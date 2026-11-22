@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: recorded RTX 5060 Ti run: GPU4PySCF vs PySCF |dE| 9.95e-13 Eh with MOs on device, CUDA matmul 3.69e-13, all five commands exit 0, logs byte-identical to raw captures with no architecture error
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

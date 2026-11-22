@@ -52,7 +52,8 @@ nodes:
     README embeds the next size up, icon-256 and banner-1024x573, enforced by tests/unit/test_media.py),
     LICENSE (MIT). Author form Thomas J. L. Mustard Ph.D. in LICENSE, README and pyproject,
     enforced by tests/unit/test_identity.py (filesystem-only whole-text regex scan
-    with fixed exclusions). docs/prd/v0.1.0/ holds the verbatim starter and DISCREPANCIES.md.
+    with fixed exclusions). docs/prd/v0.1.0/ holds the starter, DISCREPANCIES.md and
+    GPU_SMOKE_RESULT.json (v0.1.0 GPU acceptance).
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -64,10 +65,10 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 10-logo-webp
+    last_slice: 07-gpu-acceptance
   review:
-    reviewed_at: '2026-11-22T15:33:37+00:00'
-    reviewed_by: audit:OPR.0.1.0.10
+    reviewed_at: '2026-11-22T15:37:56+00:00'
+    reviewed_by: audit:OPR.0.1.0.7
     summary: patched description
 - id: eta_rxncat_core
   dimension: Module

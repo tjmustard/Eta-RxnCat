@@ -2,7 +2,7 @@
 id: OPR.0.1.0.7
 slice: 07-gpu-acceptance
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Run the GPU smoke and gpu-marked tests once on a clean tree on this hos
 depends_on: [OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8, OPR.0.1.0.9, OPR.0.1.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [docs/prd/v0.1.0/GPU_SMOKE_RESULT.json]
@@ -122,10 +122,10 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: check the preconditions and record `<sha>`.
-- [ ] Task 2: run the four commands and keep their raw outputs.
-- [ ] Task 3: assemble the JSON with a short throwaway Python one-liner. Do not add product code.
-- [ ] Task 4: commit the one file with the project footer. Restore the base env.
+- [x] Task 1: check the preconditions and record `<sha>`.
+- [x] Task 2: run the four commands and keep their raw outputs.
+- [x] Task 3: assemble the JSON with a short throwaway Python one-liner. Do not add product code.
+- [x] Task 4: commit the one file with the project footer. Restore the base env.
 
 ## 4. The Negative Space (Constraints)
 
