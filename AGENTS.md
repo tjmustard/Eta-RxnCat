@@ -352,6 +352,17 @@ uv run pytest
 UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
 ```
 
+## Engine tests
+
+- Acceptance runs use the gitignored envs `.venv-accept-gpu` (`--extra gpu`), `.venv-accept-mace`
+  (`--extra gpu --extra mlip-mace`) and `.venv-accept-uma` (`--extra gpu --extra mlip-uma`). Only
+  the build seat creates or syncs them; the audit seat runs them with `uv run --no-sync`. `.venv`
+  stays the base dev env for the required checks.
+- `ETA_RXNCAT_ACCEPTANCE=1` turns every skipped test into a failure (`tests/conftest.py`), so an
+  acceptance run can never pass by skipping.
+- Unit tests never use the network (`tests/conftest.py` sets `HF_HUB_OFFLINE=1`); provisioning a
+  model or binary is a seat command recorded in the slice, never a step inside a test.
+
 ## Protected paths
 
 - `PRDs/` is read-only: the person's plan and archives.

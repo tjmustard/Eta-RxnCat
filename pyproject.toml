@@ -83,8 +83,15 @@ follow_imports = "skip"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 norecursedirs = [".*", "build", "dist", "docs", "*.egg"]
-markers = ["gpu: needs a CUDA GPU and the gpu extra"]
-addopts = "-m 'not gpu'"
+markers = [
+    "gpu: needs a CUDA GPU and the gpu extra",
+    "xtb: needs the external xtb binary on PATH",
+    "mlip_mace: needs the mlip-mace extra and a local MACE model file",
+    "mlip_uma: needs the mlip-uma extra and UMA weights in the HF cache or a local checkpoint",
+    "slow: DFT finite-difference checks, too slow for the default suite",
+    "acceptance: acceptance run in a .venv-accept-* env (ETA_RXNCAT_ACCEPTANCE=1)",
+]
+addopts = "-m 'not gpu and not xtb and not mlip_mace and not mlip_uma and not slow and not acceptance'"
 
 [tool.eta-rxncat.licence-gate]
 # Exact licence gate (R45, ADR-0013 PROPOSED), run by tools/licence_gate.py with the target env's

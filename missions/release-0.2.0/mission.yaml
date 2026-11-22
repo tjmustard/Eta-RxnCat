@@ -4,7 +4,7 @@ kind: mission
 # release-candidate. A new mission is planned, so it stays outside the rollup
 # until you change this to active (or release-candidate).
 metadata:
-  status: planned
+  status: active
 composition:
   mission_markdown:
     spec: SPEC.md

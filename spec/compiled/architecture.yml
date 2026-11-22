@@ -2,33 +2,16 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
+  - docs/prd/v0.2.0/**
+  - docs/prd/PLAN_DISCREPANCIES.md
   - pyproject.toml
-  - uv.lock
-  - .python-version
-  - .github/**
-  - README.md
-  - AGENTS.md
-  - .gitignore
-  - docs/**
-  - src/eta_rxncat/__init__.py
-  - src/eta_rxncat/py.typed
-  - src/eta_rxncat/engines/**
-  - src/eta_rxncat/conformers/**
-  - src/eta_rxncat/mapping/**
-  - src/eta_rxncat/optimize/**
-  - src/eta_rxncat/orchestrator/**
-  - tests/unit/test_package.py
   - tests/conftest.py
+  - tests/unit/test_test_policy.py
+  - .gitignore
+  - AGENTS.md
   - spec/compiled/architecture.yml
-  - tools/**
-  - tests/unit/tools/**
-  - media/**
-  - CHANGELOG.md
-  - LICENSE
-  - tests/unit/test_identity.py
-  - tests/unit/test_media.py
   description: >-
     uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, Python
     >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,
@@ -65,14 +48,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-readme-gpu-claim
+    last_slice: 01-reference-and-test-policy
   review:
     reviewed_at: '2026-11-22T15:45:57+00:00'
     reviewed_by: audit:OPR.0.1.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -114,14 +97,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-readme-gpu-claim
+    last_slice: 01-reference-and-test-policy
   review:
     reviewed_at: '2026-11-22T15:45:57+00:00'
     reviewed_by: audit:OPR.0.1.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -166,7 +149,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-readme-gpu-claim
+    last_slice: 01-reference-and-test-policy
   review:
     reviewed_at: '2026-11-22T15:45:57+00:00'
     reviewed_by: audit:OPR.0.1.0.11
@@ -175,7 +158,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -217,14 +200,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-readme-gpu-claim
+    last_slice: 01-reference-and-test-policy
   review:
     reviewed_at: '2026-11-22T15:45:57+00:00'
     reviewed_by: audit:OPR.0.1.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -263,7 +246,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-readme-gpu-claim
+    last_slice: 01-reference-and-test-policy
   review:
     reviewed_at: '2026-11-22T15:45:57+00:00'
     reviewed_by: audit:OPR.0.1.0.11
