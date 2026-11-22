@@ -60,33 +60,41 @@ def identity_paths(root: Path) -> list[Path]:
     return sorted(paths)
 
 
-def _text_lines(path: Path, root: Path) -> list[tuple[int, str]]:
-    """Return ``(line number, text)`` pairs to scan; AGENTS.md only after the HACF END marker."""
+def _scan_text(path: Path, root: Path) -> tuple[int, str]:
+    """Return ``(first line number, text)`` to scan; AGENTS.md only after the HACF END marker.
+
+    A binary file (an image, a compiled cache) yields empty text.
+    """
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except UnicodeDecodeError:  # binary file (an image, a compiled cache): no author text
-        return []
-    numbered = list(enumerate(lines, start=1))
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return 1, ""
     if path.resolve() == (root / "AGENTS.md").resolve():
-        end = next((n for n, line in numbered if line.strip() == HACF_END), None)
-        numbered = numbered[end:] if end is not None else numbered
-    return numbered
+        lines = text.splitlines(keepends=True)
+        end = next((i for i, line in enumerate(lines) if line.strip() == HACF_END), None)
+        if end is not None:
+            return end + 2, "".join(lines[end + 1 :])
+    return 1, text
 
 
 def find_author_violations(root: Path, paths: Iterable[Path]) -> list[str]:
     """Return ``path:line: text`` for every author form under ``root`` that is not canonical.
 
-    Excluded paths are skipped even if passed in, so the guard never reads them.
+    The pattern runs over each file's whole text, so a form wrapped across lines is found; a
+    match is judged with its whitespace collapsed (a canonical form wrapped at a space passes)
+    and reported at the line where it starts. Excluded paths are skipped even if passed in, so
+    the guard never reads them.
     """
     violations = []
     for path in paths:
         relative = path.relative_to(root) if path.is_absolute() else path
         if is_excluded(relative):
             continue
-        for number, line in _text_lines(root / relative, root):
-            for match in AUTHOR.finditer(line):
-                if match.group(0) != CANONICAL:
-                    violations.append(f"{relative.as_posix()}:{number}: {match.group(0)!r}")
+        first_line, text = _scan_text(root / relative, root)
+        for match in AUTHOR.finditer(text):
+            if " ".join(match.group(0).split()) != CANONICAL:
+                number = first_line + text.count("\n", 0, match.start())
+                violations.append(f"{relative.as_posix()}:{number}: {match.group(0)!r}")
     return violations
 
 
@@ -138,6 +146,44 @@ def test_scanner_flags_variant(tmp_path: Path, variant: str) -> None:
     violations = find_author_violations(tmp_path, identity_paths(tmp_path))
     assert len(violations) == 1
     assert violations[0].startswith("README.md:2: ") and variant in violations[0]
+
+
+@pytest.mark.parametrize(
+    ("text", "line"),
+    [
+        (f"x\nby Thomas J. L.\n  {SURNAME}, PhD here\n", 2),
+        (f"Thomas\n{SURNAME}\n", 1),
+        (f"a\nb\nwritten by T. J.\nL. {SURNAME}\n", 3),
+    ],
+    ids=["initials-then-surname", "first-name-then-surname", "initials-split"],
+)
+def test_scanner_flags_wrapped_variant(tmp_path: Path, text: str, line: int) -> None:
+    """A non-canonical form wrapped across lines is reported at the line where it starts."""
+    (tmp_path / "README.md").write_text(text, encoding="utf-8")
+    violations = find_author_violations(tmp_path, identity_paths(tmp_path))
+    assert len(violations) == 1 and violations[0].startswith(f"README.md:{line}: ")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        f"Copyright Thomas J. L. {SURNAME}\nPh.D.\n",
+        f"by Thomas J.\n   L. {SURNAME} Ph.D. and others\n",
+    ],
+    ids=["wrapped-before-suffix", "wrapped-inside-initials"],
+)
+def test_scanner_accepts_wrapped_canonical(tmp_path: Path, text: str) -> None:
+    """The canonical form wrapped at a space is accepted (whitespace collapsed)."""
+    (tmp_path / "LICENSE").write_text(text, encoding="utf-8")
+    assert find_author_violations(tmp_path, identity_paths(tmp_path)) == []
+
+
+def test_agents_md_wrapped_variant_reports_file_line(tmp_path: Path) -> None:
+    """In AGENTS.md the reported line counts from the top of the file, after the HACF block."""
+    agents = f"one\ntwo\n{HACF_END}\nrules\nby Tom\n{SURNAME}\n"
+    (tmp_path / "AGENTS.md").write_text(agents, encoding="utf-8")
+    violations = find_author_violations(tmp_path, identity_paths(tmp_path))
+    assert len(violations) == 1 and violations[0].startswith("AGENTS.md:5: ")
 
 
 def test_scanner_accepts_canonical_and_citation(tmp_path: Path) -> None:
@@ -274,4 +320,4 @@ def test_readme_claims_no_gpu_pass_and_no_pip_licenses() -> None:
     text = readme()
     assert "pip-licenses" not in text
     assert "tools/licence_gate.py" in text
-    assert "GPU acceptance run has not been recorded yet" in text
+    assert "GPU acceptance run has not been recorded yet" in " ".join(text.split())

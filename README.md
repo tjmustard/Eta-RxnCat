@@ -62,8 +62,9 @@ beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 - **Hardware probe and GPU smoke test** (`eta_rxncat.utils.hw_probe`). A typed report of
   PyTorch/CUDA, the GPU, GPU4PySCF and a 6.5 GiB VRAM budget, which never raises for a missing or
   broken package. The smoke test compares GPU4PySCF with CPU PySCF and a CUDA matmul with the CPU
-  result, against fixed numeric tolerances. In `v0.1.0` it has been proven on the CPU path; the
-  GPU acceptance run has not been recorded yet.
+  result, against fixed numeric tolerances. Without CUDA it reports `skipped`. In `v0.1.0` its
+  pass and failure logic is covered by unit tests on fake hosts; the GPU acceptance run has not
+  been recorded yet.
 - **Command line**: `eta-rxncat validate` and `eta-rxncat hardware-check [--smoke]`, with a fixed
   exit-code table and one-line errors.
 - **Optional extras** `gpu`, `mlip-mace` and `mlip-uma` (declared and locked; no engine uses them
