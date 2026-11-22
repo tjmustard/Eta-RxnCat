@@ -2,7 +2,7 @@
 id: OPR.0.1.0.10
 slice: 10-logo-webp
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Replace slice 08's media with TJ's size-named WebP logo and banner sets
 depends_on: [OPR.0.1.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["media/**", README.md, tests/unit/test_identity.py, tests/unit/test_media.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

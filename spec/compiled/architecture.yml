@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -48,10 +48,11 @@ nodes:
     job plus a licence-extras matrix; no GPU job. Public face (slice 08): README.md
     (logo/banner header, badges, TOC, Features/Usage limited to v0.1.0, Roadmap, nMap
     DOI and Eta_Scripts, licensing), CHANGELOG.md (Keep a Changelog, [Unreleased]
-    only; scribe-owned), media/logo.png and media/banner.webp, LICENSE (MIT). Author
-    form Thomas J. L. Mustard Ph.D. in LICENSE, README and pyproject, enforced by
-    tests/unit/test_identity.py (filesystem-only whole-text regex scan with fixed
-    exclusions). docs/prd/v0.1.0/ holds the verbatim starter and DISCREPANCIES.md.
+    only; scribe-owned), size-named WebP media (media/icons/icon-<N>.webp, media/banner/banner-<W>x<H>.webp;
+    README embeds the next size up, icon-256 and banner-1024x573, enforced by tests/unit/test_media.py),
+    LICENSE (MIT). Author form Thomas J. L. Mustard Ph.D. in LICENSE, README and pyproject,
+    enforced by tests/unit/test_identity.py (filesystem-only whole-text regex scan
+    with fixed exclusions). docs/prd/v0.1.0/ holds the verbatim starter and DISCREPANCIES.md.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -65,12 +66,12 @@ nodes:
   provenance:
     last_slice: 10-logo-webp
   review:
-    reviewed_at: '2026-11-22T15:26:11+00:00'
-    reviewed_by: audit:OPR.0.1.0.9
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T15:33:37+00:00'
+    reviewed_by: audit:OPR.0.1.0.10
+    summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -114,12 +115,12 @@ nodes:
   provenance:
     last_slice: 10-logo-webp
   review:
-    reviewed_at: '2026-11-22T15:26:11+00:00'
-    reviewed_by: audit:OPR.0.1.0.9
+    reviewed_at: '2026-11-22T15:33:37+00:00'
+    reviewed_by: audit:OPR.0.1.0.10
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -166,14 +167,14 @@ nodes:
   provenance:
     last_slice: 10-logo-webp
   review:
-    reviewed_at: '2026-11-22T15:26:11+00:00'
-    reviewed_by: audit:OPR.0.1.0.9
-    summary: patched description
+    reviewed_at: '2026-11-22T15:33:37+00:00'
+    reviewed_by: audit:OPR.0.1.0.10
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -217,12 +218,12 @@ nodes:
   provenance:
     last_slice: 10-logo-webp
   review:
-    reviewed_at: '2026-11-22T15:26:11+00:00'
-    reviewed_by: audit:OPR.0.1.0.9
+    reviewed_at: '2026-11-22T15:33:37+00:00'
+    reviewed_by: audit:OPR.0.1.0.10
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -263,6 +264,6 @@ nodes:
   provenance:
     last_slice: 10-logo-webp
   review:
-    reviewed_at: '2026-11-22T15:26:11+00:00'
-    reviewed_by: audit:OPR.0.1.0.9
+    reviewed_at: '2026-11-22T15:33:37+00:00'
+    reviewed_by: audit:OPR.0.1.0.10
     summary: reviewed; nothing patched

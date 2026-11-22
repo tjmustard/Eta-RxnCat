@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: ten size-named WebP files match their sha256 and webpinfo pixel sizes, README embeds icon-256 and banner-1024x573 per the next-size-up rule, old-path grep empty; oracle green in a fresh clone of 2a643b9
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
