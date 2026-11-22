@@ -14,7 +14,7 @@ hacf_status: compiled
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [docs/prd/v0.1.0/GPU_SMOKE_RESULT.json]
-hacf_oracle: [[python3, "-c", "import json,sys;d=json.load(open('docs/prd/v0.1.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];sys.exit(0 if d['record_schema']==1 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and s['torch_op']['max_abs_diff']<=1e-9 and d['hardware']['vram_budget_bytes']==6979321856 and all(c['exit_code']==0 for c in d['commands']) else 1)"]]
+hacf_oracle: [[python3, "-c", "import json,sys;d=json.load(open('docs/prd/v0.1.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();sys.exit(0 if d['record_schema']==1 and s['status']=='pass' and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit')) and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and s['torch_op']['max_abs_diff']<=1e-9 and d['hardware']['vram_budget_bytes']==6979321856 and all(c['exit_code']==0 for c in d['commands']) else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
 hacf_legacy_order: null
@@ -95,12 +95,28 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
    - `smoke`: the parsed stdout of command 3
    - `pytest_gpu`: `{exit_code, summary_line}`
    - `pytest_plain`: `{exit_code, summary_line}` (command 5)
-   - `preflight`: `{ldconfig_cusolver, find_library_cusolver}` (R46)
+   - `preflight`: `{ldconfig_cusolver, find_library_cusolver, nvidia_smi_gpus}` (R46). The
+     last is the output of `nvidia-smi --query-gpu=index,name,compute_cap --format=csv,noheader`,
+     run by the seat, not by product code.
+   - `logs`: for each of commands 1–5, the complete `stdout` and `stderr` text, unedited and
+     untruncated (R49: hide nothing).
    
    Write it with 2-space indent and a trailing newline. Commit it alone, in one commit whose
    parent is `<sha>`.
 4. On any non-zero exit or any non-pass status: write the same file with the failing output, do
    not commit, and hand back to the lead with the output. The failure is the finding.
+   **Operator's acceptance rule (R49).** The run counts only as a real GPU run, proven by:
+   - GPU and CPU SCF energies agreeing within 1e-6 Eh;
+   - the device actually used being recorded: `smoke.torch_op.device == "cuda"`,
+     `smoke.scf.mo_on_device` true, and `preflight.nvidia_smi_gpus` showing the single RTX 5060
+     Ti, compute capability 12.0;
+   - no silent CPU fallback anywhere;
+   - no architecture error: none of `no kernel image`, `CUDA_ERROR_NO_BINARY_FOR_GPU`,
+     `cudaErrorNoKernelImageForDevice`, `NO_BINARY_FOR_GPU` or `PTX JIT` (as an error) in any
+     `logs` text.
+   
+   An architecture failure is a finding. Hand it back to the lead with the full output, and the
+   lead reports it to the operator. Never retry around it.
 5. Run command 1 in the default dev env (`.venv`). Afterwards, return to the base dev env with
    `uv sync --locked`, so later seats see the slice-01 environment.
 
@@ -126,6 +142,10 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
   `smoke.status == "pass"`.
 - [ ] `smoke.scf.abs_diff_eh <= 1e-6`, `smoke.scf.mo_on_device` true, `smoke.torch_op.device ==
   "cuda"`, `smoke.torch_op.max_abs_diff <= 1e-9` and `smoke.total_seconds <= smoke.timeout_s`.
+- [ ] R49: `logs` has untruncated `stdout`/`stderr` for commands 1–5. A case-insensitive search
+  of all `logs` text for `no kernel image`, `NO_BINARY_FOR_GPU`, `NoKernelImageForDevice` and
+  `PTX JIT` finds nothing. `preflight.nvidia_smi_gpus` names exactly one GPU, the RTX 5060 Ti with
+  compute capability 12.0. `preflight.find_library_cusolver` is non-`null`.
 - [ ] `hardware.gpu.compute_capability == "12.0"`, `hardware.vram_budget_bytes == 6979321856` and
   `hardware.flags == []`.
 - [ ] Every `commands[*].exit_code == 0` (five commands), `pytest_gpu.summary_line` reports ≥ 1
