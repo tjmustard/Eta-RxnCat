@@ -2,7 +2,7 @@
 id: OPR.0.2.0.10
 slice: 10-uma-direct
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the fairchem engines on one clean-room bridge with honest per
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2, OPR.0.2.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/licence-inventory.md, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

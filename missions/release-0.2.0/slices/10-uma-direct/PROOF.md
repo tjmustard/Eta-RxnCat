@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone bf72c8e: pytest 713 passed; mlip_uma 26 passed 0 skipped (audit run); probe vs fairchem predictor on H3O+/O2/CH2 within tolerance
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
