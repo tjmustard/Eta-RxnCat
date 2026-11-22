@@ -89,6 +89,8 @@ def load_reaction_graph(path: Path) -> ReactionGraph:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
         raise GraphValidationError(f"{path}: cannot read file: {exc}") from exc
+    except UnicodeDecodeError as exc:
+        raise GraphValidationError(f"{path}: file is not valid UTF-8: {exc}") from exc
     try:
         if suffix == ".json":
             data = json.loads(text, object_pairs_hook=_reject_duplicate_pairs)
@@ -98,6 +100,8 @@ def load_reaction_graph(path: Path) -> ReactionGraph:
         raise GraphValidationError(f"{path}: {exc}") from exc
     except (yaml.YAMLError, json.JSONDecodeError) as exc:
         raise GraphValidationError(f"{path}: syntax error: {exc}") from exc
+    except RecursionError as exc:
+        raise GraphValidationError(f"{path}: input is nested too deeply to parse") from exc
     try:
         return ReactionGraph.model_validate(data)
     except ValidationError as exc:

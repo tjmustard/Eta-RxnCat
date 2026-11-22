@@ -199,6 +199,24 @@ def test_missing_file(tmp_path: Path) -> None:
         load_reaction_graph(tmp_path / "missing.yaml")
 
 
+@pytest.mark.parametrize("name", ["bad.yaml", "bad.json"])
+def test_non_utf8_file(tmp_path: Path, name: str) -> None:
+    """A file that is not valid UTF-8 raises GraphValidationError naming the path."""
+    path = tmp_path / name
+    path.write_bytes(b"\xff\xfe\x00bad")
+    with pytest.raises(GraphValidationError, match=rf"{name}: file is not valid UTF-8"):
+        load_reaction_graph(path)
+
+
+@pytest.mark.parametrize("name", ["deep.yaml", "deep.json"])
+def test_deeply_nested_input(tmp_path: Path, name: str) -> None:
+    """Pathologically nested input raises GraphValidationError, not RecursionError."""
+    path = tmp_path / name
+    path.write_text("[" * 100_000 + "]" * 100_000, encoding="utf-8")
+    with pytest.raises(GraphValidationError, match=rf"{name}: "):
+        load_reaction_graph(path)
+
+
 def test_yaml_syntax_error(tmp_path: Path) -> None:
     """Invalid YAML raises GraphValidationError."""
     path = tmp_path / "bad.yaml"
