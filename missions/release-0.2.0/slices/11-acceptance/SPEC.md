@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, README.md, spec/compiled/architecture.yml]
+hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, README.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py], [python3, "-c", "import json,re,sys;d=json.load(open('docs/prd/v0.2.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();raw=json.dumps(d);ok=d['record_schema']==2 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and '2.13.0' in d['hardware']['torch']['version'] and d['hardware']['flags']==[] and all(c['exit_code']==0 for c in d['commands']) and isinstance(d['hf_token_present'],bool) and not re.search(r'hf_[A-Za-z0-9]{20,}',raw) and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit'));sys.exit(0 if ok else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
@@ -78,6 +78,32 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - UMA and eSEN weights present in the HF cache (route A, provisioned in slice 10). If either
      is absent or access fails, stop and report with the output and HTTP status, never the
      token.
+1b. **Pre-run fix: GPU Hessian support record completeness** (R44; slice 07 audit note). Slice 07 is
+   audited; this slice **touches its code** in `src/eta_rxncat/engines/pyscf_gpu_cpu/`, stated
+   here, and this slice's audit judges the change.
+   - (a) Measure and **add IEF-PCM rows** to `docs/prd/v0.2.0/evidence/pyscf-gpu-support.json`,
+     using slice 07's method and schema: GPU4PySCF 1.9.2 analytic KS Hessian (grid response on)
+     vs FD of GPU analytic gradients, step 0.005 Bohr, def2-SVP, B3LYP, DF.
+     - Systems: water, HCl, HBr, HI (+def2 ECP).
+     - Grids 3 and 9.
+     - RKS, and UKS: the same closed-shell molecules run through UKS, plus the hydroxyl radical
+       at multiplicity 2.
+
+     The audit's probe (`~/.hacf/eta-rxncat-hacf/audit-evidence/probe207.py`) measured water
+     B3LYP IEF-PCM at 6.3e-5 (C-PCM: 1.0e-5).
+   - (b) **Record-driven routing.** `hessian_mode="auto"` may route a GPU KS Hessian to analytic
+     only for a class `(scf_type RKS|UKS, solvation none|C-PCM|IEF-PCM, ecp yes|no, grids_level)`
+     whose record rows are **present** and **all ≤1e-4 Eh/Bohr²**. Anything unrecorded or over the
+     limit → FD of GPU analytic gradients. Derive the routing from the committed record (or a
+     generated constant checked against it), not from a hand list.
+   - (c) **Completeness test** (`tests/unit/engines/test_gpu_hessian_record.py`, default suite,
+     no GPU):
+     - for every class the `auto` rule can route to GPU analytic, the record has rows for it,
+       all ≤1e-4;
+     - a synthetic record missing the IEF-PCM class makes the router choose FD for IEF-PCM;
+     - removing a recorded row makes the test fail.
+
+   Commit (a)–(c) with the acceptance modules, before the run (Task 1).
 2. `tests/acceptance/`, one module per engine (`test_accept_rdkit.py`, `test_accept_pyscf.py`,
    `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`, `test_accept_esen.py`), each
    marked `acceptance` plus its piece markers:
@@ -111,7 +137,10 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - `commands` (argv and exit code);
    - `logs` (full, untruncated per command);
    - `hf_token_present: bool`, and `hf_access` (`{"facebook/UMA": <status>, "facebook/OMol25": <status>}`);
-   - the UMA and eSEN checkpoint names, sizes and sha256s.
+   - the UMA and eSEN checkpoint names, sizes and sha256s;
+   - `known_limits` (R44), a list of plain statements, at least:
+     - "R43 CPU-copy stability follow branch is exercised only by fakes (no real n_rotations<3 unstable case)";
+     - "GPU Hessian memory is not covered by the VRAM estimate (calibrated for SCF + gradient); a GPU Hessian over budget relies on the listed-OOM CPU fallback (R10)".
    
    No token, no token path content, no secrets.
 5. In the same commit:
@@ -130,8 +159,9 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: preconditions; the acceptance modules (Mini-requirements 1–2), committed **before**
-  the run as their own commit, so the run's `<sha>` includes them.
+- [ ] Task 1: preconditions; the R44 pre-run fix (Mini-requirement 1b) and the acceptance modules
+  (Mini-requirement 2), committed **before** the run as their own commit, so the run's `<sha>`
+  includes them.
 - [ ] Task 2: sync the three envs; run commands 1–5; assemble the record (Mini-requirements 3–4).
 - [ ] Task 3: the version bump and README (Mini-requirement 5); four gates in `.venv`; commit the
   record, version and README together.
@@ -143,7 +173,8 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
   substitute CPU for GPU, or edit outputs.
 - **DO NOT** record any token or secret.
 - **DO NOT** commit the record without the version bump and README update, or vice versa.
-- **DO NOT** change engine code here. A defect found here is a finding for a replan.
+- **DO NOT** change engine code here, except Mini-requirement 1b's record-driven Hessian routing in
+  `engines/pyscf_gpu_cpu` (R44). Any other defect found here is a finding for a replan.
 - **DO NOT** push.
 
 ## Proof contract
@@ -164,6 +195,14 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
 - [ ] Every `commands[*].exit_code == 0`. A case-insensitive scan of all `logs` finds none of the
   R49 architecture-error strings and no `skipped`. `hf_token_present` is a bool, `hf_access` holds
   only integer status codes, and no string in the record matches `hf_[A-Za-z0-9]{20,}`.
+- [ ] R44:
+  - `pyscf-gpu-support.json` has IEF-PCM rows for water, HCl, HBr and HI+ECP at grids 3 and 9,
+    RKS and UKS, plus hydroxyl UKS;
+  - `tests/unit/engines/test_gpu_hessian_record.py` passes, and its synthetic missing-class case
+    routes IEF-PCM to FD;
+  - in the acceptance run, any IEF-PCM GPU KS Hessian's `hessian_method` matches the record's
+    verdict for its class;
+  - the record's `known_limits` contains both R44 statements.
 - [ ] `git merge-base --is-ancestor <commit_sha> HEAD`. The final commit changes exactly the
   record, the version files and the README.
 - [ ] `uv run pytest tests/unit/test_identity.py tests/unit/test_package.py` → exit 0 (the README

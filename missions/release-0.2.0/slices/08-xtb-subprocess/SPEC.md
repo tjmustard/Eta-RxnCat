@@ -6,11 +6,11 @@ status: active
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
-intent: "Provision the pinned xtb 6.8.0 binary outside the repo, start the licence inventory, and implement the xtb_subprocess engine: GFN2-xTB with explicit charge/spin and keyed ALPB in an isolated subprocess, with energy, gradient and a convention-checked Hessian."
+intent: "Provision the pinned xtb 6.8.0 binary outside the repo (stage/bin/xtb), start the licence inventory, and implement the xtb_subprocess engine: GFN2-xTB with explicit charge/spin and keyed ALPB in an isolated subprocess, with energy, gradient and a central-FD Hessian of xtb gradients (the --hess file is TR-projected)."
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/licence-inventory.md, AGENTS.md, docs/prd/v0.2.0/DISCREPANCIES.md, "docs/prd/v0.2.0/evidence/**", spec/compiled/architecture.yml]
@@ -27,7 +27,8 @@ hacf_legacy_order: null
 Provision the official xtb 6.8.0 binary outside the repo, record it in a new licence inventory,
 and implement `XTBSubprocessEngine` (tag `xtb_subprocess`). It runs GFN2-xTB with explicit charge
 and spin and keyed ALPB solvation in an isolated subprocess, and returns energy, gradient and the
-analytic Hessian in the project's convention.
+Hessian as a central finite difference of xtb gradients (R45; xtb's own `hessian` file is
+TR-projected), in the project's convention.
 
 Context the builder needs (self-contained).
 
@@ -66,7 +67,9 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
    - download the asset URL above to `~/.local/share/eta-rxncat/xtb/6.8.0/`;
    - verify sha256 = `db0903…4d68` (stop on mismatch);
    - extract it there;
-   - record `bin/xtb --version` and the path.
+   - the binary is at `~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb`: the tarball extracts to
+     `stage/bin/xtb`, not `bin/xtb` (R45; measured: digest OK, `xtb version 6.8.0 (4b8c987…)`, static);
+   - record `stage/bin/xtb --version` and the path.
    
    Nothing goes into the repo.
 2. `docs/licence-inventory.md` is new. It lists external, non-Python-wheel components the
@@ -83,7 +86,8 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
    - `identity = EngineIdentity(name="xtb_subprocess", version="xtb <x.y.z>" parsed from --version, model=None)`;
    - `method` must be `gfn2`;
    - keyed: `accuracy` (float, 1.0), `etemp_k` (float, 300.0), `alpb_state`
-     (`gsolv`|`bar1M`|`reference`, default `gsolv`), `engine_impl` (1);
+     (`gsolv`|`bar1M`|`reference`, default `gsolv`), `fd_step_bohr` (float, 0.005; R45),
+     `engine_impl` (1);
    - runtime: `threads` (1), `timeout_s` (3600), `omp_stacksize` (`"1G"`).
 4. Run:
    - write `input.xyz` (Å) in a fresh `tempfile.mkdtemp()` under `TMPDIR`;
@@ -92,15 +96,16 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
    - **every** call runs with `["--grad"]` (R39). Only `--grad` writes the `energy` (12+
      decimals) and `gradient` files. A plain run writes neither, and `--json` reports the energy
      to only 8 decimals, too coarse for the 1e-10 tolerance;
-   - a Hessian request runs a **second** invocation, same argv with `["--hess"]` instead of
-     `["--grad"]`, in a fresh temp dir, and parses its `hessian` file. Measured on 6.8.0:
-     `--grad --hess` together produce only the gradient-mode outputs, and `--hess` alone
-     produces `hessian` but no `energy` file;
+   - a Hessian request is the **central finite difference of xtb gradients** (R45): 1 + 6N
+     `--grad` invocations (the base geometry and ±`fd_step_bohr` along each Cartesian
+     coordinate), each in a fresh temp dir; no `--hess` run. H = −∂F/∂x via slice 04's
+     `fd_hessian`, symmetrised, `hessian_max_asymmetry` recorded,
+     `hessian_method="finite_difference"`. The `--hess` file cannot be used: it is TR-projected
+     (Mini-requirement 6);
    - `subprocess.run(argv, cwd=tmp, env={…, "OMP_NUM_THREADS": t, "MKL_NUM_THREADS": t, "OMP_STACKSIZE": s}, capture_output=True, timeout=…)`,
      with no shell;
-   - parse `energy` (Eh) and `gradient` (Eh/Bohr → forces = −g) from the `--grad` run, and
-     `hessian` from the `--hess` run. Forces are computed even when `forces=False` and simply not
-     returned;
+   - parse `energy` (Eh) and `gradient` (Eh/Bohr → forces = −g) from each `--grad` run. Forces are
+     computed even when `forces=False` and simply not returned;
    - delete the temp dir on success. On failure keep it only if a runtime `keep_failed=True` is
      set.
    - Non-zero exit, timeout or missing output → `EngineRuntimeError` with the stderr/stdout tail.
@@ -108,11 +113,21 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
    - a solvation model other than `none`/`alpb` → `EngineInputError`;
    - `alpb` with only a dielectric → `EngineInputError`;
    - the solvent name is lowercased in `engine.stage` (R7).
-6. Hessian convention (R13): compare xtb's `hessian` file with central FD of xtb gradients (step
-   0.005 Bohr) on water.
-   - If the file is mass-weighted or projected, convert it to the project's convention or use FD
-     (labelled).
-   - Record the finding, with numbers, in `docs/prd/v0.2.0/evidence/xtb-hessian-convention.json`.
+6. Hessian convention (R13, R45). Measured by the builder
+   (`~/.hacf/eta-rxncat-hacf/evidence/v020-slice08-raw/stop-report-hessian.md`): xtb 6.8.0's
+   `hessian` file is **projected** (translations and rotations removed):
+   - max |file − FD of xtb gradients| = 2.7e-3 Eh/Bohr² on water;
+   - out-of-plane diagonals are exactly 0 vs 2.7e-3;
+   - re-projecting the FD Hessian still leaves 4.6e-4.
+
+   So it cannot be converted to the Cartesian, unprojected Hessian `PotentialResult` promises,
+   and the engine uses FD of gradients (Mini-requirement 4). Record the comparison, with numbers,
+   in `docs/prd/v0.2.0/evidence/xtb-hessian-convention.json` (seat command).
+
+   **Canary** (`xtb` marker): run `--hess` on water and assert the file still differs from the
+   engine's FD Hessian by more than 1e-3 Eh/Bohr², i.e. it is still projected. If a future xtb
+   writes the full Cartesian Hessian, the test fails with "xtb hessian file now Cartesian;
+   revisit R45" (slice 05's canary pattern).
 7. Register rows (status `open`) vs the starter's `XTBSubprocessEngine`: the name `xtb_gfn2-xtb` →
    the tag; argv; ALPB state; error handling.
 
@@ -138,8 +153,9 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
 
 ## Proof contract
 
-- [ ] R39: a `forces=False, hessian=False` call still runs `--grad`. A `hessian=True` call makes
-  exactly two subprocess calls (`--grad`, then `--hess`), and the recorded argvs show it.
+- [ ] R39/R45: a `forces=False, hessian=False` call runs exactly one `--grad`. A `hessian=True` call on
+  N atoms makes exactly **1 + 6N** subprocess calls, all `--grad` and none `--hess` (recorded
+  argvs). `engine.stage.options["fd_step_bohr"] == 0.005`.
 - [ ] `xtb`, all four cases, `threads=1`:
   - the engine's energy and gradient equal a hand run of the **same argv** (taken from the engine)
     in a separate temp dir: energy ≤1e-10 Eh, gradient ≤1e-9 Eh/Bohr.
@@ -156,8 +172,13 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
   - `solvent="Toluene"` → `engine.stage` has `toluene`;
   - dielectric-only → `EngineInputError`;
   - an unknown solvent → `EngineRuntimeError` whose tail contains xtb's message.
-- [ ] Hessian: the water Hessian matches FD of xtb gradients ≤1e-4 Eh/Bohr² after any conversion
-  in Mini-requirement 6. It is symmetric, with `hessian_method` stated. The evidence file exists.
+- [ ] Hessian (R45), water:
+  - the engine Hessian is `finite_difference`, exactly symmetric, with `hessian_max_asymmetry`
+    recorded;
+  - it agrees with gradient-free energy second differences (central, step 0.005 Bohr, 4-point
+    off-diagonals, xtb energies) ≤1e-4 Eh/Bohr²;
+  - the canary of Mini-requirement 6 passes (the file is still projected);
+  - `docs/prd/v0.2.0/evidence/xtb-hessian-convention.json` exists.
 - [ ] Failures:
   - a fake binary that exits 1 → `EngineRuntimeError` with its stderr tail;
   - `timeout_s=0.01` → `EngineRuntimeError` mentioning the timeout;
