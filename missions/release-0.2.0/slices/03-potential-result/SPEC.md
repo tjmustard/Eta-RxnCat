@@ -6,7 +6,7 @@ status: active
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
-intent: "Add the strict, frozen PotentialResult core data contract (energy, forces, exactly-symmetric Cartesian Hessian in atomic units, identity, device, recovery record)."
+intent: "Add the strict, frozen PotentialResult core data contract (energy, forces, exactly-symmetric Cartesian Hessian in atomic units, identity, device, recovery record), and add the esen_omol25 engine tag (one tag per model family, R31)."
 depends_on: [OPR.0.2.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
@@ -75,7 +75,12 @@ Node `eta_rxncat_core`.
    - `hessian_method` and `hessian_max_asymmetry` are both set iff the Hessian is set;
    - no NaN or inf anywhere.
 3. A docstring that states every unit and sign convention above.
-4. Register rows in `docs/prd/v0.2.0/DISCREPANCIES.md` (status `open`): the starter's
+4. `EngineTag` gains `"esen_omol25"` (replan R31; TJ 16:52Z "A - Ship it as a second model",
+   with an honest tag; PROPOSED ADR-0022 amends ADR-0001's frozen set). Update the `EngineTag`
+   docstring to say tags are one per model family. No other core change: `StageConfig`'s
+   existing rules already allow it (no basis; solvation `none` only, because `ddcosmo`/`pcm` pair
+   with PySCF and `alpb` with xtb).
+5. Register rows in `docs/prd/v0.2.0/DISCREPANCIES.md` (status `open`): the starter's
    `PotentialResult` field names and units vs these (`changed` per field; `added` for
    `hessian_method`, `hessian_max_asymmetry`, `stage_engine_impl`, `device_reason`).
 
@@ -90,7 +95,8 @@ Node `eta_rxncat_core`.
 
 - **DO NOT** import anything from `eta_rxncat.engines`, numpy, torch or any extra in core. Plain
   lists only.
-- **DO NOT** change any existing core model.
+- **DO NOT** change any existing core model, except adding `esen_omol25` to `EngineTag`
+  (Mini-requirement 4).
 - **DO NOT** symmetrise inside the model. Engines do that, and the model only validates.
 
 ## Proof contract
@@ -112,6 +118,11 @@ Node `eta_rxncat_core`.
   - `wall_time_s=-1`;
   - an extra field.
 - [ ] The frozen model rejects assignment.
+- [ ] `StageConfig(kind="single_point", engine="esen_omol25", method="esen-sm-conserving-all-omol")`
+  validates. With `basis="def2-svp"` → `ValidationError`; with `Solvation(model="pcm", dielectric=78.4)`
+  → `ValidationError`. `EngineIdentity(name="esen_omol25", version="x")` validates. The existing
+  v0.1.0 tag tests still pass, and `build_stage_key` for an existing tag gives the same hex as
+  before (a golden test, unchanged).
 - [ ] `python -c "import eta_rxncat.core, sys; assert not {'numpy','torch','pyscf','rdkit'} & set(sys.modules)"`
   (subprocess) → exit 0. numpy is not imported by core today: confirm, and if core already
   imports numpy, drop it from the set and say so.

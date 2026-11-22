@@ -69,6 +69,14 @@ libraries are imported only inside the engine that needs them.
 - **F12 / Part C Q2** (same row): "Q2. A". Accept the xtb 6.8.0 binary (LGPL-3.0 with bundled
   Intel MKL and ifx runtime) as a user-downloaded subprocess engine. It is recorded in the
   licence inventory and never vendored.
+- **OMol25 second model** (16:52Z, via operator): "A - Ship it as a second model". The fairchem
+  engine set also accepts the **conserving** OMol25 checkpoint `esen_sm_conserving_all.pt` and
+  refuses the direct-force ones, under the lead's condition (accepted by TJ) of an **honest engine
+  tag** (R31). It is an addition; UMA acceptance is still required (Q3).
+- **UMA access** (operator, 16:54Z): TJ ran `hf auth login`. Header-only checks give HTTP 302 for
+  `facebook/UMA` `uma-s-1p2p1.pt` and `facebook/OMol25` `esen_sm_conserving_all.pt`. Route A
+  (fairchem's own download path) is used. The token is a secret: only presence and HTTP status
+  are ever recorded.
 - **Standing from v0.1.0:**
   - Q1 A: the plan is authoritative.
   - Q2 B: the starter is reference only, plus a DISCREPANCIES register.
@@ -93,8 +101,9 @@ Settled:
   - the xtb asset is pinned by GitHub's digest.
 
 Open, and the reason the score is not 10. These are host facts that only a run can show:
-- **UMA weights access.** There is no HF token on the host today, so the UMA acceptance run is a
-  blocked finding until TJ's access arrives (Q3).
+- **fairchem internals.** The non-ASE batch construction in fairchem 2.26, and whether the eSEN
+  checkpoint's charge and spin embeddings are live. Slice 10's first step checks this and stops
+  with output.
 - **Runtime compatibility on the new stack**, which the lock alone does not prove:
   - torch 2.13+cu129 with the system cuSOLVER;
   - e3nn 0.4.4 under torch 2.13 for MACE.
@@ -144,7 +153,7 @@ Open, and the reason the score is not 10. These are host facts that only a run c
 | US-004 | As TJ, I want RDKit UFF and MMFF94 energies and forces. | Equal to RDKit's own force field (≤1e-10 relative). Forces vs central FD of the energy ≤1e-5 Eh/Bohr. Perception failure and round-trip mismatch raise `EngineInputError`. | P0 | 05 |
 | US-005 | As TJ, I want GFN2-xTB with ALPB through the xtb binary in a subprocess. | Provisioned xtb 6.8.0 (pinned digest). Equal to a hand run with the same argv at `OMP_NUM_THREADS=MKL_NUM_THREADS=1`: energy ≤1e-10 Eh, gradient ≤1e-9 Eh/Bohr. Hessian per the §5 convention, checked against FD of xtb gradients. ALPB state keyed. Dielectric-only ALPB is refused. Errors carry the stderr tail. | P0 | 08 |
 | US-006 | As TJ, I want MACE energies and forces on CPU or CUDA. | MACE-MP-0 medium (MIT, sha256-pinned). Equal to MACE's own calculator on the same input (≤1e-6 eV, float64). Neutral closed-shell only, refusal proofs for the rest. Device recorded. No implicit download. | P0 | 09 |
-| US-007 | As TJ, I want UMA `uma-s-1p2p1` (`omol`) with charge and spin, with no `ase` import in eta_rxncat. | Equal to fairchem's own predictor on the same input (≤1e-6 eV energy, ≤1e-5 eV/Å forces). All four test cases. Weights via HF cache (A) or a local checkpoint (B). Identity `uma-s-1p2p1@sha256:<hex>`. The token never appears in any output (test). | P0 | 10 |
+| US-007 | As TJ, I want UMA `uma-s-1p2p1` (`omol`), and the OMol25 eSEN-sm-conserving model as a second model (TJ 16:52Z), each under its own honest tag, with charge and spin, with no `ase` import in eta_rxncat. | `uma_direct` and `esen_omol25` each equal fairchem's own predictor on the same input and checkpoint (≤1e-6 eV energy, ≤1e-5 eV/Å forces), on all four test cases. Direct-force checkpoints are refused. Weights via HF cache (route A; B supported). Identity `<model>@sha256:<hex>`. The token never appears in any output (test). | P0 | 03, 10, 11 |
 | US-008 | As TJ, I want PySCF DFT on GPU4PySCF with an automatic CPU DF-KS fallback above the VRAM budget. | DF on both paths with one keyed auxiliary basis. GPU vs CPU ≤1e-6 Eh on every test case (resolve measured ≤5e-11), plus a cross-evaluation check. Above the budget, or on a listed OOM, CPU DF once, recorded. VRAM estimate calibrated and recorded. | P0 | 06, 07 |
 | US-009 | As TJ, I want ddCOSMO and PCM from a solvent name or a dielectric. | A documented name→ε table. Unknown name → `EngineInputError`. An explicit dielectric wins. The solvated energy differs from gas. ddCOSMO runs on CPU (GPU4PySCF has none), recorded. C-PCM GPU vs CPU ≤1e-6 Eh. | P0 | 06, 07 |
 | US-010 | As TJ, I want the SCF ladder to recover hard cases and prove it found the same state. | DIIS → level shift and damping → SOSCF → small-basis `project_dm_nr2nr`. Every step is recorded. Internal stability analysis always runs after convergence (≤2 follows, else `ScfConvergenceError`). Injected per-step `max_cycle` proves each step deterministically. | P0 | 06 |
@@ -184,7 +193,7 @@ the version that owns it). No finding is `accepted` and none is pending.
 | R20 | F20 negative constraints | low | resolved | All proposed additions adopted in §6, worded per F10/F11. |
 | R21 | Part B §1 state library versions | — | resolved | §5 "Target versions". |
 | R22 | Part B §2 confidence while F1 open | — | resolved | F1 answered; score 9 (§2). |
-| R23 | Part B §8 interim state if UMA access never arrives | — | resolved | Slices 01–10 are built and audited regardless. Slice 11 records UMA as a blocked finding with output, and v0.2.0 is not accepted until it passes (TJ Q3). |
+| R23 | Part B §8 interim state if UMA access never arrives | — | resolved | **Runs now.** UMA access opened at 16:54Z (HTTP 302 with TJ's login; operator), so the UMA proofs are required in slice 10 and again in slice 11's acceptance. If access ever fails again, that run is a finding with output and HTTP status, never mocked, and v0.2.0 is not accepted until UMA passes (TJ Q3). |
 | R24 | Part C Q1 | — | resolved (TJ A) | = R1. |
 | R25 | Part C Q2 | — | resolved (TJ A) | = R12. |
 | R26 | Carry-forward: store `open_timeout_s=inf` → OverflowError | — | out of scope | v0.2.0 does not touch the store (v0.8.0 or the next store change). |
@@ -192,6 +201,15 @@ the version that owns it). No finding is `accepted` and none is pending.
 | R28 | Carry-forward: CI runner disk for cu128/cu129 | — | out of scope | CI cannot run without a push. §7 risk; slice 02 records the per-profile download size. |
 | R29 | Carry-forward: cuTENSOR absent | — | out of scope | Performance only. |
 | R30 | Resolve measurement: SCF state ambiguity on PdCl₂ | — | resolved | See R9. The test set's organometallic is `[PdCl₃(C₂H₄)]⁻`, measured guess-independent (minao = huckel) and internally stable, and also `[PdCl₄]²⁻` (spare). |
+| R31 | v0.2.0 replan 1 (TJ, 16:52Z, "A - Ship it as a second model"; the lead's honest-tag condition) | — | resolved | One engine tag per model family. Core `EngineTag` gains **`esen_omol25`** (slice 03), amending ADR-0001's frozen set (PROPOSED ADR-0022). Slice 10 becomes the fairchem slice: a private shared bridge plus two engines. `uma_direct` accepts exactly `method="uma-s-1p2p1"`; `esen_omol25` accepts exactly `method="esen-sm-conserving-all-omol"` (`facebook/OMol25` `checkpoints/esen_sm_conserving_all.pt`, 50,958,067 B; FAIR Chemistry License v1, the same as UMA's). Direct-force checkpoints are refused by name **and** by the loaded config's direct-forces flag. `allscaip-md-conserving-all-omol` is refused as not approved. Identity is per ADR-0017: `esen-sm-conserving-all-omol@sha256:<hex>`. Same four-case test set and the same fairchem-predictor reference. First build step: a stop-and-report check that charge and spin are live. Slice 11 adds `esen_omol25` to acceptance; UMA stays required. Rejected: eSEN under `uma_direct` (dishonest key), and a generic `fairchem` tag (renames the plan's `uma_direct` module). |
+
+### Seed deviations
+
+| Slice | Seed field | Was | Now | R-row |
+|---|---|---|---|---|
+| OPR.0.2.0.3 `03-potential-result` | Mini-req 4, constraint, proof | core unchanged except `PotentialResult` | `EngineTag` + `esen_omol25` | R31 |
+| OPR.0.2.0.10 `10-uma-direct` | intent, body, depends_on (+.3), touches, oracle | one engine, `uma_direct` | two engines on one bridge (`uma_direct`, `esen_omol25`); all proofs required now | R31, R23 |
+| OPR.0.2.0.11 `11-acceptance` | envs, preconditions, modules, commands, record, proof | five engines; UMA could be blocked | six engines; `hf_access` statuses; UMA required | R31, R23 |
 
 ### Resolve's host measurements (2026-11-22; scratch under TMPDIR, removed)
 - **Lock:** `uv lock` with `pytorch-cu129` and `fairchem-core>=2.22` → exit 0 (versions in R1).
@@ -217,8 +235,12 @@ the version that owns it). No finding is `accepted` and none is pending.
 - **MACE-MP-0 medium:** 44,422,970 B, sha256 `01bfe221…35845`.
 - **xtb 6.8.0 asset digest:** from the GitHub API (R12).
 - **HF:** `facebook/UMA` lists `checkpoints/uma-s-1p2p1.pt` (2,333,393,615 B). The LFS oid is
-  masked. `~/.cache/huggingface/token` is absent and `HF_TOKEN` is unset (presence checked only,
-  never read).
+  masked.
+- **HF, after the replan:**
+  - `facebook/OMol25` `checkpoints/esen_sm_conserving_all.pt` is 50,958,067 B, LFS oid masked
+    (public metadata);
+  - TJ's token file is present (presence checked only, never read);
+  - access: 302 for both repos (operator, 16:54Z).
 
 ### Target versions
 torch 2.13.0+cu129; fairchem-core ≥ 2.22 (locked 2.26.0); mace-torch 0.3.17 (e3nn 0.4.4 in
@@ -233,7 +255,7 @@ Measured in the draft with `hyper_ledger.py impact`: nodes `eta_rxncat_cli`, `et
 | Node id | Slices | Change |
 |---|---|---|
 | `eta_rxncat_scaffold` | 01, 02, 11 | `docs/prd/v0.2.0/**`, `pyproject.toml` (index, fairchem floor, markers, gate config), `uv.lock`, `tests/conftest.py`, `.gitignore`, `AGENTS.md` project section, `tools/licence_gate.py` (R27), `docs/licence-inventory.md`, README/version (11). Loses `src/eta_rxncat/engines/**` to the new node. |
-| `eta_rxncat_core` | 03 | `PotentialResult` added. `store`/`cli` → needs_review; no consumed field changes. |
+| `eta_rxncat_core` | 03 | `PotentialResult` added; `EngineTag` gains `esen_omol25` (R31). `store`/`cli` → needs_review; no consumed field changes, and existing keys are unchanged. |
 | `eta_rxncat_engines` (**new**, not in the graph yet) | 04–10 | `src/eta_rxncat/engines/**`, `tests/unit/engines/**`, `tests/acceptance/**`; depends_on `eta_rxncat_core`, `eta_rxncat_hw_probe`. |
 | `eta_rxncat_hw_probe` | — | Read only (`vram_budget_bytes`). |
 | `eta_rxncat_store` | — | Read only (`build_stage_key`). The key contract is honoured through the resolved stage and identity. |
@@ -243,7 +265,7 @@ Measured in the draft with `hyper_ledger.py impact`: nodes `eta_rxncat_cli`, `et
    acceptance envs, skip→fail switch, offline tests.
 2. `02-gpu-stack-cu129` — TJ F1 A: index, fairchem floor, lock, four licence profiles, gate edge
    cases (R27), v0.1.0 GPU smoke re-proved on the new stack.
-3. `03-potential-result` — core `PotentialResult`.
+3. `03-potential-result` — core `PotentialResult`; `EngineTag` + `esen_omol25` (R31).
 4. `04-engines-base` — new node; protocol, errors, units, options, resolved stage, identity,
    FD Hessian, base-install import test.
 5. `05-rdkit-ff` — UFF/MMFF94.
@@ -252,7 +274,8 @@ Measured in the draft with `hyper_ledger.py impact`: nodes `eta_rxncat_cli`, `et
 7. `07-pyscf-gpu` — GPU4PySCF dispatch, budget, calibration, OOM fallback, GPU/CPU agreement.
 8. `08-xtb-subprocess` — provisioning, licence inventory, subprocess engine, ALPB.
 9. `09-mace` — MACE-MP-0 medium, pinned.
-10. `10-uma-direct` — fairchem 2.26 `uma-s-1p2p1`, weights A/B, secret handling.
+10. `10-uma-direct` — fairchem engines on one bridge: `uma_direct` (`uma-s-1p2p1`) and
+    `esen_omol25` (OMol25 eSEN-sm-conserving), weights via HF (route A), secret handling (R31).
 11. `11-acceptance` — every engine on this host, R49 rules, record, README claim, version
     0.2.0.
 
@@ -290,6 +313,7 @@ keywords and never reach the key. Any other option key → `EngineInputError`.
 | xtb (`xtb_subprocess`) | `gfn2` | `accuracy` (1.0), `etemp_k` (300.0), `alpb_state` (`gsolv`), `engine_impl` (1) | `binary`, `threads` (1), `timeout_s` (3600), `omp_stacksize` (`"1G"`) |
 | MACE (`mace`) | `mace-mp-0-medium` | `dtype` (`float64`), `fd_step_bohr` (0.005), `engine_impl` (1) | `model_path`, `device` (`auto`) |
 | UMA (`uma_direct`) | `uma-s-1p2p1` | `task` (`omol`), `fd_step_bohr` (0.005), `engine_impl` (1) | `checkpoint_path` or HF cache, `device` (`auto`) |
+| eSEN OMol25 (`esen_omol25`, R31) | `esen-sm-conserving-all-omol` | `task` (`omol`), `fd_step_bohr` (0.005), `engine_impl` (1) | `checkpoint_path` or HF cache, `device` (`auto`) |
 | PySCF (`pyscf_gpu_cpu`) | xc name or `hf`; `basis` required | `density_fit` (true), `auxbasis` (`def2-universal-jkfit`), `ecp` (rule R3), `grids_level` (3), `conv_tol` (1e-10), `init_guess` (`minao`), `pcm_method` (`C-PCM`), `ladder_small_basis` (rule R9), `stability` (`internal`), `engine_impl` (1) | `device` (`auto`\|`cpu`\|`cuda`), `max_memory_mb`, `ladder_max_cycle` (tests only) |
 
 **Identity:**
@@ -331,7 +355,7 @@ Hartree = 627.5094740631 kcal/mol. Forces = −∂E/∂x.
   B3LYP/def2-SVP+ECP.
 
 Who runs what:
-- UMA, xtb and PySCF run water, hydroxide, hydroxyl and the Pd anion.
+- UMA, eSEN (`esen_omol25`), xtb and PySCF run water, hydroxide, hydroxyl and the Pd anion.
 - RDKit and MACE run water and prove refusal on hydroxide, hydroxyl and hydronium.
 - Literal mapping checks use each case's own charge and multiplicity. For example, xtb gets
   `--chrg -1 --uhf 0` for hydroxide and `--chrg 0 --uhf 1` for hydroxyl. PySCF gets `mol.spin`
@@ -380,6 +404,8 @@ re-registered. The draft's known entries are seeds:
   skipped acceptance test as a pass (R8).
 - **DO NOT** let unit tests reach the network or download weights (R19).
 - **DO NOT** pass an ALPB state other than the keyed one (R7).
+- **DO NOT** run a model under another family's tag, or accept a direct-force fairchem checkpoint
+  (R31).
 - **DO NOT** add a licence exemption that no TJ decision covers; report it to the lead.
 - **DO NOT** write engine results into the store, or add a CLI command.
 - **DO NOT** work around a failed GPU or engine run (skip, CPU substitution, looser tolerance,
@@ -391,7 +417,8 @@ re-registered. The draft's known entries are seeds:
 ## 7. Risks & Mitigation
 - **New stack runtime breakage** (torch 2.13+cu129 with the system cuSOLVER; e3nn 0.4.4 under
   torch 2.13). *Mitigation:* slices 02 and 09 run real proofs first and stop with output.
-- **UMA access never arrives.** *Mitigation:* R23. Nothing is mocked.
+- **UMA access lost again.** *Mitigation:* R23. The failure is a finding with HTTP status;
+  nothing is mocked.
 - **SCF state ambiguity on organometallics** (measured, R30). *Mitigation:* a keyed guess,
   mandatory stability analysis, and a stable test complex.
 - **Upstream API drift** (fairchem internals for the clean-room bridge). *Mitigation:* pinned by
@@ -417,14 +444,14 @@ re-registered. The draft's known entries are seeds:
 |---|---|---|
 | OPR.0.2.0.1 | slices/01-reference-and-test-policy | Unpack the v0.2.0 reference zip with its ruff gate file, seed the v0.2.0 discrepancy register, decide PD-006, and install the engine test policy (markers, acceptance envs, skip-to-fail switch, offline unit tests). |
 | OPR.0.2.0.2 | slices/02-gpu-stack-cu129 | Move the GPU/MLIP stack to torch 2.13+cu129 and fairchem>=2.22 (TJ F1 A), re-run all four licence profiles with the gate edge cases fixed, and re-prove v0.1.0's GPU acceptance on the new stack under R49, recording which cuSOLVER loads. |
-| OPR.0.2.0.3 | slices/03-potential-result | Add the strict, frozen PotentialResult core data contract (energy, forces, exactly-symmetric Cartesian Hessian in atomic units, identity, device, recovery record). |
+| OPR.0.2.0.3 | slices/03-potential-result | Add the strict, frozen PotentialResult core data contract (energy, forces, exactly-symmetric Cartesian Hessian in atomic units, identity, device, recovery record), and add the esen_omol25 engine tag (one tag per model family, R31). |
 | OPR.0.2.0.4 | slices/04-engines-base | Create the eta_rxncat.engines node: Engine protocol, typed errors, CODATA-2018 units, keyed-option tables producing the resolved stage for the cache key, content-pinned model identity, FD Hessian, and a base-install no-heavy-import proof. |
 | OPR.0.2.0.5 | slices/05-rdkit-ff | Implement the rdkit_ff engine: UFF/MMFF94 energies, analytic forces and FD Hessians for multiplicity-1 states whose charge RDKit perception reproduces (round-trip checked), refusing everything else. |
 | OPR.0.2.0.6 | slices/06-pyscf-cpu | Implement the PySCF engine's CPU path: keyed DF and auxbasis, the def2 ECP rule, explicit charge/spin RKS/UKS, ddCOSMO and C-PCM from a solvent table, the SCF escalation ladder with mandatory stability analysis, and analytic gradients/Hessians checked against FD. |
 | OPR.0.2.0.7 | slices/07-pyscf-gpu | Add GPU4PySCF dispatch to the PySCF engine on one resolved stage: ADR-0008 budget read once, calibrated VRAM estimate, ddCOSMO on CPU, a listed-OOM single CPU fallback with pool cleanup, and GPU-CPU agreement with a cross-evaluation check. |
 | OPR.0.2.0.8 | slices/08-xtb-subprocess | Provision the pinned xtb 6.8.0 binary outside the repo, start the licence inventory, and implement the xtb_subprocess engine: GFN2-xTB with explicit charge/spin and keyed ALPB in an isolated subprocess, with energy, gradient and a convention-checked Hessian. |
 | OPR.0.2.0.9 | slices/09-mace | Implement the mace engine: MACE-MP-0 medium (MIT) from a sha256-verified local file, float64 energies/forces on CPU or CUDA with an FD Hessian, neutral closed-shell only, with no ase import in eta_rxncat. |
-| OPR.0.2.0.10 | slices/10-uma-direct | Implement the uma_direct engine on fairchem>=2.22: uma-s-1p2p1 with the omol task and explicit charge and spin (multiplicity), via fairchem's predictor without ase in eta_rxncat, weights from the HF cache or a local checkpoint, a sha256-pinned identity, and secret-safe errors. |
+| OPR.0.2.0.10 | slices/10-uma-direct | Implement the fairchem engines on one clean-room bridge with honest per-family tags: uma_direct (uma-s-1p2p1) and esen_omol25 (OMol25 esen-sm-conserving-all-omol), explicit charge/spin, no ase in eta_rxncat, sha256-pinned identities, direct-force checkpoints refused; both proved on this host (UMA access open since 16:54Z). |
 | OPR.0.2.0.11 | slices/11-acceptance | Run every engine's acceptance on this host in the three named envs with skips as failures, record it under R49 in docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, and in the same commit bump the version to 0.2.0 and derive the README's v0.2.0 claims from that record. |
 <!-- END HACF GENERATED: slices -->
 

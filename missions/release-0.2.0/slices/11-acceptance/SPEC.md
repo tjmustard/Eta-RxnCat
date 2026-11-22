@@ -50,13 +50,19 @@ TJ's rules:
 Environments (mission R8):
 - `.venv-accept-gpu` (`--extra gpu`): RDKit, PySCF CPU/GPU, xtb, the v0.1.0 smoke.
 - `.venv-accept-mace` (`--extra gpu --extra mlip-mace`).
-- `.venv-accept-uma` (`--extra gpu --extra mlip-uma`).
+- `.venv-accept-uma` (`--extra gpu --extra mlip-uma`): both fairchem engines, `uma_direct` and
+  `esen_omol25` (R31).
 
 Only this seat syncs them. The audit verifies the record and may re-run `uv run --no-sync`, never
 `uv sync`.
 
-The test set is mission §5 (`tests/unit/engines/data/`). Who runs what: UMA, xtb and PySCF run all
-four cases; RDKit and MACE run water plus refusal proofs.
+The test set is mission §5 (`tests/unit/engines/data/`). Who runs what:
+- UMA, eSEN (`esen_omol25`), xtb and PySCF run all four cases;
+- RDKit and MACE run water plus refusal proofs.
+
+UMA access is open (operator, 16:54Z: HTTP 302 for both `facebook/UMA` and `facebook/OMol25`
+with TJ's login). The UMA run is required for acceptance (TJ Q3); eSEN is an addition, not a
+substitute.
 
 ## 1. The Confidence Mandate
 
@@ -69,11 +75,12 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - slices 01–10 audited PASS;
    - `git status --porcelain` empty; record HEAD as `<sha>`;
    - the xtb binary provisioned (slice 08) and the MACE file present (slice 09);
-   - UMA weights present via the HF cache or a TJ path. If absent, stop and report BLOCKED with
-     the `EngineUnavailableError` output.
+   - UMA and eSEN weights present in the HF cache (route A, provisioned in slice 10). If either
+     is absent or access fails, stop and report with the output and HTTP status, never the
+     token.
 2. `tests/acceptance/`, one module per engine (`test_accept_rdkit.py`, `test_accept_pyscf.py`,
-   `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`), each marked `acceptance`
-   plus its piece markers:
+   `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`, `test_accept_esen.py`), each
+   marked `acceptance` plus its piece markers:
    - each evaluates its cases at the slice-specified reference settings (PySCF: B3LYP/def2-SVP,
      DF, on **both** CPU and GPU) and asserts the engine slices' reference tolerances;
    - each writes one JSON per case to `$ETA_RXNCAT_ACCEPTANCE_OUT` (a temp dir outside the repo)
@@ -88,7 +95,11 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
       `pytest -m gpu -q`; `pytest -q` (plain);
    3. `.venv-accept-gpu`: `ETA_RXNCAT_ACCEPTANCE=1 ETA_RXNCAT_XTB=<path> pytest -m acceptance tests/acceptance/test_accept_rdkit.py tests/acceptance/test_accept_pyscf.py tests/acceptance/test_accept_xtb.py`;
    4. `.venv-accept-mace`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_mace.py`;
-   5. `.venv-accept-uma`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_uma.py`.
+   5. `.venv-accept-uma`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_uma.py tests/acceptance/test_accept_esen.py`.
+   6. HF access, header-only via `huggingface_hub` (which reads TJ's token file itself), recording
+      **only** the HTTP status per file: `facebook/UMA` `checkpoints/uma-s-1p2p1.pt` and
+      `facebook/OMol25` `checkpoints/esen_sm_conserving_all.pt`. Never print or capture request
+      headers.
    
    All use `UV_PROJECT_ENVIRONMENT=<env> uv run --no-sync …`, after the seat's own `uv sync
    --locked --extra …` for each env.
@@ -99,7 +110,8 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - `engines` (from the per-case JSONs, keyed `<tag>.<case>`);
    - `commands` (argv and exit code);
    - `logs` (full, untruncated per command);
-   - `hf_token_present: bool`, plus the UMA checkpoint name and sha256.
+   - `hf_token_present: bool`, and `hf_access` (`{"facebook/UMA": <status>, "facebook/OMol25": <status>}`);
+   - the UMA and eSEN checkpoint names, sizes and sha256s.
    
    No token, no token path content, no secrets.
 5. In the same commit:
@@ -144,14 +156,14 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
     12.0.
 - [ ] `engines` has every `<tag>.<case>` required by the test set:
   - rdkit_ff and mace: water plus three refusals;
-  - pyscf_gpu_cpu (CPU and GPU), xtb_subprocess and uma_direct: four cases each.
+  - pyscf_gpu_cpu (CPU and GPU), xtb_subprocess, uma_direct and esen_omol25: four cases each.
   
   Every non-refusal entry has `reference_abs_diff` within its engine's tolerance. PySCF GPU
   entries have `device == "cuda"` and GPU−CPU ≤1e-6 Eh. Every refusal has `refused: true`,
   `EngineInputError`.
 - [ ] Every `commands[*].exit_code == 0`. A case-insensitive scan of all `logs` finds none of the
-  R49 architecture-error strings and no `skipped`. `hf_token_present` is a bool, and no string in
-  the record matches `hf_[A-Za-z0-9]{20,}`.
+  R49 architecture-error strings and no `skipped`. `hf_token_present` is a bool, `hf_access` holds
+  only integer status codes, and no string in the record matches `hf_[A-Za-z0-9]{20,}`.
 - [ ] `git merge-base --is-ancestor <commit_sha> HEAD`. The final commit changes exactly the
   record, the version files and the README.
 - [ ] `uv run pytest tests/unit/test_identity.py tests/unit/test_package.py` → exit 0 (the README

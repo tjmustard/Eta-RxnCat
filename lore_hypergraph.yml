@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 21
+  ADR: 22
   STORY: 0
   CANON: 0
 nodes:
@@ -847,6 +847,48 @@ nodes:
   approval: null
   history:
   - at: '2026-11-22T16:48:56+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0022
+  type: decision
+  title: 'Engine tags are one per model family: add esen_omol25 over a shared fairchem
+    bridge; refuse direct-force checkpoints (amends ADR-0001)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0022-engine-tags-are-one-per-model-family-add-esen-omol25-over-a.md
+  content_sha256: bcfd29897e7d3e888c2e4c4eea91fb4362d7e7f7cf40d7d50e81bc2b30212cc1
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/core/models.py
+    - src/eta_rxncat/engines/_fairchem_bridge.py
+    - src/eta_rxncat/engines/esen_omol25.py
+  relates_to:
+  - ADR-0001
+  - ADR-0017
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:57:07+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:57:07+00:00'
     from: null
     to: PROPOSED
     by: agent

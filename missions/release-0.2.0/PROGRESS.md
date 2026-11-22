@@ -22,6 +22,6 @@
 | OPR.0.2.0.7 | 07-pyscf-gpu | compiled | OPR.0.2.0.6, OPR.0.2.0.2 | 2026-11-22T16:44:51+00:00 compiled |
 | OPR.0.2.0.8 | 08-xtb-subprocess | compiled | OPR.0.2.0.4, OPR.0.2.0.5 | 2026-11-22T16:45:33+00:00 compiled |
 | OPR.0.2.0.9 | 09-mace | compiled | OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2 | 2026-11-22T16:46:12+00:00 compiled |
-| OPR.0.2.0.10 | 10-uma-direct | compiled | OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2 | 2026-11-22T16:47:04+00:00 compiled |
+| OPR.0.2.0.10 | 10-uma-direct | compiled | OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2, OPR.0.2.0.3 | 2026-11-22T16:47:04+00:00 compiled |
 | OPR.0.2.0.11 | 11-acceptance | compiled | OPR.0.2.0.5, OPR.0.2.0.7, OPR.0.2.0.8, OPR.0.2.0.9, OPR.0.2.0.10 | 2026-11-22T16:48:00+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->
