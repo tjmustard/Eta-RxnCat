@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, README.md, spec/compiled/architecture.yml]
+hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py], [python3, "-c", "import json,re,sys;d=json.load(open('docs/prd/v0.2.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();raw=json.dumps(d);ok=d['record_schema']==2 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and '2.13.0' in d['hardware']['torch']['version'] and d['hardware']['flags']==[] and all(c['exit_code']==0 for c in d['commands']) and isinstance(d['hf_token_present'],bool) and not re.search(r'hf_[A-Za-z0-9]{20,}',raw) and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit'));sys.exit(0 if ok else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
@@ -147,13 +147,40 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
 5. In the same commit:
    - version 0.1.0 → 0.2.0 in `pyproject.toml`, `src/eta_rxncat/__init__.py` and the
      `tests/unit/test_package.py` assertion;
-   - README: the Features section gains an "Engines (v0.2.0)" bullet set describing exactly what
-     slices 03–10 built (the five engines, units, refusal rule, keyed resolved stage);
+   - README:
+     - the release badge becomes `release-v0.2.0`;
+     - the Features heading becomes `Features (v0.2.0)`, and the section gains an engines bullet
+       set describing exactly what slices 03–10 built: the six engines `rdkit_ff`,
+       `xtb_subprocess`, `mace`, `uma_direct`, `esen_omol25`, `pyscf_gpu_cpu`; units; the
+       refusal rule; the keyed resolved stage;
+     - the Roadmap gains a `### Built` subsection listing **v0.1.0** and **v0.2.0**, with v0.3.0+
+       remaining under `### Planned, not yet built` (R50);
    - the GPU-acceptance clause is restated from the v0.2.0 record via slice 11's
      `check_gpu_claim` vocabulary (`GPU acceptance passed`, the GPU name, a link to
      `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`);
    - claim nothing the record does not show;
    - `uv lock` only if the version bump requires it (`uv lock --check` must pass).
+5b. **Version-derived README identity checks** (R50; the same lesson as v0.1.0 R54: a test must
+   not encode a fact about one version). `tests/unit/test_identity.py` (v0.1.0 slices 08/11)
+   pins the README to v0.1.0: the badge `release-v0.1.0`, the section `Features (v0.1.0)`, and
+   `**v0.2.0**` required under the Roadmap. This slice **touches it**, in the same final commit
+   as the record, version and README:
+   - read `version` from `pyproject.toml` `[project].version` (the GPU-claim test already does
+     this);
+   - the badge check expects `release-v<version>`, and the section list expects
+     `Features (v<version>)`;
+   - Roadmap: a `### Built` subsection must list `**v<x.y.z>**` for every released version up
+     to and including `<version>` (here v0.1.0 and v0.2.0). `### Planned, not yet built` must
+     list every later plan version (v0.3.0 … v1.0.0), and must not list a built one;
+   - every other identity, media and GPU-claim assertion stays as it is. The record-derived GPU
+     claim already follows the version (v0.1.0 slice 11 / R54).
+
+   Synthetic tests in the same file:
+   - a README with the v0.1.0 badge, heading and roadmap fails at version `0.2.0` (badge, heading
+     and roadmap each named in the failure);
+   - a correct v0.2.0 README passes;
+   - v0.2.0 listed under Planned at version 0.2.0 fails;
+   - v0.3.0 missing from Planned fails.
 6. On any failure (a non-zero exit, a failed check in Mini-requirement 7, a blocked UMA): write
    the record with the failing output, commit **nothing**, and hand back with the output. The
    failure is the finding.
@@ -214,7 +241,9 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
     verdict for its class;
   - the record's `known_limits` contains both R44 statements.
 - [ ] `git merge-base --is-ancestor <commit_sha> HEAD`. The final commit changes exactly the
-  record, the version files and the README.
+  record, the version files, the README and `tests/unit/test_identity.py` (R50).
+- [ ] R50: the version-derived identity checks of Mini-requirement 5b and their four synthetic
+  cases pass. The real README passes at version 0.2.0.
 - [ ] `uv run pytest tests/unit/test_identity.py tests/unit/test_package.py` → exit 0 (the README
   claim matches the v0.2.0 record; the version is 0.2.0). The four gates → exit 0.
 
