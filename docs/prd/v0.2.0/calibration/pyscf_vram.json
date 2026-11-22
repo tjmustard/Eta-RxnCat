@@ -1,0 +1,77 @@
+{
+ "record_schema": 1,
+ "purpose": "PySCF GPU VRAM estimate calibration (slice 07 Mini-req 4); seat command, not product code",
+ "formula": "estimate_bytes = f * 8 * (naux * nao(nao+1)/2 + 40 * nao^2) + VRAM_OVERHEAD_BYTES",
+ "derivation": "VRAM_OVERHEAD_BYTES = 64 MiB (2 x the largest tiny-system peak); VRAM_SAFETY = max(1.0, ceil(max((measured_peak - VRAM_OVERHEAD_BYTES) / estimate_f1) * 1.25, 2 decimals))",
+ "method": "B3LYP/def2-SVP, DF def2-universal-jkfit, grid 3, GPU4PySCF via PySCFEngine; measured = CuPy default pool total_bytes() after SCF and after gradient, pools freed before each system",
+ "gpu4pyscf_version": "1.9.2",
+ "cupy_version": "14.2.0",
+ "device": "NVIDIA GeForce RTX 5060 Ti",
+ "generated_at_utc": "2026-11-22T21:25:49Z",
+ "commit_base": "e4ef37bad75a90b6f73c33fdacdfb3063f940904",
+ "entries": [
+  {
+   "system": "water",
+   "natm": 3,
+   "nao": 24,
+   "naux": 113,
+   "ecp": "none",
+   "estimate_bytes_f1": 455520,
+   "pool_total_bytes_after_scf": 22802944,
+   "pool_total_bytes_after_gradient": 30667264,
+   "measured_peak_bytes": 30667264,
+   "ratio_measured_over_estimate_f1": 67.32363891815946,
+   "energy_hartree": -76.35815198240718,
+   "recovery_steps": [
+    "diis",
+    "stability:stable"
+   ],
+   "seconds": 1.1,
+   "ratio_measured_minus_overhead_over_estimate_f1": 0.0,
+   "estimate_bytes_calibrated": 69445681
+  },
+  {
+   "system": "pd_anion",
+   "natm": 10,
+   "nao": 133,
+   "naux": 861,
+   "ecp": "def2-svp",
+   "estimate_bytes_f1": 67039448,
+   "pool_total_bytes_after_scf": 252751872,
+   "pool_total_bytes_after_gradient": 342038528,
+   "measured_peak_bytes": 342038528,
+   "ratio_measured_over_estimate_f1": 5.102048692286369,
+   "energy_hartree": -1586.8755332900255,
+   "recovery_steps": [
+    "diis",
+    "stability:stable"
+   ],
+   "seconds": 4.9,
+   "ratio_measured_minus_overhead_over_estimate_f1": 4.10101324223314,
+   "estimate_bytes_calibrated": 411021232
+  },
+  {
+   "system": "decane",
+   "natm": 32,
+   "nao": 250,
+   "naux": 1146,
+   "ecp": "none",
+   "estimate_bytes_f1": 307646000,
+   "pool_total_bytes_after_scf": 359592960,
+   "pool_total_bytes_after_gradient": 427095040,
+   "measured_peak_bytes": 427095040,
+   "ratio_measured_over_estimate_f1": 1.3882678143060532,
+   "energy_hartree": -394.0498305818596,
+   "recovery_steps": [
+    "diis",
+    "stability:stable"
+   ],
+   "seconds": 20.3,
+   "ratio_measured_minus_overhead_over_estimate_f1": 1.1701311767420997,
+   "estimate_bytes_calibrated": 1645332844
+  }
+ ],
+ "max_ratio_after_overhead": 4.10101324223314,
+ "VRAM_OVERHEAD_BYTES": 67108864,
+ "VRAM_SAFETY": 5.13
+}

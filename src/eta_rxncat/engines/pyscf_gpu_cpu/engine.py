@@ -13,7 +13,7 @@ import importlib
 import math
 from typing import Any, ClassVar
 
-from eta_rxncat.core import EngineIdentity, MolecularState, StageConfig
+from eta_rxncat.core import Device, EngineIdentity, MolecularState, StageConfig
 from eta_rxncat.core.elements import ATOMIC_NUMBERS
 from eta_rxncat.engines.base import Engine, RawResult
 from eta_rxncat.engines.errors import (
@@ -25,7 +25,20 @@ from eta_rxncat.engines.errors import (
 from eta_rxncat.engines.fd import fd_hessian
 from eta_rxncat.engines.identity import library_version
 from eta_rxncat.engines.options import OptionSpec, normalise_solvent
+from eta_rxncat.engines.pyscf_gpu_cpu.gpu import (
+    GPU_KS_ANALYTIC_HESSIAN_OK,
+    GPU_KS_HESSIAN_GRID_RESPONSE,
+    GPU_STABILITY_CPU_COPY_STEP,
+    GPU_STABILITY_MIN_ROTATIONS,
+    estimate_bytes,
+    free_pools,
+    gpu_error_types,
+    gpu_modules,
+    is_gpu_oom,
+    to_host,
+)
 from eta_rxncat.engines.pyscf_gpu_cpu.solvents import DIELECTRICS
+from eta_rxncat.utils.hw_probe import vram_budget_bytes
 
 AUTO = "auto"
 """Option value meaning "apply the engine's rule" (``ecp``: rule 3; ``ladder_small_basis``)."""
@@ -112,12 +125,20 @@ def default_small_basis(basis: str) -> str:
 
 
 class PySCFEngine(Engine):
-    """PySCF single points with analytic derivatives on the CPU.
+    """PySCF single points with analytic gradients, on the GPU (GPU4PySCF) or the CPU.
 
     ``stage.method`` is an xc functional name accepted by ``pyscf.dft.libxc`` or ``hf``;
-    ``stage.basis`` is required. Runtime arguments (never keyed): ``device`` (``auto``,
-    ``cpu``; ``cuda`` is slice 07), ``max_memory_mb`` and ``ladder_max_cycle`` (the DIIS rung's
-    cycle budget, default 100; later rungs use ``RUNG_MAX_CYCLE``).
+    ``stage.basis`` is required. One resolved stage drives both devices; the device is never
+    keyed. Runtime arguments (never keyed): ``device`` (``auto``: the GPU when the ``gpu`` extra
+    and a CUDA device are present, else the CPU with ``device_reason="gpu_unavailable"``;
+    ``cuda``: the GPU or ``EngineUnavailableError``; ``cpu``), ``max_memory_mb`` and
+    ``ladder_max_cycle`` (the DIIS rung's cycle budget, default 100; later rungs use
+    ``RUNG_MAX_CYCLE``).
+
+    On the GPU path: ddCOSMO always runs on the CPU (``ddcosmo_cpu_only``); a VRAM estimate above
+    the ADR-0008 budget runs on the CPU (``vram_estimate_over_budget``); one of the four listed
+    CUDA out-of-memory errors frees CuPy's pools and re-runs once on the CPU (``gpu_oom``). Every
+    CPU run on a GPU-capable host records why in ``device_reason`` and ``recovery_steps``.
     """
 
     tag = "pyscf_gpu_cpu"
@@ -150,7 +171,7 @@ class PySCFEngine(Engine):
         Raises:
             EngineInputError: an unknown xc, a non-positive tolerance/step/grid level, an
                 ``alpb`` solvation, or a bad runtime argument.
-            EngineUnavailableError: ``device="cuda"`` (GPU dispatch is slice 07).
+            EngineUnavailableError: ``device="cuda"`` without the ``gpu`` extra or a CUDA device.
         """
         super().__init__(stage, **runtime)
         if self._stage.options["ladder_small_basis"] == AUTO and self._stage.basis:
@@ -160,8 +181,19 @@ class PySCFEngine(Engine):
             self._stage = StageConfig.model_validate(data)
         if device not in ("auto", "cpu", "cuda"):
             raise EngineInputError(f"pyscf_gpu_cpu: device {device!r} not in auto|cpu|cuda")
-        if device == "cuda":
-            raise EngineUnavailableError("pyscf_gpu_cpu: the CUDA path is not implemented yet")
+        self.requested_device = device
+        self._gpu = gpu_modules() if device in ("auto", "cuda") else None
+        if device == "cuda" and self._gpu is None:
+            raise EngineUnavailableError(
+                "pyscf_gpu_cpu: device 'cuda' needs GPU4PySCF, CuPy and a CUDA device; install "
+                "the gpu extra with `uv sync --extra gpu`"
+            )
+        self.vram_budget_bytes: int | None = None
+        if self._gpu is not None:
+            # ADR-0008 budget, read once at construction (never probe_hardware per evaluate).
+            total = int(self._gpu.cupy.cuda.runtime.memGetInfo()[1])
+            self.vram_budget_bytes = vram_budget_bytes(total)
+        self._on_gpu = False
         for name, limit in (
             ("max_memory_mb", max_memory_mb),
             ("ladder_max_cycle", ladder_max_cycle),
@@ -170,7 +202,6 @@ class PySCFEngine(Engine):
                 isinstance(limit, bool) or not isinstance(limit, int) or limit < 1
             ):
                 raise EngineInputError(f"pyscf_gpu_cpu: {name} must be an int >= 1, not {limit!r}")
-        self.device = "cpu"
         self.max_memory_mb = max_memory_mb
         self.ladder_max_cycle = ladder_max_cycle
         options = self.stage.options
@@ -313,14 +344,22 @@ class PySCFEngine(Engine):
             ) from exc
 
     def _make_mf(self, mol: Any, stage: StageConfig, max_cycle: int = RUNG_MAX_CYCLE) -> Any:
-        """The mean-field object for ``mol``: R/U, HF/KS, DF, solvent, tolerances."""
-        pyscf = _pyscf()
+        """The mean-field object for ``mol``: R/U, HF/KS, DF, solvent, tolerances.
+
+        On the GPU path the same settings build ``gpu4pyscf.scf`` / ``gpu4pyscf.dft`` objects.
+        """
+        if self._on_gpu:
+            assert self._gpu is not None
+            scf_mod, dft_mod = self._gpu.scf, self._gpu.dft
+        else:
+            pyscf = _pyscf()
+            scf_mod, dft_mod = pyscf.scf, pyscf.dft
         options = stage.options
         open_shell = mol.spin != 0
         if stage.method == "hf":
-            mf = pyscf.scf.UHF(mol) if open_shell else pyscf.scf.RHF(mol)
+            mf = scf_mod.UHF(mol) if open_shell else scf_mod.RHF(mol)
         else:
-            mf = pyscf.dft.UKS(mol) if open_shell else pyscf.dft.RKS(mol)
+            mf = dft_mod.UKS(mol) if open_shell else dft_mod.RKS(mol)
             mf.xc = stage.method
             mf.grids.level = options["grids_level"]
         if options["density_fit"]:
@@ -348,6 +387,8 @@ class PySCFEngine(Engine):
                 mf.kernel()
             else:
                 mf.kernel(dm0=dm0)
+        except self._passthrough():
+            raise  # CuPy / CUDA errors go to the OOM rule in _evaluate
         except pyscf.lib.exceptions.BasisNotFoundError as exc:
             raise EngineInputError(f"pyscf_gpu_cpu: auxbasis not found: {exc}") from exc
         except (RuntimeError, ValueError, FloatingPointError, MemoryError) as exc:
@@ -388,7 +429,7 @@ class PySCFEngine(Engine):
         small_mol = self._build_mol(state, small_basis, ecp)
         small = self._make_mf(small_mol, stage)
         if self._kernel(small):
-            dm_small = small.make_rdm1()
+            dm_small = to_host(small.make_rdm1())
             if mol.spin != 0:
                 dm0 = [pyscf.scf.addons.project_dm_nr2nr(small_mol, d, mol) for d in dm_small]
             else:
@@ -414,11 +455,29 @@ class PySCFEngine(Engine):
             )
         return mf
 
+    @staticmethod
+    def _rotation_count(mf: Any) -> int:
+        """Occupied-virtual orbital pairs of the internal stability problem (per spin, summed)."""
+        occ = to_host(mf.mo_occ)
+        spins = occ if getattr(occ, "ndim", 1) == 2 else [occ]
+        total = 0
+        for spin in spins:
+            n_occ = int(sum(1 for o in spin if o > 0))
+            total += n_occ * (len(spin) - n_occ)
+        return total
+
     def _stability(self, mf: Any, steps: list[str]) -> Any:
         """Internal stability analysis, following an instability up to 2 times (R9)."""
         follows = 0
+        small = self._on_gpu and self._rotation_count(mf) < GPU_STABILITY_MIN_ROTATIONS
+        if small:
+            # R43: GPU4PySCF 1.9.2's Davidson asserts nvar >= nroots (3). Checked BEFORE calling
+            # stability: analyse a CPU copy of the converged mean field (same mol/xc/grids/DF)
+            # and, if unstable, follow on the GPU from the CPU copy's orbitals (max 2 follows).
+            steps.append(GPU_STABILITY_CPU_COPY_STEP)
         while True:
-            mo, _, stable, _ = mf.stability(internal=True, external=False, return_status=True)
+            analyser = mf.to_cpu() if small else mf
+            mo, _, stable, _ = analyser.stability(internal=True, external=False, return_status=True)
             if stable:
                 steps.append("stability:stable")
                 return mf
@@ -442,7 +501,9 @@ class PySCFEngine(Engine):
     def _gradient(self, mf: Any) -> list[list[float]]:
         """The analytic nuclear gradient (Eh/Bohr), N x 3."""
         try:
-            grad = mf.nuc_grad_method().kernel()
+            grad = to_host(mf.nuc_grad_method().kernel())
+        except self._passthrough():
+            raise
         except (RuntimeError, ValueError, NotImplementedError) as exc:
             raise EngineRuntimeError(
                 f"pyscf_gpu_cpu: gradient failed: {exc}", tail=repr(exc)
@@ -451,7 +512,12 @@ class PySCFEngine(Engine):
 
     def _analytic_hessian(self, mf: Any, n_atoms: int) -> tuple[list[list[float]], float]:
         try:
-            raw = mf.Hessian().kernel()
+            hobj = mf.Hessian()
+            if self._on_gpu and hasattr(hobj, "grid_response"):
+                hobj.grid_response = GPU_KS_HESSIAN_GRID_RESPONSE
+            raw = to_host(hobj.kernel())
+        except self._passthrough():
+            raise
         except (RuntimeError, ValueError, NotImplementedError, AttributeError) as exc:
             raise EngineRuntimeError(
                 f"pyscf_gpu_cpu: Hessian failed: {exc}", tail=repr(exc)
@@ -496,20 +562,50 @@ class PySCFEngine(Engine):
         assert isinstance(step, float)
         return fd_hessian(forces_at, coords, step)
 
-    def _evaluate(self, state: MolecularState, *, forces: bool, hessian: bool) -> RawResult:
-        stage = self.resolved_stage_for(state)
+    def _passthrough(self) -> tuple[type[BaseException], ...]:
+        """CuPy / CUDA exception types to re-raise untouched (empty off the GPU path)."""
+        if self._on_gpu and self._gpu is not None:
+            return gpu_error_types(self._gpu)
+        return ()
+
+    def estimate_vram_bytes(self, mol: Any, stage: StageConfig) -> int:
+        """The calibrated VRAM estimate for ``mol`` under ``stage`` (Mini-req 3)."""
+        naux = 0
+        if stage.options["density_fit"]:
+            from pyscf.df import addons as df_addons
+
+            naux = int(df_addons.make_auxmol(mol, stage.options["auxbasis"]).nao)
+        return estimate_bytes(int(mol.nao), naux)
+
+    def _hessian_method(self, stage: StageConfig) -> str:
+        """Slice 06's rule; on the GPU, an analytic KS Hessian only if R41's record allows it."""
+        method = hessian_method_for(stage)
+        if (
+            self._on_gpu
+            and method == "finite_difference"
+            and GPU_KS_ANALYTIC_HESSIAN_OK
+            and stage.options["hessian_mode"] == "auto"
+            and stage.method != "hf"
+            and stage.solvation.model != "ddcosmo"
+        ):
+            return "analytic"
+        return method
+
+    def _run(
+        self, state: MolecularState, stage: StageConfig, *, forces: bool, hessian: bool
+    ) -> RawResult:
+        """SCF ladder, stability and derivatives on the current device (``self._on_gpu``)."""
         ecp = stage.options["ecp"]
         assert isinstance(ecp, str) and stage.basis
         mol = self._build_mol(state, stage.basis, ecp)
         mf, steps = self._ladder(state, mol, stage)
         mf = self._stability(mf, steps)
-        result = RawResult(
-            energy_hartree=float(mf.e_tot), device="cpu", device_reason=None, recovery_steps=steps
-        )
+        device: Device = "cuda" if self._on_gpu else "cpu"
+        result = RawResult(energy_hartree=float(mf.e_tot), device=device, recovery_steps=steps)
         if forces or hessian:
             result.forces_hartree_per_bohr = [[-v for v in row] for row in self._gradient(mf)]
         if hessian:
-            method = hessian_method_for(stage)
+            method = self._hessian_method(stage)
             if method == "analytic":
                 matrix, asym = self._analytic_hessian(mf, len(state.symbols))
             else:
@@ -517,6 +613,64 @@ class PySCFEngine(Engine):
             result.hessian_hartree_per_bohr2 = matrix
             result.hessian_method = "analytic" if method == "analytic" else "finite_difference"
             result.hessian_max_asymmetry = asym
+        return result
+
+    def _cpu(
+        self,
+        state: MolecularState,
+        stage: StageConfig,
+        *,
+        forces: bool,
+        hessian: bool,
+        reason: str | None,
+        step: str | None = None,
+    ) -> RawResult:
+        """The slice-06 CPU path, recording why it ran instead of the GPU."""
+        self._on_gpu = False
+        result = self._run(state, stage, forces=forces, hessian=hessian)
+        result.device_reason = reason
+        if step is not None:
+            result.recovery_steps = [step, *result.recovery_steps]
+        return result
+
+    def _evaluate(self, state: MolecularState, *, forces: bool, hessian: bool) -> RawResult:
+        stage = self.resolved_stage_for(state)
+        if self._gpu is None:
+            reason = "gpu_unavailable" if self.requested_device == "auto" else None
+            return self._cpu(state, stage, reason=reason, forces=forces, hessian=hessian)
+        if stage.solvation.model == "ddcosmo":
+            return self._cpu(
+                state, stage, reason="ddcosmo_cpu_only", forces=forces, hessian=hessian
+            )
+        ecp = stage.options["ecp"]
+        assert isinstance(ecp, str) and stage.basis and self.vram_budget_bytes is not None
+        estimate = self.estimate_vram_bytes(self._build_mol(state, stage.basis, ecp), stage)
+        if estimate > self.vram_budget_bytes:
+            return self._cpu(
+                state,
+                stage,
+                reason="vram_estimate_over_budget",
+                step="vram_estimate>budget->cpu",
+                forces=forces,
+                hessian=hessian,
+            )
+        self._on_gpu = True
+        try:
+            result = self._run(state, stage, forces=forces, hessian=hessian)
+        except gpu_error_types(self._gpu) as exc:
+            self._on_gpu = False
+            if not is_gpu_oom(self._gpu, exc):
+                raise EngineRuntimeError(
+                    f"pyscf_gpu_cpu: GPU error (not an out-of-memory error): {exc}",
+                    tail=repr(exc),
+                ) from exc
+            free_pools(self._gpu)
+            return self._cpu(
+                state, stage, reason="gpu_oom", step="gpu_oom->cpu", forces=forces, hessian=hessian
+            )
+        finally:
+            self._on_gpu = False
+        result.device_reason = f"gpu4pyscf {self._gpu.version}"
         return result
 
 

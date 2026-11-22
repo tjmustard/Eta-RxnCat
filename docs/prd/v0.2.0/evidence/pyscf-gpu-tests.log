@@ -1,0 +1,69 @@
+water: E_gpu -76.35815198240718 E_cpu -76.35815198241342 |dE| 6.239e-12
+.hydroxide: E_gpu -75.66171254747987 E_cpu -75.66171254748186 |dE| 1.990e-12
+.hydroxyl: E_gpu -75.66733328918444 E_cpu -75.66733310611278 |dE| 1.831e-07
+.ECP def2-svp not found for  H
+ECP def2-svp not found for  C
+ECP def2-svp not found for  Cl
+ECP def2-svp not found for  H
+ECP def2-svp not found for  C
+ECP def2-svp not found for  Cl
+ECP def2-svp not found for  H
+ECP def2-svp not found for  C
+ECP def2-svp not found for  Cl
+pd_anion: E_gpu -1586.8755332900264 E_cpu -1586.8755332900755 |dE| 4.911e-11
+.water: E_gpu -76.35815198240718 E_cpu(dm_gpu) -76.35815198241319
+.hydroxide: E_gpu -75.66171254747987 E_cpu(dm_gpu) -75.66171254748183
+.hydroxyl: E_gpu -75.66733328918444 E_cpu(dm_gpu) -75.6673332891867
+.ECP def2-svp not found for  H
+ECP def2-svp not found for  C
+ECP def2-svp not found for  Cl
+pd_anion: E_gpu -1586.8755332900255 E_cpu(dm_gpu) -1586.8755332900696
+.water: max |F_gpu - F_cpu| = 2.738e-07
+.hydroxyl: max |F_gpu - F_cpu| = 2.652e-07
+.water Hessian GPU vs CPU: HF 3.116e-07, B3LYP 7.377e-05
+.water C-PCM: |dE| 5.983e-12
+.water IEF-PCM: |dE| 5.912e-12
+...decane: estimate 1645332844 B, budget 6979321856 B, E -394.04983058185996
+.H2 hf: E_gpu -1.116783317901362 E_cpu -1.116783317901351
+.H2 b3lyp: E_gpu -1.1654616295819928 E_cpu -1.1654616295819866
+..
+=============================== warnings summary ===============================
+tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_energy_agreement[water]
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-gpu/lib/python3.12/site-packages/gpu4pyscf/lib/cutensor.py:154: UserWarning: using cupy as the tensor contraction engine.
+    warnings.warn(f'using {contract_engine} as the tensor contraction engine.')
+
+tests/unit/engines/test_pyscf_gpu.py: 22 warnings
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-gpu/lib/python3.12/site-packages/gpu4pyscf/dft/gen_grid.py:370: DeprecationWarning: `distance_matrix` is deprecated in favor of `scipy.spatial.distance.cdist` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
+    dist = distance_matrix(atom_coords, atom_coords)
+
+tests/unit/engines/test_pyscf_gpu.py: 22 warnings
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-gpu/lib/python3.12/site-packages/gpu4pyscf/dft/gen_grid.py:370: DeprecationWarning: `minkowski_distance` is deprecated in favor of `scipy.spatial.distance.minkowski` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
+    dist = distance_matrix(atom_coords, atom_coords)
+
+tests/unit/engines/test_pyscf_gpu.py: 22 warnings
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-gpu/lib/python3.12/site-packages/gpu4pyscf/dft/gen_grid.py:370: DeprecationWarning: `minkowski_distance_p` is deprecated in favor of `scipy.spatial.distance.minkowski` as of SciPy 1.18.0 and will be removed in SciPy 1.20.0.
+    dist = distance_matrix(atom_coords, atom_coords)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_energy_agreement[water]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_energy_agreement[hydroxide]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_energy_agreement[hydroxyl]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_energy_agreement[pd_anion]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_cross_evaluation[water]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_cross_evaluation[hydroxide]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_cross_evaluation[hydroxyl]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_cross_evaluation[pd_anion]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_gradient_agreement[water]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_gradient_agreement[hydroxyl]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_hessians
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_pcm_agreement[C-PCM]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_cpu_pcm_agreement[IEF-PCM]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_ddcosmo_auto_runs_on_cpu
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_engine_imports_no_torch
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_decane_under_budget_runs_on_gpu
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_tiny_system_stability[hf]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_tiny_system_stability[b3lyp]
+PASSED tests/unit/engines/test_pyscf_gpu.py::test_gpu_water_has_no_cpu_copy
+19 passed, 26 deselected, 67 warnings in 111.05s (0:01:51)

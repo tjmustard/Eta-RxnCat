@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -66,14 +66,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -118,7 +118,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6
@@ -127,7 +127,7 @@ nodes:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,7 +172,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6
@@ -181,7 +181,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,14 +223,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,14 +269,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -317,8 +317,9 @@ nodes:
   - OPR.0.2.0.4
   - OPR.0.2.0.5
   - OPR.0.2.0.6
+  - OPR.0.2.0.7
   provenance:
-    last_slice: 06-pyscf-cpu
+    last_slice: 07-pyscf-gpu
   review:
     reviewed_at: '2026-11-22T21:16:49+00:00'
     reviewed_by: audit:OPR.0.2.0.6

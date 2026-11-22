@@ -44,8 +44,10 @@ def stage(method: str = "hf", basis: str = "sto-3g", **kwargs: Any) -> StageConf
 def engine(
     method: str = "hf", basis: str = "sto-3g", runtime: dict[str, Any] | None = None, **kwargs: Any
 ) -> PySCFEngine:
-    """A PySCF engine for the given stage fields."""
-    return PySCFEngine.from_stage(stage(method, basis, **kwargs), **(runtime or {}))
+    """A CPU PySCF engine for the given stage fields (``device="cpu"`` unless overridden)."""
+    return PySCFEngine.from_stage(
+        stage(method, basis, **kwargs), **{"device": "cpu", **(runtime or {})}
+    )
 
 
 def plain_mf(
