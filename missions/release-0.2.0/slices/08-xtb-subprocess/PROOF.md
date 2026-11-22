@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone ffdf9f9: pytest 653 passed; real xtb 6.8.0 -m xtb 11 passed 0 skipped; Hessian vs energy second differences 8.2e-6
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

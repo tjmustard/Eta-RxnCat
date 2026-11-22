@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -68,12 +68,12 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -120,14 +120,14 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,40 +271,41 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
     eta_rxncat.engines (v0.2.0): shared engine interfaces plus engines; pure Python
-    at import, libraries imported lazily. base.py: Engine ABC (tag, ENGINE_IMPL, OPTIONS);
-    from_stage(stage, **runtime) rejects a foreign tag or unknown runtime arg; evaluate
-    times _evaluate, checks shapes, copies lists, returns a validated PotentialResult.
-    errors.py: EngineError > Unavailable, Input, ScfConvergence(steps), Runtime(tail,
-    redacted). units.py: CODATA 2018. options.py: OptionSpec, resolve_options (defaults,
-    strict types, no caller engine_impl), resolved_stage (implicit and explicit defaults
-    key the same, R6). identity.py: sha256 model_id, library_version. fd.py: fd_hessian.
-    rdkit_ff.py: RDKitFFEngine (uff|mmff94), neutral closed-shell only (R35), perception
-    round-trip, fresh force field per geometry, FD Hessian. pyscf_gpu_cpu/: PySCFEngine,
-    DF R/U KS/HF with keyed density_fit, auxbasis, ecp (auto, resolved per state by
-    resolved_stage_for, R36), grids_level, conv_tol, init_guess, pcm_method, ladder_small_basis,
-    fd_step_bohr, hessian_mode; ladder diis -> level_shift -> soscf -> small_basis_projection,
-    then mandatory internal stability (<= 2 follows); ddCOSMO/PCM with the Minnesota
-    table; CPU Hessian analytic for HF only, FD of analytic gradients for KS (R41).
-    gpu.py + runtime device auto|cuda|cpu (unkeyed): GPU4PySCF path with the same
-    resolved stage; ddCOSMO -> cpu (ddcosmo_cpu_only); VRAM budget read once (cupy
-    memGetInfo, ADR-0008), calibrated estimate f*8*(naux*nao(nao+1)/2 + 40*nao^2)
-    + 64 MiB (f 5.13, docs/prd/v0.2.0/calibration/), over budget -> cpu; the four
-    listed CUDA OOMs free the pools and re-run once on cpu (gpu_oom), other CuPy errors
-    -> EngineRuntimeError; GPU KS analytic Hessian with grid_response (GPU_KS_ANALYTIC_HESSIAN_OK);
-    stability on a CPU copy below 3 rotations (R43); device_reason records every CPU
-    choice. Tests in tests/unit/engines.
+    at import, libraries lazy. base.py: Engine ABC (tag, ENGINE_IMPL, OPTIONS); from_stage(stage,
+    **runtime) rejects a foreign tag or unknown runtime arg; evaluate checks shapes,
+    copies lists, returns a validated PotentialResult. errors.py: EngineError > Unavailable,
+    Input, ScfConvergence, Runtime(tail). units.py: CODATA 2018. options.py: OptionSpec,
+    resolve_options, resolved_stage (implicit and explicit defaults key the same,
+    R6). identity.py: sha256 model_id, library_version. fd.py: fd_hessian. rdkit_ff.py:
+    RDKitFFEngine (uff|mmff94), neutral closed-shell only (R35), perception round-trip,
+    fresh force field per geometry, FD Hessian. pyscf_gpu_cpu/: PySCFEngine, DF R/U
+    KS/HF; keyed density_fit, auxbasis, ecp (auto, resolved per state, R36), grids_level,
+    conv_tol, init_guess, pcm_method, ladder_small_basis, fd_step_bohr, hessian_mode;
+    ladder diis -> level_shift -> soscf -> small_basis_projection, then internal stability
+    (<= 2 follows); ddCOSMO/PCM with the Minnesota table; CPU Hessian analytic for
+    HF, FD of gradients for KS (R41). Runtime device auto|cuda|cpu (unkeyed, gpu.py):
+    GPU4PySCF with the same resolved stage; ddCOSMO -> cpu; VRAM budget read once
+    (ADR-0008) vs calibrated estimate (f 5.13 + 64 MiB, docs/prd/v0.2.0/calibration/),
+    over budget -> cpu; the four listed CUDA OOMs free the pools and re-run once on
+    cpu, other CuPy errors -> EngineRuntimeError; GPU KS analytic Hessian with grid_response
+    (record-gated); stability on a CPU copy below 3 rotations (R43); device_reason
+    records every CPU choice. xtb_subprocess.py: XTBSubprocessEngine (gfn2) runs the
+    external xtb 6.8.0 binary (runtime binary, $ETA_RXNCAT_XTB or PATH; docs/licence-inventory.md)
+    with a list argv, no shell, in a fresh temp dir, always --grad (--chrg, --uhf,
+    --acc, --etemp, keyed --alpb solvent alpb_state); Hessian = FD of xtb gradients,
+    1 + 6N calls (R45; the --hess file is projected). Tests in tests/unit/engines.
   inputs: []
   outputs: []
   edges:
@@ -322,6 +323,6 @@ nodes:
   provenance:
     last_slice: 08-xtb-subprocess
   review:
-    reviewed_at: '2026-11-22T22:29:47+00:00'
-    reviewed_by: audit:OPR.0.2.0.7
+    reviewed_at: '2026-11-22T22:44:54+00:00'
+    reviewed_by: audit:OPR.0.2.0.8
     summary: patched description
