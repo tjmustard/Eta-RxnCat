@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -68,12 +68,12 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
-    summary: patched description
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
+    summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -120,14 +120,14 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +271,12 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -290,17 +290,21 @@ nodes:
     against the state, copies lists and returns a validated PotentialResult (stage_engine_impl
     = ENGINE_IMPL), invalid output -> EngineRuntimeError. errors.py: EngineError and
     EngineUnavailableError, EngineInputError, ScfConvergenceError(steps tuple), EngineRuntimeError(tail:
-    last 40 lines, HF/Bearer/token values redacted). units.py: CODATA 2018 BOHR_ANGSTROM,
-    HARTREE_EV, HARTREE_KCAL_MOL and conversions. options.py: OptionSpec(type, default,
-    allowed); resolve_options fills defaults, never takes bool for int/float, stores
-    an int for a float spec as float, rejects unknown keys, wrong types, disallowed
-    values and a caller-set engine_impl (EngineInputError), and adds engine_impl;
-    resolved_stage returns a new StageConfig with resolved options and the solvent
-    lowercased, so implicit and explicit defaults key the same (R6, ADR-0016). identity.py:
-    sha256_file (1 MiB chunks), model_id '<name>@sha256:<hex>' (never a path), library_version
-    via importlib.metadata (absent -> EngineUnavailableError). fd.py: fd_hessian,
-    central differences of forces (6N calls), symmetrised, with the pre-symmetrisation
-    max asymmetry. Tests in tests/unit/engines; acceptance tests will live in tests/acceptance.
+    last 40 lines, redacted). units.py: CODATA 2018 BOHR_ANGSTROM, HARTREE_EV, HARTREE_KCAL_MOL
+    and conversions. options.py: OptionSpec(type, default, allowed); resolve_options
+    fills defaults, rejects unknown keys, wrong types (bool never int/float), disallowed
+    values and a caller-set engine_impl, and adds engine_impl; resolved_stage returns
+    a new StageConfig with resolved options and the solvent lowercased, so implicit
+    and explicit defaults key the same (R6, ADR-0016). identity.py: sha256_file (1
+    MiB chunks), model_id '<name>@sha256:<hex>' (never a path), library_version via
+    importlib.metadata (absent -> EngineUnavailableError). fd.py: fd_hessian, central
+    differences of forces (6N calls), symmetrised, with the pre-symmetrisation max
+    asymmetry. rdkit_ff.py: RDKitFFEngine (method uff|mmff94, keyed fd_step_bohr)
+    refuses charge != 0 or multiplicity != 1 first (R35), then perception failure
+    (ValueError), a round-trip mismatch (elements, formal charge, radicals, implicit
+    H) and missing parameters; forces from a fresh force field per geometry (RDKit
+    2026.09 CalcGrad(positions) is history-dependent); FD Hessian; cpu. Tests in tests/unit/engines
+    (five-state test set in data/); acceptance tests will live in tests/acceptance.
   inputs: []
   outputs: []
   edges:
@@ -315,6 +319,6 @@ nodes:
   provenance:
     last_slice: 05-rdkit-ff
   review:
-    reviewed_at: '2026-11-22T17:30:24+00:00'
-    reviewed_by: audit:OPR.0.2.0.4
+    reviewed_at: '2026-11-22T17:44:27+00:00'
+    reviewed_by: audit:OPR.0.2.0.5
     summary: patched description
