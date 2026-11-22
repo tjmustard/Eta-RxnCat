@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone 0254d4b: oracle all 0; 4 licence profiles 0 (16/46/74/127); audit-run GPU smoke pass |dE| 1.05e-12 on torch 2.13.0+cu129
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

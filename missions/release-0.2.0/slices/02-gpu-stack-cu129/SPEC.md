@@ -2,7 +2,7 @@
 id: OPR.0.2.0.2
 slice: 02-gpu-stack-cu129
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Move the GPU/MLIP stack to torch 2.13+cu129 and fairchem>=2.22 (TJ F1 A
 depends_on: [OPR.0.2.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, "tools/**", "tests/unit/tools/**", "docs/prd/v0.2.0/**", AGENTS.md, ".github/**", spec/compiled/architecture.yml]
