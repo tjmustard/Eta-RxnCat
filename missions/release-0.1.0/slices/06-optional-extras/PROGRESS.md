@@ -6,11 +6,13 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: compiled
+- hacf_status: blocked
 - status: active
-- last event: 2026-11-22T12:30:00+00:00 compiled
+- last event: 2026-11-22T13:48:39+00:00 blocked
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
 
 - 2026-11-22T12:30:00+00:00 compiled - created by hyper_scope.py slice create
+- 2026-11-22T13:35:22+00:00 executing
+- 2026-11-22T13:48:39+00:00 blocked - Licence gate (Mini-req 4, Task 3) is blocked on TJ: qitem-20261122134346-2d0f88234113eb85. The MLIP envs fail on packages TJ Q1 A does not cover (GPL python-hostlist and ray-haproxy; lmdb OLDAP-2.8; certifi MPL-2.0; torch-ema and ase_db_backends with UNKNOWN metadata). matscipy (LGPL) falsely passes --partial-match on the substring "PERMITTED". Findings: ~/.hacf/eta-rxncat-hacf/slice06-licence-findings.md. Lock, syncs, R43, R44, guards and mypy are done.

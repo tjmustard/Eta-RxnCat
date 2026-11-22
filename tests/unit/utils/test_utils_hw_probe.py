@@ -59,9 +59,36 @@ def install(
     torch: ModuleType | None,
     gpu4pyscf: ModuleType | None,
 ) -> None:
-    """Make ``import torch`` / ``import gpu4pyscf`` return the fakes (``None`` = not installed)."""
+    """Make ``import torch`` / ``import gpu4pyscf`` return the fakes (``None`` = not installed).
+
+    Distribution metadata is hidden too, so an absent fake reads as "not installed" even on a
+    host where the real packages are installed.
+    """
     monkeypatch.setitem(sys.modules, "torch", torch)
     monkeypatch.setitem(sys.modules, "gpu4pyscf", gpu4pyscf)
+    monkeypatch.setattr(hw_probe, "_dist_version", lambda distributions: None)
+
+
+LIBCUDART = "libcudart.so.12: cannot open shared object file"
+
+
+def broken_host(
+    monkeypatch: pytest.MonkeyPatch, torch_broken: bool, gpu4pyscf_broken: bool
+) -> None:
+    """Fake a host whose installed torch / gpu4pyscf raise OSError on import (metadata present)."""
+
+    def fake_import(name: str) -> ModuleType | None:
+        if (name == "torch" and torch_broken) or (name == "gpu4pyscf" and gpu4pyscf_broken):
+            raise OSError(LIBCUDART)
+        return {"torch": fake_torch(), "gpu4pyscf": fake_gpu4pyscf()}[name]
+
+    versions = {"torch": "2.8.0+cu128", "gpu4pyscf-cuda12x": "1.9.2"}
+
+    def fake_dist_version(distributions: tuple[str, ...]) -> str | None:
+        return next((versions[d] for d in distributions if d in versions), None)
+
+    monkeypatch.setattr(hw_probe, "_import", fake_import)
+    monkeypatch.setattr(hw_probe, "_dist_version", fake_dist_version)
 
 
 def test_constants_and_budget() -> None:
@@ -201,8 +228,66 @@ def test_gpu4pyscf_import_error_does_not_raise(monkeypatch: pytest.MonkeyPatch) 
     assert any("libcudart" in note for note in report.notes)
 
 
-def test_this_environment_report() -> None:
-    """On this environment (no torch, no gpu4pyscf) the real probe reports both missing."""
+def test_broken_torch_import(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An installed torch whose import raises is reported as torch_import_failed, not missing."""
+    broken_host(monkeypatch, torch_broken=True, gpu4pyscf_broken=False)
+    report = probe_hardware()
+    assert report.torch.installed is True and report.torch.version == "2.8.0+cu128"
+    assert report.torch.cuda_available is False and report.torch.cuda_version is None
+    assert report.gpu is None and report.vram_budget_bytes is None
+    assert report.flags == ["torch_import_failed", "cuda_unavailable"]
+    assert f"Importing torch raised OSError: {LIBCUDART}" in report.notes
+
+
+def test_broken_gpu4pyscf_import(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An installed gpu4pyscf whose import raises is gpu4pyscf_import_failed, not missing."""
+    broken_host(monkeypatch, torch_broken=False, gpu4pyscf_broken=True)
+    report = probe_hardware()
+    assert report.gpu4pyscf.installed is True and report.gpu4pyscf.version == "1.9.2"
+    assert report.flags == ["gpu4pyscf_import_failed"]
+    assert f"Importing gpu4pyscf raised OSError: {LIBCUDART}" in report.notes
+
+
+def test_both_broken_flag_order(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Both import failures appear in the fixed flag order."""
+    broken_host(monkeypatch, torch_broken=True, gpu4pyscf_broken=True)
+    assert probe_hardware().flags == [
+        "torch_import_failed",
+        "cuda_unavailable",
+        "gpu4pyscf_import_failed",
+    ]
+
+
+def test_import_error_without_metadata_is_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An ImportError with no distribution metadata still means "not installed"."""
+
+    def missing(name: str) -> ModuleType | None:
+        raise ModuleNotFoundError(f"No module named '{name}'")
+
+    monkeypatch.setattr(hw_probe, "_import", missing)
+    monkeypatch.setattr(hw_probe, "_dist_version", lambda distributions: None)
+    report = probe_hardware()
+    assert report.flags == ["torch_missing", "cuda_unavailable", "gpu4pyscf_missing"]
+    assert not any(note.startswith("Importing") for note in report.notes)
+
+
+def test_full_flag_order(monkeypatch: pytest.MonkeyPatch) -> None:
+    """With an old CUDA torch and an old gpu4pyscf the flags keep the fixed order."""
+    install(
+        monkeypatch,
+        fake_torch(version="2.6.0+cu124", cuda="12.4", available=False),
+        fake_gpu4pyscf("1.7.0"),
+    )
+    assert probe_hardware().flags == [
+        "cuda_unavailable",
+        "torch_cuda_below_12.8",
+        "gpu4pyscf_below_1.8.0",
+    ]
+
+
+def test_absent_packages_report(monkeypatch: pytest.MonkeyPatch) -> None:
+    """On a fake host with neither torch nor gpu4pyscf, the probe reports both missing."""
+    install(monkeypatch, None, None)
     report = probe_hardware()
     assert {"torch_missing", "cuda_unavailable", "gpu4pyscf_missing"} <= set(report.flags)
     assert report.report_schema == 1 and report.vram_budget_bytes is None

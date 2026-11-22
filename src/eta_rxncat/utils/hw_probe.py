@@ -33,6 +33,7 @@ SCF_TOLERANCE_EH: Final = 1e-6
 MATMUL_TOLERANCE: Final = 1e-9
 """Largest accepted max-abs difference of the float64 CUDA matmul against the CPU result."""
 
+_TORCH_DISTRIBUTIONS: Final = ("torch",)
 _GPU4PYSCF_DISTRIBUTIONS: Final = ("gpu4pyscf-cuda12x", "gpu4pyscf-cuda13x", "gpu4pyscf")
 
 
@@ -102,11 +103,37 @@ class HardwareReport(_Model):
 
 
 def _import(name: str) -> ModuleType | None:
-    """Import ``name``, returning ``None`` if it is not installed."""
+    """Import ``name``; whatever the import raises propagates (the test seam for fake hosts)."""
+    return importlib.import_module(name)
+
+
+def _dist_version(distributions: tuple[str, ...]) -> str | None:
+    """Return the installed version of the first of ``distributions`` that is present."""
+    for dist in distributions:
+        try:
+            return importlib.metadata.version(dist)
+        except importlib.metadata.PackageNotFoundError:
+            continue
+    return None
+
+
+def _load(
+    name: str, distributions: tuple[str, ...], notes: list[str]
+) -> tuple[ModuleType | None, str | None]:
+    """Import ``name`` without raising.
+
+    Returns:
+        ``(module, None)`` on success; ``(None, version)`` when the distribution is installed but
+        the import raised (a broken install, noted); ``(None, None)`` when it is not installed.
+    """
     try:
-        return importlib.import_module(name)
-    except ImportError:
-        return None
+        module = _import(name)
+    except Exception as exc:  # a broken install can raise OSError, RuntimeError, ...
+        version = _dist_version(distributions)
+        if version is not None or not isinstance(exc, ImportError):
+            notes.append(f"Importing {name} raised {type(exc).__name__}: {exc}")
+        return None, version
+    return module, None
 
 
 def _torch_cuda_version(torch: ModuleType) -> str | None:
@@ -118,14 +145,25 @@ def _torch_cuda_version(torch: ModuleType) -> str | None:
     return f"{tag.group(1)}.{tag.group(2)}" if tag else None
 
 
-def _probe_torch(notes: list[str]) -> tuple[TorchInfo, GpuInfo | None]:
-    """Probe PyTorch and its first CUDA device; never raises."""
-    torch = _import("torch")
+def _probe_torch(notes: list[str]) -> tuple[TorchInfo, GpuInfo | None, bool]:
+    """Probe PyTorch and its first CUDA device; never raises.
+
+    Returns:
+        The torch info, the GPU (or ``None``) and whether an installed torch failed to import.
+    """
+    torch, broken_version = _load("torch", _TORCH_DISTRIBUTIONS, notes)
     if torch is None:
+        if broken_version is not None:
+            info = TorchInfo(
+                installed=True, version=broken_version, cuda_available=False, cuda_version=None
+            )
+            return info, None, True
         notes.append("PyTorch is not installed (the gpu extra provides it).")
-        return TorchInfo(
-            installed=False, version=None, cuda_available=False, cuda_version=None
-        ), None
+        return (
+            TorchInfo(installed=False, version=None, cuda_available=False, cuda_version=None),
+            None,
+            False,
+        )
     version = str(getattr(torch, "__version__", "")) or None
     cuda_version = _torch_cuda_version(torch)
     try:
@@ -138,7 +176,7 @@ def _probe_torch(notes: list[str]) -> tuple[TorchInfo, GpuInfo | None]:
     )
     if not cuda_available:
         notes.append("PyTorch reports no usable CUDA device.")
-        return info, None
+        return info, None, False
     try:
         props = torch.cuda.get_device_properties(0)
         total = int(props.total_memory)
@@ -151,13 +189,13 @@ def _probe_torch(notes: list[str]) -> tuple[TorchInfo, GpuInfo | None]:
         )
     except Exception as exc:
         notes.append(f"Reading CUDA device 0 failed: {type(exc).__name__}: {exc}")
-        return info, None
+        return info, None, False
     try:
         free, _ = torch.cuda.mem_get_info(0)
         gpu = gpu.model_copy(update={"free_vram_bytes": int(free)})
     except Exception as exc:
         notes.append(f"Free VRAM unavailable: {type(exc).__name__}: {exc}")
-    return info, gpu
+    return info, gpu, False
 
 
 def _gpu4pyscf_version(module: ModuleType) -> str | None:
@@ -165,39 +203,44 @@ def _gpu4pyscf_version(module: ModuleType) -> str | None:
     version = getattr(module, "__version__", None)
     if isinstance(version, str) and version:
         return version
-    for dist in _GPU4PYSCF_DISTRIBUTIONS:
-        try:
-            return importlib.metadata.version(dist)
-        except importlib.metadata.PackageNotFoundError:
-            continue
-    return None
+    return _dist_version(_GPU4PYSCF_DISTRIBUTIONS)
 
 
-def _probe_gpu4pyscf(notes: list[str]) -> Gpu4PySCFInfo:
-    """Probe GPU4PySCF; never raises."""
-    try:
-        module = _import("gpu4pyscf")
-    except Exception as exc:  # e.g. a CUDA library failing to load during import
-        notes.append(f"Importing gpu4pyscf raised {type(exc).__name__}: {exc}")
-        module = None
+def _probe_gpu4pyscf(notes: list[str]) -> tuple[Gpu4PySCFInfo, bool]:
+    """Probe GPU4PySCF; never raises.
+
+    Returns:
+        The GPU4PySCF info and whether an installed GPU4PySCF failed to import.
+    """
+    module, broken_version = _load("gpu4pyscf", _GPU4PYSCF_DISTRIBUTIONS, notes)
     if module is None:
+        if broken_version is not None:
+            return Gpu4PySCFInfo(installed=True, version=broken_version), True
         notes.append("GPU4PySCF is not importable (the gpu extra provides it).")
-        return Gpu4PySCFInfo(installed=False, version=None)
-    return Gpu4PySCFInfo(installed=True, version=_gpu4pyscf_version(module))
+        return Gpu4PySCFInfo(installed=False, version=None), False
+    return Gpu4PySCFInfo(installed=True, version=_gpu4pyscf_version(module)), False
 
 
-def _flags(torch: TorchInfo, gpu4pyscf: Gpu4PySCFInfo) -> list[str]:
+def _flags(
+    torch: TorchInfo, torch_failed: bool, gpu4pyscf: Gpu4PySCFInfo, gpu4pyscf_failed: bool
+) -> list[str]:
     """Return the report flags, in a fixed order."""
     flags: list[str] = []
     if not torch.installed:
         flags.append("torch_missing")
+    if torch_failed:
+        flags.append("torch_import_failed")
     if not torch.cuda_available:
         flags.append("cuda_unavailable")
     if torch.cuda_version is not None and parse_version_prefix(torch.cuda_version) < MIN_TORCH_CUDA:
         flags.append("torch_cuda_below_12.8")
     if not gpu4pyscf.installed:
         flags.append("gpu4pyscf_missing")
-    elif gpu4pyscf.version is None or parse_version_prefix(gpu4pyscf.version) < MIN_GPU4PYSCF:
+    if gpu4pyscf_failed:
+        flags.append("gpu4pyscf_import_failed")
+    if gpu4pyscf.installed and (
+        gpu4pyscf.version is None or parse_version_prefix(gpu4pyscf.version) < MIN_GPU4PYSCF
+    ):
         flags.append("gpu4pyscf_below_1.8.0")
     return flags
 
@@ -205,8 +248,8 @@ def _flags(torch: TorchInfo, gpu4pyscf: Gpu4PySCFInfo) -> list[str]:
 def probe_hardware() -> HardwareReport:
     """Report PyTorch/CUDA, the first GPU, GPU4PySCF and the VRAM budget; never raises."""
     notes: list[str] = []
-    torch, gpu = _probe_torch(notes)
-    gpu4pyscf = _probe_gpu4pyscf(notes)
+    torch, gpu, torch_failed = _probe_torch(notes)
+    gpu4pyscf, gpu4pyscf_failed = _probe_gpu4pyscf(notes)
     return HardwareReport(
         python_version=platform.python_version(),
         platform=platform.platform(),
@@ -214,7 +257,7 @@ def probe_hardware() -> HardwareReport:
         gpu=gpu,
         gpu4pyscf=gpu4pyscf,
         vram_budget_bytes=None if gpu is None else vram_budget_bytes(gpu.total_vram_bytes),
-        flags=_flags(torch, gpu4pyscf),
+        flags=_flags(torch, torch_failed, gpu4pyscf, gpu4pyscf_failed),
         notes=notes,
     )
 
@@ -273,6 +316,19 @@ def _child_argv() -> list[str]:
     return [sys.executable, "-m", "eta_rxncat.utils._smoke_child"]
 
 
+def _broken_install_reason(host: HardwareReport) -> str | None:
+    """Return why an installed torch or GPU4PySCF cannot be imported, or ``None``."""
+    reasons = []
+    for package, flag in (
+        ("torch", "torch_import_failed"),
+        ("gpu4pyscf", "gpu4pyscf_import_failed"),
+    ):
+        if flag in host.flags:
+            note = next((n for n in host.notes if n.startswith(f"Importing {package} raised")), "")
+            reasons.append(f"broken {package} install ({flag}): {note}".rstrip(": "))
+    return "; ".join(reasons) or None
+
+
 def _skip_reason(host: HardwareReport) -> str | None:
     """Return why the smoke test cannot run on ``host``, or ``None`` if it can."""
     missing = []
@@ -326,7 +382,8 @@ def _judge(out: _ChildOutput) -> tuple[ScfCheck, TorchOpCheck, list[str]]:
 def run_smoke(timeout_s: float = 600.0) -> SmokeResult:
     """Run the GPU4PySCF-vs-PySCF and CUDA matmul smoke test.
 
-    Returns ``skipped`` (no child process) when torch, CUDA or GPU4PySCF is unavailable;
+    Returns ``fail`` (no child process) when an installed torch or GPU4PySCF fails to import,
+    and ``skipped`` (no child process) when torch, CUDA or GPU4PySCF is not available;
     otherwise runs the work in a child process killed after ``timeout_s`` and returns ``pass``
     only if every check passes, else ``fail`` with a reason naming the failed checks.
     """
@@ -349,6 +406,9 @@ def run_smoke(timeout_s: float = 600.0) -> SmokeResult:
             host=host,
         )
 
+    broken = _broken_install_reason(host)
+    if broken is not None:  # installed but unusable: a failure to surface, never a skip
+        return result("fail", broken)
     skip = _skip_reason(host)
     if skip is not None:
         return result("skipped", skip)

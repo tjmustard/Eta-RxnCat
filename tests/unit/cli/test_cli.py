@@ -1,10 +1,12 @@
 """Tests for the eta-rxncat CLI: outputs, the exit-code table and one-line errors."""
 
+import importlib.util
 import json
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import pytest
@@ -149,8 +151,21 @@ def test_hardware_check(capsys: pytest.CaptureFixture[str]) -> None:
     assert report["report_schema"] == 1 and "flags" in report
 
 
-def test_hardware_check_smoke_skipped_here(capsys: pytest.CaptureFixture[str]) -> None:
-    """On this environment (no torch) --smoke exits 3 with status skipped."""
+def absent_gpu_stack(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Fake a host where torch and gpu4pyscf are not installed (imports fail, no metadata)."""
+
+    def missing(name: str) -> ModuleType | None:
+        raise ModuleNotFoundError(f"No module named '{name}'")
+
+    monkeypatch.setattr(hw_probe, "_import", missing)
+    monkeypatch.setattr(hw_probe, "_dist_version", lambda distributions: None)
+
+
+def test_hardware_check_smoke_skipped_without_torch(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """On a host without torch, --smoke exits 3 with status skipped."""
+    absent_gpu_stack(monkeypatch)
     assert cli.main(["hardware-check", "--smoke"]) == 3
     assert json.loads(capsys.readouterr().out)["status"] == "skipped"
 
@@ -163,8 +178,11 @@ def test_hardware_check_smoke_exit_codes(
     code: int,
 ) -> None:
     """--smoke exits with smoke_exit_code: pass 0, fail 1, skipped 3."""
-    real = hw_probe.run_smoke()
-    fake = real.model_copy(update={"status": status, "reason": None if status == "pass" else "x"})
+    absent_gpu_stack(monkeypatch)
+    skipped = hw_probe.run_smoke()  # a fake host: no torch, so no child process
+    fake = skipped.model_copy(
+        update={"status": status, "reason": None if status == "pass" else "x"}
+    )
     monkeypatch.setattr(hw_probe, "run_smoke", lambda timeout_s=600.0: fake)
     assert cli.main(["hardware-check", "--smoke"]) == code
     assert json.loads(capsys.readouterr().out)["status"] == status
@@ -208,8 +226,12 @@ def test_console_script_hardware_check() -> None:
     assert result.returncode == 0 and json.loads(result.stdout)["report_schema"] == 1
 
 
+@pytest.mark.skipif(
+    importlib.util.find_spec("torch") is not None,
+    reason="torch is installed in this environment; the real skip path cannot be observed",
+)
 def test_console_script_smoke_skipped() -> None:
-    """The installed script's --smoke exits 3 (skipped) on this environment."""
+    """On a real environment without torch, the installed script's --smoke exits 3 (skipped)."""
     result = run("hardware-check", "--smoke")
     assert result.returncode == 3 and json.loads(result.stdout)["status"] == "skipped"
 

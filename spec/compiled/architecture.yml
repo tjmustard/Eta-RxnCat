@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -49,14 +49,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-cli
+    last_slice: 06-optional-extras
   review:
     reviewed_at: '2026-11-22T13:34:00+00:00'
     reviewed_by: audit:05-cli
     summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -98,14 +98,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-cli
+    last_slice: 06-optional-extras
   review:
     reviewed_at: '2026-11-22T13:34:00+00:00'
     reviewed_by: audit:05-cli
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -148,14 +148,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-cli
+    last_slice: 06-optional-extras
   review:
     reviewed_at: '2026-11-22T13:34:00+00:00'
     reviewed_by: audit:05-cli
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -198,14 +198,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-cli
+    last_slice: 06-optional-extras
   review:
     reviewed_at: '2026-11-22T13:34:00+00:00'
     reviewed_by: audit:05-cli
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -244,7 +244,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-cli
+    last_slice: 06-optional-extras
   review:
     reviewed_at: '2026-11-22T13:34:00+00:00'
     reviewed_by: audit:05-cli

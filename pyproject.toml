@@ -21,6 +21,11 @@ dependencies = [
     "pyscf",
 ]
 
+[project.optional-dependencies]
+gpu = ["torch>=2.7.0", "gpu4pyscf-cuda12x>=1.8.0", "cupy-cuda12x"]
+mlip-mace = ["torch>=2.7.0", "mace-torch"]
+mlip-uma = ["torch>=2.7.0", "fairchem-core"]
+
 [project.scripts]
 eta-rxncat = "eta_rxncat.cli:main"
 
@@ -33,6 +38,17 @@ dev = [
     "types-PyYAML",
     "pip-licenses",
 ]
+
+[tool.uv]
+conflicts = [[{ extra = "mlip-mace" }, { extra = "mlip-uma" }]]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/eta_rxncat"]

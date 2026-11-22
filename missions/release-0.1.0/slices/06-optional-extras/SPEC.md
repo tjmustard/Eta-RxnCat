@@ -10,7 +10,7 @@ intent: "Declare the gpu, mlip-mace and mlip-uma optional extras (MLIP extras co
 depends_on: [OPR.0.1.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: blocked
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, src/eta_rxncat/utils/hw_probe.py, "tests/unit/utils/**", "tests/unit/cli/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -149,15 +149,15 @@ drop an extra.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: add the extras, conflicts, index and sources to `pyproject.toml`; run `uv lock`.
+- [x] Task 1: add the extras, conflicts, index and sources to `pyproject.toml`; run `uv lock`.
   On failure, stop and report to the lead with the output.
-- [ ] Task 2: sync each supported combination into a scratch runtime env and run `pip-licenses`
+- [x] Task 2: sync each supported combination into a scratch runtime env and run `pip-licenses`
   on it. Derive the exact NVIDIA and LGPL exemption lists from that output, and keep the output for
   the handoff.
 - [ ] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`
   and `ci.yml`, character for character the same.
-- [ ] Task 4: write the two exemption-guard tests (Mini-requirement 5).
-- [ ] Task 5: run mypy with each MLIP combination installed, then return to the base dev env.
+- [x] Task 4: write the two exemption-guard tests (Mini-requirement 5).
+- [x] Task 5: run mypy with each MLIP combination installed, then return to the base dev env.
 - [ ] Task 6: add the register rows. Re-run the four gates in the base dev env.
 
 ## 4. The Negative Space (Constraints)

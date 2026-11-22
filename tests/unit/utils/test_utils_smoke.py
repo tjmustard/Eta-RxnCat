@@ -4,6 +4,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 from typing import Any
 
 import pytest
@@ -66,18 +67,81 @@ def printing(payload: dict[str, Any]) -> str:
     return f"print({json.dumps(json.dumps(payload))})\n"
 
 
-def test_skipped_on_this_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Without torch the smoke test is skipped before any child process starts."""
+def forbid_child(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Make any attempt to start the smoke child fail the test."""
 
     def no_child(*args: object, **kwargs: object) -> None:
-        raise AssertionError("no child process may start when skipping")
+        raise AssertionError("no child process may start here")
 
     monkeypatch.setattr(subprocess, "run", no_child)
+
+
+def fake_imports(
+    monkeypatch: pytest.MonkeyPatch,
+    modules: dict[str, ModuleType | Exception],
+    versions: dict[str, str],
+) -> None:
+    """Fake the probe's import seam: each name maps to a module or to the exception it raises."""
+
+    def fake_import(name: str) -> ModuleType | None:
+        found = modules.get(name, ModuleNotFoundError(f"No module named '{name}'"))
+        if isinstance(found, Exception):
+            raise found
+        return found
+
+    def fake_dist_version(distributions: tuple[str, ...]) -> str | None:
+        return next((versions[d] for d in distributions if d in versions), None)
+
+    monkeypatch.setattr(hw_probe, "_import", fake_import)
+    monkeypatch.setattr(hw_probe, "_dist_version", fake_dist_version)
+
+
+def test_skipped_without_torch(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Without torch the smoke test is skipped before any child process starts."""
+    fake_imports(monkeypatch, {}, {})
+    forbid_child(monkeypatch)
     result = run_smoke()
     assert result.status == "skipped"
     assert result.reason is not None and "torch" in result.reason
     assert smoke_exit_code(result) == 3
     assert result.scf is None and result.torch_op is None and result.host.torch.installed is False
+
+
+LIBCUDART = OSError("libcudart.so.12: cannot open shared object file")
+
+
+def test_broken_torch_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An installed torch that fails to import makes the smoke test fail (exit 1), not skip."""
+    fake_imports(monkeypatch, {"torch": LIBCUDART}, {"torch": "2.8.0+cu128"})
+    forbid_child(monkeypatch)
+    result = run_smoke()
+    assert result.status == "fail" and smoke_exit_code(result) == 1
+    assert result.reason is not None
+    assert "torch" in result.reason and "OSError" in result.reason and "libcudart" in result.reason
+    assert "torch_import_failed" in result.host.flags
+
+
+def test_broken_gpu4pyscf_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An installed gpu4pyscf that fails to import makes the smoke test fail, naming it."""
+    torch = ModuleType("torch")
+    torch.__version__ = "2.8.0+cu128"  # type: ignore[attr-defined]
+    torch.version = SimpleNamespace(cuda="12.8")  # type: ignore[attr-defined]
+    torch.cuda = SimpleNamespace(is_available=lambda: False)  # type: ignore[attr-defined]
+    fake_imports(
+        monkeypatch, {"torch": torch, "gpu4pyscf": LIBCUDART}, {"gpu4pyscf-cuda12x": "1.9.2"}
+    )
+    forbid_child(monkeypatch)
+    result = run_smoke()
+    assert result.status == "fail" and smoke_exit_code(result) == 1
+    assert result.reason is not None and "gpu4pyscf" in result.reason and "OSError" in result.reason
+
+
+def test_import_error_without_metadata_skips(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A torch ImportError with no distribution metadata is still "missing" → skipped."""
+    fake_imports(monkeypatch, {"torch": ImportError("No module named 'torch'")}, {})
+    forbid_child(monkeypatch)
+    result = run_smoke()
+    assert result.status == "skipped" and "torch_missing" in result.host.flags
 
 
 def test_skipped_without_cuda(monkeypatch: pytest.MonkeyPatch) -> None:
