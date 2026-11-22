@@ -63,8 +63,10 @@ beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
   PyTorch/CUDA, the GPU, GPU4PySCF and a 6.5 GiB VRAM budget, which never raises for a missing or
   broken package. The smoke test compares GPU4PySCF with CPU PySCF and a CUDA matmul with the CPU
   result, against fixed numeric tolerances. Without CUDA it reports `skipped`. In `v0.1.0` its
-  pass and failure logic is covered by unit tests on fake hosts; the GPU acceptance run has not
-  been recorded yet.
+  pass and failure logic is covered by unit tests on fake hosts; GPU acceptance passed on
+  2026-11-22 on an NVIDIA GeForce RTX 5060 Ti (compute capability 12.0), with GPU4PySCF and CPU
+  PySCF agreeing to |ΔE| ≈ 1e-12 Eh and the CUDA matmul matching the CPU result to ≈ 4e-13 (see
+  [GPU_SMOKE_RESULT.json](docs/prd/v0.1.0/GPU_SMOKE_RESULT.json)).
 - **Command line**: `eta-rxncat validate` and `eta-rxncat hardware-check [--smoke]`, with a fixed
   exit-code table and one-line errors.
 - **Optional extras** `gpu`, `mlip-mace` and `mlip-uma` (declared and locked; no engine uses them

@@ -10,7 +10,7 @@ intent: "Make the README's GPU-acceptance statement derived from and tested agai
 depends_on: [OPR.0.1.0.7, OPR.0.1.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [tests/unit/test_identity.py, README.md, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -93,11 +93,11 @@ Node `eta_rxncat_scaffold` already owns `README.md`, `docs/**` and `tests/unit/t
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: write `check_gpu_claim` and its synthetic tests (Mini-requirements 1–2), and see the
+- [x] Task 1: write `check_gpu_claim` and its synthetic tests (Mini-requirements 1–2), and see the
   failing cases fail.
-- [ ] Task 2: switch the real-repo test (Mini-requirement 3). It fails against the current README.
-- [ ] Task 3: update the README clause (Mini-requirement 4); the real-repo test now passes.
-- [ ] Task 4: register row; the four gates; `hypergraph_updater.py`.
+- [x] Task 2: switch the real-repo test (Mini-requirement 3). It fails against the current README.
+- [x] Task 3: update the README clause (Mini-requirement 4); the real-repo test now passes.
+- [x] Task 4: register row; the four gates; `hypergraph_updater.py`.
 
 ## 4. The Negative Space (Constraints)
 

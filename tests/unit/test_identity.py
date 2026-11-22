@@ -4,9 +4,12 @@ Pure filesystem: no git, no network. The pattern and the canonical string are as
 pieces, so this file never contains a literal author form and does not flag itself.
 """
 
+import json
 import re
+import tomllib
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -314,9 +317,117 @@ def test_readme_slice01_requirements_kept() -> None:
         assert f"**{version}**" in text.split("## 🧭 Roadmap", 1)[1]
 
 
-def test_readme_claims_no_gpu_pass_and_no_pip_licenses() -> None:
-    """The README claims no GPU pass and describes the current licence gate, not pip-licenses."""
+GPU_PASS_PHRASE = "GPU acceptance passed"
+GPU_NOT_RECORDED_PHRASE = "GPU acceptance run has not been recorded yet"
+
+
+def check_gpu_claim(readme_text: str, record: dict[str, Any] | None, version: str) -> list[str]:
+    """Return violations of the README's GPU-acceptance claim against the acceptance record (R54).
+
+    With a passing record (``smoke.status == "pass"``) the README must say the pass phrase, link
+    ``docs/prd/v<version>/GPU_SMOKE_RESULT.json`` and name the record's GPU verbatim, and must not
+    say the not-recorded phrase. Without one (no record, or not a pass) it must not say the pass
+    phrase. Phrases are matched after whitespace normalisation.
+    """
+    text = " ".join(readme_text.split())
+    passing = record is not None and record.get("smoke", {}).get("status") == "pass"
+    problems = []
+    if not passing:
+        if GPU_PASS_PHRASE in text:
+            state = "no record" if record is None else "a record that is not a pass"
+            problems.append(f"README says {GPU_PASS_PHRASE!r} but there is {state}")
+        return problems
+    assert record is not None
+    if GPU_PASS_PHRASE not in text:
+        problems.append(f"passing record, but the README lacks {GPU_PASS_PHRASE!r}")
+    if GPU_NOT_RECORDED_PHRASE in text:
+        problems.append(f"passing record, but the README still says {GPU_NOT_RECORDED_PHRASE!r}")
+    target = rf"(?:\./)?docs/prd/v{re.escape(version)}/GPU_SMOKE_RESULT\.json"
+    if not re.search(rf"\]\(\s*{target}\s*\)", text):
+        problems.append(
+            f"passing record, but no Markdown link to docs/prd/v{version}/GPU_SMOKE_RESULT.json"
+        )
+    gpu_name = str(record.get("hardware", {}).get("gpu", {}).get("name", ""))
+    if not gpu_name or gpu_name not in text:
+        problems.append(f"passing record, but the README does not name the GPU {gpu_name!r}")
+    return problems
+
+
+def test_readme_gpu_claim_matches_record_and_no_pip_licenses() -> None:
+    """The README GPU claim follows the acceptance record; the licence gate text is current."""
     text = readme()
+    version = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))["project"][
+        "version"
+    ]
+    record_path = REPO / "docs" / "prd" / f"v{version}" / "GPU_SMOKE_RESULT.json"
+    record = json.loads(record_path.read_text(encoding="utf-8")) if record_path.is_file() else None
+    assert check_gpu_claim(text, record, version) == []
     assert "pip-licenses" not in text
     assert "tools/licence_gate.py" in text
-    assert "GPU acceptance run has not been recorded yet" in " ".join(text.split())
+
+
+PASSING_RECORD: dict[str, Any] = {
+    "smoke": {"status": "pass"},
+    "hardware": {"gpu": {"name": "NVIDIA GeForce RTX 5060 Ti"}},
+}
+FAILING_RECORD: dict[str, Any] = {
+    "smoke": {"status": "fail"},
+    "hardware": {"gpu": {"name": "NVIDIA GeForce RTX 5060 Ti"}},
+}
+LINK = "[GPU_SMOKE_RESULT.json](docs/prd/v0.1.0/GPU_SMOKE_RESULT.json)"
+GOOD_CLAIM = (
+    f"{GPU_PASS_PHRASE} on an NVIDIA GeForce RTX 5060 Ti\n(compute capability 12.0); see {LINK}."
+)
+
+
+@pytest.mark.parametrize(
+    ("readme_text", "record"),
+    [
+        (GOOD_CLAIM, None),
+        (GOOD_CLAIM, FAILING_RECORD),
+        (f"the {GPU_NOT_RECORDED_PHRASE}.", PASSING_RECORD),
+        (f"{GPU_PASS_PHRASE} on an NVIDIA GeForce RTX 5060 Ti.", PASSING_RECORD),
+        (f"{GPU_PASS_PHRASE} on an NVIDIA GeForce RTX 4090; see {LINK}.", PASSING_RECORD),
+        (f"{GOOD_CLAIM} Also the {GPU_NOT_RECORDED_PHRASE}.", PASSING_RECORD),
+    ],
+    ids=[
+        "a-pass-without-record",
+        "b-pass-with-failing-record",
+        "c-not-recorded-with-passing-record",
+        "d-no-record-link",
+        "e-wrong-gpu-name",
+        "f-both-phrases",
+    ],
+)
+def test_gpu_claim_violations(readme_text: str, record: dict[str, Any] | None) -> None:
+    """Each wrong combination of README claim and record yields at least one violation."""
+    assert len(check_gpu_claim(readme_text, record, "0.1.0")) >= 1
+
+
+@pytest.mark.parametrize(
+    ("readme_text", "record"),
+    [
+        (GOOD_CLAIM, PASSING_RECORD),
+        (f"the {GPU_NOT_RECORDED_PHRASE}.", None),
+        ("the GPU acceptance run has not\n  been recorded yet.", FAILING_RECORD),
+    ],
+    ids=["g-correct-claim", "h-no-record-not-recorded", "i-failing-record-not-recorded"],
+)
+def test_gpu_claim_consistent(readme_text: str, record: dict[str, Any] | None) -> None:
+    """A claim that matches the record yields no violations (phrases match across line breaks)."""
+    assert check_gpu_claim(readme_text, record, "0.1.0") == []
+
+
+def test_gpu_claim_link_forms() -> None:
+    """The link may be docs/... or ./docs/...; a link for another version does not count."""
+    base = f"{GPU_PASS_PHRASE} on an NVIDIA GeForce RTX 5060 Ti; see [r]"
+    assert (
+        check_gpu_claim(
+            base + "(./docs/prd/v0.1.0/GPU_SMOKE_RESULT.json).", PASSING_RECORD, "0.1.0"
+        )
+        == []
+    )
+    assert (
+        check_gpu_claim(base + "(docs/prd/v0.2.0/GPU_SMOKE_RESULT.json).", PASSING_RECORD, "0.1.0")
+        != []
+    )
