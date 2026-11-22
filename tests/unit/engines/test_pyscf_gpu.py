@@ -24,12 +24,13 @@ from eta_rxncat.engines.pyscf_gpu_cpu.gpu import (
     CUBLAS_ALLOC_FAILED,
     CUDA_RUNTIME_ALLOC,
     CUSOLVER_ALLOC_FAILED,
-    GPU_KS_ANALYTIC_HESSIAN_OK,
+    GPU_ANALYTIC_KS_HESSIAN_CLASSES,
     GPU_KS_HESSIAN_GRID_RESPONSE,
     GPU_STABILITY_CPU_COPY_STEP,
     GPU_STABILITY_MIN_ROTATIONS,
     VRAM_OVERHEAD_BYTES,
     VRAM_SAFETY,
+    classes_from_record,
     estimate_bytes,
     is_gpu_oom,
     to_host,
@@ -371,14 +372,16 @@ def test_calibration_record_matches_code() -> None:
 
 
 def test_gpu_support_record_matches_code() -> None:
-    """GPU_KS_ANALYTIC_HESSIAN_OK equals the R41 record (every grid-response case <= 1e-4)."""
+    """The record's analytic classes equal the classes it supports and the code constant (R44)."""
     data = json.loads(GPU_SUPPORT.read_text(encoding="utf-8"))
     ks_on = [r for r in data["rows"] if r["xc"] != "hf" and r["grid_response"]]
     ks_off = [r for r in data["rows"] if r["xc"] != "hf" and not r["grid_response"]]
-    verdict = bool(ks_on) and all(r["max_abs_analytic_minus_fd"] <= 1e-4 for r in ks_on)
-    assert verdict is GPU_KS_ANALYTIC_HESSIAN_OK is True
+    recorded = frozenset(tuple(c) for c in data["routing"]["analytic_classes"])
+    assert recorded == classes_from_record(data["rows"]) == GPU_ANALYTIC_KS_HESSIAN_CLASSES
     assert GPU_KS_HESSIAN_GRID_RESPONSE is True
-    assert data["verdict"]["GPU_KS_ANALYTIC_HESSIAN_OK"] is True
+    assert data["verdict"]["GPU_KS_ANALYTIC_HESSIAN_OK"] is (
+        all(r["max_abs_analytic_minus_fd"] <= 1e-4 for r in ks_on)
+    )
     assert max(r["max_abs_analytic_minus_fd"] for r in ks_off) > 1e-2  # grid response off fails
     cases = {r["case"] for r in ks_on}
     assert {"water", "hcl", "hbr", "hi", "hydroxyl-uks", "water-pcm", "water-nodf"} <= cases

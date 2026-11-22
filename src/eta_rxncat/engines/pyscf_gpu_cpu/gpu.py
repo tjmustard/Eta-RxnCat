@@ -5,6 +5,7 @@ gpu4pyscf and CuPy lazily, and torch is never imported (R10).
 """
 
 import importlib
+import math
 from types import SimpleNamespace
 from typing import Any, Final
 
@@ -18,13 +19,59 @@ VRAM_SAFETY: Final = 5.13
 max(1.0, ceil(max((measured - VRAM_OVERHEAD_BYTES) / estimate_f1) * 1.25, 2 decimals)) (slice 07
 Mini-req 4, with the overhead term; a test checks both constants equal the record)."""
 
-GPU_KS_ANALYTIC_HESSIAN_OK: Final = True
-"""Whether GPU4PySCF 1.9.2's analytic KS Hessian may be used under ``hessian_mode="auto"``
-(R41): only if EVERY measured case in ``docs/prd/v0.2.0/evidence/pyscf-gpu-support.json`` is
-<= 1e-4 Eh/Bohr^2 against FD of GPU analytic gradients (a test checks it equals the record)."""
-
 GPU_KS_HESSIAN_GRID_RESPONSE: Final = True
-"""The Hessian ``grid_response`` setting the verdict above was measured with."""
+"""The Hessian ``grid_response`` setting every analytic class below was measured with (R41)."""
+
+HessianClass = tuple[str, str, bool, int]
+"""``(scf_type RKS|UKS, solvation none|C-PCM|IEF-PCM, ecp yes/no, grids_level)``."""
+
+GPU_ANALYTIC_KS_HESSIAN_CLASSES: Final[frozenset[HessianClass]] = frozenset(
+    {
+        ("RKS", "C-PCM", False, 3),
+        ("RKS", "IEF-PCM", False, 3),
+        ("RKS", "IEF-PCM", False, 9),
+        ("RKS", "IEF-PCM", True, 3),
+        ("RKS", "IEF-PCM", True, 9),
+        ("RKS", "none", False, 3),
+        ("RKS", "none", False, 9),
+        ("RKS", "none", True, 3),
+        ("RKS", "none", True, 9),
+        ("UKS", "IEF-PCM", True, 3),
+        ("UKS", "IEF-PCM", True, 9),
+        ("UKS", "none", False, 3),
+    }
+)
+"""R44: the KS classes whose rows in ``docs/prd/v0.2.0/evidence/pyscf-gpu-support.json`` are
+present and all <= 1e-4 Eh/Bohr^2 (grid response on). Generated from that record by the seat
+command ``make_gpu_support_v2.py``; ``tests/unit/engines/test_gpu_hessian_record.py`` checks the two
+agree. A GPU KS Hessian outside these classes is FD of GPU analytic gradients."""
+
+
+def gpu_ks_hessian_class(stage: Any, state: Any) -> HessianClass:
+    """The routing class of a GPU KS Hessian for a per-state resolved ``stage`` and ``state``."""
+    options = stage.options
+    solvation = "none" if stage.solvation.model == "none" else str(options["pcm_method"])
+    if stage.solvation.model not in ("none", "pcm"):
+        solvation = stage.solvation.model
+    scf_type = "UKS" if state.spin_multiplicity != 1 else "RKS"
+    return (scf_type, solvation, str(options["ecp"]).lower() != "none", int(options["grids_level"]))
+
+
+def classes_from_record(rows: list[dict[str, Any]], limit: float = 1e-4) -> frozenset[HessianClass]:
+    """Analytic-eligible classes of a GPU record: present, grid response on, all <= limit."""
+    groups: dict[HessianClass, list[float]] = {}
+    for row in rows:
+        if row.get("xc") == "hf" or not row.get("grid_response"):
+            continue
+        klass: HessianClass = (
+            str(row["scf_type"]),
+            str(row["solvation"]),
+            bool(row["ecp_present"]),
+            int(row["grid"]),
+        )
+        groups.setdefault(klass, []).append(float(row.get("max_abs_analytic_minus_fd", math.inf)))
+    return frozenset(k for k, errors in groups.items() if errors and max(errors) <= limit)
+
 
 GPU_STABILITY_MIN_ROTATIONS: Final = 3
 """GPU4PySCF 1.9.2's internal stability Davidson asserts ``nvar >= nroots`` with nroots 3; below

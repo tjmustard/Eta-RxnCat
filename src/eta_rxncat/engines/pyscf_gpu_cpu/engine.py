@@ -26,13 +26,14 @@ from eta_rxncat.engines.fd import fd_hessian
 from eta_rxncat.engines.identity import library_version
 from eta_rxncat.engines.options import OptionSpec, normalise_solvent
 from eta_rxncat.engines.pyscf_gpu_cpu.gpu import (
-    GPU_KS_ANALYTIC_HESSIAN_OK,
+    GPU_ANALYTIC_KS_HESSIAN_CLASSES,
     GPU_KS_HESSIAN_GRID_RESPONSE,
     GPU_STABILITY_CPU_COPY_STEP,
     GPU_STABILITY_MIN_ROTATIONS,
     estimate_bytes,
     free_pools,
     gpu_error_types,
+    gpu_ks_hessian_class,
     gpu_modules,
     is_gpu_oom,
     to_host,
@@ -577,16 +578,16 @@ class PySCFEngine(Engine):
             naux = int(df_addons.make_auxmol(mol, stage.options["auxbasis"]).nao)
         return estimate_bytes(int(mol.nao), naux)
 
-    def _hessian_method(self, stage: StageConfig) -> str:
-        """Slice 06's rule; on the GPU, an analytic KS Hessian only if R41's record allows it."""
+    def _hessian_method(self, stage: StageConfig, state: MolecularState) -> str:
+        """Slice 06's rule; on the GPU, a KS Hessian is analytic only for a recorded class (R44)."""
         method = hessian_method_for(stage)
         if (
             self._on_gpu
             and method == "finite_difference"
-            and GPU_KS_ANALYTIC_HESSIAN_OK
             and stage.options["hessian_mode"] == "auto"
             and stage.method != "hf"
             and stage.solvation.model != "ddcosmo"
+            and gpu_ks_hessian_class(stage, state) in GPU_ANALYTIC_KS_HESSIAN_CLASSES
         ):
             return "analytic"
         return method
@@ -605,7 +606,7 @@ class PySCFEngine(Engine):
         if forces or hessian:
             result.forces_hartree_per_bohr = [[-v for v in row] for row in self._gradient(mf)]
         if hessian:
-            method = self._hessian_method(stage)
+            method = self._hessian_method(stage, state)
             if method == "analytic":
                 matrix, asym = self._analytic_hessian(mf, len(state.symbols))
             else:
