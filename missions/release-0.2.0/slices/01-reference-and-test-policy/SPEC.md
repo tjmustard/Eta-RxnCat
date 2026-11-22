@@ -10,7 +10,7 @@ intent: "Unpack the v0.2.0 reference zip with its ruff gate file, seed the v0.2.
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["docs/prd/v0.2.0/**", docs/prd/PLAN_DISCREPANCIES.md, pyproject.toml, tests/conftest.py, tests/unit/test_test_policy.py, ".gitignore", AGENTS.md, spec/compiled/architecture.yml]
