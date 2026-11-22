@@ -2,7 +2,7 @@
 id: OPR.0.1.0.8
 slice: 08-repo-identity
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Give the repo the sibling-project public face (logo and banner README, 
 depends_on: [OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [README.md, CHANGELOG.md, LICENSE, pyproject.toml, uv.lock, "media/**", AGENTS.md, src/eta_rxncat/__init__.py, tests/unit/test_identity.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

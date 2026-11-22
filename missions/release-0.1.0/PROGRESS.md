@@ -20,6 +20,6 @@
 | OPR.0.1.0.5 | 05-cli | audited | OPR.0.1.0.2, OPR.0.1.0.4 | 2026-11-22T13:34:18+00:00 audited |
 | OPR.0.1.0.6 | 06-optional-extras | audited | OPR.0.1.0.4 | 2026-11-22T15:03:27+00:00 audited |
 | OPR.0.1.0.7 | 07-gpu-acceptance | compiled | OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8, OPR.0.1.0.9 | 2026-11-22T12:30:01+00:00 compiled |
-| OPR.0.1.0.8 | 08-repo-identity | executed | OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6 | 2026-11-22T15:09:38+00:00 executed |
+| OPR.0.1.0.8 | 08-repo-identity | audited | OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6 | 2026-11-22T15:14:24+00:00 audited |
 | OPR.0.1.0.9 | 09-store-first-open | compiled | OPR.0.1.0.3 | 2026-11-22T13:24:17+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->

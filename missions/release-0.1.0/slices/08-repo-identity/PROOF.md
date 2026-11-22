@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: identity guard flags wrapped and unwrapped non-canonical author forms (34 tests) and every README Usage command reproduces; oracle green in a fresh clone of 0f86593
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
