@@ -65,19 +65,45 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
    one row per starter item of the scaffold area (see Task 7).
 6. US-012: `docs/prd/PLAN_DISCREPANCIES.md` exists with the header and one row per `@@` hunk of the
    pinned command (14 today), PD-001 being the ~60-atom hunk.
+7. Replan R38: the HACF pre-commit hook must accept commits of the starter copy.
+   - The hook (`.agents/scripts/pre-commit`, HACF-managed, read-only) runs `ruff check -- <staged
+     .py>` and `ruff format --check -- <staged .py>` with explicit paths.
+   - For explicit paths, ruff applies the **nearest** config's exclude patterns, i.e. the starter's
+     own `pyproject.toml`, which has none. It enforces them only when the **root** config sets
+     `force-exclude = true`. Neither half works alone; resolve verified both halves together with
+     ruff 0.17.6.
+   - So the root `[tool.ruff]` sets `force-exclude = true`, and **one** gate file is added:
+     `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml`, containing exactly these two lines:
+     ```
+     # Not part of the v0.1.0 starter: keeps ruff (and the HACF pre-commit hook) off this verbatim reference copy.
+     exclude = ["*"]
+     ```
+     `.ruff.toml` outranks `pyproject.toml` in the same directory.
+   - The 23 starter files stay byte-identical to the zip. The tree is "23 verbatim + 1 declared
+     gate file".
+   - `docs/prd/v0.1.0/DISCREPANCIES.md` gains an `added` row for the gate file and an `added` row
+     for root `force-exclude`.
+8. Replan R39 (builder's D-037, now the spec): root ruff `extend-exclude = ["docs/prd", ".agents"]`.
+   `.agents/` holds HACF scripts that this project may not edit, and they fail our rules
+   (120 errors / 12 files).
 
 ## 3. Implementation Plan (Task List)
 
 - [x] Task 1 — Unpack: `unzip -q PRDs/Eta-RxnCat-v0.1.0.zip -d docs/prd/v0.1.0/` (gives
   `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/…`, 23 files). Check `git status --porcelain docs/prd | wc -l`
   after `git add -n docs/prd/v0.1.0` lists all 23 (the nested `.gitignore` must not hide any).
+- [ ] Task 1b — (replan R38) Add the gate file from Mini-requirement 7, and set `force-exclude =
+  true` in the root `[tool.ruff]`. Stage all 16 starter `.py` files with the other starter files
+  and commit through the normal hook. Never use `--no-verify`, and never edit the hook or a starter
+  file.
 - [x] Task 2 — `pyproject.toml` (hatchling or uv_build backend, src layout): name `eta-rxncat`,
   version `0.1.0`, `license = "MIT"`, `requires-python = ">=3.11,<3.14"`; runtime deps `numpy`,
   `scipy`, `pydantic>=2`, `pyyaml`, `rdkit`, `geometric`, `pyscf`; **no optional extras** (they
   arrive in a later slice); dev group `pytest`, `pytest-cov`, `ruff`, `mypy`, `types-PyYAML`,
   `pip-licenses`. Add `LICENSE` only if absent (one exists at the root: keep it, check it is MIT).
 - [x] Task 3 — Tool config in `pyproject.toml`:
-  - ruff: `line-length = 100`, `extend-exclude = ["docs/prd"]`; lint `select = ["E","F","W","I","D"]`,
+  - ruff: `line-length = 100`, `force-exclude = true`, `extend-exclude = ["docs/prd", ".agents"]`
+    (R38, R39); lint `select = ["E","F","W","I","D"]`,
     `ignore = ["D100","D104"]`; pydocstyle `convention = "google"`; isort
     `known-first-party = ["eta_rxncat"]`; format `quote-style = "double"`.
   - mypy: `strict = true`, `files = ["src"]`, `plugins = ["pydantic.mypy"]`; one
@@ -92,7 +118,9 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   `eta_rxncat.__version__ == "0.1.0"` and that importing `eta_rxncat` loads none of `torch`,
   `pyscf`, `rdkit` (subprocess + `sys.modules`).
 - [x] Task 5 — `.python-version` (`3.12`); `uv lock`; `uv sync`; run the four gates.
-- [ ] Task 6 — Licence gate: one command, written identically in `ci.yml` and in the `AGENTS.md`
+- [ ] Task 6 — (geomeTRIC licence: pending TJ, row `qitem-20261122123511-7102e97b507c86d4`; the
+  lead routes the answer through resolve. Do not drop, pin or exempt `geometric` before then.)
+  Licence gate: one command, written identically in `ci.yml` and in the `AGENTS.md`
   project section, that builds/uses a runtime-only environment (e.g. `uv sync --locked --no-dev`
   into `UV_PROJECT_ENVIRONMENT=.venv-runtime`, then `uv run --with pip-licenses pip-licenses
   --python .venv-runtime/bin/python …`, or an equivalent you verify) with the allow-list above.
@@ -153,6 +181,9 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 - **DO NOT** write into, move or delete anything in `PRDs/`.
 - **DO NOT** write to `tests/fixtures/` or `tests/candidate_outputs/`.
 - **DO NOT** let ruff, pytest or mypy read anything under `docs/prd/`.
+- **DO NOT** edit any of the 23 starter files, `.agents/scripts/pre-commit` or anything else under
+  `.agents/`; **DO NOT** commit with `--no-verify`; **DO NOT** add any file under the starter dir
+  except the one gate file.
 - **DO NOT** create `CONTRIBUTING.md`.
 - **DO NOT** push, tag or open a PR.
 
@@ -164,7 +195,12 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 - [ ] `uv run pytest` → exit 0, and `uv run pytest . --collect-only -q` collects nothing under `docs/`.
 - [ ] Licence gate → exit 0 on the runtime env; output lists no dev tools; scratch negative demo with `ase` → non-zero.
 - [ ] `ci.yml` contains `uv sync --locked` and the same five commands, character-for-character as in `AGENTS.md`.
-- [ ] `git ls-files docs/prd/v0.1.0 | wc -l` → `23`.
+- [ ] `git ls-files docs/prd/v0.1.0/Eta-RxnCat-v0.1.0 | wc -l` → `24` (23 starter files + `.ruff.toml`).
+  Each of the 23 is byte-identical to `unzip -p PRDs/Eta-RxnCat-v0.1.0.zip <path>`.
+- [ ] The commit adding the 16 starter `.py` files passed the unmodified HACF hook. Re-check:
+  `bash -c 'mapfile -t F < <(git ls-files "docs/prd/*.py"); .venv/bin/ruff check -- "${F[@]}" && .venv/bin/ruff format --check -- "${F[@]}"'` → exit 0.
+  The same command with a deliberately bad scratch `.py` added under `src/` → exit 1 (the
+  exclusion is scoped). Do not commit the scratch file.
 - [ ] `grep -c '10.1021/cs501828e' README.md` → ≥ 1.
 - [ ] `docs/prd/PLAN_DISCREPANCIES.md` row count = `@@` count of the pinned command over the distinct copies; header sha256 = `sha256sum PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 - [ ] `docs/prd/v0.1.0/DISCREPANCIES.md` has a row for every scaffold-area starter item listed in Task 7.

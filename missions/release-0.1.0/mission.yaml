@@ -30,4 +30,7 @@ composition:
     - ref: slices/07-gpu-acceptance/slice.yaml
       order: 70
       active: true
+    - ref: slices/08-repo-identity/slice.yaml
+      order: 80
+      active: true
 # Optional team and SDLC sections are added here.

@@ -144,7 +144,7 @@ Questions needed to reach 10:
 | US-008 | As TJ, I want thermochemistry to default to Grimme qRRHO and 1 M. | Defaults per §5 Contracts › ThermoConfig; non-positive values and `None` concentration raise (F23). | P0 | 02 |
 | US-009 | As a later-version developer, I want one canonical, versioned cache key per stage. | Per §5 Contracts › Cache key: coordinates equal after rounding to 5 decimals give the same key; `-0.0` and `0.0` give the same key; changing any keyed field gives a different key; a pinned golden key for a fixed input; `key_schema` is in the key (F5, F6). | P0 | 03 |
 | US-009a | As a later-version developer, I want the store never to lose a completed artifact. | Per §5 Contracts › Store: status state machine, completed rows immutable except via `invalidate`, conflict error on a different payload, schema version check, WAL with two concurrent connections (F7). | P0 | 03 |
-| US-010 | As TJ, I want the README to credit `nMap` and `Eta_Scripts` and state the licence philosophy. | README contains DOI `10.1021/cs501828e`, a licensing section and a `uv` quickstart that works on a fresh clone. | P1 | 01 |
+| US-010 | As TJ, I want the README to credit `nMap` and `Eta_Scripts` and state the licence philosophy. | README contains DOI `10.1021/cs501828e`, a licensing section and a `uv` quickstart that works on a fresh clone. | P1 | 01, 08 |
 | US-011 | As TJ, I want a durable list of every way the rewrite differs from the starter. | `docs/prd/v0.1.0/DISCREPANCIES.md` holds one row per starter inventory item (closed inventory, §5) with disposition `same`/`changed`/`dropped`, plus `added` rows; each slice completes the rows for its area (F15). | P0 | 01–05 |
 | US-012 | As TJ, I want a durable list of every place the Master Plan differs from each zip's plan copy. | `docs/prd/PLAN_DISCREPANCIES.md` has one row per `@@` hunk of the pinned `diff -U0` command (§5), headed by the sha256 of `PRDs/` plan and of each distinct zip copy; 14 rows today, each listing v0.1.0–v0.6.0 and v0.8.0; PD-001 is the ~60-atom hunk (F16). | P0 | 01 |
 
@@ -192,6 +192,22 @@ Vocabulary: **resolved** — the design changes so the risk is gone (the lead's 
 | R31 | Part B §7: missing risks (unresolvable extras, CUDA mixing, stale cache, living plan) | — | resolved | Added to §7. |
 | R32 | Part B §8: every metric a command + expected result | — | resolved | §8 rewritten as commands. |
 | R33 | Part C Q1, Q2 (TJ-only) | — | resolved | TJ: "Q1 A, Q2 A" (see R1, R2). |
+| R34 | Replan (TJ, row `qitem-20261122123807-a377da3572ef57f8`): README and CHANGELOG "like HACF, OIN-SMILES, and eta-skills" | — | resolved | New slice 08 `08-repo-identity`: sibling-pattern README (logo 200×200 header, banner hero, pitch, badges, TOC, eight sections) that keeps slice 01's US-010 content and claims only what v0.1.0 builds (Roadmap marked "Planned, not yet built"); Keep a Changelog 1.1.0 + SemVer `CHANGELOG.md` with `[Unreleased]` only. Per-release CHANGELOG upkeep (v0.1.0 … v1.0.0) belongs to the scribe (docs+commit step). Slice 01, mid-build, is not changed. |
+| R35 | Replan (TJ): author "Thomas J. L. Mustard Ph.D." "In the README, LICENSE, and everywhere else" | — | resolved | Slice 08: LICENSE line 3, `pyproject` authors (no email), README License section; no CITATION.cff in v0.1.0. Guard `tests/unit/test_identity.py` (filesystem only) scans project-owned files and rejects every other `Thomas/Tom/TJ/T. … Mustard` form; it excludes `PRDs/`, HACF-installed files, the HACF block of `AGENTS.md`, `docs/prd/**` (verbatim reference copies), `missions/`, `lore/`, `spec/`. Surname-first literature citations stay as published. |
+| R36 | Replan (TJ): logo "to use as the icon in the README"; banner "beside the icon. And if it is needed in the README" | — | resolved | `media/logo.png` (1024×1024 RGBA, transparent, sha256 `3b2a0b76…`) and `media/banner.webp` (2576×1438, sha256 `5ec0e886…`) copied byte for byte from `~/.hacf/eta-rxncat-hacf/incoming/media/`. Banner used as a full-width hero under the header; its own text is not copied, so the title and tagline carry "Eta-RxnCat". |
+| R37 | Replan: build order with slice 08 | — | resolved | Slice 08 depends on 01–06 (the README describes what they built); slice 07 now also depends on 08, so GPU acceptance stays last. Build order: 01, 02, 03, 04, 05, 06, 08, 07. |
+| R38 | Replan 2 (builder, slice 01 blocked): the HACF pre-commit hook runs `ruff check/format --check -- <staged .py>` with explicit paths; ruff then uses the starter's nested `pyproject.toml` (no excludes), so the 16 starter `.py` files cannot be committed | — | resolved | Verified by resolve (ruff 0.17.6, scratch copy). For explicit paths, ruff uses the **nearest** config's exclude patterns but enforces them only when the **root** config sets `force-exclude = true`; neither half alone works, which is why the builder's root-only attempt failed. Fix: root `force-exclude = true` plus one declared gate file `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml` (`exclude = ["*"]`), which outranks the starter `pyproject.toml`. All 23 starter files are committed verbatim, so TJ's instruction stands and no TJ question is needed. The proof becomes "23 verbatim + 1 gate file". A bad `src/` file is still caught. Hook and `.agents/` untouched; no `--no-verify`. |
+| R39 | Replan 2 (builder D-037): `ruff check .` / `format --check .` fail on HACF scripts under `.agents/` (120 errors / 12 files), which we may not edit | — | resolved | Root ruff `extend-exclude = ["docs/prd", ".agents"]`; slice 01 spec updated so the audit checks the new value. Extends R4. |
+| R40 | Replan 2 (TJ, 12:43Z via advisor): banner regenerated | — | resolved | Supersedes R36's banner facts: `media/banner.webp` is now 2576×1274, sha256 `ca80c101…`, and reads "Eta-RxnCat" with the full tagline and icon, so slice 08 drops the "don't copy banner text" caveat. The superseded `old-catalysis-engine-banner.*` is never committed. |
+
+### Seed deviations
+
+| Slice | Seed field | Was | Now | R-row |
+|---|---|---|---|---|
+| OPR.0.1.0.7 `07-gpu-acceptance` | `depends_on` | OPR.0.1.0.1–.6 | OPR.0.1.0.1–.6, OPR.0.1.0.8 | R37 |
+| OPR.0.1.0.8 `08-repo-identity` | (new slice) | — | depends on OPR.0.1.0.1–.6 | R34–R37 |
+| OPR.0.1.0.1 `01-scaffold` | ruff config, Task 1b, starter count proof, hook proof | `extend-exclude = ["docs/prd"]`; `ls-files docs/prd/v0.1.0` = 23 | `force-exclude = true`, `extend-exclude = ["docs/prd", ".agents"]`; gate `.ruff.toml`; `ls-files …/Eta-RxnCat-v0.1.0` = 24 (23 verbatim + gate) | R38, R39 |
+| OPR.0.1.0.8 `08-repo-identity` | banner sha/size, oracle | `5ec0e886…`, 2576×1438 | `ca80c101…`, 2576×1274 | R40 |
 
 ### Blast radius
 
@@ -210,6 +226,7 @@ Module`.
 | `eta_rxncat_cli` | 05 | `src/eta_rxncat/cli.py`, `src/eta_rxncat/__main__.py`, `tests/unit/cli/**` | `eta_rxncat_core`, `eta_rxncat_hw_probe` |
 
 Slice 07 changes only `docs/prd/v0.1.0/GPU_SMOKE_RESULT.json` (owned by the scaffold node).
+Slice 08 (scaffold node) adds `CHANGELOG.md`, `LICENSE`, `media/**` and `tests/unit/test_identity.py` to that node's `files:` via `hyper_ledger.py ensure-node --files` if absent.
 
 ### Execution checklist (the build loop's queue, in order)
 
@@ -223,7 +240,10 @@ Slice 07 changes only `docs/prd/v0.1.0/GPU_SMOKE_RESULT.json` (owned by the scaf
 7. `07-gpu-acceptance` — the team's GPU run and `GPU_SMOKE_RESULT.json`. *(compiled; depends on
    01–06)*
 
-The feature is done when slice 07 audits PASS.
+8. `08-repo-identity` — README/CHANGELOG/author name/media. *(compiled; replan R34–R37; depends on
+   01–06; built before 07)*
+
+Build order: 01, 02, 03, 04, 05, 06, 08, 07. The feature is done when slice 07 audits PASS.
 
 ### Dependency direction
 - `core` imports only `numpy`, `pydantic`, `pyyaml` and the stdlib.
@@ -480,6 +500,7 @@ Each on a fresh local clone (`git clone <repo> <tmp> && cd <tmp> && uv sync --lo
 | OPR.0.1.0.5 | slices/05-cli | Implement the eta-rxncat console script with hardware-check [--smoke] and validate, a fixed exit-code table and one-line stderr errors. |
 | OPR.0.1.0.6 | slices/06-optional-extras | Declare the gpu, mlip-mace and mlip-uma optional extras (MLIP extras conflicting) with torch from the PyTorch cu128 index, and a per-extra licence gate that exempts only NVIDIA CUDA wheels and the MLIP extras' transitive LGPL packages, per TJ's Q1 A / Q2 A. |
 | OPR.0.1.0.7 | slices/07-gpu-acceptance | Run the GPU smoke and gpu-marked tests once on a clean tree on this host's RTX 5060 Ti and commit docs/prd/v0.1.0/GPU_SMOKE_RESULT.json with the commit sha, as v0.1.0's acceptance gate. |
+| OPR.0.1.0.8 | slices/08-repo-identity | Give the repo the sibling-project public face (logo and banner README, Keep a Changelog CHANGELOG, media/) and the author form Thomas J. L. Mustard Ph.D. everywhere the project writes an author, with a filesystem test that blocks any other form; the README claims only what v0.1.0 builds. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
