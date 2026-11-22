@@ -18,8 +18,14 @@ StageKind = Literal[
 ]
 """The computational stages a node can run."""
 
-EngineTag = Literal["rdkit_ff", "mace", "uma_direct", "pyscf_gpu_cpu", "xtb_subprocess"]
-"""Frozen engine tags (module-boundary names of the Master Plan)."""
+EngineTag = Literal[
+    "rdkit_ff", "mace", "uma_direct", "pyscf_gpu_cpu", "xtb_subprocess", "esen_omol25"
+]
+"""Frozen engine tags, one per model family (module-boundary names of the Master Plan).
+
+``esen_omol25`` (v0.2.0, R31, ADR-0022 PROPOSED) is the OMol25 eSEN family, a model family of its
+own rather than a UMA variant.
+"""
 
 SolvationModel = Literal["none", "ddcosmo", "pcm", "alpb"]
 """Implicit-solvation models."""

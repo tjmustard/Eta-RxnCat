@@ -1,4 +1,4 @@
-"""Core data contracts and the ReactionGraph loader (v0.1.0)."""
+"""Core data contracts, the ReactionGraph loader and PotentialResult (v0.1.0, v0.2.0)."""
 
 from eta_rxncat.core.elements import ATOMIC_NUMBERS, ELEMENT_SYMBOLS
 from eta_rxncat.core.graph import (
@@ -22,17 +22,21 @@ from eta_rxncat.core.models import (
     StageKind,
     ThermoConfig,
 )
+from eta_rxncat.core.results import Device, HessianMethod, PotentialResult
 
 __all__ = [
     "ATOMIC_NUMBERS",
     "ELEMENT_SYMBOLS",
     "AtomMappingSpec",
     "Component",
+    "Device",
     "EngineIdentity",
     "EngineTag",
     "GraphValidationError",
+    "HessianMethod",
     "MolecularState",
     "NodeKind",
+    "PotentialResult",
     "PruningRule",
     "ReactionEdge",
     "ReactionGraph",
