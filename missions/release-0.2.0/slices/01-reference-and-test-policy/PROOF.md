@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone d9213d5: 4 gates 0, pytest 375 passed; 26/26 starter files cmp-identical; ACCEPTANCE=1 call skip → ret 1 failed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
