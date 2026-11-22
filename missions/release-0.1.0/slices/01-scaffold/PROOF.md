@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Fresh clone of 44ae16c: uv sync --locked, ruff, ruff format, mypy, pytest and the runtime licence gate all exit 0; ase / UNKNOWN dummy / geometric 1.0.2 each fail the gate
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -13,7 +13,7 @@
 <!-- BEGIN HACF GENERATED: slice-table -->
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
-| OPR.0.1.0.1 | 01-scaffold | executed |  | 2026-11-22T12:56:06+00:00 executed |
+| OPR.0.1.0.1 | 01-scaffold | audited |  | 2026-11-22T13:00:02+00:00 audited |
 | OPR.0.1.0.2 | 02-core-schemas | compiled | OPR.0.1.0.1 | 2026-11-22T08:09:33+00:00 compiled |
 | OPR.0.1.0.3 | 03-artifact-store | compiled | OPR.0.1.0.2 | 2026-11-22T08:09:33+00:00 compiled |
 | OPR.0.1.0.4 | 04-hw-probe | compiled | OPR.0.1.0.1 | 2026-11-22T08:09:33+00:00 compiled |

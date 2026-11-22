@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -22,12 +22,34 @@ nodes:
   - tests/unit/test_package.py
   - tests/conftest.py
   - spec/compiled/architecture.yml
-  description: ''
+  description: >-
+    uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, requires-python
+    >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,
+    pydantic>=2, pyyaml, rdkit, geometric, pyscf; no optional extras. src/eta_rxncat/__init__.py
+    exposes __version__ = "0.1.0" and imports no heavy backend; engines, conformers,
+    mapping, optimize and orchestrator are empty placeholder packages (filled v0.2.0-v0.8.0).
+    Gates in pyproject.toml: ruff (E,F,W,I,D; google docstrings; force-exclude with
+    extend-exclude docs/prd and .agents), strict mypy over src, pytest over tests
+    with gpu marker deselected. Runtime-only licence gate: [tool.pip-licenses] allow-only
+    MIT;BSD;Apache;ISC;PSF with one version-pinned exception geometric:1.1.1 (ADR-0011),
+    run against .venv-runtime with pip-licenses 5.5.5. CI (.github/workflows/ci.yml)
+    runs uv sync --locked, the four gates and the licence gate. docs/prd/v0.1.0/ holds
+    the verbatim v0.1.0 reference starter (23 files + .ruff.toml gate file) and DISCREPANCIES.md;
+    docs/prd/PLAN_DISCREPANCIES.md registers plan-copy differences. README and AGENTS.md
+    project rules sit outside the HACF managed blocks.
   inputs: []
-  outputs: []
+  outputs:
+  - data_type: python_package_eta_rxncat_version
+    external: eta_rxncat_importers
+  - data_type: ci_quality_and_licence_gates
+    external: github_actions
   edges:
     depends_on: []
     implements: []
     member_of: []
   provenance:
     last_slice: 01-scaffold
+  review:
+    reviewed_at: '2026-11-22T12:59:37+00:00'
+    reviewed_by: audit:01-scaffold
+    summary: patched description, outputs

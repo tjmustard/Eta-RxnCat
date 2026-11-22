@@ -2,7 +2,7 @@
 id: OPR.0.1.0.1
 slice: 01-scaffold
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Create the uv-managed MIT package skeleton with locked deps, strict ruf
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, ".python-version", ".github/**", README.md, AGENTS.md, ".gitignore", "docs/**", src/eta_rxncat/__init__.py, src/eta_rxncat/py.typed, "src/eta_rxncat/engines/**", "src/eta_rxncat/conformers/**", "src/eta_rxncat/mapping/**", "src/eta_rxncat/optimize/**", "src/eta_rxncat/orchestrator/**", tests/unit/test_package.py, tests/conftest.py, spec/compiled/architecture.yml]
