@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -14,7 +14,6 @@ nodes:
   - docs/**
   - src/eta_rxncat/__init__.py
   - src/eta_rxncat/py.typed
-  - src/eta_rxncat/engines/**
   - src/eta_rxncat/conformers/**
   - src/eta_rxncat/mapping/**
   - src/eta_rxncat/optimize/**
@@ -66,14 +65,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-potential-result
+    last_slice: 04-engines-base
   review:
     reviewed_at: '2026-11-22T17:20:28+00:00'
     reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -118,7 +117,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-potential-result
+    last_slice: 04-engines-base
   review:
     reviewed_at: '2026-11-22T17:20:28+00:00'
     reviewed_by: audit:OPR.0.2.0.3
@@ -127,7 +126,7 @@ nodes:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,7 +171,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-potential-result
+    last_slice: 04-engines-base
   review:
     reviewed_at: '2026-11-22T17:20:28+00:00'
     reviewed_by: audit:OPR.0.2.0.3
@@ -181,7 +180,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,14 +222,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-potential-result
+    last_slice: 04-engines-base
   review:
     reviewed_at: '2026-11-22T17:20:28+00:00'
     reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,8 +268,32 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-potential-result
+    last_slice: 04-engines-base
   review:
     reviewed_at: '2026-11-22T17:20:28+00:00'
     reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched
+- id: eta_rxncat_engines
+  dimension: Module
+  status: dirty
+  files:
+  - src/eta_rxncat/engines/**
+  - tests/unit/engines/**
+  - tests/acceptance/**
+  description: >-
+    Engine interfaces shared by every engine (v0.2.0): the Engine base class (from_stage,
+    resolved stage, identity, evaluate), typed errors, CODATA 2018 units, keyed options
+    and the resolved stage for the cache key, content-pinned model identity, and the
+    central-difference Hessian. Pure Python; engines import heavy libraries lazily.
+  inputs: []
+  outputs: []
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_hw_probe
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.2.0.4
+  provenance:
+    last_slice: 04-engines-base

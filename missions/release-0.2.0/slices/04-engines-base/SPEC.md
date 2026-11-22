@@ -10,7 +10,7 @@ intent: "Create the eta_rxncat.engines node: Engine protocol, typed errors, CODA
 depends_on: [OPR.0.2.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", tests/unit/test_package.py, tests/conftest.py, tests/unit/test_test_policy.py, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

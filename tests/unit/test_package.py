@@ -101,6 +101,41 @@ def requirement_name(requirement: str) -> str:
     return re.sub(r"[-_.]+", "-", match.group(1)).lower()
 
 
+ENGINE_HEAVY = ("ase", "torch", "mace", "fairchem", "gpu4pyscf", "cupy", "pyscf", "rdkit")
+
+
+def test_engines_import_loads_no_heavy_modules() -> None:
+    """Importing eta_rxncat.engines on the base install loads no engine library (lazy imports)."""
+    code = (
+        "import eta_rxncat, eta_rxncat.engines, sys; "
+        f"print(sorted(set({ENGINE_HEAVY!r}) & set(sys.modules)))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, text=True, check=True
+    )
+    assert result.stdout.strip() == "[]"
+
+
+def test_import_ban_scans_engines_directory() -> None:
+    """The AST import ban walks src/eta_rxncat/engines/ (every engine module is checked)."""
+    engines_dir = SRC / "engines"
+    scanned = set(SRC.rglob("*.py"))
+    modules = sorted(engines_dir.glob("*.py"))
+    assert {"__init__.py", "base.py", "errors.py", "fd.py", "identity.py", "options.py"} <= {
+        p.name for p in modules
+    }
+    assert set(modules) <= scanned
+    assert forbidden_imports(engines_dir) == []
+
+
+def test_import_ban_catches_engine_module(tmp_path: Path) -> None:
+    """A banned import inside an engines/ module (even function-local) is reported."""
+    engines_dir = tmp_path / "engines"
+    engines_dir.mkdir()
+    (engines_dir / "mace_engine.py").write_text("def load():\n    import ase\n", encoding="utf-8")
+    assert forbidden_imports(tmp_path) == [f"{engines_dir / 'mace_engine.py'}:2: ase"]
+
+
 def test_no_copyleft_imports_in_package() -> None:
     """No module under src/eta_rxncat imports a banned or copyleft-exempted package."""
     assert forbidden_imports(SRC) == []
