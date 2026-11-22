@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 15
+  ADR: 21
   STORY: 0
   CANON: 0
 nodes:
@@ -608,3 +608,247 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+- id: ADR-0016
+  type: decision
+  title: 'Cache key stage = engine''s resolved stage: keyed option tables, runtime
+    args unkeyed, engine_impl'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0016-cache-key-stage-engine-s-resolved-stage-keyed-option-tables.md
+  content_sha256: 5a83640ab5ab7bfe82fa900a9ffb7c0dbc174da912a53591fe372937e1445fbf
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/engines/options.py
+    - src/eta_rxncat/engines/base.py
+  relates_to:
+  - ADR-0001
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:55+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:55+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0017
+  type: decision
+  title: MLIP model identity is <name>@sha256:<hex> of the weights file; MACE-MP-0
+    medium pinned
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0017-mlip-model-identity-is-name-sha256-hex-of-the-weights-file-m.md
+  content_sha256: 12157eee510bfb20ea59d51401537761dc2fc5a789b8b4bcf90962cb9bfc3a0f
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/engines/identity.py
+    - src/eta_rxncat/engines/mace.py
+    - src/eta_rxncat/engines/uma_direct.py
+  relates_to:
+  - ADR-0001
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:55+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:55+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0018
+  type: decision
+  title: 'PySCF: one resolved stage for CPU and GPU; keyed DF/auxbasis/ECP/guess;
+    mandatory stability; ddCOSMO on CPU'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0018-pyscf-one-resolved-stage-for-cpu-and-gpu-keyed-df-auxbasis-e.md
+  content_sha256: 34da17ecad5bbba5513d96ddf438c0529733814c7958c359b67850f32428c665
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/engines/pyscf_gpu_cpu
+  relates_to:
+  - ADR-0008
+  - ADR-0016
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:55+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:55+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0019
+  type: decision
+  title: 'Engine test policy: markers, named acceptance envs, skip-to-fail switch,
+    offline unit tests'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0019-engine-test-policy-markers-named-acceptance-envs-skip-to-fai.md
+  content_sha256: 90d745dfce99b6f3a099cfaa5b9aed9cef3a7d7a2ae4debd45237040b22b54bb
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - tests/conftest.py
+    - pyproject.toml
+  relates_to:
+  - ADR-0010
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:55+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:55+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0020
+  type: decision
+  title: GPU/MLIP stack on torch 2.13+cu129 with fairchem>=2.22 for native uma-s-1p2p1
+    (TJ F1 A)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0020-gpu-mlip-stack-on-torch-2-13-cu129-with-fairchem-2-22-for-na.md
+  content_sha256: c99cb230b2c82606ee98295a3529a245a5a46446554fe6908b10d9db20c4acaa
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - pyproject.toml
+    - uv.lock
+  relates_to:
+  - ADR-0008
+  - ADR-0010
+  - ADR-0013
+  - ADR-0014
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:56+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:56+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
+- id: ADR-0021
+  type: decision
+  title: xtb 6.8.0 binary (LGPL-3.0 + bundled MKL/ifx) accepted as a user-downloaded
+    subprocess engine (TJ F12 A)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0021-xtb-6-8-0-binary-lgpl-3-0-bundled-mkl-ifx-accepted-as-a-user.md
+  content_sha256: 310ac80f256e0f998b4c808d8a7d56e43f462252ef187fc367e9c0bf9d52021f
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/engines/xtb_subprocess.py
+    - docs/licence-inventory.md
+  relates_to:
+  - ADR-0014
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T16:48:56+00:00'
+    source: OPR.0.2.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T16:48:56+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.2.0
