@@ -2,7 +2,7 @@
 id: OPR.0.2.0.3
 slice: 03-potential-result
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Add the strict, frozen PotentialResult core data contract (energy, forc
 depends_on: [OPR.0.2.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

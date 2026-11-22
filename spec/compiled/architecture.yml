@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -68,12 +68,12 @@ nodes:
   provenance:
     last_slice: 03-potential-result
   review:
-    reviewed_at: '2026-11-22T17:13:12+00:00'
-    reviewed_by: audit:OPR.0.2.0.2
-    summary: patched description
+    reviewed_at: '2026-11-22T17:20:28+00:00'
+    reviewed_by: audit:OPR.0.2.0.3
+    summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -81,27 +81,30 @@ nodes:
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
   description: >-
-    eta_rxncat.core (v0.1.0): strict, frozen Pydantic v2 contracts (extra=forbid)
-    and the ReactionGraph loader. elements.py: immutable Z 1-118 symbol tuple and
-    ATOMIC_NUMBERS map. models.py: MolecularState (canonical symbols, finite N x 3
-    Angstrom coordinates, required StrictInt charge and spin_multiplicity >= 1 with
-    electron-count parity check, unique active_atom_indices, scalar metadata); Solvation
-    (none/ddcosmo/pcm/alpb); StageConfig (stage kind, engine tag rdkit_ff/mace/uma_direct/pyscf_gpu_cpu/xtb_subprocess,
-    non-placeholder method, basis iff pyscf, solvation-engine pairing, frozen atoms
-    required for constrained_preopt, finite options); EngineIdentity; AtomMappingSpec
-    (ordered keep/delete/alignment/anchors with disjointness, subset and >= 3 alignment
-    checks, check_atom_count for the template index space); ThermoConfig (grimme_qrrho
-    defaults, finite > 0). graph.py: Component, TemplateGeometry (concatenated component
-    index space, mapping checked against it), ReactionNode (id pattern, unique template
-    ids and ranks, equal total charge and element multiset across templates), ReactionEdge,
-    PruningRule, ReactionGraph (schema_version 1; unique node and rule ids, known
-    endpoints, no self-loops or duplicate edges, defined rule refs; cycles allowed;
-    priority_order by (priority, id)). io.py: load_reaction_graph for .yaml/.yml (SafeLoader
-    subclass rejecting duplicate keys with line) and .json (duplicate-key object_pairs_hook),
-    wrapping read, UTF-8, syntax, nesting-depth, duplicate-key and validation failures
-    in GraphValidationError (a ValueError) prefixed by the path; dump_reaction_graph_json.
-    Imports only stdlib, pydantic and yaml; no hashing, engines, mapping, connectivity
-    or pruning evaluation. Tests in tests/unit/core; example SN2 graph in tests/data/reaction_graphs/example_reaction_graph.yaml.
+    eta_rxncat.core (v0.1.0, v0.2.0): strict, frozen Pydantic v2 contracts (extra=forbid)
+    and the ReactionGraph loader. elements.py: Z 1-118 symbols and ATOMIC_NUMBERS.
+    models.py: MolecularState (canonical symbols, finite N x 3 Angstrom coordinates,
+    StrictInt charge and spin_multiplicity >= 1 with electron parity check, unique
+    active_atom_indices, scalar metadata); Solvation (none/ddcosmo/pcm/alpb); StageConfig
+    (kind, engine tag rdkit_ff/mace/uma_direct/pyscf_gpu_cpu/xtb_subprocess/esen_omol25
+    (one per model family), non-placeholder method, basis iff pyscf, solvation-engine
+    pairing, frozen atoms required for constrained_preopt); EngineIdentity; AtomMappingSpec
+    (ordered keep/delete/alignment/anchors, disjoint, >= 3 alignment, check_atom_count);
+    ThermoConfig (grimme_qrrho defaults). results.py (v0.2.0): PotentialResult, the
+    engine return contract in atomic units: finite energy_hartree, forces -dE/dx N
+    x 3 Eh/Bohr (>= 1 row), Cartesian Hessian 3N x 3N Eh/Bohr^2 (not mass-weighted
+    or projected, validated exactly symmetric, never symmetrised by the model; side
+    = 3 x force rows), hessian_method and hessian_max_asymmetry set iff the Hessian
+    is, engine EngineIdentity, StrictInt stage_engine_impl >= 1, device cpu/cuda,
+    device_reason, wall_time_s >= 0, recovery_steps. graph.py: Component, TemplateGeometry
+    (concatenated component index space), ReactionNode (unique template ids and ranks,
+    equal charge and element multiset across templates), ReactionEdge, PruningRule,
+    ReactionGraph (schema_version 1; unique ids, known endpoints, no self-loops or
+    duplicate edges, defined rule refs; cycles allowed; priority_order by (priority,
+    id)). io.py: load_reaction_graph for .yaml/.yml and .json, rejecting duplicate
+    keys, wrapping every load failure in GraphValidationError (a ValueError) prefixed
+    by the path; dump_reaction_graph_json. Imports only stdlib, pydantic and yaml;
+    no numpy, engines or hashing. Tests in tests/unit/core; example graph in tests/data/reaction_graphs/.
   inputs:
   - data_type: reaction_graph_file_yaml_or_json
     external: graph_files
@@ -117,14 +120,14 @@ nodes:
   provenance:
     last_slice: 03-potential-result
   review:
-    reviewed_at: '2026-11-22T17:13:12+00:00'
-    reviewed_by: audit:OPR.0.2.0.2
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T17:20:28+00:00'
+    reviewed_by: audit:OPR.0.2.0.3
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -171,14 +174,14 @@ nodes:
   provenance:
     last_slice: 03-potential-result
   review:
-    reviewed_at: '2026-11-22T17:13:12+00:00'
-    reviewed_by: audit:OPR.0.2.0.2
+    reviewed_at: '2026-11-22T17:20:28+00:00'
+    reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -222,12 +225,12 @@ nodes:
   provenance:
     last_slice: 03-potential-result
   review:
-    reviewed_at: '2026-11-22T17:13:12+00:00'
-    reviewed_by: audit:OPR.0.2.0.2
+    reviewed_at: '2026-11-22T17:20:28+00:00'
+    reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -268,6 +271,6 @@ nodes:
   provenance:
     last_slice: 03-potential-result
   review:
-    reviewed_at: '2026-11-22T17:13:12+00:00'
-    reviewed_by: audit:OPR.0.2.0.2
+    reviewed_at: '2026-11-22T17:20:28+00:00'
+    reviewed_by: audit:OPR.0.2.0.3
     summary: reviewed; nothing patched

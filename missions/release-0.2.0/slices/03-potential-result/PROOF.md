@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone c956676: oracle all 0, pytest 423 passed, 40 PotentialResult tests; golden stage key unchanged; core imports no numpy/torch
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
