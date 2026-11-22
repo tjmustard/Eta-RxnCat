@@ -319,9 +319,9 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-274 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:31` `StageCacheKey.build(state, stage)` | `src/eta_rxncat/store/keys.py:104` `build_stage_key(state, stage, engine)` | changed | Module function; requires an EngineIdentity whose name matches the stage engine (R5) | open |
 | D-275 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:42` `ArtifactStore` | `src/eta_rxncat/store/artifact_store.py:72` | changed | Immutable completed rows, WAL, versioned schema (R7) | open |
 | D-276 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:45` `ArtifactStore(db_path=".eta_cache/artifacts.sqlite")` + `mkdir(parents=True)` | `src/eta_rxncat/store/artifact_store.py:80` `ArtifactStore(path, *, open_timeout_s=5.0)` | changed | Required path, no default, no mkdir; missing parent → FileNotFoundError (R7) | open |
-| D-277 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:46` attribute `db_path` | `src/eta_rxncat/store/artifact_store.py:102` `path` | changed | Renamed | open |
-| D-278 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:73` `get(key)` | `src/eta_rxncat/store/artifact_store.py:244` | same | Returns the payload only when completed, as before | open |
-| D-279 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:85` `put(key, stage, payload, status="completed")` with `INSERT OR REPLACE` | `src/eta_rxncat/store/artifact_store.py:181` `put(key, status, payload)` | changed | No overwrite of completed rows (ArtifactConflictError; same payload = no-op); `BEGIN IMMEDIATE`; canonical JSON with `allow_nan=False`; stage taken from the key (R7) | open |
+| D-277 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:46` attribute `db_path` | `src/eta_rxncat/store/artifact_store.py:105` `path` | changed | Renamed | open |
+| D-278 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:73` `get(key)` | `src/eta_rxncat/store/artifact_store.py:245` | same | Returns the payload only when completed, as before | open |
+| D-279 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:85` `put(key, stage, payload, status="completed")` with `INSERT OR REPLACE` | `src/eta_rxncat/store/artifact_store.py:182` `put(key, status, payload)` | changed | No overwrite of completed rows (ArtifactConflictError; same payload = no-op); `BEGIN IMMEDIATE`; canonical JSON with `allow_nan=False`; stage taken from the key (R7) | open |
 | D-280 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:57` SQL table `stage_artifacts` | `src/eta_rxncat/store/artifact_store.py:26` | changed | Created once on a new file under `user_version` 1, not `IF NOT EXISTS` on every open | open |
 | D-281 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:58` column `composite_key` | `src/eta_rxncat/store/artifact_store.py:27` | changed | Renamed `key` | open |
 | D-282 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:59` column `input_geometry_hash` | `src/eta_rxncat/store/artifact_store.py:29` | changed | Renamed `geometry_hash` | open |
@@ -349,12 +349,12 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-304 | store | — | `src/eta_rxncat/store/artifact_store.py:46` `ArtifactStatus` (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) | added | Mission R7 status enum (starter used a free string) | open |
 | D-305 | store | — | `src/eta_rxncat/store/artifact_store.py:55` `ArtifactConflictError` | added | Refused write to a completed row (R7) | open |
 | D-306 | store | — | `src/eta_rxncat/store/artifact_store.py:59` `StoreSchemaError` | added | Unknown `user_version` (R7) | open |
-| D-307 | store | — | `src/eta_rxncat/store/artifact_store.py:256` `ArtifactStore.status()` | added | Status lookup | open |
-| D-308 | store | — | `src/eta_rxncat/store/artifact_store.py:264` `ArtifactStore.invalidate()` | added | The only way to replace a completed artifact (R7) | open |
-| D-309 | store | — | `src/eta_rxncat/store/artifact_store.py:282` `ArtifactStore.query()` | added | Sorted keys filtered by stage kind and engine | open |
-| D-310 | store | — | `src/eta_rxncat/store/artifact_store.py:296` `ArtifactStore.close()`, `__enter__`, `__exit__` | added | Explicit close and context manager | open |
-| D-311 | store | — | `src/eta_rxncat/store/artifact_store.py:110` pragmas `journal_mode=WAL`, `busy_timeout=5000` | added | Mission R7: concurrent readers/writers | open |
-| D-312 | store | — | `src/eta_rxncat/store/artifact_store.py:169` pragma `user_version=1` | added | Mission R7: schema version; other non-zero values refused | open |
+| D-307 | store | — | `src/eta_rxncat/store/artifact_store.py:257` `ArtifactStore.status()` | added | Status lookup | open |
+| D-308 | store | — | `src/eta_rxncat/store/artifact_store.py:265` `ArtifactStore.invalidate()` | added | The only way to replace a completed artifact (R7) | open |
+| D-309 | store | — | `src/eta_rxncat/store/artifact_store.py:283` `ArtifactStore.query()` | added | Sorted keys filtered by stage kind and engine | open |
+| D-310 | store | — | `src/eta_rxncat/store/artifact_store.py:297` `ArtifactStore.close()`, `__enter__`, `__exit__` | added | Explicit close and context manager | open |
+| D-311 | store | — | `src/eta_rxncat/store/artifact_store.py:124` pragmas `journal_mode=WAL`, `busy_timeout=5000` | added | Mission R7: concurrent readers/writers | open |
+| D-312 | store | — | `src/eta_rxncat/store/artifact_store.py:170` pragma `user_version=1` | added | Mission R7: schema version; other non-zero values refused | open |
 | D-313 | store | — | `src/eta_rxncat/store/artifact_store.py:28` column `key_schema` | added | Mission R5 | open |
 | D-314 | store | — | `src/eta_rxncat/store/artifact_store.py:33` column `engine_version` | added | Mission R5 | open |
 | D-315 | store | — | `src/eta_rxncat/store/artifact_store.py:36` column `payload_sha256` | added | Idempotent completed re-put (R7) | open |
@@ -362,8 +362,8 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-317 | store | — | `src/eta_rxncat/store/artifact_store.py:42` index `idx_stage_artifacts_kind_engine` | added | Supports `query(stage_kind, engine)` | open |
 | D-318 | store | — | `tests/unit/store/test_store_keys.py` | added | Key proof bullets (golden key, grid, per-field sensitivity, metadata, int/float/bool) | open |
 | D-319 | store | — | `tests/unit/store/test_store_artifacts.py` | added | Store proof bullets (path, pragmas, schema, write rules, invalidate, query, threads, NaN) | open |
-| D-403 | store | — | `src/eta_rxncat/store/artifact_store.py:63` `StoreBusyError` | added | Slice 09 (R42, ADR-0012 PROPOSED): the WAL switch stayed locked past `open_timeout_s`; chains the last `OperationalError` | open |
-| D-404 | store | — | `src/eta_rxncat/store/artifact_store.py:80` `ArtifactStore(path, *, open_timeout_s=5.0)` | added | Slice 09: deadline for the bounded WAL-switch retry (backoff 0.005 s doubling to 0.1 s); must be > 0; the version is checked before any write | open |
+| D-403 | store | — | `src/eta_rxncat/store/artifact_store.py:63` `StoreBusyError` | added | Slice 09 (R42, R52): any BUSY/LOCKED during open past `open_timeout_s` (version read, WAL switch or schema transaction; RESERVED, IMMEDIATE or EXCLUSIVE holder); chains the last `OperationalError`; a raw 'database is locked' never escapes `__init__` | open |
+| D-404 | store | — | `src/eta_rxncat/store/artifact_store.py:80` `ArtifactStore(path, *, open_timeout_s=5.0)` | added | Slice 09 (R42, R52; ADR-0015 PROPOSED): one deadline for the whole open. The version read, WAL switch and BEGIN IMMEDIATE each wait at most the remaining time (busy_timeout set per attempt, BUSY/LOCKED retried 5 ms doubling to 100 ms); must be > 0; the version is checked before any write; busy_timeout 5000 after open | open |
 
 ## Hardware probe
 

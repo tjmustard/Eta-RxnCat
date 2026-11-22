@@ -3,11 +3,14 @@
 import hashlib
 import sqlite3
 import threading
+import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
 
-from eta_rxncat.store import ArtifactStore, StoreSchemaError
+from eta_rxncat.store import ArtifactStore, StoreBusyError, StoreSchemaError
 
 
 def open_and_close(path: Path, barrier: threading.Barrier, errors: list[BaseException]) -> None:
@@ -101,3 +104,93 @@ def test_non_busy_operational_error_propagates(tmp_path: Path) -> None:
     with pytest.raises(sqlite3.DatabaseError):
         ArtifactStore(path, open_timeout_s=0.2)
     assert sha256(path) == before
+
+
+@contextmanager
+def holder(path: Path, begin: str) -> Iterator[sqlite3.Connection]:
+    """Hold a raw rollback-journal connection inside ``begin`` (BEGIN EXCLUSIVE / IMMEDIATE)."""
+    conn = sqlite3.connect(path, isolation_level=None)
+    conn.execute(begin)
+    try:
+        yield conn
+    finally:
+        if conn.in_transaction:
+            conn.execute("COMMIT")
+        conn.close()
+
+
+HOLDERS = ["BEGIN EXCLUSIVE", "BEGIN IMMEDIATE"]
+
+
+@pytest.mark.parametrize("begin", HOLDERS)
+def test_open_waits_for_released_lock(tmp_path: Path, begin: str) -> None:
+    """A holder releasing after 0.3 s: the store opens without error, after >= 0.3 s, in WAL."""
+    path = tmp_path / "a.sqlite"
+    outcome: dict[str, object] = {}
+    with holder(path, begin) as conn:
+
+        def opener() -> None:
+            try:
+                ArtifactStore(path, open_timeout_s=5.0).close()
+            except BaseException as exc:  # asserted below
+                outcome["error"] = exc
+            outcome["seconds"] = time.monotonic() - start
+
+        thread = threading.Thread(target=opener)
+        start = time.monotonic()  # before the opener can run, so the 0.3 s bound is strict
+        thread.start()
+        time.sleep(0.3)
+        conn.execute("COMMIT")
+    thread.join()
+    assert "error" not in outcome, outcome
+    assert isinstance(outcome["seconds"], float) and outcome["seconds"] >= 0.3
+    raw = sqlite3.connect(path)
+    assert raw.execute("PRAGMA user_version").fetchone()[0] == 1
+    assert raw.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    raw.close()
+
+
+@pytest.mark.parametrize("begin", HOLDERS)
+def test_open_deadline_raises_store_busy_error(tmp_path: Path, begin: str) -> None:
+    """A holder keeping the lock: StoreBusyError (never a raw OperationalError) in [0.3, 1.0] s."""
+    path = tmp_path / "a.sqlite"
+    with holder(path, begin):
+        start = time.monotonic()
+        try:
+            ArtifactStore(path, open_timeout_s=0.3)
+        except StoreBusyError as exc:
+            elapsed = time.monotonic() - start
+            error: BaseException = exc
+        else:
+            pytest.fail("ArtifactStore opened while the file was locked")
+    assert 0.3 <= elapsed <= 1.0, elapsed
+    assert type(error) is StoreBusyError
+    assert isinstance(error.__cause__, sqlite3.OperationalError)
+    assert str(path) in str(error)
+
+
+def test_busy_timeout_restored_after_open(tmp_path: Path) -> None:
+    """After a successful open the store's connection has busy_timeout 5000 ms."""
+    with ArtifactStore(tmp_path / "a.sqlite", open_timeout_s=0.5) as store:
+        assert store._conn.execute("PRAGMA busy_timeout").fetchone()[0] == 5000
+
+
+def test_foreign_file_under_exclusive_holder(tmp_path: Path) -> None:
+    """A locked foreign file gives StoreBusyError and is unchanged once the holder releases."""
+    path = tmp_path / "foreign.sqlite"
+    conn = sqlite3.connect(path)
+    conn.execute("CREATE TABLE t (x INTEGER)")
+    conn.commit()
+    conn.execute("PRAGMA user_version=7")
+    conn.close()
+    before = sha256(path)
+    siblings = {p.name for p in tmp_path.iterdir()}
+    with holder(path, "BEGIN EXCLUSIVE"):
+        with pytest.raises(StoreBusyError):
+            ArtifactStore(path, open_timeout_s=0.3)
+    assert sha256(path) == before
+    assert {p.name for p in tmp_path.iterdir()} == siblings
+    raw = sqlite3.connect(path)
+    assert raw.execute("PRAGMA journal_mode").fetchone()[0] == "delete"
+    assert raw.execute("PRAGMA user_version").fetchone()[0] == 7
+    raw.close()

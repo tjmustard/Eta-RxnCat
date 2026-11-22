@@ -10,7 +10,7 @@ intent: "Make ArtifactStore safe to open concurrently on a new file (version che
 depends_on: [OPR.0.1.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: blocked
+hacf_status: executed
 node_id: eta_rxncat_store
 parent: null
 hacf_touches: ["src/eta_rxncat/store/**", tests/unit/store/test_first_open.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -112,10 +112,10 @@ deterministic test carries the proof of the mechanism.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — Reorder `__init__` (Mini-requirement 1), with the private busy-step helper
+- [x] Task 1 — Reorder `__init__` (Mini-requirement 1), with the private busy-step helper
   (Mini-requirement 2) used for the version read, the WAL switch and `BEGIN IMMEDIATE`.
 - [x] Task 2 — Add `StoreBusyError` and `open_timeout_s`, export them, and update docstrings.
-- [ ] Task 3 — Tests in `tests/unit/store/test_first_open.py` (one per Proof contract bullet),
+- [x] Task 3 — Tests in `tests/unit/store/test_first_open.py` (one per Proof contract bullet),
   using `tmp_path` and threads. Keep slice 03's tests unchanged and passing.
 - [x] Task 4 — Run the audit probe (unchanged) and paste its output in your handoff.
 - [x] Task 5 — Register rows; four gates exit 0.

@@ -166,6 +166,8 @@ nodes:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8
     summary: reviewed; nothing patched
+  spec_refs:
+  - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
   status: dirty

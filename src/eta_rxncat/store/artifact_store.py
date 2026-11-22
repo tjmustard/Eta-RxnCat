@@ -17,8 +17,8 @@ from eta_rxncat.store.keys import StageKey, canon
 SCHEMA_VERSION = 1
 """``PRAGMA user_version`` of a store file this code can read and write."""
 
-_WAL_RETRY_FIRST_S = 0.005
-_WAL_RETRY_MAX_S = 0.1
+_OPEN_RETRY_FIRST_S = 0.005
+_OPEN_RETRY_MAX_S = 0.1
 _RETRYABLE = frozenset({sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED})
 
 _SCHEMA = (
@@ -61,7 +61,7 @@ class StoreSchemaError(Exception):
 
 
 class StoreBusyError(Exception):
-    """The store file stayed locked past ``open_timeout_s`` while switching it to WAL."""
+    """Another connection kept the store file locked past ``open_timeout_s`` during open."""
 
 
 def _now() -> str:
@@ -78,79 +78,82 @@ class ArtifactStore:
     """
 
     def __init__(self, path: Path, *, open_timeout_s: float = 5.0) -> None:
-        """Open or create the store file at ``path``.
+        """Open or create the store file at ``path``, within one ``open_timeout_s`` deadline.
 
-        The file's ``user_version`` is checked before anything is written, so an unsupported
-        file is rejected untouched. The switch to WAL is retried with backoff while another
-        connection holds a lock (SQLite does not apply ``busy_timeout`` to it), for at most
-        ``open_timeout_s`` seconds.
+        The version read, the switch to WAL and the schema transaction each wait for other
+        connections' locks only until the shared deadline (R52): any busy or locked condition
+        during open surfaces as ``StoreBusyError``, never as a raw ``OperationalError``. The
+        file's ``user_version`` is checked before anything is written, so an unsupported file
+        is rejected untouched. After a successful open, ``busy_timeout`` is 5000 ms.
 
         Args:
             path: The SQLite file. Its parent directory must exist; nothing else is created.
-            open_timeout_s: Deadline in seconds for the WAL switch; must be > 0.
+            open_timeout_s: Deadline in seconds for the whole open; must be > 0.
 
         Raises:
             ValueError: If ``open_timeout_s`` is not > 0 (nothing is created).
             FileNotFoundError: If ``path.parent`` is not an existing directory.
             StoreSchemaError: If the file's ``user_version`` is neither 0 (new) nor 1, or the
                 file cannot be put in WAL mode.
-            StoreBusyError: If the file stays locked past ``open_timeout_s`` during the WAL
-                switch.
+            StoreBusyError: If another connection keeps the file locked past
+                ``open_timeout_s``; chains the last ``OperationalError``.
         """
         if not open_timeout_s > 0:
             raise ValueError(f"open_timeout_s must be > 0, got {open_timeout_s!r}")
+        self._open_start = time.monotonic()
+        self._deadline = self._open_start + open_timeout_s
         self.path = Path(path)
         if not self.path.parent.is_dir():
             raise FileNotFoundError(f"store directory does not exist: {self.path.parent}")
         self._lock = threading.Lock()
         self._conn = sqlite3.connect(
-            self.path, timeout=5.0, isolation_level=None, check_same_thread=False
+            self.path, timeout=open_timeout_s, isolation_level=None, check_same_thread=False
         )
         try:
-            self._conn.execute("PRAGMA busy_timeout=5000")
-            self._check_version_supported()  # before any statement that writes
-            self._enable_wal(open_timeout_s)
+            version = self._busy_step("PRAGMA user_version").fetchone()[0]
+            if version not in (0, SCHEMA_VERSION):  # before any statement that writes
+                raise StoreSchemaError(
+                    f"{self.path}: store schema version {version} is not supported "
+                    f"(expected {SCHEMA_VERSION})"
+                )
+            row = self._busy_step("PRAGMA journal_mode=WAL").fetchone()
+            mode = str(row[0]).lower() if row else ""
+            if mode != "wal":
+                raise StoreSchemaError(f"{self.path}: journal mode is {mode!r}, not 'wal'")
             self._init_schema()
+            self._conn.execute("PRAGMA busy_timeout=5000")
         except BaseException:
             self._conn.close()
             raise
 
-    def _check_version_supported(self) -> None:
-        """Raise ``StoreSchemaError`` unless ``user_version`` is 0 (new) or 1 (this schema)."""
-        version = self._user_version()
-        if version not in (0, SCHEMA_VERSION):
-            raise StoreSchemaError(
-                f"{self.path}: store schema version {version} is not supported "
-                f"(expected {SCHEMA_VERSION})"
-            )
+    def _busy_step(self, sql: str) -> sqlite3.Cursor:
+        """Run one open statement, waiting for other connections' locks until the deadline.
 
-    def _enable_wal(self, open_timeout_s: float) -> None:
-        """Switch to WAL, retrying BUSY/LOCKED with backoff until ``open_timeout_s`` elapses.
+        This is the only place an ``OperationalError`` is caught, and it is used only during
+        ``__init__``. Before each attempt ``busy_timeout`` is set to the time remaining, so a
+        statement that blocks inside SQLite cannot pass the deadline; BUSY/LOCKED is retried
+        with backoff (5 ms doubling to 100 ms).
 
         Raises:
             StoreBusyError: When the deadline passes; chains the last ``OperationalError``.
-            StoreSchemaError: If SQLite reports a journal mode other than ``wal``.
         """
-        start = time.monotonic()
-        delay = _WAL_RETRY_FIRST_S
+        delay = _OPEN_RETRY_FIRST_S
         while True:
+            remaining = self._deadline - time.monotonic()
+            self._conn.execute(f"PRAGMA busy_timeout={max(1, int(remaining * 1000))}")
             try:
-                row = self._conn.execute("PRAGMA journal_mode=WAL").fetchone()
-                break
+                return self._conn.execute(sql)
             except sqlite3.OperationalError as exc:
                 if exc.sqlite_errorcode not in _RETRYABLE:
                     raise
-                elapsed = time.monotonic() - start
-                if elapsed >= open_timeout_s:
+                remaining = self._deadline - time.monotonic()
+                if remaining <= 0:
+                    elapsed = time.monotonic() - self._open_start
                     raise StoreBusyError(
-                        f"{self.path}: still locked after {elapsed:.2f} s switching to WAL "
-                        f"(open_timeout_s={open_timeout_s:g})"
+                        f"{self.path}: still locked after {elapsed:.2f} s while opening ({sql!r})"
                     ) from exc
-                time.sleep(min(delay, open_timeout_s - elapsed))
-                delay = min(delay * 2, _WAL_RETRY_MAX_S)
-        mode = str(row[0]).lower() if row else ""
-        if mode != "wal":
-            raise StoreSchemaError(f"{self.path}: journal mode is {mode!r}, not 'wal'")
+                time.sleep(min(delay, remaining))
+                delay = min(delay * 2, _OPEN_RETRY_MAX_S)
 
     def _user_version(self) -> int:
         """Return the file's ``PRAGMA user_version``."""
@@ -158,20 +161,18 @@ class ArtifactStore:
         return version
 
     def _init_schema(self) -> None:
-        """Create the schema on a new file, or check the version of an existing one."""
+        """Create the schema on a new file under ``BEGIN IMMEDIATE``, then check the version."""
+        self._busy_step("BEGIN IMMEDIATE")
+        try:
+            if self._user_version() == 0:  # another connection may have just created it
+                for statement in _SCHEMA:
+                    self._conn.execute(statement)
+                self._conn.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
+            self._conn.execute("COMMIT")
+        except BaseException:
+            self._conn.execute("ROLLBACK")
+            raise
         version = self._user_version()
-        if version == 0:
-            self._conn.execute("BEGIN IMMEDIATE")
-            try:
-                if self._user_version() == 0:  # another connection may have just created it
-                    for statement in _SCHEMA:
-                        self._conn.execute(statement)
-                    self._conn.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
-                self._conn.execute("COMMIT")
-            except BaseException:
-                self._conn.execute("ROLLBACK")
-                raise
-            version = self._user_version()
         if version != SCHEMA_VERSION:
             raise StoreSchemaError(
                 f"{self.path}: store schema version {version} is not supported "
