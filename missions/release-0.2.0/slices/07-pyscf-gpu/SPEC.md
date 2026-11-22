@@ -10,7 +10,7 @@ intent: "Add GPU4PySCF dispatch to the PySCF engine on one resolved stage: ADR-0
 depends_on: [OPR.0.2.0.6, OPR.0.2.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/prd/v0.2.0/DISCREPANCIES.md, "docs/prd/v0.2.0/calibration/**", "docs/prd/v0.2.0/evidence/**", spec/compiled/architecture.yml]
@@ -71,20 +71,35 @@ calibration, which this slice measures and records.
    resolved stage drives both paths, and the device is not keyed.
 2. ddCOSMO → always CPU, `device_reason="ddcosmo_cpu_only"`. C-PCM / IEF-PCM run on GPU via
    `gpu4pyscf` PCM.
-3. Budget and estimate:
+3. Budget and estimate (R42; lead decision A):
    - at construction, `total = cupy.cuda.runtime.memGetInfo()[1]`;
      `budget = vram_budget_bytes(total)`;
-   - `estimate_bytes(nao, naux) = f · 8 · (naux · nao(nao+1)/2 + 40 · nao²)`, with `f`
-     (`VRAM_SAFETY: Final`) from calibration;
+   - `estimate_bytes(nao, naux) = f · 8 · (naux · nao(nao+1)/2 + 40 · nao²) + VRAM_OVERHEAD_BYTES`,
+     with two constants from calibration:
+     - `VRAM_OVERHEAD_BYTES: Final = 64 * 2**20` (64 MiB; about 2× the largest tiny-system peak);
+     - `VRAM_SAFETY: Final` (`f`, rule 4);
    - estimate > budget → CPU DF, `device_reason="vram_estimate_over_budget"`, and
      `recovery_steps` gets `"vram_estimate>budget->cpu"`.
 4. Calibration:
    - a seat command (not a test) runs water, the Pd anion, and n-decane (RDKit ETKDG,
      `randomSeed=61453`, MMFF-relaxed, committed as `tests/unit/engines/data/decane.xyz`);
-   - each runs on the GPU and records `nao`, `naux`, the estimate with f = 1, and the measured
-     peak `cupy.get_default_memory_pool().total_bytes()` after the SCF and gradient;
-   - write `docs/prd/v0.2.0/calibration/pyscf_vram.json`;
-   - `VRAM_SAFETY` = ⌈max(measured / estimate_f1) × 1.25, to 2 decimals⌉, and at least 1.0.
+   - each runs on the GPU and records `nao`, `naux`, the estimate with f = 1 (no overhead), and
+     the measured peak `cupy.get_default_memory_pool().total_bytes()` after the SCF and gradient;
+   - write `docs/prd/v0.2.0/calibration/pyscf_vram.json`. It records both constants and, per
+     entry, `(measured − VRAM_OVERHEAD_BYTES) / estimate_f1` and the calibrated estimate;
+   - `VRAM_SAFETY = max(1.0, ⌈max((measured − VRAM_OVERHEAD_BYTES) / estimate_f1) × 1.25, to 2 decimals⌉)`.
+
+   Measured on the RTX 5060 Ti (B3LYP/def2-SVP, DF, grid 3), estimate (f = 5.13, plus overhead)
+   vs measured:
+
+   | System | Estimate | Measured |
+   |---|---|---|
+   | water | 66 MiB | 29 MiB |
+   | Pd anion | 392 MiB | 326 MiB |
+   | decane | 1569 MiB | 407 MiB |
+
+   Without the overhead term, water's ratio was 67× and the old rule gave `VRAM_SAFETY` = 84.16,
+   which would send even 32-atom decane to CPU (an estimated 25.9 GB vs the 6.98 GB budget).
 5. OOM. Exactly these mean GPU out-of-memory:
    - `cupy.cuda.memory.OutOfMemoryError`;
    - `cupy_backends.cuda.libs.cublas.CUBLASError` with status `CUBLAS_STATUS_ALLOC_FAILED`;
@@ -160,8 +175,11 @@ calibration, which this slice measures and records.
   - a fake `CUDARuntimeError` that is not an allocation error → `EngineRuntimeError` with no
     fallback;
   - `device="cuda"` without gpu4pyscf → `EngineUnavailableError` naming `uv sync --extra gpu`.
-- [ ] `docs/prd/v0.2.0/calibration/pyscf_vram.json` has three entries, and `VRAM_SAFETY` in code
-  equals the record's derived value. For each entry, estimate (with `VRAM_SAFETY`) ≥ measured.
+- [ ] `docs/prd/v0.2.0/calibration/pyscf_vram.json` has three entries and both constants.
+  `VRAM_SAFETY` and `VRAM_OVERHEAD_BYTES` in code equal the record (a test reads the record).
+  `VRAM_SAFETY` equals the rule-4 formula recomputed from the entries. For each entry, the
+  calibrated estimate (f · est_f1 + overhead) ≥ measured. n-decane's estimate is below the
+  6,979,321,856-byte budget, so it runs on GPU.
 - [ ] `python -c "import eta_rxncat.engines.pyscf_gpu_cpu, sys; assert 'torch' not in sys.modules"`
   in `.venv-accept-gpu` → exit 0.
 - [ ] The four gates in `.venv` → exit 0.
