@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: blocked
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, src/eta_rxncat/utils/hw_probe.py, "tests/unit/utils/**", "tests/unit/cli/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
+hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, "tools/**", "tests/unit/tools/**", src/eta_rxncat/utils/hw_probe.py, "tests/unit/utils/**", "tests/unit/cli/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, lock, "--check"], [uv, sync, "--locked"], [uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_package.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -79,22 +79,64 @@ drop an extra.
    
    These are the combinations to check. `--extra mlip-mace --extra mlip-uma` is rejected by uv.
    Torch wheels from the cu128 index install without a GPU, so the syncs run on a CPU CI runner.
-4. The per-extra licence gate (US-002a extended, Q1 A). It is one command per environment, written
-   identically in `ci.yml` and in the `AGENTS.md` project section:
-   - `base` (no extras): unchanged from slice 01, with no exemptions.
-   - `gpu`: the slice-01 allow-list, plus `--ignore-packages` naming exactly the NVIDIA CUDA
-     runtime packages (`nvidia-*`) that the lock resolves for that extra.
-   - `mlip-mace`, `mlip-uma` (each together with `gpu`): the same NVIDIA exemption, plus exactly
-     the LGPL packages that the lock resolves for that extra (expected `ase` and `matscipy` for
-     MACE and `ase` for UMA; the lock is the authority).
-   
-   Each exemption list is written out literally. Wildcards are not allowed unless `pip-licenses`
-   accepts them and you verify that the expansion matches the list. `AGENTS.md` states why each
-   package is exempt (TJ Q1 A, row `qitem-20261122075815-4c32a48f2e42363c`).
-   A CLI `--ignore-packages` **replaces** the `[tool.pip-licenses]` list from slice 01; it does not
-   extend it (verified with pip-licenses 5.5.5). So every per-extra list also contains
-   `geometric:1.1.1` (R41, ADR-0011). The `base` gate passes no `--ignore-packages` and uses the
-   config unchanged.
+4. The licence gate, hardened and per environment (US-002a extended; R45 supersedes the
+   pip-licenses mechanism of slice 01 / R3 / R41, ADR-0013 PROPOSED; Q1 A for exemptions).
+   `pip-licenses --partial-match` is unsound: `matscipy` (LGPL, full licence text in its `License`
+   field) passes because "MIT" is a substring of "PERMITTED". It also hides MPL-2.0 in `tqdm`
+   (`MPL-2.0 AND MIT`) and `orjson` (`MPL-2.0 AND (Apache-2.0 OR MIT)`). pip-licenses cannot
+   evaluate SPDX `AND`, so it is replaced by `tools/licence_gate.py`. This is a stdlib-only script
+   (Python ≥ 3.11, `tomllib`, `importlib.metadata`) run **by the target environment's
+   interpreter**. A reference prototype that resolve ran against all four envs is at
+   `~/.hacf/eta-rxncat-hacf/evidence/licence-gate-prototype-r45.py`. Read it, then write the real
+   script to the rules below and test it.
+   - **Config** lives in `pyproject.toml` under `[tool.eta-rxncat.licence-gate]` and replaces
+     `[tool.pip-licenses]`, which is removed. It holds:
+     - `allowed`, a list of SPDX ids: `MIT`, `MIT-0`, `MIT-CMU`, `BSD-2-Clause`, `BSD-3-Clause`,
+       `0BSD`, `Apache-2.0`, `ISC`, `PSF-2.0`, `Python-2.0`, `Zlib`, `CC0-1.0`. `Zlib` and
+       `CC0-1.0` arrive with `numpy` in the core install; they passed the old gate only through
+       substring matching. They are listed explicitly as permissive (resolve's call, flagged to the
+       lead for TJ).
+     - `allowed-exceptions = ["LLVM-exception"]`.
+     - `classifiers`, an exact map from the last `License ::` classifier segment to an SPDX id or a
+       `LicenseRef-*`.
+     - `names`, an exact, case-insensitive map from known short `License`-field strings to SPDX ids
+       (e.g. `"MIT License"`, `"BSD"`, `"3-Clause BSD License"`, `"Apache 2.0"`).
+     - `[[…exempt]]` tables with `package`, `version` (exact), `profiles`, `reason` and
+       `decision` (ADR/R-row).
+     - One NVIDIA rule (`nvidia-rule`): a package whose name starts with `nvidia-` and whose licence
+       resolves to the NVIDIA proprietary classifier/field, in profiles `gpu`, `mlip-mace` and
+       `mlip-uma` only (TJ Q1 A: "NVIDIA CUDA wheels exempt").
+   - **Per-package verdict**, using the first source present:
+     1. `License-Expression`, parsed as SPDX (`AND` needs every term allowed, `OR` needs one,
+        `WITH` needs an allowed exception, parentheses respected; a parse error fails);
+     2. `License ::` classifiers, each mapped exactly; several classifiers are alternatives (OR);
+     3. the `License` field, matched **exactly** against `names`, the `allowed` ids, or a valid
+        single-line SPDX expression of allowed ids.
+     
+     Anything else, including empty, `UNKNOWN`, multi-line or full-text fields, is **unrecognised
+     and fails**. There is no substring matching anywhere.
+   - **Exemptions** are version-pinned `package` + `version` + `profile`, never wildcards (except the
+     single NVIDIA rule). A package that is exempt but not installed in a profile is reported as a
+     stale exemption, and that fails, so the lists stay equal to the lock.
+   - **CLI**: `<env>/bin/python -I tools/licence_gate.py --profile {base,gpu,mlip-mace,mlip-uma}`.
+     It reads `pyproject.toml` beside the script's parent directory. It prints one table row per
+     package (name, version, source, licence, verdict) and one `FAIL <name>:<version> …` line per
+     failure, and exits 0 or 1. It skips only the project itself (`eta-rxncat`) and `pip`.
+     `--path` (a test hook) points it at a directory of `*.dist-info` folders.
+   - **Commands**, one per profile, written identically in `ci.yml` and `AGENTS.md`:
+     `UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev [--extra …] && .venv-runtime/bin/python -I tools/licence_gate.py --profile <p>`.
+   - **Profiles and their exemptions:**
+     - `base`: `geometric:1.1.1` (R41) only.
+     - `gpu`: `geometric:1.1.1` plus the NVIDIA rule.
+     - `mlip-mace` / `mlip-uma` (each with `gpu`): the `gpu` set plus the LGPL packages Q1 A
+       authorises, transitive only. For MACE: `ase:3.29.0`, `matscipy:1.3.1`. For UMA:
+       `ase:3.29.0`, `psycopg2-binary:2.9.13`, and `ase_db_backends:0.11.0` if TJ accepts it
+       (UNKNOWN metadata, LGPL file).
+     - Every other MLIP failure waits for TJ (row `qitem-20261122134346-2d0f88234113eb85`, R-row
+       to follow): `python-hostlist`, `ray-haproxy` (GPL); `lmdb` (OLDAP-2.8); `certifi`,
+       `tqdm`, `orjson` (MPL-2.0); `torch-ema`, `clusterscope` (unrecognised metadata, MIT file).
+       Do not add any of them before then.
+   - Remove `pip-licenses` from the dev group (no longer used) and update `uv.lock`.
 5. Exemption guard: `tests/unit/test_package.py` gains:
    - (a) an AST scan of every `.py` under `src/eta_rxncat/` that fails on any `import`/`from`
      of `ase`, `matscipy`, `sella`, `tblite` or `psi4`, and names the file and line;
@@ -154,8 +196,13 @@ drop an extra.
 - [x] Task 2: sync each supported combination into a scratch runtime env and run `pip-licenses`
   on it. Derive the exact NVIDIA and LGPL exemption lists from that output, and keep the output for
   the handoff.
+- [ ] Task 3a (R45): write `tools/licence_gate.py` and `tests/unit/tools/test_licence_gate.py`;
+  add `tools` to mypy `files`; move the config to `[tool.eta-rxncat.licence-gate]`; remove
+  `[tool.pip-licenses]` and the `pip-licenses` dev dependency; `uv lock`.
 - [ ] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`
-  and `ci.yml`, character for character the same.
+  and `ci.yml`, character for character the same. The MLIP profiles pass only once TJ's licence
+  answer is folded in. Until then, report their FAIL lines, which must be exactly the pending set
+  in Mini-requirement 4.
 - [x] Task 4: write the two exemption-guard tests (Mini-requirement 5).
 - [x] Task 5: run mypy with each MLIP combination installed, then return to the base dev env.
 - [ ] Task 6: add the register rows. Re-run the four gates in the base dev env.
@@ -166,7 +213,8 @@ drop an extra.
   any extra.
 - **DO NOT** let any exempt package into the base (no-extras) install.
 - **DO NOT** exempt any package that the lock did not resolve for that extra.
-- **DO NOT** extend the base allow-list, or add an exemption for a reason other than TJ's Q1 A or the `geometric:1.1.1` exception (R41).
+- **DO NOT** extend the allow-list beyond Mini-requirement 4, or add an exemption for a reason other than TJ's Q1 A, the `geometric:1.1.1` exception (R41) or a later TJ answer through resolve.
+- **DO NOT** use substring or partial matching of licence text anywhere in the gate.
 - **DO NOT** make the MLIP extras co-installable by pinning one engine to an old release, or by
   overriding `e3nn`.
 - **DO NOT** add any new import of `torch` (beyond `hw_probe`'s existing function-local one), `mace`, `fairchem`, `ase` or `matscipy` anywhere in `src/eta_rxncat/`
@@ -184,9 +232,29 @@ drop an extra.
   `nvidia-*`, `mace-torch`, `fairchem-core`, `ase` or `matscipy`.
 - [ ] Each of the three supported combinations → `uv sync --locked …` exits 0.
   `--extra mlip-mace --extra mlip-uma` → non-zero, and the message names the conflict.
-- [ ] Each of the four licence-gate commands → exit 0 in its env. The exemption list for each
-  equals the set of packages that fail the bare allow-list in that env. Removing one exempt name
-  makes the command exit non-zero (shown once for an NVIDIA package and once for `ase`).
+- [ ] R45 unit tests, using synthetic `*.dist-info` folders under `tmp_path` via `--path`:
+  - a full-text LGPL `License` field containing "PERMITTED" and "MIT" → FAIL (the matscipy case);
+  - `MPL-2.0 AND MIT` → FAIL;
+  - `MPL-2.0 AND (Apache-2.0 OR MIT)` → FAIL;
+  - `Apache-2.0 OR BSD-2-Clause` → pass;
+  - `BSD-2-Clause AND Apache-2.0 WITH LLVM-exception` → pass;
+  - `GPL-2.0 WITH LLVM-exception` → FAIL;
+  - an SPDX parse error → FAIL;
+  - classifier `MIT License` → pass;
+  - classifiers `Mozilla Public License 2.0 (MPL 2.0)` → FAIL;
+  - field `UNKNOWN` → FAIL;
+  - field `MIT License\n\nCopyright…` → FAIL;
+  - exempt `pkg:1.0` installed at 1.1 → FAIL;
+  - an exemption naming an absent package → FAIL (stale);
+  - an `nvidia-x` proprietary package → pass in `gpu`, FAIL in `base`.
+- [ ] Real envs, gate per profile:
+  - `base` → exit 0;
+  - `gpu` → exit 0;
+  - `mlip-mace` / `mlip-uma` → exit 0 once TJ's answer is folded in. Before that, exit 1, with
+    FAIL lines exactly equal to the pending set in Mini-requirement 4, and with `matscipy`,
+    `tqdm` and `orjson` among them in the MACE env.
+  - Removing one exempt entry makes its profile exit non-zero (shown once for `geometric` in
+    `base`, once for an NVIDIA package in `gpu` via a test, and once for `ase`).
 - [ ] Exemption-guard tests pass. A scratch file under `tmp_path` containing `import ase` makes the
   AST scanner report it (the scanner is a function tested on a path argument).
 - [ ] `uv run mypy` → exit 0 with `gpu+mlip-mace` installed, and with `gpu+mlip-uma` installed.

@@ -58,7 +58,9 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
 
 ## Mini-requirements
 
-1. Preconditions: slices 01–06, 08 and 09 have audited PASS. `git status --porcelain` is empty. Record HEAD
+1. Preconditions: slices 01–06, 08 and 09 have audited PASS, and R46 (`import gpu4pyscf` fails on
+   this host: `Unable to load libcusolver`) is resolved by TJ's decision and folded in through resolve.
+   Until then, this slice does not start. `git status --porcelain` is empty. Record HEAD
    as `<sha>` before anything runs.
 2. Run, in order, from the repo root, capturing stdout, stderr and exit codes:
    1. `uv sync --locked --extra gpu`
