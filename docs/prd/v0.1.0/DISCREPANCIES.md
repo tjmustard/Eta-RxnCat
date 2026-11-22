@@ -344,6 +344,50 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 
 ## Hardware probe
 
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-320 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/__init__.py:1` module `eta_rxncat.utils` (docstring only) | `src/eta_rxncat/utils/__init__.py:1` | same | Docstring-only package module | open |
+| D-321 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:9` `HardwareReport` | `src/eta_rxncat/utils/hw_probe.py:84` | changed | Mission contract: `report_schema` 1, nested torch/gpu/gpu4pyscf objects, flags; `extra="forbid"` | open |
+| D-322 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:12` `torch_installed` | `src/eta_rxncat/utils/hw_probe.py:61` `torch.installed` | changed | Moved into the nested `torch` object (`TorchInfo`) | open |
+| D-323 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:13` `cuda_available` | `src/eta_rxncat/utils/hw_probe.py:63` `torch.cuda_available` | changed | Moved into `torch`; `cuda_unavailable` flag | open |
+| D-324 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:14` `device_name` | `src/eta_rxncat/utils/hw_probe.py:70` `gpu.name` | changed | Moved into the nested `gpu` object (`GpuInfo`), `null` without a GPU | open |
+| D-325 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:15` `compute_capability` | `src/eta_rxncat/utils/hw_probe.py:71` `gpu.compute_capability` | changed | Moved into `gpu`; same `"12.0"` form | open |
+| D-326 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:16` `total_vram_gb` | `src/eta_rxncat/utils/hw_probe.py:72` `gpu.total_vram_gib / gpu.total_vram_bytes` | changed | Exact bytes plus GiB (2 dp) instead of rounded "GB" (mission R12) | open |
+| D-327 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:17` `recommended_vram_budget_gb` | `src/eta_rxncat/utils/hw_probe.py:99` `vram_budget_bytes` | changed | Budget min(6.5 GiB, total) in bytes, not `0.80 × total` in GB (Master Plan "~6.5 GB VRAM budget"; R12 GiB) | open |
+| D-328 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:18` `gpu4pyscf_installed` | `src/eta_rxncat/utils/hw_probe.py:80` `gpu4pyscf.installed` | changed | Moved into the nested `gpu4pyscf` object with its version; `gpu4pyscf_missing` / `gpu4pyscf_below_1.8.0` flags | open |
+| D-329 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:19` `mace_installed` | — | dropped | MLIP packages are slice 06's optional extras; not in the report contract | open |
+| D-330 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:20` `fairchem_installed` | — | dropped | As `mace_installed` | open |
+| D-331 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:21` `notes` | `src/eta_rxncat/utils/hw_probe.py:101` `notes` | same | Free-text notes | open |
+| D-332 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:28` `probe_hardware(vram_safety_fraction=0.80)` | `src/eta_rxncat/utils/hw_probe.py:205` `probe_hardware()` | changed | No safety-fraction argument (fixed 6.5 GiB rule); reads versions and CUDA runtime; never raises for a broken CUDA or gpu4pyscf import | open |
+| D-333 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:25` probe depth: importability via `find_spec` | `src/eta_rxncat/utils/hw_probe.py:326` `run_smoke()` (kernel execution) | changed | Plan PR #2 asks for JIT/native kernel execution: the smoke test runs GPU4PySCF and a CUDA matmul against CPU references | open |
+| D-334 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:65` Blackwell / 8 GB class notes | — | dropped | Replaced by machine-readable flags and the fixed budget; no GPU-class special cases (mission R12, out of scope §3) | open |
+| D-335 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/utils/hw_probe.py:90` `python -m eta_rxncat.utils.hw_probe` JSON print | — | dropped | `eta-rxncat hardware-check` (slice 05) prints the report | open |
+| D-336 | hw_probe | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_hw_probe.py:6` `test_probe_hardware_returns_valid_report` | `tests/unit/utils/test_utils_hw_probe.py:204`, `tests/unit/utils/test_utils_hw_probe.py:83` | changed | Real-environment report plus fake-GPU reports with exact budget and flags | open |
+| D-337 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:21` `VRAM_BUDGET_GIB` | added | 6.5 GiB budget constant | open |
+| D-338 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:24` `MIN_TORCH_CUDA` | added | (12, 8): sm_120 support | open |
+| D-339 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:27` `MIN_GPU4PYSCF` | added | (1, 8, 0) | open |
+| D-340 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:30` `SCF_TOLERANCE_EH` | added | Smoke pass criterion |ΔE| ≤ 1e-6 Eh (mission R10) | open |
+| D-341 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:33` `MATMUL_TOLERANCE` | added | Smoke pass criterion max-abs-diff ≤ 1e-9 (mission R10) | open |
+| D-342 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:43` `parse_version_prefix()` | added | Numeric dotted-prefix version comparison | open |
+| D-343 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:53` `vram_budget_bytes()` | added | min(int(6.5 × 2³⁰), total) | open |
+| D-344 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:58` `TorchInfo` (`installed`, `version`, `cuda_available`, `cuda_version`) | added | Nested report object | open |
+| D-345 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:67` `GpuInfo` (`name`, `compute_capability`, `total_vram_bytes`, `total_vram_gib`, `free_vram_bytes`) | added | Nested report object; free VRAM reported, never used for the budget | open |
+| D-346 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:77` `Gpu4PySCFInfo` (`installed`, `version`) | added | Nested report object | open |
+| D-347 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:92` `HardwareReport.report_schema` | added | Report schema version 1 | open |
+| D-348 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:93` `HardwareReport.python_version` | added | Contract field | open |
+| D-349 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:94` `HardwareReport.platform` | added | Contract field | open |
+| D-350 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:98` `HardwareReport.vram_budget_gib` | added | Always 6.5 | open |
+| D-351 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:100` `HardwareReport.flags` | added | Machine-readable problems (five exact strings) | open |
+| D-352 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:222` `ScfCheck` | added | Smoke SCF record (mission contract) | open |
+| D-353 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:235` `TorchOpCheck` | added | Smoke matmul record | open |
+| D-354 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:244` `SmokeResult` | added | Smoke result (`result_schema` 1, status, reason, scf, torch_op, timings, host) | open |
+| D-355 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:326` `run_smoke(timeout_s=600.0)` | added | US-004a: child process, numeric pass criterion, skip when torch/CUDA/gpu4pyscf are missing | open |
+| D-356 | hw_probe | — | `src/eta_rxncat/utils/hw_probe.py:374` `smoke_exit_code()` | added | pass 0, fail 1, skipped 3 | open |
+| D-357 | hw_probe | — | `src/eta_rxncat/utils/_smoke_child.py:13` `eta_rxncat.utils._smoke_child` | added | Child-process smoke work (H₂O RHF/STO-3G on GPU and CPU, seeded float64 CUDA matmul); prints measurements only | open |
+| D-358 | hw_probe | — | `tests/unit/utils/test_utils_hw_probe.py` | added | Probe proof bullets with fake torch/gpu4pyscf modules | open |
+| D-359 | hw_probe | — | `tests/unit/utils/test_utils_smoke.py` | added | Smoke proof bullets with fake hosts and child scripts (pass, each failing check, timeout, malformed output, crash) | open |
+| D-360 | hw_probe | — | `tests/gpu/test_smoke.py:9` `tests/gpu/test_smoke.py` | added | `@pytest.mark.gpu` acceptance test (deselected by default; slice 07 runs it) | open |
+
 ## CLI
 
 ## Fixture

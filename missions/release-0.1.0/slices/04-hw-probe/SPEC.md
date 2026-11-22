@@ -10,7 +10,7 @@ intent: "Implement the typed hardware probe with the 6.5 GiB VRAM budget and a G
 depends_on: [OPR.0.1.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_hw_probe
 parent: null
 hacf_touches: ["src/eta_rxncat/utils/**", "tests/unit/utils/**", "tests/gpu/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -87,16 +87,16 @@ pass criterion here is relative (GPU vs CPU) so no literature energy is needed.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — `utils/__init__.py` (docstring), version-prefix parser, constants, `vram_budget_bytes`.
-- [ ] Task 2 — `HardwareReport` and nested models; `probe_hardware()` with function-local imports of
+- [x] Task 1 — `utils/__init__.py` (docstring), version-prefix parser, constants, `vram_budget_bytes`.
+- [x] Task 2 — `HardwareReport` and nested models; `probe_hardware()` with function-local imports of
   `torch`/`gpu4pyscf` guarded by `ImportError` (and `importlib.metadata.version` for versions).
-- [ ] Task 3 — `_smoke_child.py` (the work above, prints JSON; only runs under `__main__`).
-- [ ] Task 4 — `SmokeResult`, `run_smoke`, `smoke_exit_code`.
-- [ ] Task 5 — Unit tests in `tests/unit/utils/` with monkeypatched fakes for: no torch; torch
+- [x] Task 3 — `_smoke_child.py` (the work above, prints JSON; only runs under `__main__`).
+- [x] Task 4 — `SmokeResult`, `run_smoke`, `smoke_exit_code`.
+- [x] Task 5 — Unit tests in `tests/unit/utils/` with monkeypatched fakes for: no torch; torch
   without CUDA; CUDA 12.4 torch; gpu4pyscf 1.7.0; a fake 8151 MiB GPU; a fake 24 GiB GPU; a child
   that times out; a child that prints passing / each kind of failing JSON.
-- [ ] Task 6 — `tests/gpu/test_smoke.py` (Mini-requirement 3).
-- [ ] Task 7 — Register rows; four gates exit 0 (mypy strict with the slice-01 overrides).
+- [x] Task 6 — `tests/gpu/test_smoke.py` (Mini-requirement 3).
+- [x] Task 7 — Register rows; four gates exit 0 (mypy strict with the slice-01 overrides).
 
 ## 4. The Negative Space (Constraints)
 
