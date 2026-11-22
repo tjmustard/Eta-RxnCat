@@ -1,0 +1,8 @@
+# BEGIN HACF MANAGED BLOCK: gitignore
+.agents/state/
+.agents/.backup/
+.agents/logs/
+/exhaust/
+/.openrig/
+.agents/**/__pycache__/
+# END HACF MANAGED BLOCK: gitignore

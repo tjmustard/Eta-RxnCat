@@ -1,0 +1,755 @@
+{
+  "blocks": {
+    ".gitignore": {
+      "gitignore": "6c820ccc0429896bbb79d2eca27a8300c3bbde10e5bcc49c7855fb708026927b"
+    },
+    "AGENTS.md": {
+      "hacf": "8a68aa71094af683518381f578d189c95290d466fe0d4501ca759805c81e1b95"
+    },
+    "CLAUDE.md": {
+      "hacf": "b94fb82d5f2aa4678a60dd5d4cbbb74f575c2547139564c1be93fecfdcf78806"
+    }
+  },
+  "files": {
+    ".agentignore": {
+      "owner": "hacf",
+      "sha256": "28bfee9cd3ae22de048e0a3c4af7a8e15b5275691e80a83308bdf93bc6a0fcee"
+    },
+    ".agents/config/code_graph.defaults.yml": {
+      "owner": "hacf",
+      "sha256": "8587cbc702418ddb90cef9d0cc538abbd7d642baac0f3394fbb2548b3c480e12"
+    },
+    ".agents/config/heuristic_rules.yaml": {
+      "owner": "hacf",
+      "sha256": "a90810b2d10734519096d9197bbf351714a3df1c7fd86d8274ac9ee99b31f521"
+    },
+    ".agents/config/legacy_file_hashes.json": {
+      "owner": "hacf",
+      "sha256": "e0f3130e6b5d0079a08a13413937ea5560ae7e3a16c65b04d35880cb00544539"
+    },
+    ".agents/config/orchestration.yml": {
+      "owner": "hacf",
+      "sha256": "1d4a50489170514831436373b51fca83571c49054c681ea35ff14abba54aba2c"
+    },
+    ".agents/config/upstream.yml": {
+      "owner": "hacf",
+      "sha256": "964c3f2db44ec424c6c571596d47fff5f6b7df1b64c4de36a9949063ed27c041"
+    },
+    ".agents/install-templates/AGENTS.md": {
+      "owner": "hacf",
+      "sha256": "8a68aa71094af683518381f578d189c95290d466fe0d4501ca759805c81e1b95"
+    },
+    ".agents/install-templates/CLAUDE.md": {
+      "owner": "hacf",
+      "sha256": "b94fb82d5f2aa4678a60dd5d4cbbb74f575c2547139564c1be93fecfdcf78806"
+    },
+    ".agents/install-templates/GEMINI.md": {
+      "owner": "hacf",
+      "sha256": "98410d53b8237bb3a02d10178af080c1a2dd0a9924823625be539a2f298f5c8f"
+    },
+    ".agents/install-templates/claude-settings.fragment.json": {
+      "owner": "hacf",
+      "sha256": "845245844d848c4a121a4fbb0e55092160e450a44ea08fdd4017090c2fdacb92"
+    },
+    ".agents/rules/git-workflow.md": {
+      "owner": "hacf",
+      "sha256": "f1bc64ee06a90daaa7a485295f39c56a94e772c629e0a59944ebc7315ed91f7a"
+    },
+    ".agents/rules/package-management.md": {
+      "owner": "hacf",
+      "sha256": "e78c059560c9369a9fdab1f5966f7aabc1d4d478dc8caf6756e9682795a3bf08"
+    },
+    ".agents/rules/python.md": {
+      "owner": "hacf",
+      "sha256": "ab3eb09e3fc8ddf420faace492c41425d6f8e112b1e7e2363fa25f56447c9be8"
+    },
+    ".agents/rules/security.md": {
+      "owner": "hacf",
+      "sha256": "805f74bd00d42b04c18882695535ec9e8a806f363eb7a94a14d59bba71bb5081"
+    },
+    ".agents/rules/testing.md": {
+      "owner": "hacf",
+      "sha256": "9a294d42bc81b5a0fa4c809ab54590f0139ef751c19fbf5a38c746f822f94b03"
+    },
+    ".agents/schemas/DESIGN_Template.md": {
+      "owner": "hacf",
+      "sha256": "087c9eaf2aab377d46998a8ec7742fd9dd219e17ae634236a3a0c6da704493e5"
+    },
+    ".agents/schemas/META_template.md": {
+      "owner": "hacf",
+      "sha256": "fb9a8f19eb772f1ede594ad2e8fff2d84dae479b713e8d7f522be286ff937c58"
+    },
+    ".agents/schemas/activeContext_template.md": {
+      "owner": "hacf",
+      "sha256": "c99e9141306dd14d431f59f14181e231ef4b59af8788125ca46bb0f1c1aed39e"
+    },
+    ".agents/schemas/autonomy_prompt.md": {
+      "owner": "hacf",
+      "sha256": "189d23922195a8dc1714e8e6bd6198c96ab37f68a6d616f6cea81b6612408c2d"
+    },
+    ".agents/schemas/openrig/NOTICE": {
+      "owner": "hacf",
+      "sha256": "2aca1b6d32b4b5d4141d968fcc63f4993ef52de64fe62ada40fcea3b459ebcfd"
+    },
+    ".agents/schemas/openrig/mission_progress.md": {
+      "owner": "hacf",
+      "sha256": "ad391f079e455b81efcb18ccfb1106274b7e818362373ee73b01b0de0f6c24f6"
+    },
+    ".agents/schemas/openrig/mission_spec.md": {
+      "owner": "hacf",
+      "sha256": "18cb72ad192534fecaa54255b5bb4a6c32fa10f2772d8a0bdcb51c20327b82a3"
+    },
+    ".agents/schemas/openrig/notes.md": {
+      "owner": "hacf",
+      "sha256": "b6b28788c454a657a330cc3b532519b9e7c3b7aab6ed100f0c5e3fabf2ffa6e0"
+    },
+    ".agents/schemas/openrig/project_spec.md": {
+      "owner": "hacf",
+      "sha256": "e60e78b89ebe28c31664ccce6e92080692ed72a70132fead583f7e482b8ae13e"
+    },
+    ".agents/schemas/openrig/proof.md": {
+      "owner": "hacf",
+      "sha256": "d5da4aa2da82d2bf5fc223c06c1c25c32f89dcc7861d1511800fdf39fac7a10f"
+    },
+    ".agents/schemas/openrig/slice_progress.md": {
+      "owner": "hacf",
+      "sha256": "6094e26cd293c433e5c26fc39952182f3a76b191f5f0fde95c65e48647c88628"
+    },
+    ".agents/schemas/openrig/slice_spec.md": {
+      "owner": "hacf",
+      "sha256": "ee8e83ac259cb988e5dd2c301ee79adfc2f087496a5d5eaacf2f33ae21d1074e"
+    },
+    ".agents/schemas/plan_Template.md": {
+      "owner": "hacf",
+      "sha256": "393fc3858c941c174895f979397764a0a4317399a76ef0cac0d72c81249852e4"
+    },
+    ".agents/schemas/project-templates/CHANGELOG.md": {
+      "owner": "hacf",
+      "sha256": "e897ba51f53fc531450c402d3727357e436417572c3bd01c0b7e1624747769d6"
+    },
+    ".agents/schemas/project-templates/CITATION.cff": {
+      "owner": "hacf",
+      "sha256": "f391a0acbe130d1ba27952857a692bcd1874bff97490a8d91aa37a10a2894a40"
+    },
+    ".agents/schemas/project-templates/CODE_OF_CONDUCT.md": {
+      "owner": "hacf",
+      "sha256": "34cbe1661fccb93143fe2630ea649b55161e811e5e9deeb0af168c5bc6102caa"
+    },
+    ".agents/schemas/project-templates/CONTRIBUTING.md": {
+      "owner": "hacf",
+      "sha256": "241a1744e6521eed42121079991259d4728c413d4727f4fb55db16622504195f"
+    },
+    ".agents/schemas/project-templates/DEVELOPMENT.md": {
+      "owner": "hacf",
+      "sha256": "f15a032b983fd822b3d81e8864f2e10f3489051557c96ce7c7297d2ac0e0f4d2"
+    },
+    ".agents/schemas/project-templates/README.md": {
+      "owner": "hacf",
+      "sha256": "e3c1fbe72262c1d732ba3c74a7b87e535e8f0ea72f97acf46e72381f487d0bb7"
+    },
+    ".agents/schemas/project-templates/SECURITY.md": {
+      "owner": "hacf",
+      "sha256": "4260cbafbade809bd8031fb1c2e7b8fad89ccbb425543873c3d13801aff1b502"
+    },
+    ".agents/schemas/project-templates/pyproject.toml": {
+      "owner": "hacf",
+      "sha256": "bcbd4745511031caa96c886c56ef0c3513d0cc3c841494182cc733e680d74562"
+    },
+    ".agents/schemas/todo_Template.md": {
+      "owner": "hacf",
+      "sha256": "641f91a43b828bd4b1fff25709494ba8e6e1064973e651e75191b34746a98ecb"
+    },
+    ".agents/scripts/_runtime.py": {
+      "owner": "hacf",
+      "sha256": "e4af5870d5e3d7a470d1e9154e76f57866196e717d9531b0857b4a3a00a91b83"
+    },
+    ".agents/scripts/archive_specs.py": {
+      "owner": "hacf",
+      "sha256": "0bea5f646f5659cc29661e2b0e5902e3446e060df66452115f389aeed00f972d"
+    },
+    ".agents/scripts/ceiling_enforcer.py": {
+      "owner": "hacf",
+      "sha256": "797eb512aaf998776e1629b9b9cb78754b9a84002533876b97078dbcd091951b"
+    },
+    ".agents/scripts/ceiling_resolver.py": {
+      "owner": "hacf",
+      "sha256": "d53a53abe20061d5f3df3ed968076a6040eb0bb94fb258a6f45dac9d615844fa"
+    },
+    ".agents/scripts/commit-msg": {
+      "owner": "hacf",
+      "sha256": "685a350ca6969d08a31474f74c86da308522db5084b1fff8f46e9b6084b2cf90"
+    },
+    ".agents/scripts/heuristic_classifier.py": {
+      "owner": "hacf",
+      "sha256": "355364a2a9810ebe71d0f6f559fd9dcde0efb59d4c07e01a932309a3d08c1078"
+    },
+    ".agents/scripts/hyper_blocks.py": {
+      "owner": "hacf",
+      "sha256": "5b7b77b33dfa9cd331924c44e7e17b16b6caac5cd091cb01453f15475fe51e2b"
+    },
+    ".agents/scripts/hyper_codegraph.py": {
+      "owner": "hacf",
+      "sha256": "8c03871e810f655d1ceaffaecbd415dc42835d607e09f20f8aa468fa2fbc4045"
+    },
+    ".agents/scripts/hyper_daemon.py": {
+      "owner": "hacf",
+      "sha256": "fbc9e1125e3d3316c394d616b9fb2affd9111e06f385c8dcaeec7f175f344abc"
+    },
+    ".agents/scripts/hyper_engine.py": {
+      "owner": "hacf",
+      "sha256": "2dcf80002dcadcf58a84e0e8919cf2ec57c22e705611722375b335abc790d208"
+    },
+    ".agents/scripts/hyper_executors.py": {
+      "owner": "hacf",
+      "sha256": "a480b7c5dc047f1a6538c4995f41bc4e2ca9358e415448edf2ae4ead7676eb14"
+    },
+    ".agents/scripts/hyper_failures.py": {
+      "owner": "hacf",
+      "sha256": "d69d97df9a92d863d9727e5c1b84c6e3f6d990eba1eeea9a24e2bb884a9f9df1"
+    },
+    ".agents/scripts/hyper_firewall.py": {
+      "owner": "hacf",
+      "sha256": "43b1354657bfedebd62df3fe81ac145930a3177a3688d54c48b081f38039f12b"
+    },
+    ".agents/scripts/hyper_gate_hook.py": {
+      "owner": "hacf",
+      "sha256": "ae027bc55372015c488b4ed4dead4111c8ec4da075844f3d054cb9a08553cbab"
+    },
+    ".agents/scripts/hyper_gates.py": {
+      "owner": "hacf",
+      "sha256": "899b429724dd3e73c72d3a3eae0bc6613a8737d19ded87c9a66ef4ddd6da3648"
+    },
+    ".agents/scripts/hyper_ledger.py": {
+      "owner": "hacf",
+      "sha256": "443559a4b3ea91b1bf620d964f63c8f27de3e9d88adf61fe0b68a34af57d67d9"
+    },
+    ".agents/scripts/hyper_lore.py": {
+      "owner": "hacf",
+      "sha256": "30c2a90861e7f7eece68722737860d9805a20d75e87bbec5d75b697c864b1969"
+    },
+    ".agents/scripts/hyper_migrate.py": {
+      "owner": "hacf",
+      "sha256": "7a2dc0ae37d155b7e4bb2839aa2850005d7edcbc38eeb4df58c368201b6cb794"
+    },
+    ".agents/scripts/hyper_openrig.py": {
+      "owner": "hacf",
+      "sha256": "7986bbc3e937a8e55ada5b3b6d9e7cc7fdbb7c041d3516fae40d11e24edca7e5"
+    },
+    ".agents/scripts/hyper_orchestrator.py": {
+      "owner": "hacf",
+      "sha256": "fefd19bd81517ed4b745f14e5306fe95aff325d3243a48006288b50c7f4980b5"
+    },
+    ".agents/scripts/hyper_resolve_conflict.py": {
+      "owner": "hacf",
+      "sha256": "5ba0de7312ed6d74e80d509350246b4383997583c1e3d345c621aa97b3bdd01b"
+    },
+    ".agents/scripts/hyper_scaffold.py": {
+      "owner": "hacf",
+      "sha256": "390dbff71fe6e2814c2f77061445d4a984944b972497955642fe039e47d251f4"
+    },
+    ".agents/scripts/hyper_scope.py": {
+      "owner": "hacf",
+      "sha256": "9d4e76a180acb7a8c14a68584a972cdee56e88502e29ad2dad20c585e8dc64ad"
+    },
+    ".agents/scripts/hyper_spec.py": {
+      "owner": "hacf",
+      "sha256": "766e66f638f56767b3cc243eed43cd84c70683db0cc57687cedaf79e6c689893"
+    },
+    ".agents/scripts/hyper_update_core.py": {
+      "owner": "hacf",
+      "sha256": "19cec08585ae24e2c4419f73d4a73abd6eb3ea2adc31c6735ddd1890dfe73678"
+    },
+    ".agents/scripts/hyper_update_merge_engine.py": {
+      "owner": "hacf",
+      "sha256": "5442aeba79e8cd9b0373055e961223113c4b295100b13bb463c393355b0a2983"
+    },
+    ".agents/scripts/hyper_update_recovery.py": {
+      "owner": "hacf",
+      "sha256": "31e7cdc568db0a6578c95085c2ddb4f9fb80f9709c77f4eaffb42c434fd3e7d4"
+    },
+    ".agents/scripts/hyper_update_verification.py": {
+      "owner": "hacf",
+      "sha256": "09710f967ddb32d4a49ec8a697617597cb9d9a1d9097e54af1003159a8dbb3d5"
+    },
+    ".agents/scripts/hypergraph_updater.py": {
+      "owner": "hacf",
+      "sha256": "5530f2f12565d7edadb3e40524a810f8072db7fcbb2d4236250155c58f25fc33"
+    },
+    ".agents/scripts/meta_loader.py": {
+      "owner": "hacf",
+      "sha256": "fce0cf22b1b25b80579dcda9215ab20e5d498e361888ff18d3c89052290327ef"
+    },
+    ".agents/scripts/model_router.py": {
+      "owner": "hacf",
+      "sha256": "bbeb20abff2f3eb71103bb30acd0fa5b72ea33e59eb4e5e7fa882cb32a14238b"
+    },
+    ".agents/scripts/override_manager.py": {
+      "owner": "hacf",
+      "sha256": "a272c3cc244176834bfd90db2eb46c237b5b283aa8f6ae1936d78dc5d4838e95"
+    },
+    ".agents/scripts/pre-commit": {
+      "owner": "hacf",
+      "sha256": "848840aac42197fd7f900a2a2b1a1c82826640f615532859899a4a2d0b9fce0f"
+    },
+    ".agents/scripts/pre-push": {
+      "owner": "hacf",
+      "sha256": "2f4e6807a566d3bd609efd482645f028db0a45ebea1c0457fb822bad74613915"
+    },
+    ".agents/scripts/semantic_graph_merger.py": {
+      "owner": "hacf",
+      "sha256": "915122557745b9c51835c29e48123254aefda74a48eb5d409ad365a8b4151590"
+    },
+    ".agents/scripts/thinking_token_monitor.py": {
+      "owner": "hacf",
+      "sha256": "3c17f26fdeb89f89cead2d89257d0cd6844a8343fbd89de40260cb5a26915260"
+    },
+    ".agents/scripts/token_budget_checker.py": {
+      "owner": "hacf",
+      "sha256": "7f16e913c1038cee33c1f41fbc2f1a05634e5cf4fcc0460d63c7e6efc050386a"
+    },
+    ".agents/scripts/token_budget_reconciler.py": {
+      "owner": "hacf",
+      "sha256": "4717130e20ef0e0e3cea5031d43b76c04c4984556ef90077935dfc2eea1ffa2a"
+    },
+    ".agents/skills/hyper-architect/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "984baf18bd3d406b4fee49c7c43089cf21cbf33888591c7a1c63eed38c7d4c6d"
+    },
+    ".agents/skills/hyper-audit/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "e065d73e603ff3820033775edc4e662733f45f774c2cf78d4f007621eedd0871"
+    },
+    ".agents/skills/hyper-baseline/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "dfa1d3c41286b01b94e828a9c32a0e8ff28156a1bdd1178bf1d6afe5baac46a9"
+    },
+    ".agents/skills/hyper-clear/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "adff06ae21d5d8e979ad9cafb0c12cba7685275bcf722a64635c7720b13c7ba9"
+    },
+    ".agents/skills/hyper-co-research/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "64d722b6b3c37cd83640b4b19361df40a4b1a3b90578d774f8f067036a079fc4"
+    },
+    ".agents/skills/hyper-consult-cto/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "fc0e6f7f04ffa02ed73b7e80bbc2841d0e6d47bddef4883574e684a2fcd11714"
+    },
+    ".agents/skills/hyper-contextualize/META.yml": {
+      "owner": "hacf",
+      "sha256": "97006649566e81a282f0c2c56c20412f592bb864e38a4b806d30e60107e7c62c"
+    },
+    ".agents/skills/hyper-contextualize/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "1a4a93c0a5754677be7007d3dc95397cf6c69165b44c0b6215674bbe154255f3"
+    },
+    ".agents/skills/hyper-create-issue/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "44a77bf3a9227a27aa15cba9af7e90b87666f1812f231ca1db7d3727bf578531"
+    },
+    ".agents/skills/hyper-create-skill/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "0e8abd883b1774daadb8cbfbf7e3a6ebac060340fc5562957e76a6faa558a215"
+    },
+    ".agents/skills/hyper-create-skill/examples/gemini-gem-example.md": {
+      "owner": "hacf",
+      "sha256": "e2721a18e87f22fe456d54f23d86c4cd956b3074dc5dd34b275fd7a927927c99"
+    },
+    ".agents/skills/hyper-create-skill/resources/SKILL_TEMPLATE.md": {
+      "owner": "hacf",
+      "sha256": "445dc584d84d38563a83271e8201fb36fe3df156dd75b5505af696ea8aeef6db"
+    },
+    ".agents/skills/hyper-deepdive/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "396839a666aad6aad571f8ad9b434ea0ff5e0bcc8ffd5dce008f93db2f7bf5a3"
+    },
+    ".agents/skills/hyper-discover/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "420d0b34ac655e808bc90781014087af2baad10bff78bd154cf0b14c4eaf43ae"
+    },
+    ".agents/skills/hyper-document/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "cdc6d57f586033229ebe43a6cd15bc9ab19c05d17847d38aae6a21882063f52e"
+    },
+    ".agents/skills/hyper-execute/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "6c4f34613f2dc024e6092aa7eb0a0bd0d01275dcd26d79cd8766528bda0ff6e3"
+    },
+    ".agents/skills/hyper-grill-docs/ADR-FORMAT.md": {
+      "owner": "hacf",
+      "sha256": "6ed575683bc69344e8381666aee1f46ed4a39b09674c79f2209997a97ba5a927"
+    },
+    ".agents/skills/hyper-grill-docs/ATTRIBUTION.txt": {
+      "owner": "hacf",
+      "sha256": "e8924f164c15f8ce9d7be140934389c4c61b2f5ee17597964073a093948b227f"
+    },
+    ".agents/skills/hyper-grill-docs/CONTEXT-FORMAT.md": {
+      "owner": "hacf",
+      "sha256": "513039ff37a3715e1c86fd04fcb368285cd0c8e443bdf3f12d2441c3c07755fb"
+    },
+    ".agents/skills/hyper-grill-docs/META.yml": {
+      "owner": "hacf",
+      "sha256": "ed1b6994327c7f5ea494e389a576ff869c9da192682273b756bed786b2a7ea16"
+    },
+    ".agents/skills/hyper-grill-docs/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "46e32942219a082078dd2aba5836c1b26a1e58dcceefb1d9a61ce54c17a7aeab"
+    },
+    ".agents/skills/hyper-handoff/ATTRIBUTION.txt": {
+      "owner": "hacf",
+      "sha256": "5915715ea3967b9c0a6348524bc510d1061c76494a8bb553b50065b222864959"
+    },
+    ".agents/skills/hyper-handoff/META.yml": {
+      "owner": "hacf",
+      "sha256": "7145295c9df5d886a9f2ce1ed533dedaee70418d3e457c25405322d35407e54f"
+    },
+    ".agents/skills/hyper-handoff/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "8e662ee6221fe4da8e12c9b0908af053826407809991a5fb93cb7fe724c02ae6"
+    },
+    ".agents/skills/hyper-init/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "8ec0112069dded8c804c23f7c7a4978a756ca8abc5ca57c041f73a13c2e36a8d"
+    },
+    ".agents/skills/hyper-learning-opportunity/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "cf17b66ce45cd6563b0666f5e47108fe2c69fc01c762db6770959a5e82588976"
+    },
+    ".agents/skills/hyper-lore-approve/META.yml": {
+      "owner": "hacf",
+      "sha256": "f508f799945b100d3122be7e956124a8b3f10f7da7c047f167acbf97a786bb80"
+    },
+    ".agents/skills/hyper-lore-approve/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "e9091b55fce99c5394c2cfc78ee75d96168d3d15beb797d43e81d182388962ec"
+    },
+    ".agents/skills/hyper-new-workflow/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "a9b8e7b87fe077f4595d860d4aed890c132bf7c8fc10b5aa305621f008b5f263"
+    },
+    ".agents/skills/hyper-peer-review/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "31ebdc2ad9c885adc063102f0df0b09bd047fbe717b257b8982c0a7f3522ae7c"
+    },
+    ".agents/skills/hyper-process-document/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "f5eb2a788ec80856904363b07ec6d86e8dec6ed85008d24c3cea02d6d53b51ad"
+    },
+    ".agents/skills/hyper-prompt-engineer/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "ebe9770db0b45fed01d29163bc2b1ccb1f8d5fb5969b28cc4ddf331a5d75cfd3"
+    },
+    ".agents/skills/hyper-publish/META.yml": {
+      "owner": "hacf",
+      "sha256": "a950976e9f546a986ebac52851cc516c96dba3b58452e907e20ffb5b1e6378b2"
+    },
+    ".agents/skills/hyper-publish/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "e6ae8746e9493bb231ba977c87462a87eb8668c87767634635f82adc2a2310a9"
+    },
+    ".agents/skills/hyper-publish/examples/example_commit_messages.md": {
+      "owner": "hacf",
+      "sha256": "b6d96b4b605bd4c4e0f35ff90bf4e02155f04f0dd6bf29f34c5c9ef896eee349"
+    },
+    ".agents/skills/hyper-publish/examples/example_pr_description.md": {
+      "owner": "hacf",
+      "sha256": "e3616903b84974aa51ec5ec8f4db7a144000a6b8ea1c3191469f0f1d752e8e70"
+    },
+    ".agents/skills/hyper-publish/resources/commit_template.md": {
+      "owner": "hacf",
+      "sha256": "6d6e9eafaaa1d4134868a6340f6ee99b38806470e5fccdbaf7438d34cfb4fc65"
+    },
+    ".agents/skills/hyper-publish/resources/pr_description_template.md": {
+      "owner": "hacf",
+      "sha256": "c097573912582d48be4cc3e3f7c0a2262e824925062ce18b5ce893b2e5849ccb"
+    },
+    ".agents/skills/hyper-publish/scripts/generate_commit_message.py": {
+      "owner": "hacf",
+      "sha256": "1a08e72b1b8afa038f949cad05dfb97374c40fce073aacf3a318c7f0bfc2dc8b"
+    },
+    ".agents/skills/hyper-publish/scripts/generate_pr_description.py": {
+      "owner": "hacf",
+      "sha256": "6aaa1f1c18a59016768144468c409b4258f1e90cedc7e7ffdbeda754e3509b9e"
+    },
+    ".agents/skills/hyper-publish/scripts/setup_permissions.py": {
+      "owner": "hacf",
+      "sha256": "4309ae29fca136005a96c1fb726f501bd0bc5686489390d0e84891693a993796"
+    },
+    ".agents/skills/hyper-redteam/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "4b916e1221c9a7d853d8b5670997a32d5a0162d16e231bea2ca794a4ab3d6a05"
+    },
+    ".agents/skills/hyper-refresh-memory/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "1d6dd2622672ecd581d6f7a88316372265eb9628901f73f73d5c9619039aef4d"
+    },
+    ".agents/skills/hyper-resolve/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "0d2e88ac91676d21754ab8eecf8cbaa06de2e9d3841e2ecbc3b4d8fc7bd80575"
+    },
+    ".agents/skills/hyper-session-update/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "5762ba439cc2e725177a4c3cf71bc439d16d471930662e197c2c7b1ce41c9abf"
+    },
+    ".agents/skills/hyper-sop/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "a825cb945bee3f64298b7109410b494b73ef54126b9075f5896306f7c10489a4"
+    },
+    ".agents/skills/hyper-status/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "c630cb9eadf015fe8f8573a2c2c2f4a853a5521ad3e744658d8b0c4a948cf31e"
+    },
+    ".agents/skills/hyper-stitch-design/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "ed53b206275c7aa31f35a920a525bf62c44af1429b64a4409b1f056d2746ddbd"
+    },
+    ".agents/skills/hyper-template-architect/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "254a2d43c1bd6137ccc5b35f72ba00b60833de84e0a818f01630f6d671708a80"
+    },
+    ".agents/skills/hyper-troubleshooting/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "5c81ff47d1acb645c572408508ae2b582638953c5cf22f481d6369e1a057b094"
+    },
+    ".agents/skills/hyper-tutorial-audit/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "874fa840ce52ecad4fc3a35881559cb7115e3bfe09cdf532c9bd03e9c7ade1a0"
+    },
+    ".agents/skills/hyper-tutorial-generator/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "8597160a0cc7dcf2b1d8c0920848223fd6d653f3302dff2f25e3f4ac4d61036c"
+    },
+    ".agents/skills/hyper-tutorial-generator/resources/TUTORIAL_TEMPLATE.md": {
+      "owner": "hacf",
+      "sha256": "e6c27475c42519842f8943d83e123389509897ca17d38d844d317016a91e9ab4"
+    },
+    ".agents/skills/hyper-tutorial-run/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "bc003d113eb01e9bcba5cfe3d3f68bad2e4ba842f491d2b1f3f0f53d4893dded"
+    },
+    ".agents/skills/hyper-update/META.yml": {
+      "owner": "hacf",
+      "sha256": "2c8302924e9ee51032fbc79ce7644e5af0a5296cd64abf3bbc03dbff663165e4"
+    },
+    ".agents/skills/hyper-update/SKILL.md": {
+      "owner": "hacf",
+      "sha256": "cd15c2c1c3ad4ee5ed17a66e8d4ed733175b040e3a4ba3c7fe0457499a9d1bbb"
+    },
+    ".claude/commands/hyper-architect.md": {
+      "owner": "hacf",
+      "sha256": "e009f0c40e9bef744ad49df4ffd9feacf491ef3e37252f0cfce13393e3749e18"
+    },
+    ".claude/commands/hyper-audit.md": {
+      "owner": "hacf",
+      "sha256": "a79d16e01b03f6febc4979bf621e157f7cf6b977e58b0ac9c1a3b87720869f76"
+    },
+    ".claude/commands/hyper-baseline.md": {
+      "owner": "hacf",
+      "sha256": "79f335d378bed29cc1c6b11b3b5258ef800c66e550dcd22d32afaf8ab7d9540c"
+    },
+    ".claude/commands/hyper-clear.md": {
+      "owner": "hacf",
+      "sha256": "6917b3acc67eb5efae37d4951d53a028fe15560f1600a18b200ebab0f30e23eb"
+    },
+    ".claude/commands/hyper-co-research.md": {
+      "owner": "hacf",
+      "sha256": "eec0a50188a091359dff769296cfa5e34e7c0dd380ea45dcb676aa83d1d40ad3"
+    },
+    ".claude/commands/hyper-consult-cto.md": {
+      "owner": "hacf",
+      "sha256": "fcab9b4d75421572cb7fbca2fc0671235e9b91adcc24462dff3171cc7564b225"
+    },
+    ".claude/commands/hyper-contextualize.md": {
+      "owner": "hacf",
+      "sha256": "40c3614fe531a5590b2faf7f002c4af07b8708955d9cf5f9cd675b53e3634fc3"
+    },
+    ".claude/commands/hyper-create-issue.md": {
+      "owner": "hacf",
+      "sha256": "65de96b27ad1d644913f72979ac2200e1e512b7a0fe1f3f3d0e7112776038058"
+    },
+    ".claude/commands/hyper-create-skill.md": {
+      "owner": "hacf",
+      "sha256": "ddb25acca59e6f5e9ac53f40783bf599abcbc8918bb47db3d7b052bd24d3709b"
+    },
+    ".claude/commands/hyper-deepdive.md": {
+      "owner": "hacf",
+      "sha256": "5516fb57d154e4ae7a06abbb4a560fa49705390cd2b6d5a0ef986ef037279334"
+    },
+    ".claude/commands/hyper-discover.md": {
+      "owner": "hacf",
+      "sha256": "d8fa93deb7e301fdc90bd0169d79be6c7ace8ecf4c07a3fc78d27b1ed1e771b6"
+    },
+    ".claude/commands/hyper-document.md": {
+      "owner": "hacf",
+      "sha256": "cd1528f512eabc4f3d06274603e2c3da01775b5c18ccac8c4c8d2d4ece7ac528"
+    },
+    ".claude/commands/hyper-execute.md": {
+      "owner": "hacf",
+      "sha256": "50606658b6ace72cac23b45a7878ffbdf398fc816cfc890ea2b94d27627c04ff"
+    },
+    ".claude/commands/hyper-grill-docs.md": {
+      "owner": "hacf",
+      "sha256": "2b074671050a876427232a03e885d10d246fb42f90cc76c794f73632852fb2d7"
+    },
+    ".claude/commands/hyper-handoff.md": {
+      "owner": "hacf",
+      "sha256": "ee241a9ec680ad60c6eb3f56eda1a6adcd26d7175346971a8badb0dc1ee11a7e"
+    },
+    ".claude/commands/hyper-learning-opportunity.md": {
+      "owner": "hacf",
+      "sha256": "a0cd2126521afa862679b7f326e6211ac5816491ffd0a85bd6c9108b8dc8f60d"
+    },
+    ".claude/commands/hyper-lore-approve.md": {
+      "owner": "hacf",
+      "sha256": "06e06b6db413cb54569e14fd5179b121c9c4f04a726a3528100a64ecdde051c5"
+    },
+    ".claude/commands/hyper-new-workflow.md": {
+      "owner": "hacf",
+      "sha256": "89df2de5adcbd2a1f102e2c5e412d31abade67db59aa74d066ba948eef6e276f"
+    },
+    ".claude/commands/hyper-peer-review.md": {
+      "owner": "hacf",
+      "sha256": "462f8972bdf780eb760c3d5c294ca8b753fbdf648fe8f126a206b7d19d992f1c"
+    },
+    ".claude/commands/hyper-process-document.md": {
+      "owner": "hacf",
+      "sha256": "10ea5b611ae8dae34fbb35897e524b7abd7eec9ed066d152c69ed151500f0fdf"
+    },
+    ".claude/commands/hyper-prompt-engineer.md": {
+      "owner": "hacf",
+      "sha256": "55424e4d475f14a132eca6bcc3f0469eee5d46fb212ca770284666db5ae18621"
+    },
+    ".claude/commands/hyper-publish.md": {
+      "owner": "hacf",
+      "sha256": "e26f59db6bb43ce24d8c0ed8043ea97d0f4a53f6db05567fbd3048f83f53782e"
+    },
+    ".claude/commands/hyper-redteam.md": {
+      "owner": "hacf",
+      "sha256": "18974aa0bc679cd76e039aec23f63d2f3e7e4d385277f7f6e8a68ba61e30a5de"
+    },
+    ".claude/commands/hyper-refresh-memory.md": {
+      "owner": "hacf",
+      "sha256": "a606523ba02b3d66ce85d5c0261427be83df09138d835abdeba95aae85d11320"
+    },
+    ".claude/commands/hyper-resolve.md": {
+      "owner": "hacf",
+      "sha256": "59dafd8e55555a2a9eff2e6a15c009301fa0601459a3847b37dd4d2a78bff723"
+    },
+    ".claude/commands/hyper-session-update.md": {
+      "owner": "hacf",
+      "sha256": "3226c0dd48f81f2b55460b2a18193af4d805bcddbdfc2d0860be5701a76fd703"
+    },
+    ".claude/commands/hyper-sop.md": {
+      "owner": "hacf",
+      "sha256": "700f37329b4c673784688525231acd52b8e5c19f48ab7af36eb89b8d0e79f6c8"
+    },
+    ".claude/commands/hyper-status.md": {
+      "owner": "hacf",
+      "sha256": "4b097b93843f58d4090ccb63595a6e99ae890a667861fc22e24dbd8578843258"
+    },
+    ".claude/commands/hyper-stitch-design.md": {
+      "owner": "hacf",
+      "sha256": "7678e461a56015bbc8be572812f066ce732a92cbe40486c5ecc0165a9595134d"
+    },
+    ".claude/commands/hyper-template-architect.md": {
+      "owner": "hacf",
+      "sha256": "524fd99861b34141fb1a450dae73982938805359e8154e389afcef223d51729f"
+    },
+    ".claude/commands/hyper-troubleshooting.md": {
+      "owner": "hacf",
+      "sha256": "108a746783f6bba9d99f5e804003a6260630266e0367f7f26671c6a97f6725d2"
+    },
+    ".claude/commands/hyper-tutorial-audit.md": {
+      "owner": "hacf",
+      "sha256": "2e638b9cdfb8c392d6a4062e1fc43f1074a3baf49a39ea5a8cd0126e963335bd"
+    },
+    ".claude/commands/hyper-tutorial-generator.md": {
+      "owner": "hacf",
+      "sha256": "4293e9794db7279804d1ee16ab4bd2dcaac4ee16b888a5dceeccc4d02e8dd0e1"
+    },
+    ".claude/commands/hyper-tutorial-run.md": {
+      "owner": "hacf",
+      "sha256": "583935e7d597137606604d358a8485d0862926818dd8b2ed4106dd1b8d59009d"
+    },
+    ".claude/commands/hyper-tutorial.md": {
+      "owner": "hacf",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".claude/commands/hyper-update.md": {
+      "owner": "hacf",
+      "sha256": "43fbce7577be3b00d681bca584821e0ebf40ea208f25734c3af4bc5fc2518d3b"
+    },
+    "HACF-uninstall.sh": {
+      "owner": "hacf",
+      "sha256": "47d9701eef987f6953152dbb577f4ab829a35bd9635ac5c2ee304f18313c52d7"
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      "python3 \"${CLAUDE_PROJECT_DIR}/.agents/scripts/hyper_gate_hook.py\""
+    ],
+    "SessionStart": [
+      "bash -c 'P=$(basename \"$(git rev-parse --show-toplevel 2>/dev/null || pwd)\") && echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"SessionStart\\\",\\\"sessionTitle\\\":\\\"$P\\\"}}\"'"
+    ],
+    "git": {
+      "commit-msg": {
+        "path": ".git/hooks/commit-msg",
+        "sha256": "685a350ca6969d08a31474f74c86da308522db5084b1fff8f46e9b6084b2cf90"
+      },
+      "pre-commit": {
+        "path": ".git/hooks/pre-commit",
+        "sha256": "848840aac42197fd7f900a2a2b1a1c82826640f615532859899a4a2d0b9fce0f"
+      },
+      "pre-push": {
+        "path": ".git/hooks/pre-push",
+        "sha256": "2f4e6807a566d3bd609efd482645f028db0a45ebea1c0457fb822bad74613915"
+      }
+    }
+  },
+  "ides": [
+    "claude",
+    "universal"
+  ],
+  "installed_at": "2026-11-22T07:30:56+00:00",
+  "installed_commit": "e4da6ef5b726af57c08b08c7bd1988831d6a6282",
+  "mcp_entries": {},
+  "settings_rules": {
+    "allow": [
+      "Bash(gh *)",
+      "Bash(touch *)"
+    ],
+    "ask": [
+      "Bash(python3 .agents/scripts/hyper_lore.py approve *)",
+      "Bash(python .agents/scripts/hyper_lore.py approve *)",
+      "Bash(python3 .agents/scripts/hyper_lore.py reject *)",
+      "Bash(python .agents/scripts/hyper_lore.py reject *)",
+      "Bash(python3 .agents/scripts/hyper_lore.py retire *)",
+      "Bash(python .agents/scripts/hyper_lore.py retire *)",
+      "Bash(python3 .agents/scripts/hyper_lore.py reopen *)",
+      "Bash(python .agents/scripts/hyper_lore.py reopen *)",
+      "Bash(python3 .agents/scripts/hyper_lore.py review *)",
+      "Bash(python .agents/scripts/hyper_lore.py review *)"
+    ],
+    "deny": [
+      "Read(/spec/archive/**)",
+      "Edit(/spec/archive/**)",
+      "Read(/tests/candidate_outputs/**)",
+      "Edit(/tests/candidate_outputs/**)",
+      "Read(/**/node_modules/**)",
+      "Read(/**/.env)",
+      "Read(/**/__pycache__/**)",
+      "Read(/.git/**)",
+      "Edit(/spec/compiled/architecture.yml)",
+      "Edit(/lore_hypergraph.yml)",
+      "Edit(/lore/CANON.md)",
+      "Edit(/lore/canon/**)",
+      "Edit(/missions/*/mission.yaml)",
+      "Edit(/missions/*/slices/*/slice.yaml)"
+    ]
+  },
+  "source": {
+    "commit": "e4da6ef5b726af57c08b08c7bd1988831d6a6282",
+    "kind": "local"
+  },
+  "version": "0.6.0"
+}

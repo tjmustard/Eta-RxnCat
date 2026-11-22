@@ -1,0 +1,5 @@
+# HACF per-project selections: team defaults only (tracked; never shipped or overwritten).
+openrig:
+  id_prefix: OPR
+code_graph:
+  backend: none
