@@ -10,7 +10,7 @@ intent: "Move the GPU/MLIP stack to torch 2.13+cu129 and fairchem>=2.22 (TJ F1 A
 depends_on: [OPR.0.2.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, "tools/**", "tests/unit/tools/**", "docs/prd/v0.2.0/**", AGENTS.md, ".github/**", spec/compiled/architecture.yml]
@@ -90,6 +90,14 @@ here or stopped with output.
    - two dist-infos whose PEP 503-normalised names are equal → FAIL `ambiguous: <name> (<versions>)`.
    
    Add synthetic tests for both in `tests/unit/tools/`.
+2b. Allowed list (replan R34, lead decision within TJ's 14:57Z policy). torch 2.13.0+cu129's
+   `License-Expression` is `Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT`.
+   Only `BSL-1.0` (Boost Software License 1.0, OSI/FSF-approved permissive, no copyleft) is off
+   the list. Add it to `[tool.eta-rxncat.licence-gate] allowed`; the second line becomes exactly:
+   `    "Apache-2.0", "ISC", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0", "BSL-1.0",`
+   It is an allowed licence, not a version-pinned exemption. Add a gate unit test, a synthetic
+   dist-info, for each of: `BSL-1.0` passes; `Apache-2.0 AND BSL-1.0 AND MIT` passes;
+   `LicenseRef-Unknown-1` still fails; `BSL-1.0 AND GPL-3.0-only` still fails.
 3. Licence profiles: run all four (`base`, `gpu`, `mlip-mace`, `mlip-uma`) from `.venv-runtime`
    syncs.
    - Stale R48 entries (ray-haproxy, and anything else no longer locked) are removed; the
@@ -165,7 +173,11 @@ here or stopped with output.
 
 - [ ] `uv lock --check` → 0. `uv.lock` has torch `2.13.0+cu129` from `pytorch-cu129` and
   fairchem-core ≥ 2.22.
-- [ ] Four licence profiles → exit 0 each. Every new exempt entry is version-pinned and cites its
+- [ ] The allowed list contains `BSL-1.0`, with exactly the line given in Mini-requirement 2b. The four
+  synthetic BSL tests pass as stated. torch 2.13.0+cu129 passes through `allowed`, not an exempt
+  entry.
+- [ ] Four licence profiles → exit 0 each (`base`, `gpu`, `mlip-mace`, `mlip-uma`, after the
+  `BSL-1.0` change). Every new exempt entry is version-pinned and cites its
   decision. Removing one (shown once for `cuda-toolkit`) makes its profile fail.
 - [ ] Gate synthetic tests: an unnamed dist-info → FAIL; a duplicate name → FAIL.
 - [ ] `docs/prd/v0.2.0/evidence/stack-cu129.json`:

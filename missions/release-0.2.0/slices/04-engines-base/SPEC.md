@@ -13,8 +13,8 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_engines
 parent: null
-hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", tests/unit/test_package.py, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
-hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/engines/test_base.py, tests/unit/test_package.py]]
+hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", tests/unit/test_package.py, tests/conftest.py, tests/unit/test_test_policy.py, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
+hacf_oracle: [["uv", "run", "ruff", "check", "."], ["uv", "run", "ruff", "format", "--check", "."], ["uv", "run", "mypy"], ["uv", "run", "pytest"], ["uv", "run", "pytest", "tests/unit/engines/test_base.py", "tests/unit/test_package.py", "tests/unit/test_test_policy.py"]]
 lore_refs: []
 hacf_legacy_source: null
 hacf_legacy_order: null
@@ -46,7 +46,8 @@ stay out (mission R6, ADR-0016 PROPOSED). Model identity is a content hash (R5, 
 Node `eta_rxncat_engines` is **not yet in the graph**:
 - Create it with `hyper_ledger.py ensure-node --id eta_rxncat_engines --dimension Module
   --depends-on eta_rxncat_core,eta_rxncat_hw_probe --files 'src/eta_rxncat/engines/**,tests/unit/engines/**,tests/acceptance/**'`
-  (or `--from-spec <this SPEC.md>`, then `--files`).
+  Do **not** use `--from-spec` (R33: on an existing node it replaces `files:` with this slice's
+  narrower touches).
 - Remove `src/eta_rxncat/engines/**` from `eta_rxncat_scaffold` with `ensure-node --id
   eta_rxncat_scaffold --files <its full list minus that glob>`. `--files` replaces the list.
 - Never hand-edit `architecture.yml`.
@@ -107,7 +108,24 @@ mechanism built here.
    `python -c "import eta_rxncat, eta_rxncat.engines, sys; print(sorted({'ase','torch','mace','fairchem','gpu4pyscf','cupy','pyscf','rdkit'} & set(sys.modules)))"`
    must print `[]`. The existing AST import ban already covers `src/eta_rxncat/engines/`; assert
    that it scans that directory.
-9. Register rows (status `open`):
+9. **Acceptance switch completeness** (replan R32; slice 01 audit finding
+   `qitem-20261122165838-accad9ea`; makes mission R8 true). Extend `tests/conftest.py` so that
+   under `ETA_RXNCAT_ACCEPTANCE=1` **any** skip fails the run:
+   - (a) collection-phase skips: a module-level `pytest.skip(..., allow_module_level=True)` or
+     `pytest.importorskip(...)` produces a skipped `CollectReport`. Convert it to failed in a
+     `pytest_collectreport`/`pytest_make_collect_report` hook, with the reason in `longrepr`.
+     The run then exits non-zero (pytest's collection-error exit) and names the module.
+   - (b) xfail: a test marked `xfail` (either outcome, xfailed or xpassed) is reported `failed`,
+     with `wasxfail` removed, so the exit code is non-zero and the reason is shown.
+   - (c) setup and call skips: unchanged (slice 01).
+   
+   Without the variable, nothing changes.
+   
+   Also add a rule test: an AST scan of every `.py` under `tests/unit/engines/` and
+   `tests/acceptance/` fails on any **module-level** (top-level statement) call to
+   `pytest.importorskip` or `pytest.skip`. Engine tests skip through markers and function- or
+   fixture-level `importorskip` only.
+10. Register rows (status `open`):
    - starter `engines/base.py` names vs these (`changed`/`dropped`);
    - `added` rows for each module here.
 
@@ -117,8 +135,11 @@ mechanism built here.
 - [ ] Task 2: errors, units, options, identity, base, fd (Mini-requirements 1–7).
 - [ ] Task 3: tests in `tests/unit/engines/test_base.py`, using a toy engine class `ToyEngine`
   (tag `rdkit_ff`) with a pure-Python harmonic potential, defined in the test file.
-- [ ] Task 4: the base-install subprocess test (Mini-requirement 8); register rows; four gates;
-  `hypergraph_updater.py`.
+- [ ] Task 4: the base-install subprocess test (Mini-requirement 8).
+- [ ] Task 4b (R32): the conftest collection and xfail conversion, plus the module-level-skip rule
+  test (Mini-requirement 9). Tests go in `tests/unit/test_test_policy.py` (slice 01's file,
+  extended).
+- [ ] Task 5: register rows; four gates; `hypergraph_updater.py`.
 
 ## 4. The Negative Space (Constraints)
 
@@ -148,6 +169,18 @@ mechanism built here.
 - [ ] Unit conversions round-trip to 1e-15 relative, and the constants equal the stated CODATA
   2018 values.
 - [ ] The base-install subprocess test prints `[]`.
+- [ ] R32, pytester, using the audit probe pattern
+  (`~/.hacf/eta-rxncat-hacf/audit-evidence/probe201b.py`) with the real `tests/conftest.py`:
+  - one module doing `pytest.importorskip("no_such_mace_xyz")` at module level plus one passing
+    module, under `ETA_RXNCAT_ACCEPTANCE=1` → **non-zero** exit, the skipped module reported as
+    an error or failure naming it, and no `skipped` in the outcomes;
+  - the same without the variable → exit 0, `1 passed, 1 skipped`;
+  - module-level `pytest.skip("x", allow_module_level=True)` under `=1` → non-zero;
+  - an `xfail`-marked failing test under `=1` → non-zero exit, reported failed. Without the
+    variable → exit 0, `1 xfailed`;
+  - the slice-01 setup/call cases still behave as before.
+- [ ] The module-level-skip rule test passes on the repo. A `tmp_path` file with a top-level
+  `pytest.importorskip("x")` is flagged; one with it inside a function is not.
 - [ ] `ToyEngine.evaluate` returns a valid `PotentialResult` with `stage_engine_impl == 1` and
   `wall_time_s ≥ 0`. A toy that returns 2 force rows for 3 atoms → `EngineRuntimeError`.
 - [ ] The four gates (`uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`,
