@@ -10,7 +10,7 @@ intent: "Implement the strict Pydantic v2 core data contracts and a duplicate-ke
 depends_on: [OPR.0.1.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", "tests/data/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -109,20 +109,20 @@ that TJ may relax later; implement it as written.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — Element table (Z 1–118 symbols, canonical case) as an immutable module constant
+- [x] Task 1 — Element table (Z 1–118 symbols, canonical case) as an immutable module constant
   (tuple/`MappingProxyType`), not a mutable global.
-- [ ] Task 2 — `MolecularState` with field and model validators (Mini-requirement 1).
-- [ ] Task 3 — `Solvation`, `StageConfig`, `EngineIdentity` (Mini-requirement 2).
-- [ ] Task 4 — `AtomMappingSpec` self-checks (Mini-requirement 3, first half).
-- [ ] Task 5 — `ThermoConfig` (Mini-requirement 4).
-- [ ] Task 6 — `Component`, `TemplateGeometry` (index-space checks), `ReactionNode`,
+- [x] Task 2 — `MolecularState` with field and model validators (Mini-requirement 1).
+- [x] Task 3 — `Solvation`, `StageConfig`, `EngineIdentity` (Mini-requirement 2).
+- [x] Task 4 — `AtomMappingSpec` self-checks (Mini-requirement 3, first half).
+- [x] Task 5 — `ThermoConfig` (Mini-requirement 4).
+- [x] Task 6 — `Component`, `TemplateGeometry` (index-space checks), `ReactionNode`,
   `ReactionEdge`, `PruningRule`, `ReactionGraph`, `priority_order()` (Mini-requirement 5).
-- [ ] Task 7 — Duplicate-key YAML loader and JSON hook, `load_reaction_graph`,
+- [x] Task 7 — Duplicate-key YAML loader and JSON hook, `load_reaction_graph`,
   `dump_reaction_graph_json`, `GraphValidationError` (Mini-requirement 6).
-- [ ] Task 8 — Example graph (Mini-requirement 7).
-- [ ] Task 9 — Tests under `tests/unit/core/` (one test per bullet of the Proof contract).
-- [ ] Task 10 — `core/__init__.py` re-exports the public names; register rows (Mini-requirement 8).
-- [ ] Task 11 — Run `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`,
+- [x] Task 8 — Example graph (Mini-requirement 7).
+- [x] Task 9 — Tests under `tests/unit/core/` (one test per bullet of the Proof contract).
+- [x] Task 10 — `core/__init__.py` re-exports the public names; register rows (Mini-requirement 8).
+- [x] Task 11 — Run `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`,
   `uv run pytest`; all exit 0.
 
 ## 4. The Negative Space (Constraints)

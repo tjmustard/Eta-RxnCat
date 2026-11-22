@@ -141,6 +141,152 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 
 ## Core
 
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-099 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:14` `NodeKind` | `src/eta_rxncat/core/graph.py:18` `NodeKind` Literal | changed | Literal of the same five values instead of a str Enum | open |
+| D-100 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:17` `NodeKind.REACTANT` | `src/eta_rxncat/core/graph.py:18` `"reactant"` | same | Same value, as a Literal member | open |
+| D-101 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:18` `NodeKind.INTERMEDIATE` | `src/eta_rxncat/core/graph.py:18` `"intermediate"` | same | Same value, as a Literal member | open |
+| D-102 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:19` `NodeKind.TRANSITION_STATE` | `src/eta_rxncat/core/graph.py:18` `"transition_state"` | same | Same value, as a Literal member | open |
+| D-103 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:20` `NodeKind.PRODUCT` | `src/eta_rxncat/core/graph.py:18` `"product"` | same | Same value, as a Literal member | open |
+| D-104 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:21` `NodeKind.OFF_CYCLE_SINK` | `src/eta_rxncat/core/graph.py:18` `"off_cycle_sink"` | same | Same value, as a Literal member | open |
+| D-105 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:24` `StageKind` | `src/eta_rxncat/core/models.py:16` `StageKind` Literal | changed | Literal of the same five values instead of a str Enum | open |
+| D-106 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:27` `StageKind.CONFORMER_SEARCH` | `src/eta_rxncat/core/models.py:16` `"conformer_search"` | same | Same value, as a Literal member | open |
+| D-107 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:28` `StageKind.CONSTRAINED_PREOPT` | `src/eta_rxncat/core/models.py:16` `"constrained_preopt"` | same | Same value, as a Literal member | open |
+| D-108 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:29` `StageKind.GEOMETRY_OPT` | `src/eta_rxncat/core/models.py:16` `"geometry_opt"` | same | Same value, as a Literal member | open |
+| D-109 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:30` `StageKind.FREQUENCY` | `src/eta_rxncat/core/models.py:16` `"frequency"` | same | Same value, as a Literal member | open |
+| D-110 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:31` `StageKind.SINGLE_POINT` | `src/eta_rxncat/core/models.py:16` `"single_point"` | same | Same value, as a Literal member | open |
+| D-111 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:34` `SolvationSpec` | `src/eta_rxncat/core/models.py:113` `Solvation` | changed | Renamed per the contract; `none` forbids solvent/dielectric; engine compatibility checked on StageConfig | open |
+| D-112 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:37` `model` | `src/eta_rxncat/core/models.py:122` | same | — | open |
+| D-113 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:38` `solvent` | `src/eta_rxncat/core/models.py:123` | changed | Non-empty when given; forbidden for model `none` | open |
+| D-114 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:39` `dielectric` | `src/eta_rxncat/core/models.py:124` | changed | Must also be finite; forbidden for model `none` | open |
+| D-115 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:48` `StageConfig` | `src/eta_rxncat/core/models.py:142` | changed | Mission contract: strict method/basis/solvation/frozen-atom rules | open |
+| D-116 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:51` `stage` | `src/eta_rxncat/core/models.py:155` `kind` | changed | Renamed `stage` → `kind` (mission contract) | open |
+| D-117 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:52` `engine` | `src/eta_rxncat/core/models.py:156` | changed | Tags `rdkit_ff, mace, uma_direct, pyscf_gpu_cpu, xtb_subprocess` replace `rdkit_ff, xtb, mace, uma, pyscf` (mission R22) | open |
+| D-118 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:53` `method` | `src/eta_rxncat/core/models.py:157` | changed | Required, no `"default"` default; the literal `default` in any case is rejected | open |
+| D-119 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:57` `basis` | `src/eta_rxncat/core/models.py:158` | changed | Required non-empty iff engine is `pyscf_gpu_cpu`, otherwise must be `None` | open |
+| D-120 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:61` `solvation` | `src/eta_rxncat/core/models.py:159` | changed | Type renamed to `Solvation` | open |
+| D-121 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:62` `extra_options` | `src/eta_rxncat/core/models.py:161` `options` | changed | Renamed `extra_options` → `options`; float values must be finite | open |
+| D-122 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:64` `stage_hash()` | — | dropped | Hashing belongs to the store slice (03, mission R5); this slice must not implement it | open |
+| D-123 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:70` `ThermoConfig` | `src/eta_rxncat/core/models.py:265` | changed | Mission contract / R23 | open |
+| D-124 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:73` `temperature_k` | `src/eta_rxncat/core/models.py:279` | changed | Must also be finite | open |
+| D-125 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:74` `pressure_atm` | `src/eta_rxncat/core/models.py:280` | changed | Must also be finite | open |
+| D-126 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:75` `concentration_mol_l` | `src/eta_rxncat/core/models.py:281` `standard_state_mol_l` | changed | Renamed; `None` forbidden (mission R23) | open |
+| D-127 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:80` `quasi_rrho_mode` | `src/eta_rxncat/core/models.py:278` `entropy_model` | changed | Only `grimme_qrrho`; `head_gordon` and `none` dropped | open |
+| D-128 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:81` `omega0_cm1` | `src/eta_rxncat/core/models.py:282` `qrrho_cutoff_cm1` | changed | Renamed per the contract | open |
+| D-129 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:88` `MolecularState` | `src/eta_rxncat/core/models.py:61` | changed | Mission contract / R9: strict ints, canonical symbols, finite N×3, electron parity | open |
+| D-130 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:91` `name` | — | dropped | Not in the mission contract (labels live on `Component`) | open |
+| D-131 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:92` `symbols` | `src/eta_rxncat/core/models.py:73` | changed | Each must be a canonical symbol, Z 1–118 | open |
+| D-132 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:93` `coordinates` | `src/eta_rxncat/core/models.py:74` | changed | Values must be finite | open |
+| D-133 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:94` `charge` | `src/eta_rxncat/core/models.py:75` | changed | `StrictInt`: rejects `True`, `"1"`, `1.0` (mission R9) | open |
+| D-134 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:95` `spin_multiplicity` | `src/eta_rxncat/core/models.py:76` | changed | `StrictInt ≥ 1` plus the electron-count/parity check (mission R9) | open |
+| D-135 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:96` `active_atom_indices` | `src/eta_rxncat/core/models.py:77` | changed | `StrictInt` and unique | open |
+| D-136 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:100` `metadata` | `src/eta_rxncat/core/models.py:78` | same | — | open |
+| D-137 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:115` `coords_array()` | — | dropped | Not in the mission contract; numeric arrays arrive with the engines (v0.2.0) | open |
+| D-138 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:118` `geometry_hash()` | — | dropped | Hashing belongs to the store slice (03, mission R6) | open |
+| D-139 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:133` `AtomMappingSpec` | `src/eta_rxncat/core/models.py:203` | changed | Mission R19: full invariant list, plus template-level checks | open |
+| D-140 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:143` `keep_atoms` | `src/eta_rxncat/core/models.py:213` `keep` | changed | Renamed; non-negative, unique | open |
+| D-141 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:144` `delete_atoms` | `src/eta_rxncat/core/models.py:214` `delete` | changed | Renamed; required (no default); non-negative, unique | open |
+| D-142 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:145` `alignment_atoms` | `src/eta_rxncat/core/models.py:215` `alignment` | changed | Renamed; must be ⊆ keep (≥ 3) | open |
+| D-143 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:146` `attachment_anchors` | `src/eta_rxncat/core/models.py:216` `anchors` | changed | Renamed; must be ⊆ keep, unique | open |
+| D-144 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:165` `VibrationalMode` | — | dropped | mission R8: defined by its consuming version | open |
+| D-145 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:168` `VibrationalMode.frequency_cm1` | — | dropped | mission R8: defined by its consuming version | open |
+| D-146 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:169` `VibrationalMode.displacement_vectors` | — | dropped | mission R8: defined by its consuming version | open |
+| D-147 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:170` `VibrationalMode.active_core_kinetic_fraction` | — | dropped | mission R8: defined by its consuming version | open |
+| D-148 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:178` `PotentialResult` | — | dropped | mission R8: defined by its consuming version | open |
+| D-149 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:181` `PotentialResult.electronic_energy_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-150 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:182` `PotentialResult.forces_hartree_per_bohr` | — | dropped | mission R8: defined by its consuming version | open |
+| D-151 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:183` `PotentialResult.hessian_hartree_per_bohr2` | — | dropped | mission R8: defined by its consuming version | open |
+| D-152 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:184` `PotentialResult.wall_time_seconds` | — | dropped | mission R8: defined by its consuming version | open |
+| D-153 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:185` `PotentialResult.backend_device` | — | dropped | mission R8: defined by its consuming version | open |
+| D-154 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:186` `PotentialResult.recovery_steps_used` | — | dropped | mission R8: defined by its consuming version | open |
+| D-155 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:189` `ThermoResult` | — | dropped | mission R8: defined by its consuming version | open |
+| D-156 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:192` `ThermoResult.electronic_energy_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-157 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:193` `ThermoResult.zpe_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-158 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:194` `ThermoResult.thermal_enthalpy_corr_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-159 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:195` `ThermoResult.entropy_cal_per_mol_k` | — | dropped | mission R8: defined by its consuming version | open |
+| D-160 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:196` `ThermoResult.gibbs_free_energy_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-161 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:197` `ThermoResult.imaginary_frequencies_cm1` | — | dropped | mission R8: defined by its consuming version | open |
+| D-162 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:198` `ThermoResult.is_valid_stationary_point` | — | dropped | mission R8: defined by its consuming version | open |
+| D-163 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:199` `ThermoResult.validation_notes` | — | dropped | mission R8: defined by its consuming version | open |
+| D-164 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:202` `ConformerEnsemble` | — | dropped | mission R8: defined by its consuming version | open |
+| D-165 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:205` `ConformerEnsemble.species_name` | — | dropped | mission R8: defined by its consuming version | open |
+| D-166 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:206` `ConformerEnsemble.conformers` | — | dropped | mission R8: defined by its consuming version | open |
+| D-167 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:207` `ConformerEnsemble.gibbs_energies_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-168 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:208` `ConformerEnsemble.boltzmann_weights` | — | dropped | mission R8: defined by its consuming version | open |
+| D-169 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:209` `ConformerEnsemble.lowest_conformer_index` | — | dropped | mission R8: defined by its consuming version | open |
+| D-170 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/models.py:210` `ConformerEnsemble.boltzmann_averaged_gibbs_hartree` | — | dropped | mission R8: defined by its consuming version | open |
+| D-171 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:21` `TemplateGeometry` | `src/eta_rxncat/core/graph.py:36` | changed | Mission R18: multi-component templates, unique rank | open |
+| D-172 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:24` `template_id` | `src/eta_rxncat/core/graph.py:49` `id` | changed | Renamed; unique within the node | open |
+| D-173 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:25` `structure` | `src/eta_rxncat/core/graph.py:51` `components` | changed | One `MolecularState` → list of `Component` (state + count), mission R18 | open |
+| D-174 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:26` `mapping` | `src/eta_rxncat/core/graph.py:52` | changed | Optional; checked against the template atom count (index < N, keep ∪ delete = all) | open |
+| D-175 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:27` `priority_rank` | `src/eta_rxncat/core/graph.py:50` `rank` | changed | Renamed; required `StrictInt ≥ 1`, unique within the node | open |
+| D-176 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:34` `PruningRule` | `src/eta_rxncat/core/graph.py:143` | changed | Schema and reference check only; never evaluated in v0.1.0 (mission contract) | open |
+| D-177 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:37` `rule_id` | `src/eta_rxncat/core/graph.py:152` `id` | changed | Renamed; unique within the graph | open |
+| D-178 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:38` `metric` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-179 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:39` `reference_node_id` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-180 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:40` `target_node_id` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-181 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:41` `operator` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-182 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:42` `threshold` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-183 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:43` `on_fail` | `src/eta_rxncat/core/graph.py:154` `parameters` | dropped | Typed rule fields replaced by free-form `parameters`; rule evaluation is out of v0.1.0 scope | open |
+| D-184 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:46` `ReactionNode` | `src/eta_rxncat/core/graph.py:83` | changed | Mission contract / R18 | open |
+| D-185 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:49` `node_id` | `src/eta_rxncat/core/graph.py:96` `id` | changed | Renamed; pattern `^[A-Za-z][A-Za-z0-9_.-]*$` | open |
+| D-186 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:50` `label` | `src/eta_rxncat/core/graph.py:97` | same | — | open |
+| D-187 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:51` `kind` | `src/eta_rxncat/core/graph.py:98` | changed | Literal instead of Enum | open |
+| D-188 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:52` `priority` | `src/eta_rxncat/core/graph.py:99` | changed | Required `StrictInt ≥ 1` (no default 1) | open |
+| D-189 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:57` `stoichiometry_multipliers` | `src/eta_rxncat/core/graph.py:32` `Component.count` | dropped | Stoichiometry moves to `Component.count` (mission R18) | open |
+| D-190 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:61` `templates` | `src/eta_rxncat/core/graph.py:100` | changed | Unique ids and ranks; equal total charge and element multiset across templates | open |
+| D-191 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:62` `stages` | `src/eta_rxncat/core/graph.py:101` | changed | `None` (not `[]`) means the graph's default stages | open |
+| D-192 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:66` `notes` | — | dropped | Not in the mission contract | open |
+| D-193 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:92` `ReactionEdge` | `src/eta_rxncat/core/graph.py:129` | changed | Self-loops and duplicate pairs rejected at graph level | open |
+| D-194 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:95` `source_id` | `src/eta_rxncat/core/graph.py:138` `source` | changed | Renamed | open |
+| D-195 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:96` `target_id` | `src/eta_rxncat/core/graph.py:139` `target` | changed | Renamed | open |
+| D-196 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:97` `step_label` | `src/eta_rxncat/core/graph.py:140` `label` | changed | Renamed; optional, default `None` | open |
+| D-197 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:98` `is_reversible` | — | dropped | Not in the mission contract | open |
+| D-198 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:101` `ReactionGraph` | `src/eta_rxncat/core/graph.py:157` | changed | Mission contract | open |
+| D-199 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:104` `name` | `src/eta_rxncat/core/graph.py:171` | same | — | open |
+| D-200 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:105` `description` | — | dropped | Not in the mission contract | open |
+| D-201 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:106` `default_stages` | `src/eta_rxncat/core/graph.py:174` | changed | Default `[]` instead of required, non-empty | open |
+| D-202 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:107` `thermo` | `src/eta_rxncat/core/graph.py:175` | same | — | open |
+| D-203 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:108` `nodes` | `src/eta_rxncat/core/graph.py:172` | same | — | open |
+| D-204 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:109` `edges` | `src/eta_rxncat/core/graph.py:173` | changed | Self-loops and duplicate (source, target) pairs rejected; cycles allowed (mission R18) | open |
+| D-205 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:110` `pruning_rules` | `src/eta_rxncat/core/graph.py:176` | changed | Unique ids; nodes reference them by id (starter rules referenced nodes instead) | open |
+| D-206 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:132` `effective_stages()` | — | dropped | Not in the mission contract; stage resolution belongs to the orchestrator (v0.8.0) | open |
+| D-207 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:137` `get_node()` | — | dropped | Not in the mission contract | open |
+| D-208 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:143` `execution_order()` | `src/eta_rxncat/core/graph.py:207` `priority_order()` | changed | Returns ids sorted by `(priority, id)`, not nodes in declaration order | open |
+| D-209 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:147` `to_yaml()` | — | dropped | Not in the mission contract (JSON dump only) | open |
+| D-210 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:150` `to_json()` | `src/eta_rxncat/core/io.py:107` `dump_reaction_graph_json()` | changed | Module function per the contract | open |
+| D-211 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/reaction_graph.py:154` `from_file()` | `src/eta_rxncat/core/io.py:69` `load_reaction_graph()` | changed | Module function; rejects duplicate keys; every failure is `GraphValidationError` (mission R9) | open |
+| D-212 | core | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/core/__init__.py:24` `__all__` re-exports | `src/eta_rxncat/core/__init__.py:26` | changed | Re-exports the rewrite's public names (dropped models removed, new ones added) | open |
+| D-213 | core | — | `src/eta_rxncat/core/elements.py:6` `ELEMENT_SYMBOLS` | added | Mission R9 / slice 02 Task 1: immutable Z 1–118 table | open |
+| D-214 | core | — | `src/eta_rxncat/core/elements.py:23` `ATOMIC_NUMBERS` | added | Read-only symbol → Z map for the electron check | open |
+| D-215 | core | — | `src/eta_rxncat/core/models.py:21` `EngineTag` | added | Frozen engine tags (mission R22) | open |
+| D-216 | core | — | `src/eta_rxncat/core/models.py:24` `SolvationModel` | added | Solvation model Literal | open |
+| D-217 | core | — | `src/eta_rxncat/core/models.py:27` `ScalarValue` | added | Value type of options/metadata/parameters maps | open |
+| D-218 | core | — | `src/eta_rxncat/core/models.py:30` `PositiveInt` | added | `StrictInt ≥ 1` alias (mission R9) | open |
+| D-219 | core | — | `src/eta_rxncat/core/models.py:31` `NonNegativeInt` | added | `StrictInt ≥ 0` alias | open |
+| D-220 | core | — | `src/eta_rxncat/core/models.py:32` `PositiveFiniteFloat` | added | Finite float > 0 alias (ThermoConfig, dielectric) | open |
+| D-221 | core | — | `src/eta_rxncat/core/models.py:35` `CoreModel` | added | Base: `extra="forbid"`, `frozen=True` on every model | open |
+| D-222 | core | — | `src/eta_rxncat/core/models.py:160` `StageConfig.frozen_atom_indices` | added | Mission contract; required for `constrained_preopt` | open |
+| D-223 | core | — | `src/eta_rxncat/core/models.py:189` `EngineIdentity` | added | Mission R5: engine identity for cache keys | open |
+| D-224 | core | — | `src/eta_rxncat/core/models.py:198` `EngineIdentity.name` | added | Engine tag | open |
+| D-225 | core | — | `src/eta_rxncat/core/models.py:199` `EngineIdentity.version` | added | Non-empty version | open |
+| D-226 | core | — | `src/eta_rxncat/core/models.py:200` `EngineIdentity.model` | added | Optional weights id | open |
+| D-227 | core | — | `src/eta_rxncat/core/models.py:247` `AtomMappingSpec.check_atom_count()` | added | Template-level checks (index < N, keep ∪ delete = all), mission R19 | open |
+| D-228 | core | — | `src/eta_rxncat/core/models.py:283` `ThermoConfig.qrrho_alpha` | added | Mission R23: Grimme α default 4.0 | open |
+| D-229 | core | — | `src/eta_rxncat/core/models.py:284` `ThermoConfig.qrrho_rotor_moment_kg_m2` | added | Mission R23: B_av default 1e-44 kg m² | open |
+| D-230 | core | — | `src/eta_rxncat/core/graph.py:22` `Component` | added | Mission R18: species of a separated state with stoichiometric count | open |
+| D-231 | core | — | `src/eta_rxncat/core/graph.py:31` `Component.state` | added | The species' structure | open |
+| D-232 | core | — | `src/eta_rxncat/core/graph.py:32` `Component.count` | added | `StrictInt ≥ 1` | open |
+| D-233 | core | — | `src/eta_rxncat/core/graph.py:33` `Component.label` | added | Optional name | open |
+| D-234 | core | — | `src/eta_rxncat/core/graph.py:55` `TemplateGeometry.atom_count` | added | Size of the template index space | open |
+| D-235 | core | — | `src/eta_rxncat/core/graph.py:60` `TemplateGeometry.total_charge` | added | Σ(count × charge), for the node consistency check | open |
+| D-236 | core | — | `src/eta_rxncat/core/graph.py:65` `TemplateGeometry.element_counts` | added | Σ(count × symbols), for the node consistency check | open |
+| D-237 | core | — | `src/eta_rxncat/core/graph.py:102` `ReactionNode.pruning_rules` | added | Rule ids referenced by the node | open |
+| D-238 | core | — | `src/eta_rxncat/core/graph.py:154` `PruningRule.parameters` | added | Free-form scalar parameters | open |
+| D-239 | core | — | `src/eta_rxncat/core/graph.py:153` `PruningRule.description` | added | What the rule gates | open |
+| D-240 | core | — | `src/eta_rxncat/core/graph.py:170` `ReactionGraph.schema_version` | added | Required `Literal[1]` file schema version | open |
+| D-241 | core | — | `src/eta_rxncat/core/io.py:13` `GraphValidationError` | added | Single error type for every loader failure (mission contract) | open |
+
 ## Store
 
 ## Hardware probe
@@ -149,4 +295,38 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 
 ## Fixture
 
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-242 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml` (file) | `tests/data/reaction_graphs/example_reaction_graph.yaml` | changed | New path (mission R17; agents never write `tests/fixtures/`); a new graph (SN2 Cl⁻ + CH₃Cl), not a copy | open |
+| D-243 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:1` top-level `name` | `tests/data/reaction_graphs/example_reaction_graph.yaml:6` | same | — | open |
+| D-244 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:2` top-level `description` | — | dropped | Not in the graph contract (replaced by a YAML comment) | open |
+| D-245 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:3` top-level `default_stages` | `tests/data/reaction_graphs/example_reaction_graph.yaml:7` | changed | Uses `kind` and the frozen engine tags; three stages | open |
+| D-246 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:20` top-level `thermo` | `tests/data/reaction_graphs/example_reaction_graph.yaml:24` | changed | Keys `temperature_k`, `standard_state_mol_l` (starter `concentration_mol_l`, `quasi_rrho_mode`, `omega0_cm1` renamed/dropped) | open |
+| D-247 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:26` top-level `nodes` | `tests/data/reaction_graphs/example_reaction_graph.yaml:32` | changed | Three nodes (TS, reactants, products) in two priority tiers | open |
+| D-248 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:50` top-level `edges` | `tests/data/reaction_graphs/example_reaction_graph.yaml:117` | changed | Two edges (starter has none) | open |
+| D-249 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:51` top-level `pruning_rules` | `tests/data/reaction_graphs/example_reaction_graph.yaml:27` | changed | One rule, referenced by the TS node (starter has none) | open |
+| D-250 | fixture | — | `tests/data/reaction_graphs/example_reaction_graph.yaml:5` top-level `schema_version` | added | Required by the graph contract | open |
+| D-251 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:27` node `node_id` | `tests/data/reaction_graphs/example_reaction_graph.yaml:33` | changed | Renamed `id` | open |
+| D-252 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:28` node `label` | `tests/data/reaction_graphs/example_reaction_graph.yaml:34` | same | — | open |
+| D-253 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:29` node `kind` | `tests/data/reaction_graphs/example_reaction_graph.yaml:35` | same | — | open |
+| D-254 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:30` node `priority` | `tests/data/reaction_graphs/example_reaction_graph.yaml:36` | same | — | open |
+| D-255 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:31` node `templates` | `tests/data/reaction_graphs/example_reaction_graph.yaml:38` | same | — | open |
+| D-256 | fixture | — | `tests/data/reaction_graphs/example_reaction_graph.yaml:37` node `pruning_rules` | added | Node references a graph rule | open |
+| D-257 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:32` template `template_id` | `tests/data/reaction_graphs/example_reaction_graph.yaml:39` | changed | Renamed `id` | open |
+| D-258 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:33` template `priority_rank` | `tests/data/reaction_graphs/example_reaction_graph.yaml:40` | changed | Renamed `rank` | open |
+| D-259 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:34` template `structure` | `tests/data/reaction_graphs/example_reaction_graph.yaml:41` | changed | Replaced by `components` (state + count). Starter state CH3 (9 electrons) with multiplicity 1 is chemically impossible and would fail the new electron check | open |
+| D-260 | fixture | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/e2e/fixtures/example_reaction_graph.yaml:45` template `mapping` | `tests/data/reaction_graphs/example_reaction_graph.yaml:56` | changed | Keys `keep`, `delete`, `alignment`, `anchors` (renamed); keep ∪ delete covers all atoms | open |
+| D-261 | fixture | — (starter `edges: []` has no edge objects) | `tests/data/reaction_graphs/example_reaction_graph.yaml:118` edge `source`, `target`, `label` | added | Edge object keys per the contract | open |
+
 ## Tests
+
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-262 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:39` `test_molecular_state_requires_charge_and_multiplicity` | `tests/unit/core/test_core_molecule.py:32` | changed | Rewritten; strictness cases in `test_charge_and_multiplicity_are_strict_ints` | open |
+| D-263 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:46` `test_atom_mapping_spec_rejects_overlap` | `tests/unit/core/test_core_mapping_thermo.py:55` (`keep-delete-overlap`) | changed | One parametrised case per invariant | open |
+| D-264 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:55` `test_reaction_graph_yaml_roundtrip_and_priority_order` | `tests/unit/core/test_core_graph_io.py:210`, `tests/unit/core/test_core_graph_io.py:161` | changed | Split into round-trip and `(priority, id)` ordering tests | open |
+| D-265 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:85` `test_stage_decomposed_cache_incremental_solvation` | — | dropped | Cache behaviour belongs to the store slice (03) | open |
+| D-266 | tests | — | `tests/unit/core/test_core_molecule.py` | added | MolecularState proof bullets (slice 02) | open |
+| D-267 | tests | — | `tests/unit/core/test_core_stage.py` | added | StageConfig/Solvation/EngineIdentity proof bullets | open |
+| D-268 | tests | — | `tests/unit/core/test_core_mapping_thermo.py` | added | AtomMappingSpec and ThermoConfig proof bullets | open |
+| D-269 | tests | — | `tests/unit/core/test_core_graph_io.py` | added | Graph, loader, import-isolation and no-unsafe-YAML proof bullets | open |

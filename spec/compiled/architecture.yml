@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -48,8 +48,26 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 01-scaffold
+    last_slice: 02-core-schemas
   review:
     reviewed_at: '2026-11-22T12:59:37+00:00'
     reviewed_by: audit:01-scaffold
     summary: patched description, outputs
+- id: eta_rxncat_core
+  dimension: Module
+  status: dirty
+  files:
+  - src/eta_rxncat/core/**
+  - tests/unit/core/**
+  - tests/data/**
+  - docs/prd/v0.1.0/DISCREPANCIES.md
+  - spec/compiled/architecture.yml
+  description: ''
+  inputs: []
+  outputs: []
+  edges:
+    depends_on: []
+    implements: []
+    member_of: []
+  provenance:
+    last_slice: 02-core-schemas

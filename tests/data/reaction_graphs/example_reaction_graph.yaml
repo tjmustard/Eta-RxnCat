@@ -1,0 +1,123 @@
+# Example reaction graph (schema_version 1): the SN2 identity reaction Cl- + CH3Cl.
+# Geometries are illustrative, not optimised. Every state is a valid charge/multiplicity pair:
+#   CH3Cl  neutral, 26 electrons, singlet;  Cl-  charge -1, 18 electrons, singlet;
+#   [Cl-CH3-Cl]-  charge -1, 44 electrons, singlet.
+schema_version: 1
+name: sn2_chloride_exchange
+default_stages:
+  - kind: conformer_search
+    engine: rdkit_ff
+    method: UFF
+  - kind: geometry_opt
+    engine: xtb_subprocess
+    method: GFN2-xTB
+    solvation:
+      model: alpb
+      solvent: water
+  - kind: single_point
+    engine: pyscf_gpu_cpu
+    method: wB97X-D3BJ
+    basis: def2-TZVP
+    solvation:
+      model: ddcosmo
+      solvent: water
+thermo:
+  temperature_k: 298.15
+  standard_state_mol_l: 1.0
+pruning_rules:
+  - id: barrier_gate
+    description: Skip the remaining nodes if this barrier is too high.
+    parameters:
+      max_barrier_kcal_mol: 30.0
+nodes:
+  - id: ts_sn2
+    label: SN2 transition state
+    kind: transition_state
+    priority: 1
+    pruning_rules: [barrier_gate]
+    templates:
+      - id: ts_sn2_ref
+        rank: 1
+        components:
+          - count: 1
+            label: "[Cl-CH3-Cl]-"
+            state:
+              symbols: [C, Cl, Cl, H, H, H]
+              coordinates:
+                - [0.000, 0.000, 0.000]
+                - [2.300, 0.000, 0.000]
+                - [-2.300, 0.000, 0.000]
+                - [0.000, 1.070, 0.000]
+                - [0.000, -0.535, 0.927]
+                - [0.000, -0.535, -0.927]
+              charge: -1
+              spin_multiplicity: 1
+              active_atom_indices: [0, 1, 2]
+        mapping:
+          keep: [0, 1, 2, 3, 4]
+          delete: [5]
+          alignment: [1, 0, 2]
+          anchors: [3]
+  - id: reactants
+    label: Cl- + CH3Cl
+    kind: reactant
+    priority: 2
+    templates:
+      - id: separated
+        rank: 1
+        components:
+          - count: 1
+            label: CH3Cl
+            state:
+              symbols: [C, Cl, H, H, H]
+              coordinates:
+                - [0.000, 0.000, 0.000]
+                - [1.780, 0.000, 0.000]
+                - [-0.360, 1.030, 0.000]
+                - [-0.360, -0.515, 0.892]
+                - [-0.360, -0.515, -0.892]
+              charge: 0
+              spin_multiplicity: 1
+          - count: 1
+            label: Cl-
+            state:
+              symbols: [Cl]
+              coordinates:
+                - [0.000, 0.000, 0.000]
+              charge: -1
+              spin_multiplicity: 1
+  - id: products
+    label: CH3Cl + Cl-
+    kind: product
+    priority: 2
+    templates:
+      - id: separated
+        rank: 1
+        components:
+          - count: 1
+            label: CH3Cl
+            state:
+              symbols: [C, Cl, H, H, H]
+              coordinates:
+                - [0.000, 0.000, 0.000]
+                - [-1.780, 0.000, 0.000]
+                - [0.360, 1.030, 0.000]
+                - [0.360, -0.515, 0.892]
+                - [0.360, -0.515, -0.892]
+              charge: 0
+              spin_multiplicity: 1
+          - count: 1
+            label: Cl-
+            state:
+              symbols: [Cl]
+              coordinates:
+                - [0.000, 0.000, 0.000]
+              charge: -1
+              spin_multiplicity: 1
+edges:
+  - source: reactants
+    target: ts_sn2
+    label: approach
+  - source: ts_sn2
+    target: products
+    label: departure
