@@ -10,7 +10,7 @@ intent: "Implement the fairchem engines on one clean-room bridge with honest per
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2, OPR.0.2.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/licence-inventory.md, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -124,7 +124,15 @@ The residuals:
    - `device` = `"cuda"` or `"cpu"`;
    - torch and fairchem are imported inside functions only.
 2. Two engines on the bridge, `ENGINE_IMPL = 1` each. Keyed options: `task` (`omol` only),
+   `inference_settings` (allowed `{"high-precision"}`, default `"high-precision"`; R47),
    `fd_step_bohr` (0.005), `engine_impl` (1). Runtime: `checkpoint_path` (optional), `device`.
+
+   **Precision (R47).** fairchem 2.26's default `inference_settings` uses TF32 / "UMA Nitro" on
+   CUDA (CC 8.x–12.x; this GPU is 12.0) and "general" on CPU. Measured on water, CUDA vs CPU
+   differ by ΔE 1.1e-4 eV and ΔF 6.9e-4 eV/Å for UMA, and by 1.0e-5 / 2.5e-4 for eSEN, with the
+   device unkeyed, so one cache key would mix precisions. With `"high-precision"` the difference
+   is ≤1e-7 eV and ≤6e-7 eV/Å. The bridge passes `inference_settings=<stage value>` to fairchem's
+   loader on **both** devices. Any other value → `EngineInputError`.
 
    | | `UMADirectEngine` | `ESENOMol25Engine` |
    |---|---|---|
@@ -210,16 +218,23 @@ The residuals:
   bridge docstring.
 - [ ] `mlip_uma`, for **each** of eSEN (`esen-sm-conserving-all-omol`) and UMA (`uma-s-1p2p1`),
   CPU and CUDA, all four cases (water, hydroxide, hydroxyl, Pd anion):
-  - energy and forces equal fairchem's own predictor for the same checkpoint (or
-    `FAIRChemCalculator` with `ase.Atoms` in the test file) with charge and spin set explicitly,
-    converted with `engines.units`: energy ≤1e-6 eV, forces ≤1e-5 eV/Å;
+  - energy and forces equal fairchem's own predictor,
+    `get_predict_unit(name, inference_settings="high-precision", device=…)` for the same
+    checkpoint (or `FAIRChemCalculator` built on that predict unit, with `ase.Atoms` in the test
+    file), with charge and spin set explicitly, converted with `engines.units`: energy ≤1e-6 eV,
+    forces ≤1e-5 eV/Å;
+  - R47, CPU vs CUDA for the same model and case at `"high-precision"`: |ΔE| ≤1e-6 eV and
+    max|ΔF| ≤1e-5 eV/Å (measured ≤1e-7 / ≤6e-7);
+  - `inference_settings="default"` (or any value other than `"high-precision"`) →
+    `EngineInputError`, and `engine.stage.options["inference_settings"] == "high-precision"`
+    for a stage with no option;
   - the liveness checks of Mini-requirement 3 hold;
   - forces vs central FD of the engine energy (step 1e-3 Å) ≤1e-3 eV/Å, which holds for a
     conserving model;
   - `hessian=True` on water → 9×9, `finite_difference`, symmetric.
 - [ ] R40: for each model, `engine.stage.options` holds `atom_refs_sha256` (and, for UMA,
   `form_elem_refs_sha256`) equal to the sha256 of the files used. The engine energy equals
-  `get_predict_unit(name, device=…)`'s on the same input (≤1e-6 eV), which would show any
+  `get_predict_unit(name, inference_settings="high-precision", device=…)`'s on the same input (≤1e-6 eV), which would show any
   reference-file mismatch as an offset. Changing the refs file (a `tmp_path` copy with one value
   edited, passed via a test hook) changes the key.
 - [ ] eSEN `identity.model` matches `^esen-sm-conserving-all-omol@sha256:[0-9a-f]{64}$`, and UMA's
