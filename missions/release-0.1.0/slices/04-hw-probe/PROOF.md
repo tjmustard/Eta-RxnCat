@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Fresh clone of 26ac2b4: four gates + licence gate exit 0; fake 8151 MiB GPU -> budget 6979321856, flags []; run_smoke on this host -> skipped/3 with no child; every failing check -> fail/1
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

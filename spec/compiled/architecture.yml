@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -50,12 +50,12 @@ nodes:
   provenance:
     last_slice: 04-hw-probe
   review:
-    reviewed_at: '2026-11-22T13:21:39+00:00'
-    reviewed_by: audit:03-artifact-store
+    reviewed_at: '2026-11-22T13:28:54+00:00'
+    reviewed_by: audit:04-hw-probe
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -99,12 +99,12 @@ nodes:
   provenance:
     last_slice: 04-hw-probe
   review:
-    reviewed_at: '2026-11-22T13:21:39+00:00'
-    reviewed_by: audit:03-artifact-store
+    reviewed_at: '2026-11-22T13:28:54+00:00'
+    reviewed_by: audit:04-hw-probe
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -149,24 +149,56 @@ nodes:
   provenance:
     last_slice: 04-hw-probe
   review:
-    reviewed_at: '2026-11-22T13:21:39+00:00'
-    reviewed_by: audit:03-artifact-store
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-22T13:28:54+00:00'
+    reviewed_by: audit:04-hw-probe
+    summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
   - tests/gpu/**
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
-  description: ''
-  inputs: []
-  outputs: []
+  description: >-
+    eta_rxncat.utils.hw_probe (v0.1.0): hardware probe and GPU smoke test. probe_hardware()
+    returns a HardwareReport (pydantic, extra=forbid; report_schema 1) of python/platform,
+    torch {installed, version, cuda_available, cuda_version (torch.version.cuda or
+    the +cuNNN tag)}, the first CUDA device {name, compute_capability 'M.m', total/free
+    VRAM, total GiB 2 dp} or null, gpu4pyscf {installed, version}, vram_budget_gib
+    6.5 and vram_budget_bytes = min(int(6.5 GiB), total) or null (free VRAM is reported,
+    never budgeted), and exact flags torch_missing / cuda_unavailable / torch_cuda_below_12.8
+    / gpu4pyscf_missing / gpu4pyscf_below_1.8.0 plus human notes; it does not raise
+    for a missing package, absent GPU or a failing CUDA query (a non-ImportError raised
+    by importing torch itself still propagates). Versions compare by numeric dotted
+    prefix (parse_version_prefix); constants VRAM_BUDGET_GIB, MIN_TORCH_CUDA (12,
+    8), MIN_GPU4PYSCF (1, 8, 0), SCF_TOLERANCE_EH 1e-6, MATMUL_TOLERANCE 1e-9. run_smoke(timeout_s=600)
+    returns a SmokeResult (result_schema 1): skipped with a reason, before any child
+    process, when torch, CUDA or gpu4pyscf is unavailable; otherwise runs python -m
+    eta_rxncat.utils._smoke_child (H2O RHF/STO-3G on gpu4pyscf and pyscf, seeded float64
+    512x512 CUDA matmul without TF32), validates its one JSON line, and passes only
+    if both SCFs converged, |dE| <= 1e-6 Eh, mo_coeff is a cupy.ndarray, the matmul
+    ran on cuda and max |dC| <= 1e-9 (NaN never passes); timeout, crash, unstartable
+    child or malformed output -> fail naming the cause. smoke_exit_code: pass 0, fail
+    1, skipped 3. torch/gpu4pyscf/cupy/pyscf are imported only inside functions; no
+    imports from core, store or cli; no git, nvidia-smi or network. GPU acceptance
+    test tests/gpu/test_smoke.py is gpu-marked and deselected by default.
+  inputs:
+  - data_type: host_torch_cuda_gpu4pyscf_installation
+    external: host_environment
+  outputs:
+  - data_type: hardware_report_and_vram_budget
+    external: eta_rxncat_consumers
+  - data_type: smoke_result_json_and_exit_code
+    external: eta_rxncat_consumers
   edges:
     depends_on: []
     implements: []
     member_of: []
   provenance:
     last_slice: 04-hw-probe
+  review:
+    reviewed_at: '2026-11-22T13:28:54+00:00'
+    reviewed_by: audit:04-hw-probe
+    summary: patched description, inputs, outputs
