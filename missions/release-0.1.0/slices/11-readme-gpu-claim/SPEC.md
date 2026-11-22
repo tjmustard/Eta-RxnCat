@@ -2,7 +2,7 @@
 id: OPR.0.1.0.11
 slice: 11-readme-gpu-claim
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Make the README's GPU-acceptance statement derived from and tested agai
 depends_on: [OPR.0.1.0.7, OPR.0.1.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [tests/unit/test_identity.py, README.md, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

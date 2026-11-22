@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: README GPU claim now derived from GPU_SMOKE_RESULT.json and tested; the old README fails the check with 4 violations, the new one passes; oracle green in a fresh clone of 909c4c7
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
