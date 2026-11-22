@@ -58,6 +58,10 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
    `pip-licenses --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"`
    and exits 0; the same command over a scratch environment containing an LGPL package (e.g. `ase`)
    exits non-zero.
+   **One exception (replan R41, TJ "B" 12:49Z, ADR-0011):** `geometric` 1.1.1. Its licence is BSD
+   3-clause Non-AI; clause 4 restricts use in AI-training datasets; pip-licenses reports the
+   metadata as UNKNOWN. The exception is pinned to that version and lives in the licence-gate
+   config (Task 6). Nothing else is exempt.
 4. US-010: `README.md` contains the `nMap` citation (Mustard, Wender & Cheong, *ACS Catal.* 2015,
    DOI `10.1021/cs501828e`) and credits `Eta_Scripts`, has a licensing section (MIT; allow-list;
    no `ase`/`sella`/in-process `tblite`/`psi4`) and a `uv` quickstart (`uv sync`, `uv run pytest`).
@@ -118,14 +122,34 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   `eta_rxncat.__version__ == "0.1.0"` and that importing `eta_rxncat` loads none of `torch`,
   `pyscf`, `rdkit` (subprocess + `sys.modules`).
 - [x] Task 5 — `.python-version` (`3.12`); `uv lock`; `uv sync`; run the four gates.
-- [ ] Task 6 — (geomeTRIC licence: pending TJ, row `qitem-20261122123511-7102e97b507c86d4`; the
-  lead routes the answer through resolve. Do not drop, pin or exempt `geometric` before then.)
-  Licence gate: one command, written identically in `ci.yml` and in the `AGENTS.md`
-  project section, that builds/uses a runtime-only environment (e.g. `uv sync --locked --no-dev`
-  into `UV_PROJECT_ENVIRONMENT=.venv-runtime`, then `uv run --with pip-licenses pip-licenses
-  --python .venv-runtime/bin/python …`, or an equivalent you verify) with the allow-list above.
-  Add `.venv-runtime/` to `.gitignore`. Record the negative demonstration (scratch dir outside the
-  repo, `ase` installed, command exits non-zero) in your handoff with its output.
+- [ ] Task 6 — Licence gate (replan R41; resolve verified the mechanism with pip-licenses 5.5.5
+  in a scratch env). Steps:
+  1. Add the licence-gate config to `pyproject.toml`. It is the single source used by `ci.yml` and
+     `AGENTS.md`, and pip-licenses reads it from the working directory:
+     ```toml
+     [tool.pip-licenses]
+     # Licence gate (ADR-0006). One exception, ADR-0011 / R41 (TJ "B", 12:49Z):
+     # geometric 1.1.1 is BSD 3-clause Non-AI (clause 4 restricts use in AI-training datasets);
+     # pip-licenses reports its metadata as UNKNOWN. Version-pinned: any other version fails.
+     partial-match = true
+     allow-only = "MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+     ignore-packages = ["geometric:1.1.1"]
+     ```
+  2. The gate command, run from the repo root, written identically in `ci.yml` and in the
+     `AGENTS.md` project section. Compared with pass 1, `--partial-match --allow-only=…` move into
+     the config, and pip-licenses is pinned:
+     `UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python`
+  3. Under the gate command in `AGENTS.md`, add one sentence giving the exception and its reason
+     (as in the config comment), citing ADR-0011.
+  4. Keep `.venv-runtime/` in `.gitignore`.
+  5. Negative demonstrations, each from the repo root with `--python <scratch>/bin/python` and a
+     scratch env outside the repo, recorded in your handoff with output:
+     - (a) `ase` installed → exit 1 (pass 1's demo, re-run with the new config);
+     - (b) `geometric==1.1.1` plus a local dummy package with no licence metadata → exit 1,
+       naming the dummy;
+     - (c) `geometric==1.0.2` → exit 1, naming `geometric:1.0.2` (the exception is version-scoped).
+     
+     Do not commit anything from the scratch envs.
 - [x] Task 7 — `docs/prd/v0.1.0/DISCREPANCIES.md`: header (purpose, TJ's Q2 quote, the closed
   inventory rules and row format below), then rows for the scaffold area: every key of the
   starter `pyproject.toml` (`[project]` with each dependency entry its own row, optional
@@ -173,7 +197,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 ## 4. The Negative Space (Constraints)
 
 - **DO NOT** declare `[project.optional-dependencies]` in this slice.
-- **DO NOT** add a licence exception (`--ignore-packages` or a longer allow-list); report instead.
+- **DO NOT** add any licence exception other than `geometric:1.1.1` (R41), or lengthen the allow-list; report instead.
 - **DO NOT** edit inside any `HACF MANAGED BLOCK` in `AGENTS.md`, `CLAUDE.md` or `.gitignore`.
 - **DO NOT** copy starter files into `src/` or `tests/`, or import from `docs/prd/`.
 - **DO NOT** unpack any zip other than v0.1.0 into the repo; read plan copies with `unzip -p` into
@@ -193,7 +217,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 - [ ] `uv run ruff check .` → exit 0 and `uv run ruff format --check .` → exit 0, with `docs/prd/v0.1.0/` present.
 - [ ] `uv run mypy` → exit 0 (strict, `files = ["src"]`).
 - [ ] `uv run pytest` → exit 0, and `uv run pytest . --collect-only -q` collects nothing under `docs/`.
-- [ ] Licence gate → exit 0 on the runtime env; output lists no dev tools; scratch negative demo with `ase` → non-zero.
+- [ ] Licence gate → exit 0 on the runtime env; output lists no dev tools; `[tool.pip-licenses].ignore-packages == ["geometric:1.1.1"]`; scratch demos (a) `ase`, (b) geometric 1.1.1 + an UNKNOWN dummy, (c) geometric 1.0.2 → each exit 1.
 - [ ] `ci.yml` contains `uv sync --locked` and the same five commands, character-for-character as in `AGENTS.md`.
 - [ ] `git ls-files docs/prd/v0.1.0/Eta-RxnCat-v0.1.0 | wc -l` → `24` (23 starter files + `.ruff.toml`).
   Each of the 23 is byte-identical to `unzip -p PRDs/Eta-RxnCat-v0.1.0.zip <path>`.

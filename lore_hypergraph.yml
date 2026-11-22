@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 10
+  ADR: 11
   STORY: 0
   CANON: 0
 nodes:
@@ -396,6 +396,48 @@ nodes:
   approval: null
   history:
   - at: '2026-11-22T12:30:33+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0011
+  type: decision
+  title: 'Licence-gate exception: geomeTRIC 1.1.1 (BSD 3-clause Non-AI, metadata UNKNOWN),
+    version-pinned in [tool.pip-licenses]'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0011-licence-gate-exception-geometric-1-1-1-bsd-3-clause-non-ai-m.md
+  content_sha256: 4f94862c33932c6a24b90b3a5d2c565d95637a1f6294aac834a0fed1a96c7782
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - pyproject.toml
+    - .github/workflows/ci.yml
+    - AGENTS.md
+  relates_to:
+  - ADR-0006
+  - ADR-0010
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T12:50:54+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T12:50:54+00:00'
     from: null
     to: PROPOSED
     by: agent

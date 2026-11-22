@@ -91,6 +91,10 @@ drop an extra.
    Each exemption list is written out literally. Wildcards are not allowed unless `pip-licenses`
    accepts them and you verify that the expansion matches the list. `AGENTS.md` states why each
    package is exempt (TJ Q1 A, row `qitem-20261122075815-4c32a48f2e42363c`).
+   A CLI `--ignore-packages` **replaces** the `[tool.pip-licenses]` list from slice 01; it does not
+   extend it (verified with pip-licenses 5.5.5). So every per-extra list also contains
+   `geometric:1.1.1` (R41, ADR-0011). The `base` gate passes no `--ignore-packages` and uses the
+   config unchanged.
 5. Exemption guard: `tests/unit/test_package.py` gains:
    - (a) an AST scan of every `.py` under `src/eta_rxncat/` that fails on any `import`/`from`
      of `ase`, `matscipy`, `sella`, `tblite` or `psi4`, and names the file and line;
@@ -129,7 +133,7 @@ drop an extra.
   any extra.
 - **DO NOT** let any exempt package into the base (no-extras) install.
 - **DO NOT** exempt any package that the lock did not resolve for that extra.
-- **DO NOT** extend the base allow-list, or add an exemption for a reason other than TJ's Q1 A.
+- **DO NOT** extend the base allow-list, or add an exemption for a reason other than TJ's Q1 A or the `geometric:1.1.1` exception (R41).
 - **DO NOT** make the MLIP extras co-installable by pinning one engine to an old release, or by
   overriding `e3nn`.
 - **DO NOT** import `torch`, `mace`, `fairchem`, `ase` or `matscipy` anywhere in `src/eta_rxncat/`

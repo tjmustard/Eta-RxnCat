@@ -134,7 +134,7 @@ Questions needed to reach 10:
 |---|---|---|---|---|
 | US-001 | As TJ, I want `uv sync` to install from a committed lockfile so every machine gets the same environment. | `uv sync --locked` exits 0 on a fresh local clone; `uv.lock` committed; `.python-version` = `3.12`; `requires-python = ">=3.11,<3.14"`; `uv run python -c "import eta_rxncat; print(eta_rxncat.__version__)"` prints `0.1.0`. | P0 | 01 |
 | US-002 | As TJ, I want lint, types, tests and a licence audit locally and in CI. | `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy` (strict, `files = ["src"]`), `uv run pytest` and the licence gate each exit 0 on a fresh local clone with `docs/prd/v0.1.0/` present. `ci.yml` runs exactly these commands after `uv sync --locked` (F14: "in CI" is checked as "ci.yml runs the same commands", since nobody pushes). | P0 | 01 |
-| US-002a | As TJ, I want the licence gate to catch real copyleft licence strings. | The gate uses `pip-licenses --partial-match --allow-only` with the allow-list in §5, audits the **runtime** environment only (no dev tools in its table), and fails on `UNKNOWN`. A scratch-env demonstration with an LGPL package exits non-zero (F3). | P0 | 01 |
+| US-002a | As TJ, I want the licence gate to catch real copyleft licence strings. | The gate uses `pip-licenses --partial-match --allow-only` with the allow-list in §5, audits the **runtime** environment only (no dev tools in its table), and fails on `UNKNOWN`. A scratch-env demonstration with an LGPL package exits non-zero (F3). One documented, version-pinned exception: `geometric:1.1.1` (R41). | P0 | 01 |
 | US-003 | As TJ, I want `eta-rxncat hardware-check` to report GPU, compute capability, PyTorch/CUDA and GPU4PySCF versions, total VRAM and the 6.5 GiB budget. | JSON report per §5 Contracts, exit 0 always (flags are in the JSON). CPU-only host: `cuda_available: false` with a note. Versions below CUDA 12.8 / GPU4PySCF 1.8.0 appear in `flags`. | P0 | 04, 05 |
 | US-004a | As TJ, I want `--smoke` and a `gpu` test that prove a GPU4PySCF kernel and a CUDA op actually run. | Implemented per §5 smoke contract; exit 0 pass / 1 fail / 3 skipped; skipped on a CPU-only host with the reason; default `pytest` deselects `gpu`. Audited on the CPU path. | P0 | 04, 05 |
 | US-004b | As TJ, I want v0.1.0 accepted only after the smoke passes on this host. | The build seat runs it once on a clean tree; `docs/prd/v0.1.0/GPU_SMOKE_RESULT.json` records `status: pass` and the commit sha it ran against; audit verifies it (F11, F26). | P0 | 07 |
@@ -199,6 +199,7 @@ Vocabulary: **resolved** — the design changes so the risk is gone (the lead's 
 | R38 | Replan 2 (builder, slice 01 blocked): the HACF pre-commit hook runs `ruff check/format --check -- <staged .py>` with explicit paths; ruff then uses the starter's nested `pyproject.toml` (no excludes), so the 16 starter `.py` files cannot be committed | — | resolved | Verified by resolve (ruff 0.17.6, scratch copy). For explicit paths, ruff uses the **nearest** config's exclude patterns but enforces them only when the **root** config sets `force-exclude = true`; neither half alone works, which is why the builder's root-only attempt failed. Fix: root `force-exclude = true` plus one declared gate file `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml` (`exclude = ["*"]`), which outranks the starter `pyproject.toml`. All 23 starter files are committed verbatim, so TJ's instruction stands and no TJ question is needed. The proof becomes "23 verbatim + 1 gate file". A bad `src/` file is still caught. Hook and `.agents/` untouched; no `--no-verify`. |
 | R39 | Replan 2 (builder D-037): `ruff check .` / `format --check .` fail on HACF scripts under `.agents/` (120 errors / 12 files), which we may not edit | — | resolved | Root ruff `extend-exclude = ["docs/prd", ".agents"]`; slice 01 spec updated so the audit checks the new value. Extends R4. |
 | R40 | Replan 2 (TJ, 12:43Z via advisor): banner regenerated | — | resolved | Supersedes R36's banner facts: `media/banner.webp` is now 2576×1274, sha256 `ca80c101…`, and reads "Eta-RxnCat" with the full tagline and icon, so slice 08 drops the "don't copy banner text" caveat. The superseded `old-catalysis-engine-banner.*` is never committed. |
+| R41 | Replan 3 (TJ, row `qitem-20261122123511-7102e97b507c86d4`, 12:49Z, verbatim "'B': accept geomeTRIC 1.1.1 now, with a documented licence-gate exception (BSD 3-clause Non-AI; clause 4 restricts AI-training datasets; metadata UNKNOWN in pip-licenses). Record it in the spec/ADR and the licence-gate config. Proceed. Never push.") | — | resolved | One exception, `geometric:1.1.1`, pinned to the version, in `[tool.pip-licenses]` in `pyproject.toml` (with `partial-match` and the R3 allow-list). That config is the one source for the `ci.yml` and `AGENTS.md` gate command, now `uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python`. Verified by resolve (pip-licenses 5.5.5, scratch env): the exception passes; another UNKNOWN package fails; a different geometric version fails. The CLI `--ignore-packages` replaces the config list, so slice 06's per-extra lists repeat it. Amends R3/ADR-0006. PROPOSED ADR-0011. |
 
 ### Seed deviations
 
@@ -208,6 +209,8 @@ Vocabulary: **resolved** — the design changes so the risk is gone (the lead's 
 | OPR.0.1.0.8 `08-repo-identity` | (new slice) | — | depends on OPR.0.1.0.1–.6 | R34–R37 |
 | OPR.0.1.0.1 `01-scaffold` | ruff config, Task 1b, starter count proof, hook proof | `extend-exclude = ["docs/prd"]`; `ls-files docs/prd/v0.1.0` = 23 | `force-exclude = true`, `extend-exclude = ["docs/prd", ".agents"]`; gate `.ruff.toml`; `ls-files …/Eta-RxnCat-v0.1.0` = 24 (23 verbatim + gate) | R38, R39 |
 | OPR.0.1.0.8 `08-repo-identity` | banner sha/size, oracle | `5ec0e886…`, 2576×1438 | `ca80c101…`, 2576×1274 | R40 |
+| OPR.0.1.0.1 `01-scaffold` | Mini-req 3, Task 6, constraint, gate proof | no exceptions; flags on the CLI | `[tool.pip-licenses]` with `ignore-packages = ["geometric:1.1.1"]`; command uses the config; demos (a)–(c) | R41 |
+| OPR.0.1.0.6 `06-optional-extras` | Mini-req 4, constraint | per-extra exemptions only | each per-extra list also contains `geometric:1.1.1` | R41 |
 
 ### Blast radius
 
@@ -435,7 +438,7 @@ no traceback.
 ## 6. Negative Constraints
 - **DO NOT** import `ase`, `sella`, `tblite` or `psi4` anywhere in `src/eta_rxncat/`.
 - **DO NOT** add a runtime dependency that fails the §5 allow-list; never add a licence exception
-  without TJ's decision through the lead.
+  without TJ's decision through the lead (granted so far: `geometric:1.1.1`, R41; the Q1 A per-extra exemptions, R2).
 - **DO NOT** give `charge` or `spin_multiplicity` a default, or accept non-strict ints for them.
 - **DO NOT** accept duplicate keys in YAML or JSON graph files.
 - **DO NOT** bundle multiple stages into one cache key, or hash a raw `model_dump()`.
