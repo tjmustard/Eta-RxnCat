@@ -39,4 +39,7 @@ composition:
     - ref: slices/10-logo-webp/slice.yaml
       order: 100
       active: true
+    - ref: slices/11-readme-gpu-claim/slice.yaml
+      order: 110
+      active: true
 # Optional team and SDLC sections are added here.

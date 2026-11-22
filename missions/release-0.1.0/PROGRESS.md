@@ -23,4 +23,5 @@
 | OPR.0.1.0.8 | 08-repo-identity | audited | OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6 | 2026-11-22T15:14:24+00:00 audited |
 | OPR.0.1.0.9 | 09-store-first-open | audited | OPR.0.1.0.3 | 2026-11-22T15:26:30+00:00 audited |
 | OPR.0.1.0.10 | 10-logo-webp | audited | OPR.0.1.0.8 | 2026-11-22T15:33:51+00:00 audited |
+| OPR.0.1.0.11 | 11-readme-gpu-claim | compiled | OPR.0.1.0.7, OPR.0.1.0.10 | 2026-11-22T15:41:34+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->
