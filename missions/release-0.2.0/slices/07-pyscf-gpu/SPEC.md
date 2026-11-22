@@ -35,7 +35,13 @@ Resolve measured on this host (RTX 5060 Ti, gpu4pyscf-cuda12x 1.9.2, B3LYP/def2-
 - GPU − CPU, DF with `def2-universal-jkfit`: water 6.2e-12 Eh; `[PdCl₃(C₂H₄)]⁻` with ECP 4.9e-11;
 - non-DF water: 7.3e-12; C-PCM ε 78.3553: 6.0e-12;
 - GPU4PySCF ECP gradients and Hessians run (shapes N×3 and N×N×3×3);
-- GPU4PySCF has `pcm` and `smd` solvent modules, and **no ddCOSMO**;
+- GPU4PySCF has `pcm` and `smd` solvent modules, and **no ddCOSMO**. Both C-PCM and IEF-PCM run
+  on GPU and match CPU to 1e-6 rounding (replan 6 sweep);
+- GPU UKS (hydroxyl, B3LYP/DF, `conv_tol` 1e-10): def2-SVP GPU − CPU = 7e-8 Eh, both internally
+  stable. On STO-3G, GPU stops 7.3e-7 Eh from CPU and its stability check reports unstable
+  (CPU: stable); following it moves the energy by 5e-7. This is a minimal-basis tolerance
+  artefact, so keep GPU agreement proofs at def2-SVP as specified, and expect a possible
+  `stability:followed` on minimal-basis GPU UKS;
 - on linear PdCl₂, GPU `minao` reached a different SCF state from CPU `minao` (7.9 mEh). Slice
   06's mandatory stability analysis and keyed `init_guess` apply to the GPU path too.
 

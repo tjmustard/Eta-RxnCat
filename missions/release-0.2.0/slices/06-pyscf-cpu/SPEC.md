@@ -81,7 +81,7 @@ fallback.
    | `conv_tol` | float | 1e-10 |
    | `init_guess` | `minao` \| `atom` \| `huckel` | `minao` |
    | `pcm_method` | `C-PCM` \| `IEF-PCM` | `C-PCM` |
-   | `ladder_small_basis` | str | per rule 5 |
+   | `ladder_small_basis` | str | per rule 5: `minao` for def2-* bases, else `sto-3g` (R37) |
    | `stability` | `internal` | `internal` |
    | `fd_step_bohr` | float | 0.005 |
    | `engine_impl` | int | 1 |
@@ -112,9 +112,16 @@ fallback.
    1. `diis`: a plain SCF with `init_guess`, `max_cycle = ladder_max_cycle`;
    2. `level_shift`: `level_shift = 0.25`, `damp = 0.5`, starting from the last density;
    3. `soscf`: `mf.newton()`;
-   4. `small_basis_projection`: converge the same functional in `ladder_small_basis` (`def2-sv(p)`
-      for def2-* bases, else `sto-3g`, with the same ECP rule), project it with
-      `pyscf.scf.addons.project_dm_nr2nr`, then a DIIS SCF from that guess.
+   4. `small_basis_projection`: converge the same functional in `ladder_small_basis` (`minao` for
+      def2-* bases, else `sto-3g`, R37; keyed; an explicit option overrides it), with the **same
+      resolved ECP** as the target. Project it with
+      `pyscf.scf.addons.project_dm_nr2nr(mol_small, dm_small, mol)`, then run a DIIS SCF from that
+      guess.
+
+      Measured (PySCF 2.15.1): `def2-sv(p)` does not exist (`BasisNotFoundError`), and
+      `def2-sv_p`/`def2svp` normalise to def2-SVP itself. `minao` covers Rh, Pd, Ru, Ir, Pt, Au, Os
+      and W; `sto-3g` stops at Xe. On the Pd anion, the `minao` and `sto-3g` projections both
+      converge to E = −1586.87553329 Eh.
    
    Each attempted step is appended to `recovery_steps` (e.g. `["diis", "level_shift"]`). If every
    step fails → `ScfConvergenceError(steps=…)`.
@@ -212,6 +219,10 @@ fallback.
     → `ScfConvergenceError` with all four steps;
   - the energy after recovery equals the plain converged energy ≤1e-8 Eh;
   - `recovery_steps` ends with `stability:stable`.
+- [ ] Small-basis rung (R37): for a `def2-svp` stage, `engine.stage.options["ladder_small_basis"] == "minao"`;
+  for `cc-pvdz`, `"sto-3g"`. A ladder run forced to step 4 (inject `ladder_max_cycle=1` into
+  steps 1–3 only) on the Pd anion records `small_basis_projection` and converges to the plain
+  energy ≤1e-8 Eh.
 - [ ] Stability: a monkeypatched `stability()` that reports unstable once and then stable →
   `"stability:followed"` and then `"stability:stable"`. Always unstable → `ScfConvergenceError`
   after 2 follows.

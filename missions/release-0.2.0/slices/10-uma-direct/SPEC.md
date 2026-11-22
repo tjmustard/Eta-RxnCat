@@ -96,15 +96,28 @@ The residuals:
 ## Mini-requirements
 
 1. `engines/_fairchem_bridge.py` (private, shared):
-   - load a predict unit from a local checkpoint path (`load_predict_unit`), or from the HF cache
-     with `local_files_only=True` (`hf_hub_download(repo_id, filename, local_files_only=True)` →
-     path → `load_predict_unit`);
+   - reproduce **exactly** what `get_predict_unit(name)` does in fairchem 2.26, but offline. Its
+     registry entry (`fairchem/core/calculate/pretrained_models.json`) gives `repo_id`,
+     `subfolder: "checkpoints"` and `filename`, plus **reference files** that change the returned
+     energy:
+     - `atom_refs`: `references/iso_atom_elem_refs.yaml` (both models);
+     - `form_elem_refs`: `references/form_elem_refs.yaml` (UMA).
+
+     Resolve each with `hf_hub_download(repo_id, filename, subfolder=…, local_files_only=True)`,
+     or take the checkpoint from `checkpoint_path` (route B), and pass the refs to
+     `load_predict_unit(path, atom_refs=…, form_elem_refs=…)` exactly as `get_predict_unit` does
+     (read its source; R40);
+   - **key the references** (R40): at construction, add the derived keyed options
+     `atom_refs_sha256` and `form_elem_refs_sha256` (64-hex, or `"none"` when the registry entry
+     has none) to `engine.stage`. The checkpoint's hash stays in `identity.model` (ADR-0017). A
+     caller may not set these two options; they are derived like `engine_impl`;
    - **refuse** a model whose loaded config has direct forces (`direct_forces` true, or the
      equivalent flag in 2.26), with `EngineInputError("<method>: direct-force checkpoint; forces are not -dE/dx")`.
      This is checked after load, and in addition to the per-engine method allow-list;
    - build fairchem's input batch from symbols, positions (Å), `charge = state.charge` and
      `spin = state.multiplicity`, with task `omol`, using fairchem's data classes and **no `ase`
-     import in `src/`**;
+     import in `src/`**. In 2.26, `AtomicData.__init__` takes `charge`, `spin` and `dataset`; the
+     task goes in `dataset` (`from_ase` calls it `task_name`). Build `AtomicData` directly;
    - predict; energy eV → Eh; forces eV/Å → Eh/Bohr (units module);
    - Hessian = `fd_hessian` on the engine's forces (`finite_difference`);
    - record the position dtype: float32 → `"fairchem_dtype:float32"` in `recovery_steps`;
@@ -204,6 +217,11 @@ The residuals:
   - forces vs central FD of the engine energy (step 1e-3 Å) ≤1e-3 eV/Å, which holds for a
     conserving model;
   - `hessian=True` on water → 9×9, `finite_difference`, symmetric.
+- [ ] R40: for each model, `engine.stage.options` holds `atom_refs_sha256` (and, for UMA,
+  `form_elem_refs_sha256`) equal to the sha256 of the files used. The engine energy equals
+  `get_predict_unit(name, device=…)`'s on the same input (≤1e-6 eV), which would show any
+  reference-file mismatch as an offset. Changing the refs file (a `tmp_path` copy with one value
+  edited, passed via a test hook) changes the key.
 - [ ] eSEN `identity.model` matches `^esen-sm-conserving-all-omol@sha256:[0-9a-f]{64}$`, and UMA's
   matches `^uma-s-1p2p1@sha256:[0-9a-f]{64}$`; each equals the sha256 of the file used.
   `docs/licence-inventory.md` has both, with sizes 50,958,067 and 2,333,393,615.

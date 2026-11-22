@@ -88,11 +88,19 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
 4. Run:
    - write `input.xyz` (Å) in a fresh `tempfile.mkdtemp()` under `TMPDIR`;
    - argv: `[xtb, "input.xyz", "--gfn", "2", "--chrg", str(q), "--uhf", str(mult−1), "--acc", str(accuracy), "--etemp", str(etemp_k)]`;
-   - add `["--alpb", solvent, alpb_state]` for ALPB, `["--grad"]` for forces, `["--hess"]`
-     for a Hessian;
+   - add `["--alpb", solvent, alpb_state]` for ALPB;
+   - **every** call runs with `["--grad"]` (R39). Only `--grad` writes the `energy` (12+
+     decimals) and `gradient` files. A plain run writes neither, and `--json` reports the energy
+     to only 8 decimals, too coarse for the 1e-10 tolerance;
+   - a Hessian request runs a **second** invocation, same argv with `["--hess"]` instead of
+     `["--grad"]`, in a fresh temp dir, and parses its `hessian` file. Measured on 6.8.0:
+     `--grad --hess` together produce only the gradient-mode outputs, and `--hess` alone
+     produces `hessian` but no `energy` file;
    - `subprocess.run(argv, cwd=tmp, env={…, "OMP_NUM_THREADS": t, "MKL_NUM_THREADS": t, "OMP_STACKSIZE": s}, capture_output=True, timeout=…)`,
      with no shell;
-   - parse `energy` (Eh), `gradient` (Eh/Bohr → forces = −g) and `hessian`;
+   - parse `energy` (Eh) and `gradient` (Eh/Bohr → forces = −g) from the `--grad` run, and
+     `hessian` from the `--hess` run. Forces are computed even when `forces=False` and simply not
+     returned;
    - delete the temp dir on success. On failure keep it only if a runtime `keep_failed=True` is
      set.
    - Non-zero exit, timeout or missing output → `EngineRuntimeError` with the stderr/stdout tail.
@@ -130,6 +138,8 @@ of xtb's `hessian` file, which this slice determines against FD of xtb gradients
 
 ## Proof contract
 
+- [ ] R39: a `forces=False, hessian=False` call still runs `--grad`. A `hessian=True` call makes
+  exactly two subprocess calls (`--grad`, then `--hess`), and the recorded argvs show it.
 - [ ] `xtb`, all four cases, `threads=1`:
   - the engine's energy and gradient equal a hand run of the **same argv** (taken from the engine)
     in a separate temp dir: energy ≤1e-10 Eh, gradient ≤1e-9 Eh/Bohr.
