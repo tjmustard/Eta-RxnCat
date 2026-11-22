@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -62,14 +62,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 08-repo-identity
+    last_slice: 09-store-first-open
   review:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8
     summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -111,14 +111,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 08-repo-identity
+    last_slice: 09-store-first-open
   review:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -161,14 +161,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 08-repo-identity
+    last_slice: 09-store-first-open
   review:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -210,14 +210,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 08-repo-identity
+    last_slice: 09-store-first-open
   review:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -256,7 +256,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 08-repo-identity
+    last_slice: 09-store-first-open
   review:
     reviewed_at: '2026-11-22T15:14:23+00:00'
     reviewed_by: audit:OPR.0.1.0.8

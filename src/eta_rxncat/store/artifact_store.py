@@ -4,6 +4,7 @@ import hashlib
 import json
 import sqlite3
 import threading
+import time
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -15,6 +16,10 @@ from eta_rxncat.store.keys import StageKey, canon
 
 SCHEMA_VERSION = 1
 """``PRAGMA user_version`` of a store file this code can read and write."""
+
+_WAL_RETRY_FIRST_S = 0.005
+_WAL_RETRY_MAX_S = 0.1
+_RETRYABLE = frozenset({sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED})
 
 _SCHEMA = (
     """
@@ -55,6 +60,10 @@ class StoreSchemaError(Exception):
     """The store file has a ``user_version`` this code does not understand."""
 
 
+class StoreBusyError(Exception):
+    """The store file stayed locked past ``open_timeout_s`` while switching it to WAL."""
+
+
 def _now() -> str:
     """Return the current UTC time in ISO 8601."""
     return datetime.now(UTC).isoformat()
@@ -68,16 +77,28 @@ class ArtifactStore:
     up to ``busy_timeout`` (5 s) for the write lock.
     """
 
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, *, open_timeout_s: float = 5.0) -> None:
         """Open or create the store file at ``path``.
+
+        The file's ``user_version`` is checked before anything is written, so an unsupported
+        file is rejected untouched. The switch to WAL is retried with backoff while another
+        connection holds a lock (SQLite does not apply ``busy_timeout`` to it), for at most
+        ``open_timeout_s`` seconds.
 
         Args:
             path: The SQLite file. Its parent directory must exist; nothing else is created.
+            open_timeout_s: Deadline in seconds for the WAL switch; must be > 0.
 
         Raises:
+            ValueError: If ``open_timeout_s`` is not > 0 (nothing is created).
             FileNotFoundError: If ``path.parent`` is not an existing directory.
-            StoreSchemaError: If the file's ``user_version`` is neither 0 (new) nor 1.
+            StoreSchemaError: If the file's ``user_version`` is neither 0 (new) nor 1, or the
+                file cannot be put in WAL mode.
+            StoreBusyError: If the file stays locked past ``open_timeout_s`` during the WAL
+                switch.
         """
+        if not open_timeout_s > 0:
+            raise ValueError(f"open_timeout_s must be > 0, got {open_timeout_s!r}")
         self.path = Path(path)
         if not self.path.parent.is_dir():
             raise FileNotFoundError(f"store directory does not exist: {self.path.parent}")
@@ -87,11 +108,49 @@ class ArtifactStore:
         )
         try:
             self._conn.execute("PRAGMA busy_timeout=5000")
-            self._conn.execute("PRAGMA journal_mode=WAL")
+            self._check_version_supported()  # before any statement that writes
+            self._enable_wal(open_timeout_s)
             self._init_schema()
         except BaseException:
             self._conn.close()
             raise
+
+    def _check_version_supported(self) -> None:
+        """Raise ``StoreSchemaError`` unless ``user_version`` is 0 (new) or 1 (this schema)."""
+        version = self._user_version()
+        if version not in (0, SCHEMA_VERSION):
+            raise StoreSchemaError(
+                f"{self.path}: store schema version {version} is not supported "
+                f"(expected {SCHEMA_VERSION})"
+            )
+
+    def _enable_wal(self, open_timeout_s: float) -> None:
+        """Switch to WAL, retrying BUSY/LOCKED with backoff until ``open_timeout_s`` elapses.
+
+        Raises:
+            StoreBusyError: When the deadline passes; chains the last ``OperationalError``.
+            StoreSchemaError: If SQLite reports a journal mode other than ``wal``.
+        """
+        start = time.monotonic()
+        delay = _WAL_RETRY_FIRST_S
+        while True:
+            try:
+                row = self._conn.execute("PRAGMA journal_mode=WAL").fetchone()
+                break
+            except sqlite3.OperationalError as exc:
+                if exc.sqlite_errorcode not in _RETRYABLE:
+                    raise
+                elapsed = time.monotonic() - start
+                if elapsed >= open_timeout_s:
+                    raise StoreBusyError(
+                        f"{self.path}: still locked after {elapsed:.2f} s switching to WAL "
+                        f"(open_timeout_s={open_timeout_s:g})"
+                    ) from exc
+                time.sleep(min(delay, open_timeout_s - elapsed))
+                delay = min(delay * 2, _WAL_RETRY_MAX_S)
+        mode = str(row[0]).lower() if row else ""
+        if mode != "wal":
+            raise StoreSchemaError(f"{self.path}: journal mode is {mode!r}, not 'wal'")
 
     def _user_version(self) -> int:
         """Return the file's ``PRAGMA user_version``."""

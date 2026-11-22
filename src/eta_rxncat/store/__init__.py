@@ -5,6 +5,7 @@ from eta_rxncat.store.artifact_store import (
     ArtifactConflictError,
     ArtifactStatus,
     ArtifactStore,
+    StoreBusyError,
     StoreSchemaError,
 )
 from eta_rxncat.store.keys import (
@@ -26,6 +27,7 @@ __all__ = [
     "ArtifactStatus",
     "ArtifactStore",
     "StageKey",
+    "StoreBusyError",
     "StoreSchemaError",
     "build_stage_key",
     "canon",

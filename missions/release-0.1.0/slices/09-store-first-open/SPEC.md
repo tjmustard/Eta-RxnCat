@@ -10,7 +10,7 @@ intent: "Make ArtifactStore safe to open concurrently on a new file (version che
 depends_on: [OPR.0.1.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: blocked
 node_id: eta_rxncat_store
 parent: null
 hacf_touches: ["src/eta_rxncat/store/**", tests/unit/store/test_first_open.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -58,30 +58,45 @@ deterministic test carries the proof of the mechanism.
 
 ## Mini-requirements
 
-1. New open order in `ArtifactStore.__init__`, replacing slice 03's order:
-   1. path check, unchanged (`FileNotFoundError` if `path.parent` is missing, nothing created);
-   2. connect (`timeout=5.0`, as now);
-   3. `PRAGMA busy_timeout=5000`;
-   4. read `PRAGMA user_version`. If it is not 0 and not 1, close the connection and raise
-      `StoreSchemaError`, **before** any statement that writes;
-   5. switch to WAL with the bounded retry (Mini-requirement 2);
-   6. `_init_schema()` as now: create under `BEGIN IMMEDIATE` if `user_version` is still 0, then
-      re-check that it equals 1.
+1. New open order in `ArtifactStore.__init__`, replacing slice 03's order. Replan R52: **one deadline
+   for the whole open**.
+   1. Validate `open_timeout_s` (> 0, else `ValueError`, before anything else).
+      `deadline = time.monotonic() + open_timeout_s`.
+   2. Path check, unchanged (`FileNotFoundError` if `path.parent` is missing, nothing created).
+   3. Connect (`sqlite3.connect(path, timeout=open_timeout_s, isolation_level=None, …)`).
+   4. Read `PRAGMA user_version` through the busy step (Mini-requirement 2). If it is not 0 and
+      not 1, close and raise `StoreSchemaError` **before any statement that writes**.
+   5. `PRAGMA journal_mode=WAL` through the busy step. A returned mode other than `"wal"` raises
+      `StoreSchemaError`.
+   6. `_init_schema()`: `BEGIN IMMEDIATE` through the busy step. Then, if `user_version` is still
+      0, create the schema and set it to 1, and `COMMIT`. Finally re-check that it equals 1.
+   7. After a successful open, set `PRAGMA busy_timeout=5000` for normal operation (`put`/`get`/…
+      keep slice 03's behaviour).
    
    On any exception, close the connection (as now).
-2. Bounded WAL retry:
-   - Run `PRAGMA journal_mode=WAL` and read its returned row.
-   - On `sqlite3.OperationalError` whose `sqlite_errorcode` is `sqlite3.SQLITE_BUSY` or
-     `sqlite3.SQLITE_LOCKED` (Python ≥ 3.11 exposes both), sleep and retry.
-   - The sleep starts at 0.005 s, doubles each time, and is capped at 0.1 s, with no jitter
-     requirement.
-   - Stop after a total wall-clock deadline of `open_timeout_s`, measured with
-     `time.monotonic()`.
-   - When the deadline passes, raise `StoreBusyError`. Its message names the path and the elapsed
-     seconds, and it chains the last `OperationalError` (`raise … from`).
+2. The busy step (private helper, e.g. `_busy_step(conn, sql, deadline)`) is the only place an
+   `OperationalError` is caught.
+   - Before each attempt, set `PRAGMA busy_timeout = max(1, int(remaining_ms))`, where
+     `remaining = deadline − time.monotonic()`. A step that blocks inside SQLite (e.g. the
+     version read under an EXCLUSIVE holder) therefore can never wait past the deadline.
+   - Run the statement. On `sqlite3.OperationalError` whose `sqlite_errorcode` is
+     `sqlite3.SQLITE_BUSY` or `sqlite3.SQLITE_LOCKED`:
+     - if time remains, sleep `min(delay, remaining)` and retry. `delay` starts at 0.005 s,
+       doubles, and is capped at 0.1 s.
+     - otherwise raise `StoreBusyError`. Its message names the path and the elapsed seconds, and
+       it chains the last `OperationalError` (`raise … from`).
    - Any other `OperationalError` propagates unchanged, without a retry.
-   - If the pragma returns a mode other than `"wal"`, raise `StoreSchemaError` (for example, a
-     read-only medium).
+   - **Contract:** any BUSY/LOCKED condition during open, whether in the version read, the WAL
+     switch or the schema transaction, and whether the other holder took a RESERVED, IMMEDIATE or
+     EXCLUSIVE lock, surfaces only as `StoreBusyError`, after at most `open_timeout_s` plus one
+     backoff step (≤ 0.1 s) plus statement overhead. A raw `OperationalError('database is
+     locked')` never escapes `__init__`.
+   
+   Resolve prototyped this on this host (SQLite 3.46.1), under TMPDIR:
+   - an EXCLUSIVE holder for 3 s with `open_timeout_s=0.3` → `StoreBusyError` after 0.300 s;
+   - an IMMEDIATE holder, same timing → `StoreBusyError` after 0.300 s;
+   - holders released after 0.3 s with a 5 s timeout → opened in WAL at about 0.33–0.36 s;
+   - the barrier race at N = 2, 6, 16 → 0 errors in 300 trials.
 3. API additions, both exported from `eta_rxncat.store`:
    - `ArtifactStore(path: Path, *, open_timeout_s: float = 5.0)`. It must be `> 0`, else
      `ValueError`.
@@ -90,25 +105,26 @@ deterministic test carries the proof of the mechanism.
    Update the `__init__` docstring's `Raises:` section with `StoreBusyError`. Nothing else in
    the store's public API changes. `put`/`get`/`invalidate`/`query`/`status` are untouched.
 4. No other mechanism. No lock files or sidecar files, and no change to `put` semantics or schema.
-   Do not catch `OperationalError` anywhere outside the WAL switch.
+   Do not catch `OperationalError` anywhere outside the busy step, and use the busy step only
+   during `__init__`.
 5. US-011 (store area): `docs/prd/v0.1.0/DISCREPANCIES.md` `## Store` gains `added` rows for
    `StoreBusyError` and `open_timeout_s`, each with status `open`.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — Reorder `__init__` (Mini-requirement 1), with a private `_enable_wal(deadline)`
-  helper (Mini-requirement 2).
-- [ ] Task 2 — Add `StoreBusyError` and `open_timeout_s`, export them, and update docstrings.
+- [ ] Task 1 — Reorder `__init__` (Mini-requirement 1), with the private busy-step helper
+  (Mini-requirement 2) used for the version read, the WAL switch and `BEGIN IMMEDIATE`.
+- [x] Task 2 — Add `StoreBusyError` and `open_timeout_s`, export them, and update docstrings.
 - [ ] Task 3 — Tests in `tests/unit/store/test_first_open.py` (one per Proof contract bullet),
   using `tmp_path` and threads. Keep slice 03's tests unchanged and passing.
-- [ ] Task 4 — Run the audit probe (unchanged) and paste its output in your handoff.
-- [ ] Task 5 — Register rows; four gates exit 0.
+- [x] Task 4 — Run the audit probe (unchanged) and paste its output in your handoff.
+- [x] Task 5 — Register rows; four gates exit 0.
 
 ## 4. The Negative Space (Constraints)
 
 - **DO NOT** edit slice 03's SPEC, proof or tests (slice 03 is audited PASS). Changing
   `artifact_store.py` and `__init__.py` is this slice's job.
-- **DO NOT** retry anything except the journal-mode switch, and never retry without a deadline.
+- **DO NOT** retry anything outside the open sequence's three busy steps, and never retry or block past the one `open_timeout_s` deadline.
 - **DO NOT** write to a file before its `user_version` is known to be 0 or 1.
 - **DO NOT** create any file other than `path` and SQLite's own `-wal`/`-shm` siblings.
 - **DO NOT** swallow errors: any failure other than BUSY/LOCKED propagates unchanged.
@@ -121,16 +137,19 @@ deterministic test carries the proof of the mechanism.
   file; N threads wait on one `threading.Barrier(N)`, then each opens `ArtifactStore(p)` and closes
   it. The expected result is **0 errors in 300 trials**. Afterwards, `PRAGMA user_version` is 1 and
   `PRAGMA journal_mode` is `wal` on each file.
-- [ ] Retry path, deterministic:
-  - A raw `sqlite3` connection makes a fresh file (rollback journal), runs `BEGIN EXCLUSIVE` and
-    holds the lock.
+- [ ] Retry path, deterministic, run **twice**: once with the holder using `BEGIN EXCLUSIVE`,
+  once with `BEGIN IMMEDIATE` (parametrized).
+  - A raw `sqlite3` connection makes a fresh file (rollback journal), runs the BEGIN and holds
+    the lock.
   - `ArtifactStore(p, open_timeout_s=5.0)` starts in a thread.
   - The holder commits after 0.3 s.
   - Expected: the store opens without error, takes ≥ 0.3 s, and the file ends with
     `user_version` 1 and WAL.
-- [ ] Deadline, deterministic: the same holder keeps the lock for the whole test, and
-  `ArtifactStore(p, open_timeout_s=0.3)` raises `StoreBusyError`. It raises within
-  [0.3 s, 2.0 s], `__cause__` is an `sqlite3.OperationalError`, and the message contains the path.
+- [ ] Deadline, deterministic, run **twice** (EXCLUSIVE and IMMEDIATE holders, each keeping the
+  lock for the whole test). `ArtifactStore(p, open_timeout_s=0.3)` raises `StoreBusyError`, never
+  a raw `OperationalError`. It raises within [0.3 s, 1.0 s], `__cause__` is an
+  `sqlite3.OperationalError`, and the message contains the path.
+- [ ] After a successful open, `PRAGMA busy_timeout` on the store's connection is `5000`.
 - [ ] Foreign file untouched:
   - A raw `sqlite3` file is made with a table, `PRAGMA user_version=7` and the default journal
     mode, and its connection is closed.
@@ -138,6 +157,9 @@ deterministic test carries the proof of the mechanism.
   - Expected: `StoreSchemaError`; the file's sha256 is unchanged; `PRAGMA journal_mode` (raw
     connection) is still `delete`; no `-wal`/`-shm` sibling exists.
   - `user_version` 2 behaves the same way.
+  - Foreign file under an EXCLUSIVE holder: `ArtifactStore(p, open_timeout_s=0.3)` raises
+    `StoreBusyError`, and after the holder releases, the file's sha256, its journal mode
+    (`delete`) and its siblings are unchanged.
 - [ ] `open_timeout_s=0` and `-1` → `ValueError`, and no file is created.
 - [ ] Existing valid store (`user_version` 1, WAL) opens unchanged. Slice 03's tests all pass
   unmodified.
