@@ -99,9 +99,21 @@ calibration, which this slice measures and records.
    
    Any other CuPy or CUDA error → `EngineRuntimeError`, with no fallback.
 6. Results: `device = "cuda"` or `"cpu"`; GPU arrays converted to plain lists; the Hessian
-   (N,N,3,3) → 3N×3N, symmetrised, with `hessian_method`. If GPU4PySCF lacks an analytic Hessian
-   for a combination, use FD of GPU analytic gradients (labelled). Record the GPU support matrix
-   in `docs/prd/v0.2.0/evidence/pyscf-gpu-support.json`.
+   (N,N,3,3) → 3N×3N, symmetrised, with `hessian_method`.
+
+   **Hessian rule on GPU (R41).** Slice 06's keyed `hessian_mode` rule applies unchanged. In
+   addition, this slice **re-measures GPU4PySCF 1.9.2's analytic KS Hessian, with grid response
+   off and on where GPU4PySCF supports it,** against FD of GPU analytic gradients (step
+   0.005 Bohr, def2-SVP), on water, HCl, HBr and HI (+def2 ECP), at grids 3 and 9.
+   - A GPU analytic KS Hessian may be used only where **every** measured case in its class is
+     ≤1e-4 Eh/Bohr², via a recorded constant (`GPU_KS_ANALYTIC_HESSIAN_OK` or an envelope set
+     from the record). It is then interchangeable with the FD Hessian within the verified
+     tolerance (the argument that leaves the device unkeyed), and `hessian_method` records which
+     was used.
+   - Otherwise GPU KS Hessians are FD of GPU analytic gradients.
+
+   Record the measurements and the GPU support matrix in
+   `docs/prd/v0.2.0/evidence/pyscf-gpu-support.json`.
 7. Register rows (status `open`) vs the starter: the GB formula → the calibrated estimate plus the
    ADR-0008 budget; the per-evaluate probe dropped; OOM handling; ddCOSMO on CPU.
 
@@ -136,7 +148,9 @@ calibration, which this slice measures and records.
   - `device == "cuda"` for GPU runs.
 - [ ] `gpu`:
   - GPU gradient vs CPU gradient ≤1e-6 Eh/Bohr;
-  - GPU Hessian (water) vs CPU analytic Hessian ≤1e-5 Eh/Bohr²;
+  - GPU Hessian (water): HF analytic GPU vs CPU analytic ≤1e-5 Eh/Bohr². B3LYP GPU vs CPU (each
+    per the R41 rule) ≤1e-4 Eh/Bohr²;
+  - the R41 GPU KS-Hessian record exists, and the code's constant/envelope equals its verdict;
   - water C-PCM GPU vs CPU ≤1e-6 Eh;
   - ddCOSMO with `device="auto"` → `device == "cpu"`, `device_reason == "ddcosmo_cpu_only"`.
 - [ ] Default suite, fakes:
