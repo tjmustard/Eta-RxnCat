@@ -69,6 +69,19 @@ calibration, which this slice measures and records.
    The GPU path builds the same mol, functional, DF, auxbasis, ECP, grids, conv_tol, init_guess,
    solvation, ladder and stability as slice 06, using `gpu4pyscf.dft` / `gpu4pyscf.scf`. One
    resolved stage drives both paths, and the device is not keyed.
+1b. Stability on GPU when there are too few orbital rotations (R43). GPU4PySCF 1.9.2's stability
+   Davidson solver asserts when there are fewer than 3 orbital rotations (e.g. H₂/STO-3G).
+   - Condition, checked **before** calling stability, never by catching the assert:
+     `n_rotations = nocc·nvir` (RHF/RKS), or `nocc_α·nvir_α + nocc_β·nvir_β` (UHF/UKS), with
+     `n_rotations < 3`.
+   - Action: run the mandatory internal stability analysis (slice 06 rule 5) on a **CPU copy**
+     of the converged GPU SCF: the same mol, functional, grids and DF, and the converged
+     density/orbitals moved to host memory. If it is unstable, the follow is done on the GPU path
+     from the CPU-copy rotated orbitals, as usual (at most 2 follows).
+   - Record: `recovery_steps` gets exactly `"stability:cpu_copy (gpu4pyscf 1.9.2 stability assert, n_rotations<3)"`
+     before the usual `stability:stable` / `stability:followed` entry.
+   - Energy, forces and Hessian still come from the GPU SCF. `device` stays `"cuda"`, and
+     `device_reason` is unchanged.
 2. ddCOSMO → always CPU, `device_reason="ddcosmo_cpu_only"`. C-PCM / IEF-PCM run on GPU via
    `gpu4pyscf` PCM.
 3. Budget and estimate (R42; lead decision A):
@@ -168,6 +181,15 @@ calibration, which this slice measures and records.
   - the R41 GPU KS-Hessian record exists, and the code's constant/envelope equals its verdict;
   - water C-PCM GPU vs CPU ≤1e-6 Eh;
   - ddCOSMO with `device="auto"` → `device == "cpu"`, `device_reason == "ddcosmo_cpu_only"`.
+- [ ] `gpu`, R43: H₂/STO-3G (`H 0 0 0; H 0 0 0.74`, charge 0, multiplicity 1, HF and B3LYP) on GPU
+  →
+  - converged, `recovery_steps` contains `"stability:cpu_copy (gpu4pyscf 1.9.2 stability assert, n_rotations<3)"`
+    followed by `"stability:stable"`;
+  - `device == "cuda"`, and the energy equals the CPU-path energy ≤1e-6 Eh;
+  - water on GPU (n_rotations ≥ 3) has **no** `stability:cpu_copy` entry.
+
+  Default suite, fake: the `n_rotations` helper returns 1 for H₂/STO-3G RHF and the expected
+  counts for water and the hydroxyl UHF case.
 - [ ] Default suite, fakes:
   - a budget of 1 byte → CPU, with `vram_estimate_over_budget` and the recorded step;
   - a fake GPU kernel raising `OutOfMemoryError` once → CPU, `gpu_oom`, both pools'
