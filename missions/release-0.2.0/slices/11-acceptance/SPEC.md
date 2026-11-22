@@ -130,7 +130,7 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
       `uv run python -c "import ctypes.util; print(ctypes.util.find_library('cusolver'))"`;
       `nvidia-smi --query-gpu=index,name,compute_cap --format=csv,noheader`;
    2. `.venv-accept-gpu`: `eta-rxncat hardware-check`; `eta-rxncat hardware-check --smoke`;
-      `pytest -m gpu -q -rs`; `pytest -q -rs` (plain; `-rs` prints each skip's node id and reason, R49);
+      `pytest -m 'gpu and not acceptance and not mlip_mace and not mlip_uma' -q -rs` (the GPU env's own suite: PySCF GPU plus the smoke, R52; a bare `-m gpu` would replace `addopts`' whole marker expression and select the acceptance and MLIP GPU tests, which belong to commands 3–5); `pytest -q -rs` (plain; `-rs` prints each skip's node id and reason, R49);
    3. `.venv-accept-gpu`: `ETA_RXNCAT_ACCEPTANCE=1 ETA_RXNCAT_XTB=<path> pytest -m acceptance tests/acceptance/test_accept_rdkit.py tests/acceptance/test_accept_pyscf.py tests/acceptance/test_accept_xtb.py`;
    4. `.venv-accept-mace`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_mace.py`;
    5. `.venv-accept-uma`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_uma.py tests/acceptance/test_accept_esen.py`.
@@ -237,7 +237,8 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
   - a case-insensitive scan of **all** `logs` finds none of the **v0.1.0 R49** architecture-error strings
     (`no kernel image`, `NO_BINARY_FOR_GPU`, `NoKernelImageForDevice`, `PTX JIT`);
   - acceptance commands 3–5 (run under `ETA_RXNCAT_ACCEPTANCE=1`) and command 2's
-    `pytest -m gpu`: **zero** skips (no `skipped` in their logs);
+    `pytest -m 'gpu and not acceptance and not mlip_mace and not mlip_uma'` (R52): **zero** skips
+    (no `skipped` in their logs);
   - command 2's plain `pytest -q -rs`: **exactly one** skip, the node id
     `tests/unit/cli/test_cli.py::test_console_script_smoke_skipped` with reason "`torch is installed in this environment; the real skip path cannot be observed`". Its summary line shows `1 skipped`. Any other or
     additional skip fails this proof;
