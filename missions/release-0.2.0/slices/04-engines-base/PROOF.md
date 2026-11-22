@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone 41c94a0: oracle all 0, pytest 502 passed; audit probe201b mixed importorskip now ret 2 under ACCEPTANCE=1; engines import loads no heavy module
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

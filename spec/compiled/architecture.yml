@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -30,26 +30,27 @@ nodes:
   - tests/unit/test_media.py
   - tests/unit/test_test_policy.py
   description: >-
-    uv-managed MIT package skeleton (hatchling, src layout, Python >=3.11,<3.14, .python-version
-    3.12, committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit,
-    geometric, pyscf. Extras (floors only): gpu = torch>=2.7.0, gpu4pyscf-cuda12x>=1.8.0,
-    cupy-cuda12x; mlip-mace = torch, mace-torch; mlip-uma = torch, fairchem-core>=2.22;
-    [tool.uv] conflicts keeps the MLIP extras exclusive; torch only from the explicit
-    pytorch-cu129 index (torch 2.13.0+cu129; GPU re-proof in docs/prd/v0.2.0/evidence/).
-    [project.scripts] eta-rxncat = eta_rxncat.cli:main. __init__ exposes __version__
-    and imports no backend; engines, conformers, mapping, optimize, orchestrator are
-    placeholders. Gates: ruff, strict mypy over src and tools, pytest. Test policy
-    (v0.2.0 slice 01, ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance,
-    all deselected by addopts; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1
-    for the session and, under ETA_RXNCAT_ACCEPTANCE=1, reports a setup- or call-phase
-    skip as failed (collection-phase skips are not converted); acceptance envs .venv-accept-{gpu,mace,uma}
-    are gitignored. Licence gate tools/licence_gate.py (stdlib, --profile base|gpu|mlip-mace|mlip-uma)
-    judges each installed distribution exactly (SPDX, else classifiers, else License)
-    against [tool.eta-rxncat.licence-gate] (allowed includes BSL-1.0) with version-pinned
-    per-profile exemptions; stale ones fail; an unnamed dist-info or two dist-infos
-    with one PEP 503 name fail. tests/unit/test_package.py bans copyleft and sella/tblite/psi4
-    imports. CI: checks job plus a licence-extras matrix; no GPU job. Public face:
-    README.md, CHANGELOG.md (scribe-owned), size-named WebP media (tests/unit/test_media.py),
+    uv-managed MIT package skeleton (hatchling, src layout, Python >=3.11,<3.14, committed
+    uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, geometric, pyscf.
+    Extras (floors only): gpu = torch>=2.7.0, gpu4pyscf-cuda12x>=1.8.0, cupy-cuda12x;
+    mlip-mace = torch, mace-torch; mlip-uma = torch, fairchem-core>=2.22; [tool.uv]
+    conflicts keeps the MLIP extras exclusive; torch only from the explicit pytorch-cu129
+    index (torch 2.13.0+cu129, re-proved in docs/prd/v0.2.0/evidence/). [project.scripts]
+    eta-rxncat = eta_rxncat.cli:main. __init__ exposes __version__ and imports no
+    backend; conformers, mapping, optimize, orchestrator are placeholders (engines
+    is its own node). Gates: ruff, strict mypy over src and tools, pytest. Test policy
+    (ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance, all deselected
+    by addopts; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 for the
+    session and, under ETA_RXNCAT_ACCEPTANCE=1, fails every setup/call/collection
+    skip and every xfail (R32); an AST rule bans module-level skips in engine and
+    acceptance tests; acceptance envs .venv-accept-{gpu,mace,uma} are gitignored.
+    Licence gate tools/licence_gate.py (--profile base|gpu|mlip-mace|mlip-uma) judges
+    each installed distribution exactly against [tool.eta-rxncat.licence-gate] (allowed
+    includes BSL-1.0) with version-pinned per-profile exemptions; stale ones fail;
+    an unnamed dist-info or two dist-infos with one PEP 503 name fail. tests/unit/test_package.py
+    bans copyleft and sella/tblite/psi4 imports and checks the engines import loads
+    no heavy library. CI: checks plus licence-extras matrix. Public face: README.md,
+    CHANGELOG.md (scribe-owned), size-named WebP media (tests/unit/test_media.py),
     LICENSE (MIT); author form Thomas J. L. Mustard Ph.D. enforced by tests/unit/test_identity.py.
     docs/prd/v0.1.0/ and docs/prd/v0.2.0/ hold the verbatim starters (ruff-gated by
     .ruff.toml) and each version's DISCREPANCIES.md; docs/prd/PLAN_DISCREPANCIES.md
@@ -67,12 +68,12 @@ nodes:
   provenance:
     last_slice: 04-engines-base
   review:
-    reviewed_at: '2026-11-22T17:20:28+00:00'
-    reviewed_by: audit:OPR.0.2.0.3
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
+    summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,14 +120,14 @@ nodes:
   provenance:
     last_slice: 04-engines-base
   review:
-    reviewed_at: '2026-11-22T17:20:28+00:00'
-    reviewed_by: audit:OPR.0.2.0.3
-    summary: patched description
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -173,14 +174,14 @@ nodes:
   provenance:
     last_slice: 04-engines-base
   review:
-    reviewed_at: '2026-11-22T17:20:28+00:00'
-    reviewed_by: audit:OPR.0.2.0.3
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -224,12 +225,12 @@ nodes:
   provenance:
     last_slice: 04-engines-base
   review:
-    reviewed_at: '2026-11-22T17:20:28+00:00'
-    reviewed_by: audit:OPR.0.2.0.3
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -270,21 +271,36 @@ nodes:
   provenance:
     last_slice: 04-engines-base
   review:
-    reviewed_at: '2026-11-22T17:20:28+00:00'
-    reviewed_by: audit:OPR.0.2.0.3
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
-    Engine interfaces shared by every engine (v0.2.0): the Engine base class (from_stage,
-    resolved stage, identity, evaluate), typed errors, CODATA 2018 units, keyed options
-    and the resolved stage for the cache key, content-pinned model identity, and the
-    central-difference Hessian. Pure Python; engines import heavy libraries lazily.
+    eta_rxncat.engines (v0.2.0): what every engine shares; pure Python, heavy libraries
+    imported lazily inside engines. base.py: Engine ABC (class tag: EngineTag, ENGINE_IMPL,
+    OPTIONS); __init__/from_stage(stage, **runtime) rejects a foreign tag or unknown
+    runtime argument and stores the resolved stage; abstract identity and _evaluate
+    -> RawResult; evaluate times the call, checks forces/Hessian presence and shapes
+    against the state, copies lists and returns a validated PotentialResult (stage_engine_impl
+    = ENGINE_IMPL), invalid output -> EngineRuntimeError. errors.py: EngineError and
+    EngineUnavailableError, EngineInputError, ScfConvergenceError(steps tuple), EngineRuntimeError(tail:
+    last 40 lines, HF/Bearer/token values redacted). units.py: CODATA 2018 BOHR_ANGSTROM,
+    HARTREE_EV, HARTREE_KCAL_MOL and conversions. options.py: OptionSpec(type, default,
+    allowed); resolve_options fills defaults, never takes bool for int/float, stores
+    an int for a float spec as float, rejects unknown keys, wrong types, disallowed
+    values and a caller-set engine_impl (EngineInputError), and adds engine_impl;
+    resolved_stage returns a new StageConfig with resolved options and the solvent
+    lowercased, so implicit and explicit defaults key the same (R6, ADR-0016). identity.py:
+    sha256_file (1 MiB chunks), model_id '<name>@sha256:<hex>' (never a path), library_version
+    via importlib.metadata (absent -> EngineUnavailableError). fd.py: fd_hessian,
+    central differences of forces (6N calls), symmetrised, with the pre-symmetrisation
+    max asymmetry. Tests in tests/unit/engines; acceptance tests will live in tests/acceptance.
   inputs: []
   outputs: []
   edges:
@@ -297,3 +313,7 @@ nodes:
   - OPR.0.2.0.4
   provenance:
     last_slice: 04-engines-base
+  review:
+    reviewed_at: '2026-11-22T17:30:24+00:00'
+    reviewed_by: audit:OPR.0.2.0.4
+    summary: patched description
