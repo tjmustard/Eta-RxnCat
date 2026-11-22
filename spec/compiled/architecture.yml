@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -50,12 +50,12 @@ nodes:
   provenance:
     last_slice: 03-artifact-store
   review:
-    reviewed_at: '2026-11-22T13:14:25+00:00'
-    reviewed_by: audit:02-core-schemas
+    reviewed_at: '2026-11-22T13:21:39+00:00'
+    reviewed_by: audit:03-artifact-store
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -99,20 +99,48 @@ nodes:
   provenance:
     last_slice: 03-artifact-store
   review:
-    reviewed_at: '2026-11-22T13:14:25+00:00'
-    reviewed_by: audit:02-core-schemas
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-22T13:21:39+00:00'
+    reviewed_by: audit:03-artifact-store
+    summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
-  description: ''
-  inputs: []
-  outputs: []
+  description: >-
+    eta_rxncat.store (v0.1.0): canonical per-stage cache keys and a WAL-mode SQLite
+    artifact store. keys.py: canon (sorted-key, compact, ASCII, allow_nan=False JSON)
+    and h (sha256 of canon); KEY_SCHEMA = 1; geometry_payload (symbols, coordinates
+    snapped to a 5-decimal grid as fixed-point strings with -0.0 -> 0.0, charge, spin_multiplicity,
+    sorted active_atom_indices; metadata excluded); stage_payload (kind, engine, method,
+    basis, solvation model/solvent/dielectric, sorted frozen_atom_indices, options,
+    engine identity name/version/model; integral floats written as ints, bools kept);
+    frozen StageKey (key_schema, geometry_hash, stage_hash, key = h of the three,
+    stage_kind, engine, engine_version) from build_stage_key, which raises ValueError
+    when engine.name != stage.engine. artifact_store.py: ArtifactStatus StrEnum (pending/running/completed/failed),
+    ArtifactConflictError, StoreSchemaError; ArtifactStore(path) requires an existing
+    parent dir (FileNotFoundError, no mkdir), sets busy_timeout 5000 and journal_mode
+    WAL, creates the 12-column stage_artifacts table with indexes on geometry_hash
+    and (stage_kind, engine) at user_version 0 -> 1 and rejects any other version.
+    put/get/status/invalidate/query with one BEGIN IMMEDIATE transaction per write:
+    completed rows are immutable (identical completed re-put is a no-op, any other
+    write raises ArtifactConflictError) and only invalidate deletes them; get returns
+    the payload only for completed rows; query returns sorted keys filtered by stage_kind
+    and engine. Thread-safe per instance via a lock. Imports eta_rxncat.core and the
+    stdlib only; no orchestration.
+  inputs:
+  - data_type: molecular_state_stage_config_engine_identity
+    source_id: eta_rxncat_core
+  - data_type: stage_artifact_payload_json
+    external: eta_rxncat_consumers
+  outputs:
+  - data_type: stage_cache_key
+    external: eta_rxncat_consumers
+  - data_type: stage_artifacts_sqlite
+    external: sqlite_store_file
   edges:
     depends_on:
     - eta_rxncat_core
@@ -120,3 +148,7 @@ nodes:
     member_of: []
   provenance:
     last_slice: 03-artifact-store
+  review:
+    reviewed_at: '2026-11-22T13:21:39+00:00'
+    reviewed_by: audit:03-artifact-store
+    summary: patched description, inputs, outputs

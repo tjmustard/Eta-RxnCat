@@ -2,7 +2,7 @@
 id: OPR.0.1.0.3
 slice: 03-artifact-store
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the canonical versioned per-stage cache key and a WAL-mode SQ
 depends_on: [OPR.0.1.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_store
 parent: null
 hacf_touches: ["src/eta_rxncat/store/**", "tests/unit/store/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

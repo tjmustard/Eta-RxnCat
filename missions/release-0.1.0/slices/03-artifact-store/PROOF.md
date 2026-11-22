@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Fresh clone of 978049b: four gates + licence gate exit 0; golden H2O key independently recomputed; completed rows refuse every overwrite; 2 stores x 2 threads x 50 puts, no lock error
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
