@@ -10,7 +10,7 @@ intent: "Replace slice 08's media with TJ's size-named WebP logo and banner sets
 depends_on: [OPR.0.1.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["media/**", README.md, tests/unit/test_identity.py, tests/unit/test_media.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -158,12 +158,12 @@ stdlib-only test with explicit failure cases.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: media swap and sha verification (Mini-requirement 1).
-- [ ] Task 2: the two README lines (Mini-requirement 4).
-- [ ] Task 3: `tests/unit/test_media.py` (Mini-requirement 5). First see the synthetic failure
+- [x] Task 1: media swap and sha verification (Mini-requirement 1).
+- [x] Task 2: the two README lines (Mini-requirement 4).
+- [x] Task 3: `tests/unit/test_media.py` (Mini-requirement 5). First see the synthetic failure
   cases fail against a deliberately wrong fixture, then pass.
-- [ ] Task 4: update the slice-08 assertions (Mini-requirement 6).
-- [ ] Task 5: register rows, then the four gates, then `hypergraph_updater.py`.
+- [x] Task 4: update the slice-08 assertions (Mini-requirement 6).
+- [x] Task 5: register rows, then the four gates, then `hypergraph_updater.py`.
 
 ## 4. The Negative Space (Constraints)
 

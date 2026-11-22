@@ -1,10 +1,10 @@
 <div align="center">
-    <img src="./media/logo.png" alt="Eta-RxnCat logo" width="200" height="200"/>
+    <img src="./media/icons/web/icon-256.webp" alt="Eta-RxnCat logo" width="200" height="200"/>
     <h1>Eta-RxnCat</h1>
     <h3><em>Priority-gated reaction-graph workflows for homogeneous catalysis, built on a permissively licensed core.</em></h3>
 </div>
 
-<p align="center"><img src="./media/banner.webp" alt="Eta-RxnCat banner" width="100%"/></p>
+<p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
     <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.1.0 lays the foundation: strict data contracts, a validating graph loader, a stage-level artifact store, a GPU hardware probe and a small command line.</strong>

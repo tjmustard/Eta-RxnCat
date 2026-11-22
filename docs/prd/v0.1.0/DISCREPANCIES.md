@@ -159,6 +159,9 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-400 | scaffold | — | `media/logo.png` (1024×1024 RGBA, sha256 3b2a0b76…) | added | TJ's README icon, copied byte for byte | open |
 | D-401 | scaffold | — | `media/banner.webp` (2576×1439, 279188 bytes, sha256 cc3fe67b…) | added | TJ's final banner, README hero image, copied byte for byte | open |
 | D-402 | scaffold | — | `tests/unit/test_identity.py:80` `tests/unit/test_identity.py` | added | Slice 08 Mini-req 5: canonical-author guard (pure filesystem) plus README structure checks | open |
+| D-405 | scaffold | `media/logo.png` (slice 08, D-400; 1024×1024 PNG) | `media/icons/icon-1024.webp`, `media/icons/web/icon-{128,192,256,512}.webp`; README logo `README.md:2` `./media/icons/web/icon-256.webp` at 200×200 | changed | R53, TJ 15:10Z ("convert the images to webp"), 15:13Z ("a few different sizes"), 15:22Z ("names the exact size … Only imbed the next size up"): size-named WebP icon set (cwebp q90 from TJ's logo.png); 256 is the next size up over 128/192 for a 200 px display | open |
+| D-406 | scaffold | `media/banner.webp` (slice 08, D-401; sha256 cc3fe67b…, Pillow q92) | `media/banner/banner-2576x1439.webp` (sha256 979e0f60…, same image re-encoded with cwebp) + `banner-{640x358,1024x573,1280x716,1920x1073}.webp`; README hero `README.md:7` `./media/banner/banner-1024x573.webp` at 100% | changed | R53, TJ 15:10Z ("convert the images to webp"), 15:13Z ("a few different sizes"), 15:22Z ("names the exact size … Only imbed the next size up"): one encoder for the whole set; 100% = 1012 px README column, 1024 is the next size up over 640; visual parity measured by resolve (MAD < 1/255, luma PSNR 54.2 dB) | open |
+| D-407 | scaffold | — | `tests/unit/test_media.py` | added | R53: stdlib-only WebP header parser (VP8X/VP8L/VP8), size-in-name rule, next-size-up embed rule, six synthetic failing cases | open |
 
 ## Core
 

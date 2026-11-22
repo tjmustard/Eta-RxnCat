@@ -262,14 +262,13 @@ def test_readme_header_and_banner() -> None:
     """Centered logo header with the Eta-RxnCat h1 and an italic tagline, then the banner."""
     lines = readme().splitlines()
     assert lines[0] == '<div align="center">'
-    assert lines[1].strip() == (
-        '<img src="./media/logo.png" alt="Eta-RxnCat logo" width="200" height="200"/>'
-    )
+    logo = "./media/icons/web/icon-256.webp"
+    assert lines[1].strip() == f'<img src="{logo}" alt="Eta-RxnCat logo" width="200" height="200"/>'
     assert lines[2].strip() == "<h1>Eta-RxnCat</h1>"
     assert re.fullmatch(r"<h3><em>[^<]+</em></h3>", lines[3].strip())
     assert lines[4] == "</div>"
     following = [line for line in lines[5:] if line.strip()][0]
-    banner = '<img src="./media/banner.webp" alt="Eta-RxnCat banner" width="100%"/>'
+    banner = '<img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/>'
     assert following == f'<p align="center">{banner}</p>'
 
 
