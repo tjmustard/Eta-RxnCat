@@ -10,7 +10,7 @@ intent: "Move the GPU/MLIP stack to torch 2.13+cu129 and fairchem>=2.22 (TJ F1 A
 depends_on: [OPR.0.2.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, "tools/**", "tests/unit/tools/**", "docs/prd/v0.2.0/**", AGENTS.md, ".github/**", spec/compiled/architecture.yml]

@@ -71,7 +71,7 @@ nodes:
     summary: patched description, files
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -113,14 +113,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 01-reference-and-test-policy
+    last_slice: 02-gpu-stack-cu129
   review:
     reviewed_at: '2026-11-22T16:57:58+00:00'
     reviewed_by: audit:OPR.0.2.0.1
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -165,7 +165,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 01-reference-and-test-policy
+    last_slice: 02-gpu-stack-cu129
   review:
     reviewed_at: '2026-11-22T16:57:58+00:00'
     reviewed_by: audit:OPR.0.2.0.1
@@ -174,7 +174,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -216,7 +216,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 01-reference-and-test-policy
+    last_slice: 02-gpu-stack-cu129
   review:
     reviewed_at: '2026-11-22T16:57:58+00:00'
     reviewed_by: audit:OPR.0.2.0.1
