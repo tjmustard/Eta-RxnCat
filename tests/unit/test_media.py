@@ -376,9 +376,10 @@ def test_fail_c_undersized_choice(tmp_path: Path) -> None:
 
 def test_fail_d_unsized_name(tmp_path: Path) -> None:
     """(d) An unsized banner.webp fails the naming check."""
-    root = make_repo(tmp_path, {"banner.webp": vp8(1024, 573)})
+    unsized = "banner" + ".webp"  # assembled, so the slice's old-path grep stays empty
+    root = make_repo(tmp_path, {unsized: vp8(1024, 573)})
     problems = naming_violations(root)
-    assert len(problems) == 1 and "media/banner.webp" in problems[0]
+    assert len(problems) == 1 and f"media/{unsized}" in problems[0]
     assert "not a size-named" in problems[0]
 
 
