@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
+hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, tests/unit/engines/test_pyscf_cpu.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py], [python3, "-c", "import json,re,sys;d=json.load(open('docs/prd/v0.2.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();raw=json.dumps(d);ok=d['record_schema']==2 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and '2.13.0' in d['hardware']['torch']['version'] and d['hardware']['flags']==[] and all(c['exit_code']==0 for c in d['commands']) and isinstance(d['hf_token_present'],bool) and not re.search(r'hf_[A-Za-z0-9]{20,}',raw) and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit'));sys.exit(0 if ok else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
@@ -115,7 +115,16 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
        the code's routing constant.
      - Drop the now-unused `GPU_KS_ANALYTIC_HESSIAN_OK` constant from `engines/pyscf_gpu_cpu`.
 
-   Commit (a)–(d) with the acceptance modules, before the run (Task 1).
+   - (e) **Host-independent CPU-engine test** (R53; acceptance run 1 at `8b984d3`). The case
+     `tests/unit/engines/test_pyscf_cpu.py::test_bad_stage_or_runtime[...EngineUnavailableError-CUDA]`
+     (slice 06, audited) asserts that `device="cuda"` raises `EngineUnavailableError`. That holds
+     only where CUDA is unusable: it passed in `.venv` and failed in `.venv-accept-gpu`. This slice
+     **touches** that file. Force the unavailable path with a fake or monkeypatch (gpu4pyscf or
+     CUDA reported absent, the pattern `test_pyscf_gpu.py` already uses), so the case passes
+     identically in `.venv` and `.venv-accept-gpu`. The real-CUDA path stays covered by the GPU
+     tests (command 2). No assertion is weakened.
+
+   Commit (a)–(e) with the acceptance modules, before the run (Task 1).
 2. `tests/acceptance/`, one module per engine (`test_accept_rdkit.py`, `test_accept_pyscf.py`,
    `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`, `test_accept_esen.py`), each
    marked `acceptance` plus its piece markers:
@@ -241,7 +250,9 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
     (no `skipped` in their logs);
   - command 2's plain `pytest -q -rs`: **exactly one** skip, the node id
     `tests/unit/cli/test_cli.py::test_console_script_smoke_skipped` with reason "`torch is installed in this environment; the real skip path cannot be observed`". Its summary line shows `1 skipped`. Any other or
-    additional skip fails this proof;
+    additional skip fails this proof, and it must show **0 failed** (R53);
+  - the plain suite in `.venv` (the required checks) also shows 0 failed, and the R53 case passes in
+    both envs;
   - `known_limits` names that node id.
 
   Also: `hf_token_present` is a bool, `hf_access` holds
