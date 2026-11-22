@@ -58,9 +58,22 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
 
 ## Mini-requirements
 
-1. Preconditions: slices 01–06, 08 and 09 have audited PASS, and R46 (`import gpu4pyscf` fails on
-   this host: `Unable to load libcusolver`) is resolved by TJ's decision and folded in through resolve.
-   Until then, this slice does not start. `git status --porcelain` is empty. Record HEAD
+1. Preconditions:
+   - Slices 01–06, 08 and 09 have audited PASS.
+   - **R46 = A (TJ, 14:49Z):** TJ installs NVIDIA cuSOLVER system-wide himself. The plan is
+     Ubuntu's `libcusolver11` (11.6.1, CUDA 12.4), with NVIDIA's ubuntu2404 `libcusolver-12-8`
+     11.7.3.90 as fallback. This slice does not start until the operator confirms that install
+     to the lead.
+   - The first check here, before command 1, uses the base dev env:
+     - `ldconfig -p | grep libcusolver.so` shows a system path;
+     - `uv run python -c "import ctypes.util; print(ctypes.util.find_library('cusolver'))"` prints
+       a non-`None` name.
+     
+     Record both outputs in the result file under `preflight`. If either fails, stop and report
+     it.
+   - **No product shim:** nothing in `eta_rxncat` redirects `find_library`, preloads libraries,
+     or sets `LD_LIBRARY_PATH`. If `import gpu4pyscf` still fails, or the smoke fails (for example
+     on a cuSOLVER/CUDA minor-version mismatch), that is a finding with output (TJ, 07:52Z). `git status --porcelain` is empty. Record HEAD
    as `<sha>` before anything runs.
 2. Run, in order, from the repo root, capturing stdout, stderr and exit codes:
    1. `uv sync --locked --extra gpu`
@@ -82,6 +95,7 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
    - `smoke`: the parsed stdout of command 3
    - `pytest_gpu`: `{exit_code, summary_line}`
    - `pytest_plain`: `{exit_code, summary_line}` (command 5)
+   - `preflight`: `{ldconfig_cusolver, find_library_cusolver}` (R46)
    
    Write it with 2-space indent and a trailing newline. Commit it alone, in one commit whose
    parent is `<sha>`.

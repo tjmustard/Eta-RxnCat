@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 13
+  ADR: 14
   STORY: 0
   CANON: 0
 nodes:
@@ -522,6 +522,47 @@ nodes:
   approval: null
   history:
   - at: '2026-11-22T13:57:36+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0014
+  type: decision
+  title: Copyleft/off-list licences allowed only as unmodified transitive deps of
+    optional MLIP extras; project code stays MIT (TJ A)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0014-copyleft-off-list-licences-allowed-only-as-unmodified-transi.md
+  content_sha256: 91c01c9598a9caca0aa7b6ed4f2a0d08b335cd55bb86b531c60075506c9186f6
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - pyproject.toml
+    - tests/unit/test_package.py
+  relates_to:
+  - ADR-0010
+  - ADR-0013
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T14:51:29+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T14:51:29+00:00'
     from: null
     to: PROPOSED
     by: agent

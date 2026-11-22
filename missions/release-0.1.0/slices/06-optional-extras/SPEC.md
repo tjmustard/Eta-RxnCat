@@ -128,20 +128,56 @@ drop an extra.
    - **Profiles and their exemptions:**
      - `base`: `geometric:1.1.1` (R41) only.
      - `gpu`: `geometric:1.1.1` plus the NVIDIA rule.
-     - `mlip-mace` / `mlip-uma` (each with `gpu`): the `gpu` set plus the LGPL packages Q1 A
-       authorises, transitive only. For MACE: `ase:3.29.0`, `matscipy:1.3.1`. For UMA:
-       `ase:3.29.0`, `psycopg2-binary:2.9.13`, and `ase_db_backends:0.11.0` if TJ accepts it
-       (UNKNOWN metadata, LGPL file).
-     - Every other MLIP failure waits for TJ (row `qitem-20261122134346-2d0f88234113eb85`, R-row
-       to follow): `python-hostlist`, `ray-haproxy` (GPL); `lmdb` (OLDAP-2.8); `certifi`,
-       `tqdm`, `orjson` (MPL-2.0); `torch-ema`, `clusterscope` (unrecognised metadata, MIT file).
-       Do not add any of them before then.
+     - `mlip-mace` / `mlip-uma` (each with `gpu`): the `gpu` set plus the version-pinned list
+       below (R48, TJ "A" 14:49Z; ADR-0014). Copyleft and off-list licences are allowed only as
+       downloaded, unmodified, transitive dependencies of these optional extras. Eta-RxnCat's own
+       code stays MIT: these packages are never vendored, copied in or imported.
+       - `mlip-mace`:
+         - `ase:3.29.0` (LGPL-2.1-or-later)
+         - `matscipy:1.3.1` (LGPL-2.1, full-text field)
+         - `python-hostlist:2.3.0` (GPL-2.0-or-later)
+         - `lmdb:1.7.3` (OLDAP-2.8)
+         - `torch-ema:0.3` (metadata UNKNOWN, MIT file)
+         - `tqdm:4.70.1` (MPL-2.0 AND MIT)
+         - `orjson:3.13.0` (MPL-2.0 AND (Apache-2.0 OR MIT))
+       - `mlip-uma`:
+         - `ase:3.29.0`
+         - `psycopg2-binary:2.9.13` (LGPL with exceptions)
+         - `ase_db_backends:0.11.0` (metadata UNKNOWN, LGPL-2.1+ files)
+         - `ray-haproxy:2.8.25` (GPLv2)
+         - `lmdb:1.7.3`
+         - `certifi:2026.11.20` (MPL-2.0)
+         - `tqdm:4.70.1`
+         - `orjson:3.13.0`
+         - `clusterscope:0.0.18` (full MIT text in the field)
+       
+       These are the versions resolve's prototype saw from the lock at `b9281e0`. The lock is
+       the authority: if a version differs, use the locked one and say so in the handoff.
+     - Each exemption entry records:
+       - `licence`: what the metadata says, and the licence file where they differ;
+       - `pulled-in-by`: the direct parent, from `uv tree --invert --package <name>` in that
+         profile;
+       - `reason`;
+       - `decision = "R48 / ADR-0014"`.
+       
+       Names are compared after PEP 503 normalisation (`python_hostlist` == `python-hostlist`).
    - Remove `pip-licenses` from the dev group (no longer used) and update `uv.lock`.
 5. Exemption guard: `tests/unit/test_package.py` gains:
    - (a) an AST scan of every `.py` under `src/eta_rxncat/` that fails on any `import`/`from`
      of `ase`, `matscipy`, `sella`, `tblite` or `psi4`, and names the file and line;
    - (b) a test that reads `pyproject.toml`'s `[project.dependencies]` and every extra, and fails
      if `ase` or `matscipy` is declared **directly** anywhere.
+   - (c) R48 extends both checks to every package exempted for a copyleft licence (GPL, LGPL,
+     MPL).
+     - The forbidden-import list adds the top-level module names those distributions install:
+       `ase`, `matscipy`, `hostlist`, `psycopg2`, `ase_db_backends`, `tqdm`, `orjson`, `certifi`,
+       plus `ray-haproxy`'s module(s). Read each one from its `top_level.txt` or `RECORD` in the
+       profile env, and write the result into the test as a literal list.
+     - The direct-dependency check fails if any of those distributions is declared directly.
+     - Packages that are permissive but off-list or unrecognised (`lmdb`, `torch-ema`,
+       `clusterscope`) are not import-banned.
+   - (d) A test asserts that every `exempt` entry in `[tool.eta-rxncat.licence-gate]` (other than
+     `geometric`) lists only MLIP profiles, never `base` or `gpu`.
 6. mypy (R13) passes in the dev environment with `--extra gpu --extra mlip-mace` installed, and
    with `--extra gpu --extra mlip-uma` installed. The slice-01 overrides stay unchanged. Add
    `mace.*` and `fairchem.*` to the override list only if mypy needs them, and add a register row
@@ -200,17 +236,16 @@ drop an extra.
   add `tools` to mypy `files`; move the config to `[tool.eta-rxncat.licence-gate]`; remove
   `[tool.pip-licenses]` and the `pip-licenses` dev dependency; `uv lock`.
 - [ ] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`
-  and `ci.yml`, character for character the same. The MLIP profiles pass only once TJ's licence
-  answer is folded in. Until then, report their FAIL lines, which must be exactly the pending set
-  in Mini-requirement 4.
+  and `ci.yml`, character for character the same, with the R48 exemption lists in the config.
 - [x] Task 4: write the two exemption-guard tests (Mini-requirement 5).
+- [ ] Task 4b (R48): extend the guards per Mini-requirement 5 (c) and (d).
 - [x] Task 5: run mypy with each MLIP combination installed, then return to the base dev env.
 - [ ] Task 6: add the register rows. Re-run the four gates in the base dev env.
 
 ## 4. The Negative Space (Constraints)
 
-- **DO NOT** add `ase`, `matscipy` or any LGPL/GPL package as a direct dependency, in core or in
-  any extra.
+- **DO NOT** add `ase`, `matscipy` or any GPL/LGPL/MPL package as a direct dependency, in core or
+  in any extra. **DO NOT** import, vendor or copy code from any of them into `eta_rxncat` (R48).
 - **DO NOT** let any exempt package into the base (no-extras) install.
 - **DO NOT** exempt any package that the lock did not resolve for that extra.
 - **DO NOT** extend the allow-list beyond Mini-requirement 4, or add an exemption for a reason other than TJ's Q1 A, the `geometric:1.1.1` exception (R41) or a later TJ answer through resolve.
@@ -250,9 +285,9 @@ drop an extra.
 - [ ] Real envs, gate per profile:
   - `base` → exit 0;
   - `gpu` → exit 0;
-  - `mlip-mace` / `mlip-uma` → exit 0 once TJ's answer is folded in. Before that, exit 1, with
-    FAIL lines exactly equal to the pending set in Mini-requirement 4, and with `matscipy`,
-    `tqdm` and `orjson` among them in the MACE env.
+  - `mlip-mace` → exit 0, and `mlip-uma` → exit 0, with the R48 lists;
+  - each list equals, entry for entry, that profile's FAIL set with the MLIP exemptions removed
+    (no extra entries, and no stale entry);
   - Removing one exempt entry makes its profile exit non-zero (shown once for `geometric` in
     `base`, once for an NVIDIA package in `gpu` via a test, and once for `ase`).
 - [ ] Exemption-guard tests pass. A scratch file under `tmp_path` containing `import ase` makes the
