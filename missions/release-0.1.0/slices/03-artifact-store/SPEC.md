@@ -10,7 +10,7 @@ intent: "Implement the canonical versioned per-stage cache key and a WAL-mode SQ
 depends_on: [OPR.0.1.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_store
 parent: null
 hacf_touches: ["src/eta_rxncat/store/**", "tests/unit/store/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -90,14 +90,14 @@ stores canonical JSON text.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — `canon`, `h`, coordinate and option canonicalisation helpers (pure functions).
-- [ ] Task 2 — `geometry_payload`, `stage_payload`, `StageKey`, `build_stage_key`.
-- [ ] Task 3 — `ArtifactStatus` (`StrEnum`), `ArtifactConflictError`, `StoreSchemaError`.
-- [ ] Task 4 — `ArtifactStore.__init__` (path check, pragmas, schema/user_version).
-- [ ] Task 5 — `put`, `get`, `status`, `invalidate`, `query`, `close`/context manager.
-- [ ] Task 6 — Tests under `tests/unit/store/` (one per Proof contract bullet), using `tmp_path`.
-- [ ] Task 7 — Register rows (Mini-requirement 4).
-- [ ] Task 8 — Four gates exit 0.
+- [x] Task 1 — `canon`, `h`, coordinate and option canonicalisation helpers (pure functions).
+- [x] Task 2 — `geometry_payload`, `stage_payload`, `StageKey`, `build_stage_key`.
+- [x] Task 3 — `ArtifactStatus` (`StrEnum`), `ArtifactConflictError`, `StoreSchemaError`.
+- [x] Task 4 — `ArtifactStore.__init__` (path check, pragmas, schema/user_version).
+- [x] Task 5 — `put`, `get`, `status`, `invalidate`, `query`, `close`/context manager.
+- [x] Task 6 — Tests under `tests/unit/store/` (one per Proof contract bullet), using `tmp_path`.
+- [x] Task 7 — Register rows (Mini-requirement 4).
+- [x] Task 8 — Four gates exit 0.
 
 ## 4. The Negative Space (Constraints)
 

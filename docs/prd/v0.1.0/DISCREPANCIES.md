@@ -289,6 +289,59 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 
 ## Store
 
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-270 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:23` `StageCacheKey` | `src/eta_rxncat/store/keys.py:82` `StageKey` | changed | Frozen dataclass with key_schema, stage kind, engine and version (mission R5) | open |
+| D-271 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:26` `input_geometry_hash` | `src/eta_rxncat/store/keys.py:96` `geometry_hash` | changed | Renamed; hash of the field-by-field canonical geometry payload (5-decimal grid, -0.0 folded), not `sha256(model_dump())` (R6) | open |
+| D-272 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:27` `stage_config_hash` | `src/eta_rxncat/store/keys.py:97` `stage_hash` | changed | Renamed; canonical stage payload including EngineIdentity, integral floats as ints (R5) | open |
+| D-273 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:28` `composite_key` | `src/eta_rxncat/store/keys.py:98` `key` | changed | `h({key_schema, geometry_hash, stage_hash})` instead of `sha256("g:s")`; versioned (R5) | open |
+| D-274 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:31` `StageCacheKey.build(state, stage)` | `src/eta_rxncat/store/keys.py:104` `build_stage_key(state, stage, engine)` | changed | Module function; requires an EngineIdentity whose name matches the stage engine (R5) | open |
+| D-275 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:42` `ArtifactStore` | `src/eta_rxncat/store/artifact_store.py:63` | changed | Immutable completed rows, WAL, versioned schema (R7) | open |
+| D-276 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:45` `ArtifactStore(db_path=".eta_cache/artifacts.sqlite")` + `mkdir(parents=True)` | `src/eta_rxncat/store/artifact_store.py:71` `ArtifactStore(path)` | changed | Required path, no default, no mkdir; missing parent → FileNotFoundError (R7) | open |
+| D-277 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:46` attribute `db_path` | `src/eta_rxncat/store/artifact_store.py:81` `path` | changed | Renamed | open |
+| D-278 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:73` `get(key)` | `src/eta_rxncat/store/artifact_store.py:185` | same | Returns the payload only when completed, as before | open |
+| D-279 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:85` `put(key, stage, payload, status="completed")` with `INSERT OR REPLACE` | `src/eta_rxncat/store/artifact_store.py:122` `put(key, status, payload)` | changed | No overwrite of completed rows (ArtifactConflictError; same payload = no-op); `BEGIN IMMEDIATE`; canonical JSON with `allow_nan=False`; stage taken from the key (R7) | open |
+| D-280 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:57` SQL table `stage_artifacts` | `src/eta_rxncat/store/artifact_store.py:21` | changed | Created once on a new file under `user_version` 1, not `IF NOT EXISTS` on every open | open |
+| D-281 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:58` column `composite_key` | `src/eta_rxncat/store/artifact_store.py:22` | changed | Renamed `key` | open |
+| D-282 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:59` column `input_geometry_hash` | `src/eta_rxncat/store/artifact_store.py:24` | changed | Renamed `geometry_hash` | open |
+| D-283 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:60` column `stage_config_hash` | `src/eta_rxncat/store/artifact_store.py:25` | changed | Renamed `stage_hash` | open |
+| D-284 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:61` column `stage_kind` | `src/eta_rxncat/store/artifact_store.py:26` | same | — | open |
+| D-285 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:62` column `engine` | `src/eta_rxncat/store/artifact_store.py:27` | same | — | open |
+| D-286 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:63` column `status` | `src/eta_rxncat/store/artifact_store.py:29` | changed | `CHECK(status IN ('pending','running','completed','failed'))` | open |
+| D-287 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:64` column `payload_json` | `src/eta_rxncat/store/artifact_store.py:30` | changed | Canonical JSON (`sort_keys`, compact, ASCII, `allow_nan=False`) | open |
+| D-288 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:65` column `created_at_utc` | `src/eta_rxncat/store/artifact_store.py:32` | same | — | open |
+| D-289 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/artifact_store.py:70` index `idx_geom_hash` | `src/eta_rxncat/store/artifact_store.py:36` `idx_stage_artifacts_geometry` | changed | Renamed; same column (geometry hash) | open |
+| D-290 | store | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/store/__init__.py:5` `__all__` re-exports | `src/eta_rxncat/store/__init__.py:22` | changed | Re-exports the rewrite's public names | open |
+| D-291 | store | — | `src/eta_rxncat/store/keys.py:15` `KEY_SCHEMA` | added | Mission R5: versioned key payload | open |
+| D-292 | store | — | `src/eta_rxncat/store/keys.py:18` `JsonScalar` | added | Type alias of option scalars | open |
+| D-293 | store | — | `src/eta_rxncat/store/keys.py:21` `canon()` | added | Mission contract canonical JSON | open |
+| D-294 | store | — | `src/eta_rxncat/store/keys.py:32` `h()` | added | sha256 of canon | open |
+| D-295 | store | — | `src/eta_rxncat/store/keys.py:37` `grid_coordinate()` | added | Mission R6: 5-decimal grid, -0.0 folded, fixed-point string | open |
+| D-296 | store | — | `src/eta_rxncat/store/keys.py:45` `canonical_number()` | added | Integral floats keyed as ints | open |
+| D-297 | store | — | `src/eta_rxncat/store/keys.py:52` `geometry_payload()` | added | Field-by-field geometry payload; metadata not keyed | open |
+| D-298 | store | — | `src/eta_rxncat/store/keys.py:63` `stage_payload()` | added | Field-by-field stage payload with engine identity | open |
+| D-299 | store | — | `src/eta_rxncat/store/keys.py:95` `StageKey.key_schema` | added | Payload schema version | open |
+| D-300 | store | — | `src/eta_rxncat/store/keys.py:99` `StageKey.stage_kind` | added | Stored in its own column for `query` | open |
+| D-301 | store | — | `src/eta_rxncat/store/keys.py:100` `StageKey.engine` | added | Stored in its own column for `query` | open |
+| D-302 | store | — | `src/eta_rxncat/store/keys.py:101` `StageKey.engine_version` | added | Stored in its own column | open |
+| D-303 | store | — | `src/eta_rxncat/store/artifact_store.py:16` `SCHEMA_VERSION` | added | `PRAGMA user_version` this code reads (R7) | open |
+| D-304 | store | — | `src/eta_rxncat/store/artifact_store.py:41` `ArtifactStatus` (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) | added | Mission R7 status enum (starter used a free string) | open |
+| D-305 | store | — | `src/eta_rxncat/store/artifact_store.py:50` `ArtifactConflictError` | added | Refused write to a completed row (R7) | open |
+| D-306 | store | — | `src/eta_rxncat/store/artifact_store.py:54` `StoreSchemaError` | added | Unknown `user_version` (R7) | open |
+| D-307 | store | — | `src/eta_rxncat/store/artifact_store.py:197` `ArtifactStore.status()` | added | Status lookup | open |
+| D-308 | store | — | `src/eta_rxncat/store/artifact_store.py:205` `ArtifactStore.invalidate()` | added | The only way to replace a completed artifact (R7) | open |
+| D-309 | store | — | `src/eta_rxncat/store/artifact_store.py:223` `ArtifactStore.query()` | added | Sorted keys filtered by stage kind and engine | open |
+| D-310 | store | — | `src/eta_rxncat/store/artifact_store.py:237` `ArtifactStore.close()`, `__enter__`, `__exit__` | added | Explicit close and context manager | open |
+| D-311 | store | — | `src/eta_rxncat/store/artifact_store.py:89` pragmas `journal_mode=WAL`, `busy_timeout=5000` | added | Mission R7: concurrent readers/writers | open |
+| D-312 | store | — | `src/eta_rxncat/store/artifact_store.py:110` pragma `user_version=1` | added | Mission R7: schema version; other non-zero values refused | open |
+| D-313 | store | — | `src/eta_rxncat/store/artifact_store.py:23` column `key_schema` | added | Mission R5 | open |
+| D-314 | store | — | `src/eta_rxncat/store/artifact_store.py:28` column `engine_version` | added | Mission R5 | open |
+| D-315 | store | — | `src/eta_rxncat/store/artifact_store.py:31` column `payload_sha256` | added | Idempotent completed re-put (R7) | open |
+| D-316 | store | — | `src/eta_rxncat/store/artifact_store.py:33` column `updated_at_utc` | added | Updated on non-completed rewrites | open |
+| D-317 | store | — | `src/eta_rxncat/store/artifact_store.py:37` index `idx_stage_artifacts_kind_engine` | added | Supports `query(stage_kind, engine)` | open |
+| D-318 | store | — | `tests/unit/store/test_store_keys.py` | added | Key proof bullets (golden key, grid, per-field sensitivity, metadata, int/float/bool) | open |
+| D-319 | store | — | `tests/unit/store/test_store_artifacts.py` | added | Store proof bullets (path, pragmas, schema, write rules, invalidate, query, threads, NaN) | open |
+
 ## Hardware probe
 
 ## CLI
@@ -325,7 +378,7 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-262 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:39` `test_molecular_state_requires_charge_and_multiplicity` | `tests/unit/core/test_core_molecule.py:32` | changed | Rewritten; strictness cases in `test_charge_and_multiplicity_are_strict_ints` | open |
 | D-263 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:46` `test_atom_mapping_spec_rejects_overlap` | `tests/unit/core/test_core_mapping_thermo.py:55` (`keep-delete-overlap`) | changed | One parametrised case per invariant | open |
 | D-264 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:55` `test_reaction_graph_yaml_roundtrip_and_priority_order` | `tests/unit/core/test_core_graph_io.py:228`, `tests/unit/core/test_core_graph_io.py:161` | changed | Split into round-trip and `(priority, id)` ordering tests | open |
-| D-265 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:85` `test_stage_decomposed_cache_incremental_solvation` | — | dropped | Cache behaviour belongs to the store slice (03) | open |
+| D-265 | tests | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/tests/unit/test_core_schemas.py:85` `test_stage_decomposed_cache_incremental_solvation` | `tests/unit/store/test_store_artifacts.py:161` | changed | Covered by slice 03: a second stage on the same geometry misses while the first hits | open |
 | D-266 | tests | — | `tests/unit/core/test_core_molecule.py` | added | MolecularState proof bullets (slice 02) | open |
 | D-267 | tests | — | `tests/unit/core/test_core_stage.py` | added | StageConfig/Solvation/EngineIdentity proof bullets | open |
 | D-268 | tests | — | `tests/unit/core/test_core_mapping_thermo.py` | added | AtomMappingSpec and ThermoConfig proof bullets | open |
