@@ -10,7 +10,7 @@ intent: "Run every engine's acceptance on this host in the three named envs with
 depends_on: [OPR.0.2.0.5, OPR.0.2.0.7, OPR.0.2.0.8, OPR.0.2.0.9, OPR.0.2.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, README.md, spec/compiled/architecture.yml]
@@ -118,7 +118,7 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
       `uv run python -c "import ctypes.util; print(ctypes.util.find_library('cusolver'))"`;
       `nvidia-smi --query-gpu=index,name,compute_cap --format=csv,noheader`;
    2. `.venv-accept-gpu`: `eta-rxncat hardware-check`; `eta-rxncat hardware-check --smoke`;
-      `pytest -m gpu -q`; `pytest -q` (plain);
+      `pytest -m gpu -q -rs`; `pytest -q -rs` (plain; `-rs` prints each skip's node id and reason, R49);
    3. `.venv-accept-gpu`: `ETA_RXNCAT_ACCEPTANCE=1 ETA_RXNCAT_XTB=<path> pytest -m acceptance tests/acceptance/test_accept_rdkit.py tests/acceptance/test_accept_pyscf.py tests/acceptance/test_accept_xtb.py`;
    4. `.venv-accept-mace`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_mace.py`;
    5. `.venv-accept-uma`: `ETA_RXNCAT_ACCEPTANCE=1 pytest -m acceptance tests/acceptance/test_accept_uma.py tests/acceptance/test_accept_esen.py`.
@@ -141,6 +141,7 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - `known_limits` (R44), a list of plain statements, at least:
      - "R43 CPU-copy stability follow branch is exercised only by fakes (no real n_rotations<3 unstable case)";
      - "GPU Hessian memory is not covered by the VRAM estimate (calibrated for SCF + gradient); a GPU Hessian over budget relies on the listed-OOM CPU fallback (R10)".
+     - "plain suite in .venv-accept-gpu has exactly one by-design skip: tests/unit/cli/test_cli.py::test_console_script_smoke_skipped (torch is installed in this environment; the real skip path cannot be observed)" (R49).
    
    No token, no token path content, no secrets.
 5. In the same commit:
@@ -192,8 +193,17 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
   Every non-refusal entry has `reference_abs_diff` within its engine's tolerance. PySCF GPU
   entries have `device == "cuda"` and GPU−CPU ≤1e-6 Eh. Every refusal has `refused: true`,
   `EngineInputError`.
-- [ ] Every `commands[*].exit_code == 0`. A case-insensitive scan of all `logs` finds none of the
-  R49 architecture-error strings and no `skipped`. `hf_token_present` is a bool, `hf_access` holds
+- [ ] Every `commands[*].exit_code == 0`. Skip and error scans (this mission's R49):
+  - a case-insensitive scan of **all** `logs` finds none of the **v0.1.0 R49** architecture-error strings
+    (`no kernel image`, `NO_BINARY_FOR_GPU`, `NoKernelImageForDevice`, `PTX JIT`);
+  - acceptance commands 3–5 (run under `ETA_RXNCAT_ACCEPTANCE=1`) and command 2's
+    `pytest -m gpu`: **zero** skips (no `skipped` in their logs);
+  - command 2's plain `pytest -q -rs`: **exactly one** skip, the node id
+    `tests/unit/cli/test_cli.py::test_console_script_smoke_skipped` with reason "`torch is installed in this environment; the real skip path cannot be observed`". Its summary line shows `1 skipped`. Any other or
+    additional skip fails this proof;
+  - `known_limits` names that node id.
+
+  Also: `hf_token_present` is a bool, `hf_access` holds
   only integer status codes, and no string in the record matches `hf_[A-Za-z0-9]{20,}`.
 - [ ] R44:
   - `pyscf-gpu-support.json` has IEF-PCM rows for water, HCl, HBr and HI+ECP at grids 3 and 9,
