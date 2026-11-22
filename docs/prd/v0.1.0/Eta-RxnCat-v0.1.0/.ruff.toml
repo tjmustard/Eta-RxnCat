@@ -1,0 +1,2 @@
+# Not part of the v0.1.0 starter: keeps ruff (and the HACF pre-commit hook) off this verbatim reference copy.
+exclude = ["*"]

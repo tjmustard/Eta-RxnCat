@@ -92,7 +92,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 - [x] Task 1 — Unpack: `unzip -q PRDs/Eta-RxnCat-v0.1.0.zip -d docs/prd/v0.1.0/` (gives
   `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/…`, 23 files). Check `git status --porcelain docs/prd | wc -l`
   after `git add -n docs/prd/v0.1.0` lists all 23 (the nested `.gitignore` must not hide any).
-- [ ] Task 1b — (replan R38) Add the gate file from Mini-requirement 7, and set `force-exclude =
+- [x] Task 1b — (replan R38) Add the gate file from Mini-requirement 7, and set `force-exclude =
   true` in the root `[tool.ruff]`. Stage all 16 starter `.py` files with the other starter files
   and commit through the normal hook. Never use `--no-verify`, and never edit the hook or a starter
   file.
