@@ -33,4 +33,7 @@ composition:
     - ref: slices/08-repo-identity/slice.yaml
       order: 80
       active: true
+    - ref: slices/09-store-first-open/slice.yaml
+      order: 90
+      active: true
 # Optional team and SDLC sections are added here.

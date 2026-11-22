@@ -200,6 +200,7 @@ Vocabulary: **resolved** — the design changes so the risk is gone (the lead's 
 | R39 | Replan 2 (builder D-037): `ruff check .` / `format --check .` fail on HACF scripts under `.agents/` (120 errors / 12 files), which we may not edit | — | resolved | Root ruff `extend-exclude = ["docs/prd", ".agents"]`; slice 01 spec updated so the audit checks the new value. Extends R4. |
 | R40 | Replan 2 (TJ, 12:43Z via advisor): banner regenerated | — | resolved | Supersedes R36's banner facts: `media/banner.webp` is TJ's final banner (13:05Z, corrected chemistry panel; amended in replan 4): 2576×1439, sha256 `cc3fe67b…`. It reads "Eta-RxnCat" with the full tagline and icon, so slice 08 drops the "don't copy banner text" caveat. Superseded `old-*` files (`old-catalysis-engine-banner.*`, `old-sn2-attempt-banner.jpg`) are never committed. |
 | R41 | Replan 3 (TJ, row `qitem-20261122123511-7102e97b507c86d4`, 12:49Z, verbatim "'B': accept geomeTRIC 1.1.1 now, with a documented licence-gate exception (BSD 3-clause Non-AI; clause 4 restricts AI-training datasets; metadata UNKNOWN in pip-licenses). Record it in the spec/ADR and the licence-gate config. Proceed. Never push.") | — | resolved | One exception, `geometric:1.1.1`, pinned to the version, in `[tool.pip-licenses]` in `pyproject.toml` (with `partial-match` and the R3 allow-list). That config is the one source for the `ci.yml` and `AGENTS.md` gate command, now `uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python`. Verified by resolve (pip-licenses 5.5.5, scratch env): the exception passes; another UNKNOWN package fails; a different geometric version fails. The CLI `--ignore-packages` replaces the config list, so slice 06's per-extra lists repeat it. Amends R3/ADR-0006. PROPOSED ADR-0011. |
+| R42 | Replan 5 (audit finding on slice 03, row `qitem-20261122132213-82a94145`): (1) concurrent first open of a new store file intermittently raises `database is locked` at `PRAGMA journal_mode=WAL` (SQLite ignores `busy_timeout` there; 3/30 and 4/30 in the probe); (2) a `user_version` 7 file is switched to WAL before it is rejected | high | resolved | Lead's decision: fix in v0.1.0. New slice 09 `09-store-first-open` (node `eta_rxncat_store`, depends on 03); slice 03 is audited and is not changed. Open order is now path → connect → busy_timeout → **read user_version and reject ≠ 0/1 before any write** → WAL switch with bounded retry (BUSY/LOCKED only, backoff 5 ms ×2 capped at 100 ms, deadline `open_timeout_s` = 5.0 s, then `StoreBusyError` chained to the last error) → schema. Proofs: 300 barrier-synchronised trials (N = 2, 6, 16) with 0 errors; deterministic lock-holder tests for the retry path and the deadline; foreign-file sha256, journal mode and siblings unchanged; the audit probe prints 0 errors. Slice 07 now also depends on 09. PROPOSED ADR-0012 amends ADR-0002. |
 
 ### Seed deviations
 
@@ -211,6 +212,8 @@ Vocabulary: **resolved** — the design changes so the risk is gone (the lead's 
 | OPR.0.1.0.8 `08-repo-identity` | banner sha/size, oracle | `5ec0e886…`, 2576×1438 | `cc3fe67b…`, 2576×1439 (final; earlier pin `ca80c101…`, 2576×1274) | R40 |
 | OPR.0.1.0.1 `01-scaffold` | Mini-req 3, Task 6, constraint, gate proof | no exceptions; flags on the CLI | `[tool.pip-licenses]` with `ignore-packages = ["geometric:1.1.1"]`; command uses the config; demos (a)–(c) | R41 |
 | OPR.0.1.0.6 `06-optional-extras` | Mini-req 4, constraint | per-extra exemptions only | each per-extra list also contains `geometric:1.1.1` | R41 |
+| OPR.0.1.0.9 `09-store-first-open` | (new slice) | — | depends on OPR.0.1.0.3 | R42 |
+| OPR.0.1.0.7 `07-gpu-acceptance` | `depends_on` | OPR.0.1.0.1–.6, .8 | OPR.0.1.0.1–.6, .8, .9 | R42 |
 
 ### Blast radius
 
@@ -246,7 +249,10 @@ Slice 08 (scaffold node) adds `CHANGELOG.md`, `LICENSE`, `media/**` and `tests/u
 8. `08-repo-identity` — README/CHANGELOG/author name/media. *(compiled; replan R34–R37; depends on
    01–06; built before 07)*
 
-Build order: 01, 02, 03, 04, 05, 06, 08, 07. The feature is done when slice 07 audits PASS.
+9. `09-store-first-open` — concurrent first open and non-mutating schema rejection. *(compiled;
+   replan R42; depends on 03; built before 07)*
+
+Build order: see `hyper_scope.py dag`; 07 is always last. The feature is done when slice 07 audits PASS.
 
 ### Dependency direction
 - `core` imports only `numpy`, `pydantic`, `pyyaml` and the stdlib.
@@ -504,6 +510,7 @@ Each on a fresh local clone (`git clone <repo> <tmp> && cd <tmp> && uv sync --lo
 | OPR.0.1.0.6 | slices/06-optional-extras | Declare the gpu, mlip-mace and mlip-uma optional extras (MLIP extras conflicting) with torch from the PyTorch cu128 index, and a per-extra licence gate that exempts only NVIDIA CUDA wheels and the MLIP extras' transitive LGPL packages, per TJ's Q1 A / Q2 A. |
 | OPR.0.1.0.7 | slices/07-gpu-acceptance | Run the GPU smoke and gpu-marked tests once on a clean tree on this host's RTX 5060 Ti and commit docs/prd/v0.1.0/GPU_SMOKE_RESULT.json with the commit sha, as v0.1.0's acceptance gate. |
 | OPR.0.1.0.8 | slices/08-repo-identity | Give the repo the sibling-project public face (logo and banner README, Keep a Changelog CHANGELOG, media/) and the author form Thomas J. L. Mustard Ph.D. everywhere the project writes an author, with a filesystem test that blocks any other form; the README claims only what v0.1.0 builds. |
+| OPR.0.1.0.9 | slices/09-store-first-open | Make ArtifactStore safe to open concurrently on a new file (version check before any write, then a bounded WAL-switch retry that succeeds or raises StoreBusyError) and reject unsupported user_version files without modifying them. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status

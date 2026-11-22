@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 11
+  ADR: 12
   STORY: 0
   CANON: 0
 nodes:
@@ -438,6 +438,46 @@ nodes:
   approval: null
   history:
   - at: '2026-11-22T12:50:54+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0012
+  type: decision
+  title: 'Store open order: version check before WAL; bounded WAL retry with StoreBusyError
+    (amends ADR-0002)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0012-store-open-order-version-check-before-wal-bounded-wal-retry.md
+  content_sha256: ee8f880783dac64b0df0ac83d2bd1e33931431f641daec0239ea5e11dd136f59
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/store/artifact_store.py
+    - src/eta_rxncat/store/__init__.py
+  relates_to:
+  - ADR-0002
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T13:24:17+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T13:24:17+00:00'
     from: null
     to: PROPOSED
     by: agent
