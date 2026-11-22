@@ -10,7 +10,7 @@ intent: "Implement the PySCF engine's CPU path: keyed DF and auxbasis, the def2 
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/prd/v0.2.0/DISCREPANCIES.md, "docs/prd/v0.2.0/evidence/**", spec/compiled/architecture.yml]
@@ -76,7 +76,7 @@ fallback.
    |---|---|---|
    | `density_fit` | bool | `True` |
    | `auxbasis` | str | `def2-universal-jkfit` |
-   | `ecp` | str | per rule 3 |
+   | `ecp` | str | `auto` (resolved per state, rule 3, R36) |
    | `grids_level` | int | 3 |
    | `conv_tol` | float | 1e-10 |
    | `init_guess` | `minao` \| `atom` \| `huckel` | `minao` |
@@ -89,13 +89,23 @@ fallback.
    Runtime arguments: `device` (`auto`|`cpu`|`cuda`; this slice implements `cpu` only, and `auto`
    = `cpu` until slice 07), `max_memory_mb` (int), `ladder_max_cycle` (int, default 100; tests
    inject small values).
-3. ECP rule (R3):
-   - if the basis starts with `def2-` (case-insensitive) and any atom has Z > 36, the resolved
-     `ecp` = the basis name;
-   - PySCF must have that ECP for every such element, else `EngineInputError`;
-   - a non-def2 basis with Z > 36 and no explicit `ecp` option → `EngineInputError`;
-   - an explicit `ecp` option is used as given (keyed);
-   - with Z ≤ 36 everywhere, `ecp` resolves to `"none"`.
+3. ECP rule (R3, as amended by R36; lead decision A). `engine.stage`, the stage the cache key
+   hashes (slice 04, ADR-0016), keeps `ecp = "auto"` as a keyed literal unless the caller gives an
+   explicit value. The key stays exact, because the rule below is a pure function of
+   `(basis, symbols)`, and both are already keyed.
+
+   The engine adds `resolved_stage_for(state) -> StageConfig`: `engine.stage` with `ecp` replaced
+   by the concrete value. `evaluate` builds the mol from it, and the per-state proofs read it.
+   - `auto`: if the basis starts with `def2-` (case-insensitive) and any atom has Z > 36 → the
+     basis name; with Z ≤ 36 everywhere → `"none"`; a non-def2 basis with any Z > 36 →
+     `EngineInputError`;
+   - an explicit `ecp` value (anything but `auto`) is used as given and validated against PySCF.
+     It must exist for every element with Z > 36, else `EngineInputError`. `"none"` with any
+     Z > 36 under a def2 basis → `EngineInputError` (R3: never all-electron def2 for Z > 36);
+   - PySCF must have the resolved ECP for every Z > 36 element, else `EngineInputError`.
+
+   Known cost: explicit `ecp="def2-svp"` and implicit `auto` give different keys for the same
+   physics. That is a harmless cache miss, never a wrong hit.
 4. Charge and spin: `mol.charge = state.charge`, `mol.spin = multiplicity − 1`. Multiplicity 1
    uses RKS (RHF for `hf`); above that, UKS (UHF). Coordinates go in Å with `unit="Angstrom"`.
 5. SCF ladder (R9). Run in order, stopping at the first converged step:
@@ -184,10 +194,17 @@ fallback.
     would be 114);
   - behavioural: the hydroxyl geometry at multiplicity 2 vs hydroxide at charge −1 give
     different energies.
-- [ ] ECP rule:
-  - the Pd anion with `def2-svp` → resolved `ecp == "def2-svp"`;
-  - the Pd anion with `cc-pvdz` and no `ecp` → `EngineInputError`;
-  - water → `ecp == "none"`.
+- [ ] ECP rule (R36):
+  - `engine.stage.options["ecp"] == "auto"` for a stage with no `ecp` option;
+  - for the Pd anion with `def2-svp`, `engine.resolved_stage_for(state).options["ecp"] == "def2-svp"`;
+  - for water, `== "none"`;
+  - the Pd anion with `cc-pvdz` and no `ecp` → `EngineInputError` (from `resolved_stage_for` and
+    from `evaluate`);
+  - explicit `ecp="def2-svp"` on the Pd anion → used as given, with the same energy as `auto` to
+    ≤1e-10 Eh, but a different `build_stage_key` (the recorded known cost);
+  - explicit `ecp="none"` on the Pd anion with `def2-svp` → `EngineInputError`;
+  - `build_stage_key(state, engine.stage, identity)` is identical for two `auto` stages, and the
+    concrete ECP is never written back into `engine.stage`.
 - [ ] Ladder (deterministic, injected; default suite on HF/sto-3g water):
   - `ladder_max_cycle=1` makes DIIS fail and records `["diis", "level_shift", …]`, up to the
     step that converges;
