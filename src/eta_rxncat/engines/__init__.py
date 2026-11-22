@@ -1,7 +1,7 @@
 """Engine interfaces shared by every engine (v0.2.0).
 
 Pure Python: importing this package loads no numpy, torch, RDKit, PySCF, MACE, fairchem or xtb.
-Each engine imports its heavy library inside its own module, lazily.
+Each engine imports its heavy library inside its own methods, lazily.
 """
 
 from eta_rxncat.engines.base import Engine, RawResult
@@ -21,6 +21,7 @@ from eta_rxncat.engines.options import (
     resolve_options,
     resolved_stage,
 )
+from eta_rxncat.engines.rdkit_ff import RDKitFFEngine
 from eta_rxncat.engines.units import (
     BOHR_ANGSTROM,
     HARTREE_EV,
@@ -44,6 +45,7 @@ __all__ = [
     "EngineRuntimeError",
     "EngineUnavailableError",
     "OptionSpec",
+    "RDKitFFEngine",
     "RawResult",
     "ScfConvergenceError",
     "angstrom_to_bohr",
