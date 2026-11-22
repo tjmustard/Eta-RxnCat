@@ -21,6 +21,7 @@ from eta_rxncat.engines.options import (
     resolve_options,
     resolved_stage,
 )
+from eta_rxncat.engines.pyscf_gpu_cpu import PySCFEngine
 from eta_rxncat.engines.rdkit_ff import RDKitFFEngine
 from eta_rxncat.engines.units import (
     BOHR_ANGSTROM,
@@ -45,6 +46,7 @@ __all__ = [
     "EngineRuntimeError",
     "EngineUnavailableError",
     "OptionSpec",
+    "PySCFEngine",
     "RDKitFFEngine",
     "RawResult",
     "ScfConvergenceError",
