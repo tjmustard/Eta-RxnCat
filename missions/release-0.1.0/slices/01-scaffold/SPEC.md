@@ -10,7 +10,7 @@ intent: "Create the uv-managed MIT package skeleton with locked deps, strict ruf
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: blocked
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, ".python-version", ".github/**", README.md, AGENTS.md, ".gitignore", "docs/**", src/eta_rxncat/__init__.py, src/eta_rxncat/py.typed, "src/eta_rxncat/engines/**", "src/eta_rxncat/conformers/**", "src/eta_rxncat/mapping/**", "src/eta_rxncat/optimize/**", "src/eta_rxncat/orchestrator/**", tests/unit/test_package.py, tests/conftest.py, spec/compiled/architecture.yml]
@@ -191,7 +191,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   `dist/`, `build/`, `*.egg-info/`) **after** `# END HACF MANAGED BLOCK: gitignore`.
 - [x] Task 11 — `.github/workflows/ci.yml`: ubuntu-latest, `astral-sh/setup-uv` with cache, Python
   from `.python-version`, `uv sync --locked`, then the four gates and the licence gate. No GPU job.
-- [ ] Task 12 — Fresh-clone proof: `git clone <repo> "$(mktemp -d)/c"` of your committed branch,
+- [x] Task 12 — Fresh-clone proof: `git clone <repo> "$(mktemp -d)/c"` of your committed branch,
   `uv sync --locked`, run all five commands; paste the exit codes in your handoff.
 
 ## 4. The Negative Space (Constraints)
