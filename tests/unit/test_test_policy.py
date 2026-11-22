@@ -153,12 +153,12 @@ def test_collection_skip_fails_under_acceptance(
     """A module-level importorskip next to a passing module fails the run under =1 (R32)."""
     monkeypatch.setenv("ETA_RXNCAT_ACCEPTANCE", "1")
     result = run_modules(
-        pytester, test_mace=IMPORTORSKIP_MODULE, test_rdkit="def test_r():\n    pass\n"
+        pytester, test_mlip_inner=IMPORTORSKIP_MODULE, test_rdkit="def test_r():\n    pass\n"
     )
     assert result.ret != 0
     outcomes = result.parseoutcomes()
     assert "skipped" not in outcomes and outcomes.get("errors", 0) >= 1, outcomes
-    result.stdout.fnmatch_lines(["*test_mace.py*skipped at collection*no_such_mace_xyz*"])
+    result.stdout.fnmatch_lines(["*test_mlip_inner.py*skipped at collection*no_such_mace_xyz*"])
 
 
 def test_collection_skip_stays_skip_without_variable(
@@ -167,7 +167,7 @@ def test_collection_skip_stays_skip_without_variable(
     """Without the variable the same two modules give exit 0 and 1 passed, 1 skipped."""
     monkeypatch.delenv("ETA_RXNCAT_ACCEPTANCE", raising=False)
     result = run_modules(
-        pytester, test_mace=IMPORTORSKIP_MODULE, test_rdkit="def test_r():\n    pass\n"
+        pytester, test_mlip_inner=IMPORTORSKIP_MODULE, test_rdkit="def test_r():\n    pass\n"
     )
     assert result.ret == 0
     result.assert_outcomes(passed=1, skipped=1)

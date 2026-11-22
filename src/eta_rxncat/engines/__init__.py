@@ -14,6 +14,7 @@ from eta_rxncat.engines.errors import (
 )
 from eta_rxncat.engines.fd import fd_hessian
 from eta_rxncat.engines.identity import library_version, model_id, sha256_file
+from eta_rxncat.engines.mace import MACEEngine
 from eta_rxncat.engines.options import (
     ENGINE_IMPL_KEY,
     OptionSpec,
@@ -41,6 +42,7 @@ __all__ = [
     "ENGINE_IMPL_KEY",
     "HARTREE_EV",
     "HARTREE_KCAL_MOL",
+    "MACEEngine",
     "Engine",
     "EngineError",
     "EngineInputError",
