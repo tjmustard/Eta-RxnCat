@@ -201,6 +201,13 @@ The residuals:
 
 ## Proof contract
 
+**Energy tolerance (R48).** Every energy comparison in this slice uses ≤max(1e-6 eV, 1e-10·|E|),
+where |E| is the reference energy in eV. That is 1e-6 eV for the small molecules and about
+4.3e-6 eV for the Pd anion (|E| ≈ 43,190 eV). It sits above fairchem's measured same-device
+repeat spread (≤1.9e-6 eV, about 4e-11 relative, on the Pd anion; ≤2.6e-7 eV for the small
+molecules) and well below any physical difference. Force tolerances are unchanged (≤1e-5 eV/Å;
+measured ≤2.4e-6).
+
 **All required for this slice's audit** (both repos are 302 since 16:54Z):
 - [ ] Default suite:
   - an unknown `method` per tag → `EngineInputError`;
@@ -221,10 +228,10 @@ The residuals:
   - energy and forces equal fairchem's own predictor,
     `get_predict_unit(name, inference_settings="high-precision", device=…)` for the same
     checkpoint (or `FAIRChemCalculator` built on that predict unit, with `ase.Atoms` in the test
-    file), with charge and spin set explicitly, converted with `engines.units`: energy ≤1e-6 eV,
+    file), with charge and spin set explicitly, converted with `engines.units`: energy ≤max(1e-6 eV, 1e-10·|E|) (R48),
     forces ≤1e-5 eV/Å;
-  - R47, CPU vs CUDA for the same model and case at `"high-precision"`: |ΔE| ≤1e-6 eV and
-    max|ΔF| ≤1e-5 eV/Å (measured ≤1e-7 / ≤6e-7);
+  - R47/R48, CPU vs CUDA for the same model and case at `"high-precision"`: |ΔE| ≤max(1e-6 eV, 1e-10·|E|)
+    and max|ΔF| ≤1e-5 eV/Å;
   - `inference_settings="default"` (or any value other than `"high-precision"`) →
     `EngineInputError`, and `engine.stage.options["inference_settings"] == "high-precision"`
     for a stage with no option;
@@ -234,7 +241,7 @@ The residuals:
   - `hessian=True` on water → 9×9, `finite_difference`, symmetric.
 - [ ] R40: for each model, `engine.stage.options` holds `atom_refs_sha256` (and, for UMA,
   `form_elem_refs_sha256`) equal to the sha256 of the files used. The engine energy equals
-  `get_predict_unit(name, inference_settings="high-precision", device=…)`'s on the same input (≤1e-6 eV), which would show any
+  `get_predict_unit(name, inference_settings="high-precision", device=…)`'s on the same input (≤max(1e-6 eV, 1e-10·|E|)), which would show any
   reference-file mismatch as an offset. Changing the refs file (a `tmp_path` copy with one value
   edited, passed via a test hook) changes the key.
 - [ ] eSEN `identity.model` matches `^esen-sm-conserving-all-omol@sha256:[0-9a-f]{64}$`, and UMA's
