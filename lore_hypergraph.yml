@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 14
+  ADR: 15
   STORY: 0
   CANON: 0
 nodes:
@@ -563,6 +563,46 @@ nodes:
   approval: null
   history:
   - at: '2026-11-22T14:51:29+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0015
+  type: decision
+  title: 'Store open: one open_timeout_s deadline for version read, WAL switch and
+    schema txn; busy mapped to StoreBusyError (proposed to supersede ADR-0012)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0015-store-open-one-open-timeout-s-deadline-for-version-read-wal.md
+  content_sha256: fb1239f22cc032e943ac6521bb2200aa56093ec3200a8795a7f653b78ca58fb7
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/store/artifact_store.py
+  relates_to:
+  - ADR-0002
+  - ADR-0012
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T15:19:09+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T15:19:09+00:00'
     from: null
     to: PROPOSED
     by: agent

@@ -171,8 +171,8 @@ deterministic test carries the proof of the mechanism.
 
 - Audit finding on slice 03, row `qitem-20261122132213-82a94145` (quoted above), and its probe.
 - `missions/release-0.1.0/slices/03-artifact-store/SPEC.md` and `proof/01-qa.md` (context only).
-- ADR-0002 (store immutability, WAL, `user_version`); ADR-0012 (this amendment, PROPOSED).
-- Mission `missions/release-0.1.0/SPEC.md` §5 Store contract and trade-off log R7, R42.
+- ADR-0002 (store immutability, WAL, `user_version`); ADR-0012 (first amendment, PROPOSED); ADR-0015 (one-deadline open, PROPOSED to supersede ADR-0012).
+- Mission `missions/release-0.1.0/SPEC.md` §5 Store contract and trade-off log R7, R42, R52.
 - SQLite: `busy_timeout` is not honoured by the `journal_mode` change (the audit observed this).
 
 ## Intent visual

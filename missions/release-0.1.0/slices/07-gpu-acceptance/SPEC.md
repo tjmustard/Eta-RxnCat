@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
 intent: "Run the GPU smoke and gpu-marked tests once on a clean tree on this host's RTX 5060 Ti and commit docs/prd/v0.1.0/GPU_SMOKE_RESULT.json with the commit sha, as v0.1.0's acceptance gate."
-depends_on: [OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8, OPR.0.1.0.9]
+depends_on: [OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8, OPR.0.1.0.9, OPR.0.1.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -32,7 +32,7 @@ slice audits PASS.
 Context the builder needs (self-contained). TJ, Q3 (07:52Z): "Build, install, and run these
 autonomously as to move on to the next step/question". The team runs the GPU gate on this host.
 The red team's F11 called for one seat and one point: the build/execute seat runs it, here, after
-slices 01–06, 08 and 09 have audited PASS. The audit seat checks the recorded file and does not run `uv sync`.
+slices 01–06, 08, 09 and 10 have audited PASS. The audit seat checks the recorded file and does not run `uv sync`.
 
 The run uses code that already exists:
 - `eta-rxncat hardware-check [--smoke]` (slice 05), which wraps `probe_hardware()` /
@@ -59,7 +59,7 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
 ## Mini-requirements
 
 1. Preconditions:
-   - Slices 01–06, 08 and 09 have audited PASS.
+   - Slices 01–06, 08, 09 and 10 have audited PASS.
    - **R46 = A (TJ, 14:49Z):** TJ installs NVIDIA cuSOLVER system-wide himself. The plan is
      Ubuntu's `libcusolver11` (11.6.1, CUDA 12.4), with NVIDIA's ubuntu2404 `libcusolver-12-8`
      11.7.3.90 as fallback. This slice does not start until the operator confirms that install
@@ -129,7 +129,7 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
 
 ## 4. The Negative Space (Constraints)
 
-- **DO NOT** run on a dirty tree, or before slices 01–06, 08 and 09 have audited PASS.
+- **DO NOT** run on a dirty tree, or before slices 01–06, 08, 09 and 10 have audited PASS.
 - **DO NOT** loosen any tolerance, rerun until it passes, edit outputs by hand, or substitute CPU
   for GPU.
 - **DO NOT** change any file other than `docs/prd/v0.1.0/GPU_SMOKE_RESULT.json`.
@@ -170,4 +170,4 @@ N/A: non-visual slice.
 
 ## Dependencies
 
-- OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8 (all audited PASS; 08 added by replan R37, 09 by R42, so acceptance stays last)
+- OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6, OPR.0.1.0.8 (all audited PASS; 08 added by replan R37, 09 by R42, 10 by R50, so acceptance stays last)
