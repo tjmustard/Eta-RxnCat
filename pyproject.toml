@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.11,<3.14"
-authors = [{ name = "Thomas J. L. Mustard" }]
+authors = [{ name = "Thomas J. L. Mustard Ph.D." }]
 dependencies = [
     "numpy",
     "scipy",

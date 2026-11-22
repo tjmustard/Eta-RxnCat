@@ -1,0 +1,277 @@
+"""Author-name guard: every author form this project writes is the canonical one (slice 08).
+
+Pure filesystem: no git, no network. The pattern and the canonical string are assembled from
+pieces, so this file never contains a literal author form and does not flag itself.
+"""
+
+import re
+from collections.abc import Iterable
+from pathlib import Path
+
+import pytest
+
+REPO = Path(__file__).parents[2]
+SURNAME = "Mus" + "tard"
+CANONICAL = " ".join(["Thomas", "J.", "L.", SURNAME]) + " Ph.D."
+AUTHOR = re.compile(
+    r"(?:Thomas|Tom|TJ|T\.)(?:\s+[A-Z]\.)*\s+" + SURNAME + r"(?:,?\s*Ph\.?\s*D\.?)?"
+)
+HACF_END = "<!-- END HACF MANAGED BLOCK: hacf -->"
+
+SCANNED_FILES = ("README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml", "AGENTS.md")
+SCANNED_TREES = ("src", "tests", "docs", ".github")
+EXCLUDED = (
+    "PRDs",
+    ".agents",
+    ".claude",
+    "CLAUDE.md",
+    "HACF-uninstall.sh",
+    "docs/prd",
+    "missions",
+    "lore",
+    "spec",
+)
+
+
+def is_excluded(relative: Path) -> bool:
+    """Return whether a repo-relative path lies under a path the guard must never read."""
+    text = relative.as_posix()
+    return any(text == ex or text.startswith(ex + "/") for ex in EXCLUDED)
+
+
+def identity_paths(root: Path) -> list[Path]:
+    """Return the files the guard scans under ``root``, never descending into excluded paths."""
+    paths = [root / name for name in SCANNED_FILES if (root / name).is_file()]
+    for tree in SCANNED_TREES:
+        base = root / tree
+        if not base.is_dir() or is_excluded(base.relative_to(root)):
+            continue
+        stack = [base]
+        while stack:
+            directory = stack.pop()
+            for entry in sorted(directory.iterdir()):
+                relative = entry.relative_to(root)
+                if is_excluded(relative) or entry.name in {"__pycache__", ".pytest_cache"}:
+                    continue
+                if entry.is_dir():
+                    stack.append(entry)
+                elif entry.is_file():
+                    paths.append(entry)
+    return sorted(paths)
+
+
+def _text_lines(path: Path, root: Path) -> list[tuple[int, str]]:
+    """Return ``(line number, text)`` pairs to scan; AGENTS.md only after the HACF END marker."""
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except UnicodeDecodeError:  # binary file (an image, a compiled cache): no author text
+        return []
+    numbered = list(enumerate(lines, start=1))
+    if path.resolve() == (root / "AGENTS.md").resolve():
+        end = next((n for n, line in numbered if line.strip() == HACF_END), None)
+        numbered = numbered[end:] if end is not None else numbered
+    return numbered
+
+
+def find_author_violations(root: Path, paths: Iterable[Path]) -> list[str]:
+    """Return ``path:line: text`` for every author form under ``root`` that is not canonical.
+
+    Excluded paths are skipped even if passed in, so the guard never reads them.
+    """
+    violations = []
+    for path in paths:
+        relative = path.relative_to(root) if path.is_absolute() else path
+        if is_excluded(relative):
+            continue
+        for number, line in _text_lines(root / relative, root):
+            for match in AUTHOR.finditer(line):
+                if match.group(0) != CANONICAL:
+                    violations.append(f"{relative.as_posix()}:{number}: {match.group(0)!r}")
+    return violations
+
+
+def test_repo_uses_only_the_canonical_author() -> None:
+    """No scanned file in the repo writes the author any other way."""
+    assert find_author_violations(REPO, identity_paths(REPO)) == []
+
+
+@pytest.mark.parametrize("name", ["LICENSE", "README.md", "pyproject.toml"])
+def test_canonical_form_present(name: str) -> None:
+    """LICENSE, README.md and pyproject.toml each contain the canonical author at least once."""
+    assert CANONICAL in (REPO / name).read_text(encoding="utf-8")
+
+
+def test_license_line_three() -> None:
+    """LICENSE line 3 is the copyright line in the canonical form."""
+    assert (REPO / "LICENSE").read_text(encoding="utf-8").splitlines()[2] == (
+        f"Copyright (c) 2026 {CANONICAL}"
+    )
+
+
+def test_scan_set_never_includes_excluded_paths() -> None:
+    """The repo scan set holds the listed files and trees and nothing under an excluded path."""
+    scanned = [p.relative_to(REPO) for p in identity_paths(REPO)]
+    assert not [p for p in scanned if is_excluded(p)]
+    names = {p.as_posix() for p in scanned}
+    assert {"README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml", "AGENTS.md"} <= names
+    assert any(n.startswith("src/") for n in names) and any(n.startswith("tests/") for n in names)
+    assert any(n.startswith(".github/") for n in names)
+
+
+VARIANTS = [
+    f"Thomas {SURNAME}",
+    f"Thomas J. {SURNAME}",
+    f"T. J. L. {SURNAME}",
+    f"Thomas J. L. {SURNAME}, PhD",
+    f"Thomas J. L. {SURNAME}",
+    f"Thomas J. L. {SURNAME} PhD",
+    f"Thomas J. L. {SURNAME} Ph.D",
+    f"Tom {SURNAME}",
+    f"TJ {SURNAME}",
+]
+
+
+@pytest.mark.parametrize("variant", VARIANTS)
+def test_scanner_flags_variant(tmp_path: Path, variant: str) -> None:
+    """Each non-canonical author form is reported with its file, line and text."""
+    (tmp_path / "README.md").write_text(f"intro\nby {variant} here\n", encoding="utf-8")
+    violations = find_author_violations(tmp_path, identity_paths(tmp_path))
+    assert len(violations) == 1
+    assert violations[0].startswith("README.md:2: ") and variant in violations[0]
+
+
+def test_scanner_accepts_canonical_and_citation(tmp_path: Path) -> None:
+    """The canonical form and a surname-first bibliographic citation pass."""
+    text = (
+        f"Copyright {CANONICAL}\n{SURNAME}, T. J. L.; Wender, P. A.; Cheong, P. H.-Y. ACS Catal.\n"
+    )
+    (tmp_path / "LICENSE").write_text(text, encoding="utf-8")
+    assert find_author_violations(tmp_path, identity_paths(tmp_path)) == []
+
+
+@pytest.mark.parametrize(
+    "excluded", ["docs/prd/x.md", "PRDs/plan.md", "missions/m/SPEC.md", "spec/a.md"]
+)
+def test_scanner_skips_excluded_paths(tmp_path: Path, excluded: str) -> None:
+    """A violation under an excluded path is neither collected nor reported."""
+    target = tmp_path / excluded
+    target.parent.mkdir(parents=True)
+    target.write_text(f"Thomas {SURNAME}\n", encoding="utf-8")
+    (tmp_path / "docs" / "ok.md").parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "docs" / "ok.md").write_text("fine\n", encoding="utf-8")
+    assert target not in identity_paths(tmp_path)
+    assert find_author_violations(tmp_path, [target]) == []
+
+
+def test_scanner_reads_docs_outside_prd(tmp_path: Path) -> None:
+    """docs/** outside docs/prd/** is scanned."""
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "guide.md").write_text(f"Thomas {SURNAME}\n", encoding="utf-8")
+    assert find_author_violations(tmp_path, identity_paths(tmp_path)) == [
+        f"docs/guide.md:1: 'Thomas {SURNAME}'"
+    ]
+
+
+def test_agents_md_scanned_only_after_hacf_block(tmp_path: Path) -> None:
+    """In AGENTS.md only the text after the HACF END marker is scanned."""
+    agents = f"inside block {'Thomas ' + SURNAME}\n{HACF_END}\nproject rules by Tom {SURNAME}\n"
+    (tmp_path / "AGENTS.md").write_text(agents, encoding="utf-8")
+    assert find_author_violations(tmp_path, identity_paths(tmp_path)) == [
+        f"AGENTS.md:3: 'Tom {SURNAME}'"
+    ]
+
+
+def test_binary_files_are_skipped(tmp_path: Path) -> None:
+    """Undecodable (binary) files are skipped rather than crashing the scan."""
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "blob.bin").write_bytes(b"\xff\xfe\x00" + f"Thomas {SURNAME}".encode())
+    assert find_author_violations(tmp_path, identity_paths(tmp_path)) == []
+
+
+README_SECTIONS = [
+    "What is Eta-RxnCat?",
+    "Features (v0.1.0)",
+    "Installation",
+    "Usage",
+    "Development",
+    "Roadmap",
+    "Acknowledgements",
+    "License",
+]
+
+
+def github_anchor(heading: str) -> str:
+    """Return the GitHub anchor of a Markdown heading (lowercase, punctuation and emoji dropped)."""
+    text = heading.strip().lower()
+    text = "".join(c for c in text if c.isalnum() or c in " -_")
+    return "#" + text.replace(" ", "-")
+
+
+def readme() -> str:
+    """Return the README text."""
+    return (REPO / "README.md").read_text(encoding="utf-8")
+
+
+def test_readme_header_and_banner() -> None:
+    """Centered logo header with the Eta-RxnCat h1 and an italic tagline, then the banner."""
+    lines = readme().splitlines()
+    assert lines[0] == '<div align="center">'
+    assert lines[1].strip() == (
+        '<img src="./media/logo.png" alt="Eta-RxnCat logo" width="200" height="200"/>'
+    )
+    assert lines[2].strip() == "<h1>Eta-RxnCat</h1>"
+    assert re.fullmatch(r"<h3><em>[^<]+</em></h3>", lines[3].strip())
+    assert lines[4] == "</div>"
+    following = [line for line in lines[5:] if line.strip()][0]
+    banner = '<img src="./media/banner.webp" alt="Eta-RxnCat banner" width="100%"/>'
+    assert following == f'<p align="center">{banner}</p>'
+
+
+def test_readme_pitch_and_badges() -> None:
+    """A bold centered pitch and the four badges for github.com/tjmustard/Eta-RxnCat."""
+    text = readme()
+    assert re.search(r'<p align="center">\s*<strong>[^<]+</strong>\s*</p>', text)
+    repo = "tjmustard/Eta-RxnCat"
+    for needle in (
+        f'href="https://github.com/{repo}/releases/latest"><img src="https://img.shields.io/badge/release-v0.1.0-blue"',
+        f'src="https://github.com/{repo}/actions/workflows/ci.yml/badge.svg"',
+        f'src="https://img.shields.io/github/stars/{repo}?style=social"',
+        f'src="https://img.shields.io/github/license/{repo}"',
+    ):
+        assert needle in text, needle
+
+
+def test_readme_sections_and_toc() -> None:
+    """The eight emoji-prefixed sections appear in order, and every TOC link hits a heading."""
+    text = readme()
+    headings = [line[3:] for line in text.splitlines() if line.startswith("## ")]
+    assert headings[0] == "Table of Contents"
+    titles = [h.split(" ", 1)[1] for h in headings[1:]]
+    assert titles == README_SECTIONS
+    assert all(not h[0].isascii() for h in headings[1:])  # emoji prefix
+    anchors = {github_anchor(h) for h in re.findall(r"^#{2,6} (.+)$", text, flags=re.M)}
+    toc = text.split("## Table of Contents", 1)[1].split("\n## ", 1)[0]
+    links = re.findall(r"\]\((#[^)]+)\)", toc)
+    assert len(links) == len(README_SECTIONS)
+    assert [link for link in links if link not in anchors] == []
+    body_links = re.findall(r"\]\((#[^)]+)\)", text)
+    assert [link for link in body_links if link not in anchors] == []
+
+
+def test_readme_slice01_requirements_kept() -> None:
+    """The nMap DOI, Eta_Scripts credit, uv quickstart and licensing section survive."""
+    text = readme()
+    assert "10.1021/cs501828e" in text and "Eta_Scripts" in text
+    assert "uv sync" in text and "uv run pytest" in text
+    assert "## 📄 License" in text and "MIT" in text
+    assert "### Planned, not yet built" in text
+    for version in ("v0.2.0", "v0.5.0", "v1.0.0"):
+        assert f"**{version}**" in text.split("## 🧭 Roadmap", 1)[1]
+
+
+def test_readme_claims_no_gpu_pass_and_no_pip_licenses() -> None:
+    """The README claims no GPU pass and describes the current licence gate, not pip-licenses."""
+    text = readme()
+    assert "pip-licenses" not in text
+    assert "tools/licence_gate.py" in text
+    assert "GPU acceptance run has not been recorded yet" in text

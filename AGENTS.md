@@ -299,6 +299,9 @@ These rules apply to everything outside the HACF managed block above.
 
 - Work happens on `feature/<feature>`, one branch per feature; each slice is one commit on it.
 - Never push, tag or open a pull request without the person's word for that work.
+- `CHANGELOG.md` (Keep a Changelog) is the scribe's, at the docs+commit step: at each release from
+  v0.1.0 through v1.0.0 it renames `[Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, opens a new
+  `[Unreleased]` and adds that release's entries.
 
 ## Licence guardrails
 

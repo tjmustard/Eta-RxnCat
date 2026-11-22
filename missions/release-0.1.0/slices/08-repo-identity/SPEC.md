@@ -10,7 +10,7 @@ intent: "Give the repo the sibling-project public face (logo and banner README, 
 depends_on: [OPR.0.1.0.1, OPR.0.1.0.2, OPR.0.1.0.3, OPR.0.1.0.4, OPR.0.1.0.5, OPR.0.1.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [README.md, CHANGELOG.md, LICENSE, pyproject.toml, uv.lock, "media/**", AGENTS.md, src/eta_rxncat/__init__.py, tests/unit/test_identity.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -158,15 +158,15 @@ style.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: copy and verify the media files (Mini-requirement 1).
-- [ ] Task 2: fix the LICENSE and `pyproject` authors; run `uv lock --check` (the metadata change
+- [x] Task 1: copy and verify the media files (Mini-requirement 1).
+- [x] Task 2: fix the LICENSE and `pyproject` authors; run `uv lock --check` (the metadata change
   must not change the lock; if it does, run `uv lock` and note it).
-- [ ] Task 3: write the guard test and its `tmp_path` unit tests; see them fail on the old LICENSE
+- [x] Task 3: write the guard test and its `tmp_path` unit tests; see them fail on the old LICENSE
   form, then pass.
-- [ ] Task 4: rewrite the README (Mini-requirement 2) and run every Usage example to confirm it
+- [x] Task 4: rewrite the README (Mini-requirement 2) and run every Usage example to confirm it
   reproduces.
-- [ ] Task 5: write the CHANGELOG and the one-line scribe rule in `AGENTS.md`.
-- [ ] Task 6: add the register rows; run the four gates.
+- [x] Task 5: write the CHANGELOG and the one-line scribe rule in `AGENTS.md`.
+- [x] Task 6: add the register rows; run the four gates.
 
 ## 4. The Negative Space (Constraints)
 

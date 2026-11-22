@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -24,6 +24,10 @@ nodes:
   - spec/compiled/architecture.yml
   - tools/**
   - tests/unit/tools/**
+  - media/**
+  - CHANGELOG.md
+  - LICENSE
+  - tests/unit/test_identity.py
   description: >-
     uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, requires-python
     >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,
@@ -60,14 +64,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-optional-extras
+    last_slice: 08-repo-identity
   review:
     reviewed_at: '2026-11-22T15:03:04+00:00'
     reviewed_by: audit:OPR.0.1.0.6
     summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -109,14 +113,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-optional-extras
+    last_slice: 08-repo-identity
   review:
     reviewed_at: '2026-11-22T15:03:04+00:00'
     reviewed_by: audit:OPR.0.1.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -159,14 +163,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-optional-extras
+    last_slice: 08-repo-identity
   review:
     reviewed_at: '2026-11-22T15:03:04+00:00'
     reviewed_by: audit:OPR.0.1.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -208,14 +212,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-optional-extras
+    last_slice: 08-repo-identity
   review:
     reviewed_at: '2026-11-22T15:03:04+00:00'
     reviewed_by: audit:OPR.0.1.0.6
     summary: patched description
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -254,7 +258,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 06-optional-extras
+    last_slice: 08-repo-identity
   review:
     reviewed_at: '2026-11-22T15:03:04+00:00'
     reviewed_by: audit:OPR.0.1.0.6
