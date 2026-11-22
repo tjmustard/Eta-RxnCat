@@ -67,3 +67,11 @@ testpaths = ["tests"]
 norecursedirs = [".*", "build", "dist", "docs", "*.egg"]
 markers = ["gpu: needs a CUDA GPU and the gpu extra"]
 addopts = "-m 'not gpu'"
+
+[tool.pip-licenses]
+# Licence gate (ADR-0006). One exception, ADR-0011 / R41 (TJ "B", 12:49Z):
+# geometric 1.1.1 is BSD 3-clause Non-AI (clause 4 restricts use in AI-training datasets);
+# pip-licenses reports its metadata as UNKNOWN. Version-pinned: any other version fails.
+partial-match = true
+allow-only = "MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+ignore-packages = ["geometric:1.1.1"]

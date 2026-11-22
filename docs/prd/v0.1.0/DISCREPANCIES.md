@@ -56,7 +56,7 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-014 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:35` `pydantic>=2.7.0` | `pyproject.toml:17` `pydantic>=2` | changed | Slice 01 Task 2 floor `>=2` | open |
 | D-015 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:36` `pyyaml>=6.0.1` | `pyproject.toml:18` `pyyaml` | changed | As D-012 | open |
 | D-016 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:37` `rdkit>=2024.03.1` | `pyproject.toml:19` `rdkit` | changed | As D-012 | open |
-| D-017 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:38` `geometric>=1.0.2` | `pyproject.toml:20` `geometric` (locks 1.1.1) | changed | As D-012. The licence gate fails on it: geometric 1.1.1 reports `UNKNOWN` and its LICENSE is "BSD 3-clause Non-AI"; raised to TJ | open |
+| D-017 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:38` `geometric>=1.0.2` | `pyproject.toml:20` `geometric` (locks 1.1.1) | changed | As D-012. geometric 1.1.1 reports `UNKNOWN` and its LICENSE is "BSD 3-clause Non-AI"; gated by the version-pinned exception in D-098 (TJ "B", R41) | open |
 | D-018 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:39` `pyscf>=2.6.0` | `pyproject.toml:21` `pyscf` | changed | As D-012 | open |
 | D-019 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:43` extra `gpu` | — | dropped | No extras in slice 01 (TJ F1/F2 decided 08:19Z; slice 06 re-adds `gpu`) | open |
 | D-020 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:46` extra `mlip` | — | dropped | No extras in slice 01; slice 06 adds conflicting `mlip-mace` / `mlip-uma` instead (mission R1) | open |
@@ -133,10 +133,11 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-091 | package | — | `src/eta_rxncat/py.typed` | added | PEP 561 marker (slice 01 Task 4) | open |
 | D-092 | repo | — | `.python-version` `3.12` | added | Mission R14 | open |
 | D-093 | repo | — | `uv.lock` | added | Mission R14: committed lockfile | open |
-| D-094 | licence gate | — | `.github/workflows/ci.yml:29`, `AGENTS.md:313` runtime-only `pip-licenses --partial-match --allow-only=…` | added | Mission R3 | open |
+| D-094 | licence gate | — | `.github/workflows/ci.yml:29`, `AGENTS.md:313` runtime-only gate, `pip-licenses==5.5.5` reading `[tool.pip-licenses]` | added | Mission R3, R41 | open |
 | D-095 | tests | — | `tests/unit/test_package.py` `test_version`, `test_import_loads_no_heavy_modules` | added | Slice 01 Task 4 | open |
 | D-096 | pyproject `[tool.ruff]` | — | `pyproject.toml:39` `force-exclude = true` | added | Mission R38: makes ruff honour excludes for explicit paths, as the HACF pre-commit hook passes them | open |
 | D-097 | starter gate file | — | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml` (2 lines, `exclude = ["*"]`) | added | Mission R38: declared, not part of the starter; keeps ruff and the hook off the verbatim copy (23 verbatim + 1 gate file) | open |
+| D-098 | pyproject `[tool.pip-licenses]` | — | `pyproject.toml:71` `partial-match`, `allow-only`, `ignore-packages = ["geometric:1.1.1"]` | added | Mission R41 (TJ "B", 12:49Z; ADR-0011 PROPOSED): the only licence exception, pinned to geometric 1.1.1 | open |
 
 ## Core
 

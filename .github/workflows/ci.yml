@@ -26,4 +26,4 @@ jobs:
       - name: Tests
         run: uv run pytest
       - name: Licence gate (runtime only)
-        run: UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses pip-licenses --python .venv-runtime/bin/python --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+        run: UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python

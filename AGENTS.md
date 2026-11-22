@@ -310,8 +310,13 @@ These rules apply to everything outside the HACF managed block above.
 - Licence gate (runtime environment only):
 
   ```sh
-  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses pip-licenses --python .venv-runtime/bin/python --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python
   ```
+
+  The allow-list and the one exception live in `[tool.pip-licenses]` in `pyproject.toml`, so run the
+  gate from the repo root. The exception is `geometric` 1.1.1 only (ADR-0011): its licence is BSD
+  3-clause Non-AI (clause 4 restricts use in AI-training datasets), and pip-licenses reports its
+  metadata as UNKNOWN; any other version still fails.
 
 ## Scientific standards
 
@@ -327,7 +332,7 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy
 uv run pytest
-UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses pip-licenses --python .venv-runtime/bin/python --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python
 ```
 
 ## Protected paths

@@ -122,7 +122,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   `eta_rxncat.__version__ == "0.1.0"` and that importing `eta_rxncat` loads none of `torch`,
   `pyscf`, `rdkit` (subprocess + `sys.modules`).
 - [x] Task 5 — `.python-version` (`3.12`); `uv lock`; `uv sync`; run the four gates.
-- [ ] Task 6 — Licence gate (replan R41; resolve verified the mechanism with pip-licenses 5.5.5
+- [x] Task 6 — Licence gate (replan R41; resolve verified the mechanism with pip-licenses 5.5.5
   in a scratch env). Steps:
   1. Add the licence-gate config to `pyproject.toml`. It is the single source used by `ci.yml` and
      `AGENTS.md`, and pip-licenses reads it from the working directory:
