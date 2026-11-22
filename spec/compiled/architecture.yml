@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -50,24 +50,55 @@ nodes:
   provenance:
     last_slice: 02-core-schemas
   review:
-    reviewed_at: '2026-11-22T12:59:37+00:00'
-    reviewed_by: audit:01-scaffold
-    summary: patched description, outputs
+    reviewed_at: '2026-11-22T13:14:25+00:00'
+    reviewed_by: audit:02-core-schemas
+    summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
   - tests/data/**
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
-  description: ''
-  inputs: []
-  outputs: []
+  description: >-
+    eta_rxncat.core (v0.1.0): strict, frozen Pydantic v2 contracts (extra=forbid)
+    and the ReactionGraph loader. elements.py: immutable Z 1-118 symbol tuple and
+    ATOMIC_NUMBERS map. models.py: MolecularState (canonical symbols, finite N x 3
+    Angstrom coordinates, required StrictInt charge and spin_multiplicity >= 1 with
+    electron-count parity check, unique active_atom_indices, scalar metadata); Solvation
+    (none/ddcosmo/pcm/alpb); StageConfig (stage kind, engine tag rdkit_ff/mace/uma_direct/pyscf_gpu_cpu/xtb_subprocess,
+    non-placeholder method, basis iff pyscf, solvation-engine pairing, frozen atoms
+    required for constrained_preopt, finite options); EngineIdentity; AtomMappingSpec
+    (ordered keep/delete/alignment/anchors with disjointness, subset and >= 3 alignment
+    checks, check_atom_count for the template index space); ThermoConfig (grimme_qrrho
+    defaults, finite > 0). graph.py: Component, TemplateGeometry (concatenated component
+    index space, mapping checked against it), ReactionNode (id pattern, unique template
+    ids and ranks, equal total charge and element multiset across templates), ReactionEdge,
+    PruningRule, ReactionGraph (schema_version 1; unique node and rule ids, known
+    endpoints, no self-loops or duplicate edges, defined rule refs; cycles allowed;
+    priority_order by (priority, id)). io.py: load_reaction_graph for .yaml/.yml (SafeLoader
+    subclass rejecting duplicate keys with line) and .json (duplicate-key object_pairs_hook),
+    wrapping read, UTF-8, syntax, nesting-depth, duplicate-key and validation failures
+    in GraphValidationError (a ValueError) prefixed by the path; dump_reaction_graph_json.
+    Imports only stdlib, pydantic and yaml; no hashing, engines, mapping, connectivity
+    or pruning evaluation. Tests in tests/unit/core; example SN2 graph in tests/data/reaction_graphs/example_reaction_graph.yaml.
+  inputs:
+  - data_type: reaction_graph_file_yaml_or_json
+    external: graph_files
+  outputs:
+  - data_type: validated_reaction_graph_and_core_models
+    external: eta_rxncat_consumers
+  - data_type: reaction_graph_json
+    external: graph_files
   edges:
     depends_on: []
     implements: []
     member_of: []
   provenance:
     last_slice: 02-core-schemas
+  review:
+    reviewed_at: '2026-11-22T13:14:25+00:00'
+    reviewed_by: audit:02-core-schemas
+    summary: patched description, inputs, outputs

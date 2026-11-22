@@ -14,7 +14,7 @@
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
 | OPR.0.1.0.1 | 01-scaffold | audited |  | 2026-11-22T13:00:02+00:00 audited |
-| OPR.0.1.0.2 | 02-core-schemas | executed | OPR.0.1.0.1 | 2026-11-22T13:09:10+00:00 executed |
+| OPR.0.1.0.2 | 02-core-schemas | audited | OPR.0.1.0.1 | 2026-11-22T13:14:44+00:00 audited |
 | OPR.0.1.0.3 | 03-artifact-store | compiled | OPR.0.1.0.2 | 2026-11-22T08:09:33+00:00 compiled |
 | OPR.0.1.0.4 | 04-hw-probe | compiled | OPR.0.1.0.1 | 2026-11-22T08:09:33+00:00 compiled |
 | OPR.0.1.0.5 | 05-cli | compiled | OPR.0.1.0.2, OPR.0.1.0.4 | 2026-11-22T08:09:33+00:00 compiled |

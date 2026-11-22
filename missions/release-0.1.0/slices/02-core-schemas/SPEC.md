@@ -2,7 +2,7 @@
 id: OPR.0.1.0.2
 slice: 02-core-schemas
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the strict Pydantic v2 core data contracts and a duplicate-ke
 depends_on: [OPR.0.1.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", "tests/data/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

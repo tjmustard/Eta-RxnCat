@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Fresh clone of 3656eb4: four gates + licence gate exit 0, 93 core tests cover every Proof-contract bullet; every loader failure incl. non-UTF-8 raises GraphValidationError naming the path
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
