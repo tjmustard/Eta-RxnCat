@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone b08fd85: oracle all 0, pytest 543 passed; audit RDKit reference on water UFF/MMFF94 diff 0.0; CalcGrad defect reproduced
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
