@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eta-rxncat"
+version = "0.1.0"
+description = "Permissively licensed computational catalysis and reaction-mechanism workflow library."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11,<3.14"
+authors = [{ name = "Thomas J. L. Mustard" }]
+dependencies = [
+    "numpy",
+    "scipy",
+    "pydantic>=2",
+    "pyyaml",
+    "rdkit",
+    "geometric",
+    "pyscf",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "types-PyYAML",
+    "pip-licenses",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/eta_rxncat"]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["docs/prd", ".agents"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "D"]
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["eta_rxncat"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+strict = true
+files = ["src"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["torch.*", "gpu4pyscf.*", "cupy.*", "pyscf.*", "rdkit.*", "geometric.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [".*", "build", "dist", "docs", "*.egg"]
+markers = ["gpu: needs a CUDA GPU and the gpu extra"]
+addopts = "-m 'not gpu'"

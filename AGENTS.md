@@ -290,3 +290,48 @@ v0.6.0 moves specs to `SPEC.md` scopes under `missions/` and lore to `lore/`
 (`hyper_migrate.py`). Legacy flat MiniPRDs are dual-read until v0.7.0, and no earlier than
 2027-01-31; after that, migrate them with `python3 .agents/scripts/hyper_migrate.py apply`.
 <!-- END HACF MANAGED BLOCK: hacf -->
+
+# Eta-RxnCat project rules
+
+These rules apply to everything outside the HACF managed block above.
+
+## Branches and commits
+
+- Work happens on `feature/<feature>`, one branch per feature; each slice is one commit on it.
+- Never push, tag or open a pull request without the person's word for that work.
+
+## Licence guardrails
+
+- Never import `ase`, `sella`, in-process `tblite` or `psi4` anywhere in `src/eta_rxncat/`.
+  External copyleft or proprietary programs run only as subprocesses with serialised file I/O.
+- Every runtime dependency must report a licence on the allow-list
+  `MIT;BSD;Apache;ISC;PSF;Python Software Foundation`. No exceptions are added by agents; a failing
+  package is reported to the person.
+- Licence gate (runtime environment only):
+
+  ```sh
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses pip-licenses --python .venv-runtime/bin/python --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+  ```
+
+## Scientific standards
+
+- Every `MolecularState` declares an explicit integer `charge` and `spin_multiplicity`.
+
+## Required checks
+
+All must exit 0 before a slice is committed:
+
+```sh
+uv sync --locked
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy
+uv run pytest
+UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses pip-licenses --python .venv-runtime/bin/python --partial-match --allow-only="MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
+```
+
+## Protected paths
+
+- `PRDs/` is read-only: the person's plan and archives.
+- Agents never write to `tests/fixtures/`; novel outputs go to `tests/candidate_outputs/` for the
+  person to review.

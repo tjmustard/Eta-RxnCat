@@ -1,0 +1,33 @@
+schema: hacf.ledger/v2
+nodes:
+- id: eta_rxncat_scaffold
+  dimension: Module
+  status: dirty
+  files:
+  - pyproject.toml
+  - uv.lock
+  - .python-version
+  - .github/**
+  - README.md
+  - AGENTS.md
+  - .gitignore
+  - docs/**
+  - src/eta_rxncat/__init__.py
+  - src/eta_rxncat/py.typed
+  - src/eta_rxncat/engines/**
+  - src/eta_rxncat/conformers/**
+  - src/eta_rxncat/mapping/**
+  - src/eta_rxncat/optimize/**
+  - src/eta_rxncat/orchestrator/**
+  - tests/unit/test_package.py
+  - tests/conftest.py
+  - spec/compiled/architecture.yml
+  description: ''
+  inputs: []
+  outputs: []
+  edges:
+    depends_on: []
+    implements: []
+    member_of: []
+  provenance:
+    last_slice: 01-scaffold

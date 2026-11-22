@@ -1,0 +1,51 @@
+name: example_two_state_benchmark
+description: Minimal YAML schema template illustrating priority tiers, ordered keep/delete/align indices, and stage-decomposed pipelines.
+default_stages:
+  - stage: conformer_search
+    engine: rdkit_ff
+    method: UFF
+  - stage: geometry_opt
+    engine: uma
+    method: uma-s-1.2.1
+  - stage: frequency
+    engine: uma
+    method: uma-s-1.2.1
+  - stage: single_point
+    engine: pyscf
+    method: wB97X-D3BJ
+    basis: def2-TZVPP
+    solvation:
+      model: ddcosmo
+      solvent: toluene
+thermo:
+  temperature_k: 298.15
+  pressure_atm: 1.0
+  concentration_mol_l: 1.0
+  quasi_rrho_mode: grimme
+  omega0_cm1: 100.0
+nodes:
+  - node_id: ts_major
+    label: Major Pathway Transition State
+    kind: transition_state
+    priority: 1
+    templates:
+      - template_id: ref_ts_major
+        priority_rank: 1
+        structure:
+          name: model_ts_core
+          symbols: ["C", "H", "H", "H"]
+          coordinates:
+            - [0.0, 0.0, 0.0]
+            - [1.09, 0.0, 0.0]
+            - [-0.36, 1.03, 0.0]
+            - [-0.36, -0.51, 0.89]
+          charge: 0
+          spin_multiplicity: 1
+          active_atom_indices: [0, 1]
+        mapping:
+          keep_atoms: [0, 1, 2]
+          delete_atoms: [3]
+          alignment_atoms: [0, 1, 2]
+          attachment_anchors: [0]
+edges: []
+pruning_rules: []

@@ -10,7 +10,7 @@ intent: "Create the uv-managed MIT package skeleton with locked deps, strict ruf
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: blocked
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, ".python-version", ".github/**", README.md, AGENTS.md, ".gitignore", "docs/**", src/eta_rxncat/__init__.py, src/eta_rxncat/py.typed, "src/eta_rxncat/engines/**", "src/eta_rxncat/conformers/**", "src/eta_rxncat/mapping/**", "src/eta_rxncat/optimize/**", "src/eta_rxncat/orchestrator/**", tests/unit/test_package.py, tests/conftest.py, spec/compiled/architecture.yml]
@@ -68,15 +68,15 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — Unpack: `unzip -q PRDs/Eta-RxnCat-v0.1.0.zip -d docs/prd/v0.1.0/` (gives
+- [x] Task 1 — Unpack: `unzip -q PRDs/Eta-RxnCat-v0.1.0.zip -d docs/prd/v0.1.0/` (gives
   `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/…`, 23 files). Check `git status --porcelain docs/prd | wc -l`
   after `git add -n docs/prd/v0.1.0` lists all 23 (the nested `.gitignore` must not hide any).
-- [ ] Task 2 — `pyproject.toml` (hatchling or uv_build backend, src layout): name `eta-rxncat`,
+- [x] Task 2 — `pyproject.toml` (hatchling or uv_build backend, src layout): name `eta-rxncat`,
   version `0.1.0`, `license = "MIT"`, `requires-python = ">=3.11,<3.14"`; runtime deps `numpy`,
   `scipy`, `pydantic>=2`, `pyyaml`, `rdkit`, `geometric`, `pyscf`; **no optional extras** (they
   arrive in a later slice); dev group `pytest`, `pytest-cov`, `ruff`, `mypy`, `types-PyYAML`,
   `pip-licenses`. Add `LICENSE` only if absent (one exists at the root: keep it, check it is MIT).
-- [ ] Task 3 — Tool config in `pyproject.toml`:
+- [x] Task 3 — Tool config in `pyproject.toml`:
   - ruff: `line-length = 100`, `extend-exclude = ["docs/prd"]`; lint `select = ["E","F","W","I","D"]`,
     `ignore = ["D100","D104"]`; pydocstyle `convention = "google"`; isort
     `known-first-party = ["eta_rxncat"]`; format `quote-style = "double"`.
@@ -85,20 +85,20 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
     `ignore_missing_imports = true`, `follow_imports = "skip"`.
   - pytest: `testpaths = ["tests"]`, `norecursedirs = [".*","build","dist","docs","*.egg"]`,
     `markers = ["gpu: needs a CUDA GPU and the gpu extra"]`, `addopts = "-m 'not gpu'"`.
-- [ ] Task 4 — Package: `src/eta_rxncat/__init__.py` (`__version__ = "0.1.0"`, docstring),
+- [x] Task 4 — Package: `src/eta_rxncat/__init__.py` (`__version__ = "0.1.0"`, docstring),
   `src/eta_rxncat/py.typed`, and empty packages `engines`, `conformers`, `mapping`, `optimize`,
   `orchestrator`, each an `__init__.py` with a one-line docstring naming the plan version that fills
   it (v0.2.0, v0.3.0, v0.4.0, v0.5.0, v0.8.0). `tests/unit/test_package.py` asserts
   `eta_rxncat.__version__ == "0.1.0"` and that importing `eta_rxncat` loads none of `torch`,
   `pyscf`, `rdkit` (subprocess + `sys.modules`).
-- [ ] Task 5 — `.python-version` (`3.12`); `uv lock`; `uv sync`; run the four gates.
+- [x] Task 5 — `.python-version` (`3.12`); `uv lock`; `uv sync`; run the four gates.
 - [ ] Task 6 — Licence gate: one command, written identically in `ci.yml` and in the `AGENTS.md`
   project section, that builds/uses a runtime-only environment (e.g. `uv sync --locked --no-dev`
   into `UV_PROJECT_ENVIRONMENT=.venv-runtime`, then `uv run --with pip-licenses pip-licenses
   --python .venv-runtime/bin/python …`, or an equivalent you verify) with the allow-list above.
   Add `.venv-runtime/` to `.gitignore`. Record the negative demonstration (scratch dir outside the
   repo, `ase` installed, command exits non-zero) in your handoff with its output.
-- [ ] Task 7 — `docs/prd/v0.1.0/DISCREPANCIES.md`: header (purpose, TJ's Q2 quote, the closed
+- [x] Task 7 — `docs/prd/v0.1.0/DISCREPANCIES.md`: header (purpose, TJ's Q2 quote, the closed
   inventory rules and row format below), then rows for the scaffold area: every key of the
   starter `pyproject.toml` (`[project]` with each dependency entry its own row, optional
   dependencies, scripts, build-system, each `[tool.*]` key), each step of its `ci.yml`, each line of
@@ -115,7 +115,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   `dropped` (`PRDs/` is TJ's). Later slices append rows for their areas; leave a section heading
   per area (`## Scaffold`, `## Core`, `## Store`, `## Hardware probe`, `## CLI`, `## Fixture`,
   `## Tests`).
-- [ ] Task 8 — `docs/prd/PLAN_DISCREPANCIES.md`: for each of the ten `PRDs/*.zip`, run
+- [x] Task 8 — `docs/prd/PLAN_DISCREPANCIES.md`: for each of the ten `PRDs/*.zip`, run
   `unzip -p PRDs/<zip> '*/Eta-RxnCat_Living_Master_Plan.md' > "$TMP/<version>.md"` with
   `TMP=$(mktemp -d)` outside the repo, then
   `LC_ALL=C diff -U0 "$TMP/<version>.md" PRDs/Eta-RxnCat_Living_Master_Plan.md`. Header: the
@@ -128,8 +128,8 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   Expected today: 14 rows, copies of v0.1.0–v0.6.0 and v0.8.0 identical (one sha), v0.7.0, v0.9.0
   and v1.0.0 byte-identical to `PRDs/` (no rows). If your counts differ, report the difference;
   do not force 14.
-- [ ] Task 9 — `README.md` per Mini-requirement 4.
-- [ ] Task 10 — `AGENTS.md`: append a `# Eta-RxnCat project rules` section **after** the line
+- [x] Task 9 — `README.md` per Mini-requirement 4.
+- [x] Task 10 — `AGENTS.md`: append a `# Eta-RxnCat project rules` section **after** the line
   `<!-- END HACF MANAGED BLOCK: hacf -->`: branch `feature/<feature>`, one commit per slice; no
   `ase`/`sella`/in-process `tblite`/`psi4` imports; the licence allow-list and gate command; every
   `MolecularState` has explicit `charge` and `spin_multiplicity`; required checks (the four gates +
@@ -137,7 +137,7 @@ not, stop and report it to the lead with the `pip-licenses` output (do not add a
   managed block. `.gitignore`: append the starter's entries that apply (`__pycache__/`, `*.py[cod]`,
   `.venv/`, `.venv-runtime/`, caches, `*.sqlite`, `*.sqlite3`, `*.db`, `.coverage`, `htmlcov/`,
   `dist/`, `build/`, `*.egg-info/`) **after** `# END HACF MANAGED BLOCK: gitignore`.
-- [ ] Task 11 — `.github/workflows/ci.yml`: ubuntu-latest, `astral-sh/setup-uv` with cache, Python
+- [x] Task 11 — `.github/workflows/ci.yml`: ubuntu-latest, `astral-sh/setup-uv` with cache, Python
   from `.python-version`, `uv sync --locked`, then the four gates and the licence gate. No GPU job.
 - [ ] Task 12 — Fresh-clone proof: `git clone <repo> "$(mktemp -d)/c"` of your committed branch,
   `uv sync --locked`, run all five commands; paste the exit codes in your handoff.
