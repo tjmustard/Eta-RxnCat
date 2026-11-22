@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
+hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py], [python3, "-c", "import json,re,sys;d=json.load(open('docs/prd/v0.2.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();raw=json.dumps(d);ok=d['record_schema']==2 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and '2.13.0' in d['hardware']['torch']['version'] and d['hardware']['flags']==[] and all(c['exit_code']==0 for c in d['commands']) and isinstance(d['hf_token_present'],bool) and not re.search(r'hf_[A-Za-z0-9]{20,}',raw) and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit'));sys.exit(0 if ok else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
@@ -103,7 +103,19 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
      - a synthetic record missing the IEF-PCM class makes the router choose FD for IEF-PCM;
      - removing a recorded row makes the test fail.
 
-   Commit (a)–(c) with the acceptance modules, before the run (Task 1).
+   - (d) **Per-class rule replaces slice 07's blanket verdict** (R51). R44's IEF-PCM rows found the
+     hydroxyl **UKS IEF-PCM** GPU analytic KS Hessian off by 1.97e-4 (grid 3) and 2.11e-4 (grid 9)
+     vs FD. The error is independent of the FD step (1.86e-4 to 2.05e-4 over 0.0025–0.01 Bohr),
+     so it is a real defect, not FD noise. All closed-shell IEF-PCM rows are ≤1.45e-5. The (b)
+     routing correctly sends (UKS, IEF-PCM, no ECP) to FD.
+     - This slice **touches** slice 07's `tests/unit/engines/test_pyscf_gpu.py`:
+       `test_gpu_support_record_matches_code` loses its blanket assertions (all rows ≤1e-4;
+       `GPU_KS_ANALYTIC_HESSIAN_OK is True`) and asserts the class rule instead. The record's
+       `routing.analytic_classes` == the classes derived from its rows (present, all ≤1e-4) ==
+       the code's routing constant.
+     - Drop the now-unused `GPU_KS_ANALYTIC_HESSIAN_OK` constant from `engines/pyscf_gpu_cpu`.
+
+   Commit (a)–(d) with the acceptance modules, before the run (Task 1).
 2. `tests/acceptance/`, one module per engine (`test_accept_rdkit.py`, `test_accept_pyscf.py`,
    `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`, `test_accept_esen.py`), each
    marked `acceptance` plus its piece markers:
@@ -140,7 +152,8 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
    - the UMA and eSEN checkpoint names, sizes and sha256s;
    - `known_limits` (R44), a list of plain statements, at least:
      - "R43 CPU-copy stability follow branch is exercised only by fakes (no real n_rotations<3 unstable case)";
-     - "GPU Hessian memory is not covered by the VRAM estimate (calibrated for SCF + gradient); a GPU Hessian over budget relies on the listed-OOM CPU fallback (R10)".
+     - "GPU Hessian memory is not covered by the VRAM estimate (calibrated for SCF + gradient); a GPU Hessian over budget relies on the listed-OOM CPU fallback (R10)";
+     - "GPU4PySCF 1.9.2 analytic UKS IEF-PCM Hessian off ~2e-4 (hydroxyl; step-independent); routed to FD" (R51).
      - "plain suite in .venv-accept-gpu has exactly one by-design skip: tests/unit/cli/test_cli.py::test_console_script_smoke_skipped (torch is installed in this environment; the real skip path cannot be observed)" (R49).
    
    No token, no token path content, no secrets.
@@ -232,6 +245,13 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
 
   Also: `hf_token_present` is a bool, `hf_access` holds
   only integer status codes, and no string in the record matches `hf_[A-Za-z0-9]{20,}`.
+- [ ] R51:
+  - `test_gpu_support_record_matches_code` asserts the class rule (record `routing.analytic_classes`
+    == the derived classes == the code constant) and no blanket verdict;
+  - (UKS, IEF-PCM, no ECP) is **not** in `analytic_classes`, and a hydroxyl IEF-PCM GPU Hessian
+    reports `finite_difference`;
+  - `GPU_KS_ANALYTIC_HESSIAN_OK` no longer exists in `src/`;
+  - `known_limits` has the UKS IEF-PCM line.
 - [ ] R44:
   - `pyscf-gpu-support.json` has IEF-PCM rows for water, HCl, HBr and HI+ECP at grids 3 and 9,
     RKS and UKS, plus hydroxyl UKS;
