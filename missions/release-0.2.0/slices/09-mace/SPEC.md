@@ -2,7 +2,7 @@
 id: OPR.0.2.0.9
 slice: 09-mace
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the mace engine: MACE-MP-0 medium (MIT) from a sha256-verifie
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", tests/unit/test_test_policy.py, docs/licence-inventory.md, docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

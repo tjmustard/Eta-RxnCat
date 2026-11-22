@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -68,12 +68,12 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -120,14 +120,14 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,41 +271,41 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
-    eta_rxncat.engines (v0.2.0): shared engine interfaces plus engines; pure Python
-    at import, libraries lazy. base.py: Engine ABC (tag, ENGINE_IMPL, OPTIONS); from_stage(stage,
-    **runtime) rejects a foreign tag or unknown runtime arg; evaluate checks shapes,
-    copies lists, returns a validated PotentialResult. errors.py: EngineError > Unavailable,
-    Input, ScfConvergence, Runtime(tail). units.py: CODATA 2018. options.py: OptionSpec,
-    resolve_options, resolved_stage (implicit and explicit defaults key the same,
-    R6). identity.py: sha256 model_id, library_version. fd.py: fd_hessian. rdkit_ff.py:
-    RDKitFFEngine (uff|mmff94), neutral closed-shell only (R35), perception round-trip,
-    fresh force field per geometry, FD Hessian. pyscf_gpu_cpu/: PySCFEngine, DF R/U
-    KS/HF; keyed density_fit, auxbasis, ecp (auto, resolved per state, R36), grids_level,
-    conv_tol, init_guess, pcm_method, ladder_small_basis, fd_step_bohr, hessian_mode;
-    ladder diis -> level_shift -> soscf -> small_basis_projection, then internal stability
-    (<= 2 follows); ddCOSMO/PCM with the Minnesota table; CPU Hessian analytic for
-    HF, FD of gradients for KS (R41). Runtime device auto|cuda|cpu (unkeyed, gpu.py):
-    GPU4PySCF with the same resolved stage; ddCOSMO -> cpu; VRAM budget read once
-    (ADR-0008) vs calibrated estimate (f 5.13 + 64 MiB, docs/prd/v0.2.0/calibration/),
-    over budget -> cpu; the four listed CUDA OOMs free the pools and re-run once on
-    cpu, other CuPy errors -> EngineRuntimeError; GPU KS analytic Hessian with grid_response
-    (record-gated); stability on a CPU copy below 3 rotations (R43); device_reason
-    records every CPU choice. xtb_subprocess.py: XTBSubprocessEngine (gfn2) runs the
-    external xtb 6.8.0 binary (runtime binary, $ETA_RXNCAT_XTB or PATH; docs/licence-inventory.md)
-    with a list argv, no shell, in a fresh temp dir, always --grad (--chrg, --uhf,
-    --acc, --etemp, keyed --alpb solvent alpb_state); Hessian = FD of xtb gradients,
-    1 + 6N calls (R45; the --hess file is projected). Tests in tests/unit/engines.
+    eta_rxncat.engines (v0.2.0): engine interfaces and engines; pure Python at import,
+    libraries lazy. base.py: Engine ABC (tag, ENGINE_IMPL, OPTIONS); from_stage rejects
+    a foreign tag or unknown runtime arg; evaluate checks shapes and returns a validated
+    PotentialResult. errors.py: EngineError > Unavailable, Input, ScfConvergence,
+    Runtime(tail). units.py: CODATA 2018. options.py: resolve_options, resolved_stage
+    (implicit and explicit defaults key the same, R6). identity.py: sha256 model_id,
+    library_version. fd.py: fd_hessian. rdkit_ff.py: RDKitFFEngine (uff|mmff94), neutral
+    closed-shell only (R35), perception round-trip, fresh force field per geometry,
+    FD Hessian. pyscf_gpu_cpu/: PySCFEngine, DF R/U KS/HF; keyed density_fit, auxbasis,
+    ecp (auto, resolved per state, R36), grids_level, conv_tol, init_guess, pcm_method,
+    ladder_small_basis, fd_step_bohr, hessian_mode; ladder diis -> level_shift ->
+    soscf -> small_basis_projection, then internal stability (<= 2 follows); ddCOSMO/PCM
+    (Minnesota table); CPU Hessian analytic for HF, FD for KS (R41). Unkeyed device
+    auto|cuda|cpu (gpu.py): GPU4PySCF, same resolved stage; ddCOSMO -> cpu; calibrated
+    VRAM estimate (f 5.13 + 64 MiB) vs the ADR-0008 budget; the four CUDA OOMs re-run
+    once on cpu; record-gated GPU KS analytic Hessian; CPU-copy stability below 3
+    rotations (R43); device_reason on every CPU choice. xtb_subprocess.py: XTBSubprocessEngine
+    (gfn2), external xtb 6.8.0 (docs/licence-inventory.md), list argv, no shell, fresh
+    temp dir, always --grad, keyed --alpb solvent alpb_state; Hessian = FD of gradients,
+    1 + 6N calls (R45). mace.py: MACEEngine (mace-mp-0-medium), required model_path
+    whose sha256 must equal the pin before torch.load; float64 (input built under
+    a float64 default dtype); neutral closed-shell only; MACE's own mace.data, no
+    ase in src; identity model mace-mp-0-medium@sha256:<hex>; device auto|cpu|cuda;
+    FD Hessian. Tests in tests/unit/engines.
   inputs: []
   outputs: []
   edges:
@@ -324,6 +324,6 @@ nodes:
   provenance:
     last_slice: 09-mace
   review:
-    reviewed_at: '2026-11-22T22:44:54+00:00'
-    reviewed_by: audit:OPR.0.2.0.8
+    reviewed_at: '2026-11-22T22:54:09+00:00'
+    reviewed_by: audit:OPR.0.2.0.9
     summary: patched description
