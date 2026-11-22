@@ -66,14 +66,20 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
       `gpu.compute_capability "12.0"`, `vram_budget_bytes 6979321856` and `flags []`.
    3. `uv run eta-rxncat hardware-check --smoke`. Expect exit 0 and `status "pass"`.
    4. `uv run pytest -m gpu -q`. Expect exit 0 and at least 1 passed.
+   5. `uv run pytest -q`, the plain suite with the gpu extra installed (R44). Expect exit 0.
+   
+   If command 2 shows `torch_import_failed` or `gpu4pyscf_import_failed` (R43), or any command
+   exits non-zero, stop. Write the record with the failing output and hand it to the lead under
+   rule 4. Do not reinstall packages, change the index, or retry to get a pass.
 3. Write `docs/prd/v0.1.0/GPU_SMOKE_RESULT.json` with these fields:
    - `record_schema: 1`
    - `commit_sha: <sha>`
    - `run_at_utc` (ISO-8601 Z)
-   - `commands`: the four argv lists, each with its exit code
+   - `commands`: the five argv lists, each with its exit code
    - `hardware`: the parsed stdout of command 2
    - `smoke`: the parsed stdout of command 3
    - `pytest_gpu`: `{exit_code, summary_line}`
+   - `pytest_plain`: `{exit_code, summary_line}` (command 5)
    
    Write it with 2-space indent and a trailing newline. Commit it alone, in one commit whose
    parent is `<sha>`.
@@ -106,8 +112,9 @@ is this host's driver, CUDA and wheel state, which only the run itself can show.
   "cuda"`, `smoke.torch_op.max_abs_diff <= 1e-9` and `smoke.total_seconds <= smoke.timeout_s`.
 - [ ] `hardware.gpu.compute_capability == "12.0"`, `hardware.vram_budget_bytes == 6979321856` and
   `hardware.flags == []`.
-- [ ] Every `commands[*].exit_code == 0`, and `pytest_gpu.summary_line` reports ≥ 1 passed and 0
-  failed.
+- [ ] Every `commands[*].exit_code == 0` (five commands), `pytest_gpu.summary_line` reports ≥ 1
+  passed and 0 failed, and `pytest_plain.exit_code == 0`. `hardware.flags` contains no
+  `*_import_failed`.
 - [ ] `git merge-base --is-ancestor <commit_sha> HEAD` → exit 0. The commit that adds the file
   changes only that file.
 

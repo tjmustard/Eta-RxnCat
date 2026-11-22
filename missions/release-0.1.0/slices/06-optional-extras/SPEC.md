@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
+hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, src/eta_rxncat/utils/hw_probe.py, "tests/unit/utils/**", "tests/unit/cli/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, lock, "--check"], [uv, sync, "--locked"], [uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_package.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -113,6 +113,39 @@ drop an extra.
    - `added` rows for the `gpu` extra, the torch index and the `licence-extras` CI job.
    
    Status of each row: `open`.
+9. Replan R43, slice-04 audit note 1 (row `qitem-20261122132935-9169e7c0`): report a broken torch
+   or GPU4PySCF install; never raise. This slice is the first to install a real torch.
+   Today, if `torch` is installed but importing it raises something other than `ImportError`
+   (e.g. `OSError: libcudart.so.12: cannot open shared object file`), `probe_hardware()` and
+   `run_smoke()` raise. Change `src/eta_rxncat/utils/hw_probe.py` so that:
+   - The torch import catches `Exception` (not `BaseException`). When the distribution is present
+     (`importlib.metadata.version("torch")` succeeds) but the import raised, the report has:
+     - `torch.installed = true`, `torch.version` = the metadata version;
+     - `cuda_available = false`, `cuda_version = null`, `gpu = null`, `vram_budget_bytes = null`;
+     - a new flag `torch_import_failed`;
+     - a note `Importing torch raised <ExceptionType>: <message>`.
+   - GPU4PySCF follows the same rule, with flag `gpu4pyscf_import_failed` instead of
+     `gpu4pyscf_missing`. Its note already exists.
+   - Fixed flag order: `torch_missing`, `torch_import_failed`, `cuda_unavailable`,
+     `torch_cuda_below_12.8`, `gpu4pyscf_missing`, `gpu4pyscf_import_failed`,
+     `gpu4pyscf_below_1.8.0`. `report_schema` stays 1 (only a new flag value is added).
+   - `run_smoke()`: when either `*_import_failed` flag is set, the result is **`fail`** (exit 1),
+     not `skipped`. The reason names the package and the exception, and no child process starts.
+     `skipped` (exit 3) keeps meaning "not installed / no CUDA". A broken install on the
+     acceptance host must surface as a failure with its output (TJ, 07:52Z), never be mistaken for
+     an absent package.
+   - No retry, reinstall or fallback logic. This is reporting only.
+10. Replan R44, slice-04 audit note 2: the plain suite does not depend on the environment.
+    `uv run pytest` must exit 0 both in the base dev env (no extras) and with `--extra gpu`
+    installed. Convert every test under `tests/unit/` that assumes torch, CUDA or GPU4PySCF is
+    absent to a fake host, by monkeypatching the module's import seam (`hw_probe._import` or
+    equivalent) so that the package reads as absent. Known cases:
+    - `tests/unit/utils/test_utils_smoke.py::test_skipped_on_this_environment`; rename it
+      `test_skipped_without_torch`.
+    - Any slice-05 CLI test of `hardware-check --smoke` → exit 3.
+    
+    Keep the real-environment "skipped" check as one subprocess test that is skipped with a
+    reason when `importlib.util.find_spec("torch")` is not `None`. Do not weaken any assertion.
 
 ## 3. Implementation Plan (Task List)
 
@@ -136,11 +169,12 @@ drop an extra.
 - **DO NOT** extend the base allow-list, or add an exemption for a reason other than TJ's Q1 A or the `geometric:1.1.1` exception (R41).
 - **DO NOT** make the MLIP extras co-installable by pinning one engine to an old release, or by
   overriding `e3nn`.
-- **DO NOT** import `torch`, `mace`, `fairchem`, `ase` or `matscipy` anywhere in `src/eta_rxncat/`
+- **DO NOT** add any new import of `torch` (beyond `hw_probe`'s existing function-local one), `mace`, `fairchem`, `ase` or `matscipy` anywhere in `src/eta_rxncat/`
   in this slice.
 - **DO NOT** run the GPU smoke or commit `GPU_SMOKE_RESULT.json`; that belongs to slice 07.
 - **DO NOT** add a GPU job to CI.
-- **DO NOT** edit `src/eta_rxncat/{core,store,utils}` or `cli.py`.
+- **DO NOT** edit `src/eta_rxncat/{core,store}` or `cli.py`. In `utils`, change only `hw_probe.py`, and only for Mini-requirement 9 (R43).
+- **DO NOT** add retry, reinstall or CPU-fallback logic for a broken torch/GPU4PySCF; report it.
 
 ## Proof contract
 
@@ -160,6 +194,15 @@ drop an extra.
   for character.
 - [ ] The four gates → exit 0 in the base dev env. The register rows from Mini-requirement 8 are
   present.
+- [ ] R43: unit tests using a fake `torch` (and a fake `gpu4pyscf`) whose import raises
+  `OSError("libcudart.so.12: cannot open shared object file")`, with the distribution metadata
+  present. Expected: `probe_hardware()` returns `installed true`, flags containing
+  `torch_import_failed` (resp. `gpu4pyscf_import_failed`) in the fixed order, and the note text.
+  `run_smoke()` returns `fail` naming the package, exit 1, with no child process. A torch whose
+  import raises `ImportError` with no metadata still gives `torch_missing` / `skipped`.
+- [ ] R44: `uv run pytest` → exit 0 in the base dev env, **and** → exit 0 after
+  `uv sync --locked --extra gpu` (then return to the base env with `uv sync --locked`). Paste both
+  summary lines. `grep -rn "installed is False" tests/unit` hits only fake-host tests.
 
 ## Source material
 
