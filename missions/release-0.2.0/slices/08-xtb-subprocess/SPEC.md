@@ -10,7 +10,7 @@ intent: "Provision the pinned xtb 6.8.0 binary outside the repo (stage/bin/xtb),
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/licence-inventory.md, AGENTS.md, docs/prd/v0.2.0/DISCREPANCIES.md, "docs/prd/v0.2.0/evidence/**", spec/compiled/architecture.yml]

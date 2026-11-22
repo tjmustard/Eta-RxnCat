@@ -1,0 +1,15 @@
+.....water/toluene: gsolv -5.07288720817 reference -5.0675833857 gas -5.07037076454 diff 5.3038e-03
+.....
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/unit/engines/test_xtb.py::test_real_matches_hand_run[water]
+PASSED tests/unit/engines/test_xtb.py::test_real_matches_hand_run[hydroxide]
+PASSED tests/unit/engines/test_xtb.py::test_real_matches_hand_run[hydroxyl]
+PASSED tests/unit/engines/test_xtb.py::test_real_matches_hand_run[pd_anion]
+PASSED tests/unit/engines/test_xtb.py::test_real_multiplicity_changes_energy
+PASSED tests/unit/engines/test_xtb.py::test_real_alpb_state
+PASSED tests/unit/engines/test_xtb.py::test_real_unknown_solvent
+PASSED tests/unit/engines/test_xtb.py::test_real_hessian
+PASSED tests/unit/engines/test_xtb.py::test_real_hessian_file_canary
+PASSED tests/unit/engines/test_xtb.py::test_real_timeout_and_no_stray_files
+10 passed, 31 deselected in 1.04s

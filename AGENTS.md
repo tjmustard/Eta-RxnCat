@@ -352,6 +352,11 @@ uv run pytest
 UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
 ```
 
+## External components
+
+- Programs and model weights used but never shipped (for example the xtb binary) are listed in
+  `docs/licence-inventory.md`, with licence, digest and the decision that allows them.
+
 ## Engine tests
 
 - Acceptance runs use the gitignored envs `.venv-accept-gpu` (`--extra gpu`), `.venv-accept-mace`

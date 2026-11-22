@@ -34,6 +34,7 @@ from eta_rxncat.engines.units import (
     kcal_mol_per_angstrom_to_hartree_per_bohr,
     kcal_mol_to_hartree,
 )
+from eta_rxncat.engines.xtb_subprocess import XTBSubprocessEngine
 
 __all__ = [
     "BOHR_ANGSTROM",
@@ -50,6 +51,7 @@ __all__ = [
     "RDKitFFEngine",
     "RawResult",
     "ScfConvergenceError",
+    "XTBSubprocessEngine",
     "angstrom_to_bohr",
     "bohr_to_angstrom",
     "ev_per_angstrom_to_hartree_per_bohr",
