@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -64,12 +64,12 @@ nodes:
   provenance:
     last_slice: 09-store-first-open
   review:
-    reviewed_at: '2026-11-22T15:14:23+00:00'
-    reviewed_by: audit:OPR.0.1.0.8
-    summary: patched description
+    reviewed_at: '2026-11-22T15:26:11+00:00'
+    reviewed_by: audit:OPR.0.1.0.9
+    summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -113,12 +113,12 @@ nodes:
   provenance:
     last_slice: 09-store-first-open
   review:
-    reviewed_at: '2026-11-22T15:14:23+00:00'
-    reviewed_by: audit:OPR.0.1.0.8
+    reviewed_at: '2026-11-22T15:26:11+00:00'
+    reviewed_by: audit:OPR.0.1.0.9
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -128,23 +128,25 @@ nodes:
     eta_rxncat.store (v0.1.0): canonical per-stage cache keys and a WAL-mode SQLite
     artifact store. keys.py: canon (sorted-key, compact, ASCII, allow_nan=False JSON)
     and h (sha256 of canon); KEY_SCHEMA = 1; geometry_payload (symbols, coordinates
-    snapped to a 5-decimal grid as fixed-point strings with -0.0 -> 0.0, charge, spin_multiplicity,
-    sorted active_atom_indices; metadata excluded); stage_payload (kind, engine, method,
-    basis, solvation model/solvent/dielectric, sorted frozen_atom_indices, options,
-    engine identity name/version/model; integral floats written as ints, bools kept);
-    frozen StageKey (key_schema, geometry_hash, stage_hash, key = h of the three,
-    stage_kind, engine, engine_version) from build_stage_key, which raises ValueError
-    when engine.name != stage.engine. artifact_store.py: ArtifactStatus StrEnum (pending/running/completed/failed),
-    ArtifactConflictError, StoreSchemaError; ArtifactStore(path) requires an existing
-    parent dir (FileNotFoundError, no mkdir), sets busy_timeout 5000 and journal_mode
-    WAL, creates the 12-column stage_artifacts table with indexes on geometry_hash
-    and (stage_kind, engine) at user_version 0 -> 1 and rejects any other version.
-    put/get/status/invalidate/query with one BEGIN IMMEDIATE transaction per write:
-    completed rows are immutable (identical completed re-put is a no-op, any other
-    write raises ArtifactConflictError) and only invalidate deletes them; get returns
-    the payload only for completed rows; query returns sorted keys filtered by stage_kind
-    and engine. Thread-safe per instance via a lock. Imports eta_rxncat.core and the
-    stdlib only; no orchestration.
+    snapped to a 5-decimal grid, charge, spin_multiplicity, sorted active_atom_indices;
+    metadata excluded); stage_payload (kind, engine, method, basis, solvation, sorted
+    frozen_atom_indices, options, engine identity; integral floats as ints); frozen
+    StageKey from build_stage_key (ValueError when engine.name != stage.engine). artifact_store.py:
+    ArtifactStatus, ArtifactConflictError, StoreSchemaError, StoreBusyError. ArtifactStore(path,
+    *, open_timeout_s=5.0): open_timeout_s must be > 0 (ValueError, nothing created);
+    an existing parent dir is required (FileNotFoundError). One deadline covers the
+    whole open (slice 09, R52): the user_version read, PRAGMA journal_mode=WAL and
+    the BEGIN IMMEDIATE schema transaction each run through a private busy step that
+    sets busy_timeout to the time remaining and retries SQLITE_BUSY/LOCKED with 5
+    ms doubling to 100 ms backoff, raising StoreBusyError (chaining the OperationalError,
+    naming the path) at the deadline; other errors propagate. user_version is checked
+    before any write, so an unsupported file is rejected untouched; version 0 gets
+    the 12-column stage_artifacts table and indexes, then user_version 1; afterwards
+    busy_timeout is 5000. put/get/status/invalidate/query use one BEGIN IMMEDIATE
+    transaction per write: completed rows are immutable (identical re-put is a no-op,
+    any other write raises ArtifactConflictError) and only invalidate deletes them;
+    get returns completed payloads only; query returns sorted keys by stage_kind and
+    engine. Thread-safe per instance. Imports eta_rxncat.core and the stdlib only.
   inputs:
   - data_type: molecular_state_stage_config_engine_identity
     source_id: eta_rxncat_core
@@ -163,14 +165,14 @@ nodes:
   provenance:
     last_slice: 09-store-first-open
   review:
-    reviewed_at: '2026-11-22T15:14:23+00:00'
-    reviewed_by: audit:OPR.0.1.0.8
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T15:26:11+00:00'
+    reviewed_by: audit:OPR.0.1.0.9
+    summary: patched description
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -214,12 +216,12 @@ nodes:
   provenance:
     last_slice: 09-store-first-open
   review:
-    reviewed_at: '2026-11-22T15:14:23+00:00'
-    reviewed_by: audit:OPR.0.1.0.8
+    reviewed_at: '2026-11-22T15:26:11+00:00'
+    reviewed_by: audit:OPR.0.1.0.9
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -260,6 +262,6 @@ nodes:
   provenance:
     last_slice: 09-store-first-open
   review:
-    reviewed_at: '2026-11-22T15:14:23+00:00'
-    reviewed_by: audit:OPR.0.1.0.8
+    reviewed_at: '2026-11-22T15:26:11+00:00'
+    reviewed_by: audit:OPR.0.1.0.9
     summary: reviewed; nothing patched

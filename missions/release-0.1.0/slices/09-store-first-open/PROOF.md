@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: concurrent first open 0 errors in 300 race trials and all four probe03b lines, every lock holder surfaces as StoreBusyError by the deadline, foreign files byte-identical; oracle green in a fresh clone of e77b697
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
