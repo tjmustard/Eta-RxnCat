@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone 9ba80ce: pytest 622 passed; gpu suite 19 passed 0 skipped under ACCEPTANCE=1 (audit run); CPU slow 14 passed; GPU-CPU dE <= 8.8e-9
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
