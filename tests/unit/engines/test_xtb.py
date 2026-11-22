@@ -499,6 +499,53 @@ def test_real_hessian(xtb_binary: Path, test_set: dict[str, MolecularState]) -> 
 
 
 @pytest.mark.xtb
+def test_real_hessian_vs_energy_second_differences(
+    xtb_binary: Path, test_set: dict[str, MolecularState]
+) -> None:
+    """R45: the water Hessian agrees with gradient-free energy second differences (<= 1e-4).
+
+    Central, h = 0.005 Bohr, xtb energies only (forces=False): diagonal (E+ - 2 E0 + E-) / h^2,
+    off-diagonal (E++ - E+- - E-+ + E--) / (4 h^2), over all 45 upper-triangle elements. This checks
+    xtb's gradient file against its energies, which no other test does.
+    """
+    water = test_set["water"]
+    eng = real(xtb_binary)
+    h_engine = eng.evaluate(water, hessian=True).hessian_hartree_per_bohr2
+    assert h_engine is not None
+    step = 0.005
+    cache: dict[tuple[tuple[int, int], ...], float] = {}
+
+    def energy(shifts: dict[int, int]) -> float:
+        key = tuple(sorted(shifts.items()))
+        if key not in cache:
+            coords = [row[:] for row in water.coordinates]
+            for index, sign in shifts.items():
+                coords[index // 3][index % 3] += sign * step * 0.529177210903
+            moved = MolecularState(
+                symbols=water.symbols, coordinates=coords, charge=0, spin_multiplicity=1
+            )
+            cache[key] = eng.evaluate(moved, forces=False).energy_hartree
+        return cache[key]
+
+    e0 = energy({})
+    worst = 0.0
+    for i in range(9):
+        for j in range(i, 9):
+            if i == j:
+                second = (energy({i: 1}) - 2 * e0 + energy({i: -1})) / step**2
+            else:
+                second = (
+                    energy({i: 1, j: 1})
+                    - energy({i: 1, j: -1})
+                    - energy({i: -1, j: 1})
+                    + energy({i: -1, j: -1})
+                ) / (4 * step**2)
+            worst = max(worst, abs(h_engine[i][j] - second))
+    print(f"water: max |H_engine - H_energy-second-differences| = {worst:.3e} over 45 elements")
+    assert worst <= 1e-4
+
+
+@pytest.mark.xtb
 def test_real_hessian_file_canary(xtb_binary: Path, test_set: dict[str, MolecularState]) -> None:
     """Canary: xtb 6.8.0's --hess file is still projected (> 1e-3 from the Cartesian FD Hessian).
 
@@ -510,9 +557,7 @@ def test_real_hessian_file_canary(xtb_binary: Path, test_set: dict[str, Molecula
     assert fd is not None
     projected = eng.hessian_file(water)
     gap = max(abs(projected[i][j] - fd[i][j]) for i in range(9) for j in range(9))
-    assert gap > 1e-3, (
-        f"xtb hessian file now matches the Cartesian Hessian ({gap:.2e}); revisit R45"
-    )
+    assert gap > 1e-3, f"xtb hessian file now Cartesian; revisit R45 (gap {gap:.2e})"
 
 
 @pytest.mark.xtb
