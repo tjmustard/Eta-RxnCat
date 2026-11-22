@@ -196,7 +196,7 @@ drop an extra.
 - [x] Task 2: sync each supported combination into a scratch runtime env and run `pip-licenses`
   on it. Derive the exact NVIDIA and LGPL exemption lists from that output, and keep the output for
   the handoff.
-- [ ] Task 3a (R45): write `tools/licence_gate.py` and `tests/unit/tools/test_licence_gate.py`;
+- [x] Task 3a (R45): write `tools/licence_gate.py` and `tests/unit/tools/test_licence_gate.py`;
   add `tools` to mypy `files`; move the config to `[tool.eta-rxncat.licence-gate]`; remove
   `[tool.pip-licenses]` and the `pip-licenses` dev dependency; `uv lock`.
 - [ ] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`

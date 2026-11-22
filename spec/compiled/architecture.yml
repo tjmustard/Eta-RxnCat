@@ -22,6 +22,8 @@ nodes:
   - tests/unit/test_package.py
   - tests/conftest.py
   - spec/compiled/architecture.yml
+  - tools/**
+  - tests/unit/tools/**
   description: >-
     uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, requires-python
     >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,

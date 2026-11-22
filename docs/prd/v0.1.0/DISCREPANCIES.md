@@ -60,30 +60,30 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-018 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:39` `pyscf>=2.6.0` | `pyproject.toml:21` `pyscf` | changed | As D-012 | open |
 | D-019 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:43` extra `gpu` | `pyproject.toml:25` `gpu = ["torch>=2.7.0", "gpu4pyscf-cuda12x>=1.8.0", "cupy-cuda12x"]` | changed | Re-added in slice 06; also declares torch (cu128 index) and cupy-cuda12x | open |
 | D-020 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:46` extra `mlip` | `pyproject.toml:26` `mlip-mace`, `pyproject.toml:27` `mlip-uma` | changed | Split into two mutually exclusive extras declared conflicting (F1, TJ Q2 A): mace-torch pins e3nn 0.4.4, fairchem-core needs e3nn ≥ 0.5; the lock resolves e3nn 0.4.4 and 0.6.0 per fork | open |
-| D-021 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:51` extra `dev` | `pyproject.toml:32` `[dependency-groups] dev` | changed | Dev tools are a uv dependency group, not a published extra; same six packages, unpinned | open |
+| D-021 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:51` extra `dev` | `pyproject.toml:32` `[dependency-groups] dev` | changed | Dev tools are a uv dependency group, not a published extra; unpinned; `pip-licenses` removed in slice 06 (R45: replaced by `tools/licence_gate.py`) | open |
 | D-022 | pyproject `[project.scripts]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:61` `eta-rxncat = "eta_rxncat.cli:main"` | `pyproject.toml:30` | same | Same entry point, added by slice 05 (dropped in slice 01, which had no CLI) | open |
-| D-023 | pyproject `[tool.hatch]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:64` `packages = ["src/eta_rxncat"]` | `pyproject.toml:54` | same | — | open |
-| D-024 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:67` `line-length = 100` | `pyproject.toml:57` | same | — | open |
+| D-023 | pyproject `[tool.hatch]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:64` `packages = ["src/eta_rxncat"]` | `pyproject.toml:53` | same | — | open |
+| D-024 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:67` `line-length = 100` | `pyproject.toml:56` | same | — | open |
 | D-025 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:68` `target-version = "py311"` | — | dropped | Not in slice 01 Task 3; ruff infers it from `requires-python` | open |
-| D-026 | pyproject `[tool.ruff.lint]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:71` `select = ["E","F","I","UP","B","SIM","RUF"]` | `pyproject.toml:62` `["E","F","W","I","D"]` | changed | Slice 01 Task 3 and `.agents/rules/python.md` | open |
+| D-026 | pyproject `[tool.ruff.lint]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:71` `select = ["E","F","I","UP","B","SIM","RUF"]` | `pyproject.toml:61` `["E","F","W","I","D"]` | changed | Slice 01 Task 3 and `.agents/rules/python.md` | open |
 | D-027 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:74` `python_version = "3.11"` | — | dropped | Not in slice 01 Task 3 | open |
-| D-028 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:75` `strict = true` | `pyproject.toml:75` | same | — | open |
-| D-029 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:76` `warn_return_any = true` | `pyproject.toml:75` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
-| D-030 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:77` `warn_unused_configs = true` | `pyproject.toml:75` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
-| D-031 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:78` `plugins = ["pydantic.mypy"]` | `pyproject.toml:77` | same | — | open |
-| D-032 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:81` `testpaths = ["tests"]` | `pyproject.toml:85` | same | — | open |
-| D-033 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:82` `addopts = "-ra -q"` | `pyproject.toml:88` `addopts = "-m 'not gpu'"` | changed | Slice 01 Task 3: GPU tests deselected by default | open |
-| D-034 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:84` marker `gpu` | `pyproject.toml:87` | changed | Text names the `gpu` extra | open |
+| D-028 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:75` `strict = true` | `pyproject.toml:74` | same | — | open |
+| D-029 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:76` `warn_return_any = true` | `pyproject.toml:74` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
+| D-030 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:77` `warn_unused_configs = true` | `pyproject.toml:74` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
+| D-031 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:78` `plugins = ["pydantic.mypy"]` | `pyproject.toml:76` | same | — | open |
+| D-032 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:81` `testpaths = ["tests"]` | `pyproject.toml:84` | same | — | open |
+| D-033 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:82` `addopts = "-ra -q"` | `pyproject.toml:87` `addopts = "-m 'not gpu'"` | changed | Slice 01 Task 3: GPU tests deselected by default | open |
+| D-034 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:84` marker `gpu` | `pyproject.toml:86` | changed | Text names the `gpu` extra | open |
 | D-035 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:85` marker `e2e` | — | dropped | Not in slice 01 Task 3; e2e fixtures arrive with later versions | open |
 | D-036 | pyproject `[project]` | — | `pyproject.toml:11` `license-files = ["LICENSE"]` | added | Ships the root MIT `LICENSE` in the wheel | open |
-| D-037 | pyproject `[tool.ruff]` | — | `pyproject.toml:59` `extend-exclude = ["docs/prd", ".agents"]` | added | `docs/prd`: mission R4. `.agents`: mission R39 (HACF scripts may not be edited and fail 120 lint / 12 format checks) | open |
-| D-038 | pyproject `[tool.ruff.lint]` | — | `pyproject.toml:63` `ignore = ["D100","D104"]` | added | Slice 01 Task 3 | open |
-| D-039 | pyproject `[tool.ruff.lint.pydocstyle]` | — | `pyproject.toml:66` `convention = "google"` | added | Slice 01 Task 3 | open |
-| D-040 | pyproject `[tool.ruff.lint.isort]` | — | `pyproject.toml:69` `known-first-party` | added | Slice 01 Task 3 | open |
-| D-041 | pyproject `[tool.ruff.format]` | — | `pyproject.toml:72` `quote-style = "double"` | added | Slice 01 Task 3 | open |
-| D-042 | pyproject `[tool.mypy]` | — | `pyproject.toml:76` `files = ["src"]` | added | Mission R4: mypy never reads `docs/prd` | open |
-| D-043 | pyproject `[[tool.mypy.overrides]]` | — | `pyproject.toml:79` heavy-module overrides | added | Mission R13 | open |
-| D-044 | pyproject `[tool.pytest]` | — | `pyproject.toml:86` `norecursedirs` | added | Mission R4 | open |
+| D-037 | pyproject `[tool.ruff]` | — | `pyproject.toml:58` `extend-exclude = ["docs/prd", ".agents"]` | added | `docs/prd`: mission R4. `.agents`: mission R39 (HACF scripts may not be edited and fail 120 lint / 12 format checks) | open |
+| D-038 | pyproject `[tool.ruff.lint]` | — | `pyproject.toml:62` `ignore = ["D100","D104"]` | added | Slice 01 Task 3 | open |
+| D-039 | pyproject `[tool.ruff.lint.pydocstyle]` | — | `pyproject.toml:65` `convention = "google"` | added | Slice 01 Task 3 | open |
+| D-040 | pyproject `[tool.ruff.lint.isort]` | — | `pyproject.toml:68` `known-first-party` | added | Slice 01 Task 3 | open |
+| D-041 | pyproject `[tool.ruff.format]` | — | `pyproject.toml:71` `quote-style = "double"` | added | Slice 01 Task 3 | open |
+| D-042 | pyproject `[tool.mypy]` | — | `pyproject.toml:75` `files = ["src", "tools"]` | added | Mission R4: mypy never reads `docs/prd`; slice 06 adds `tools` (R45) | open |
+| D-043 | pyproject `[[tool.mypy.overrides]]` | — | `pyproject.toml:78` heavy-module overrides | added | Mission R13 | open |
+| D-044 | pyproject `[tool.pytest]` | — | `pyproject.toml:85` `norecursedirs` | added | Mission R4 | open |
 | D-045 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:13` `actions/checkout@v4` | `.github/workflows/ci.yml:11` | same | — | open |
 | D-046 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:14` `actions/setup-python@v5` (3.11) | `.github/workflows/ci.yml:16` `uv python install` | changed | Python comes from `.python-version` (3.12), slice 01 Task 11 | open |
 | D-047 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:18` `astral-sh/setup-uv@v3` | `.github/workflows/ci.yml:12` `astral-sh/setup-uv@v6` with cache | changed | Slice 01 Task 11: setup-uv with cache | open |
@@ -116,9 +116,9 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-074 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:5` `## 1. Branching & Pull Request Protocol` (`feat/*`, one PR per unit, never commit to `main`) | `AGENTS.md:298` `## Branches and commits` (`feature/<feature>`, one commit per slice, never push) | changed | Rig branch model | open |
 | D-075 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:8` rule "update the Master Plan in the same PR" | — | dropped | `PRDs/` is TJ's (mission R20) | open |
 | D-076 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:10` `## 2. Clean-Room & Permissive License Guardrails` | `AGENTS.md:303` `## Licence guardrails` | changed | Adds the allow-list and the gate command | open |
-| D-077 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:15` `## 3. Scientific & Numerical Standards` | `AGENTS.md:316` `## Scientific standards` | changed | Keeps the charge/spin rule only; the VRAM and caching rules belong to the slices that build them (04, 03) | open |
-| D-078 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:20` `## 4. Required Checks Before Opening a PR` | `AGENTS.md:320` `## Required checks` | changed | The four `uv run` gates plus the runtime licence gate | open |
-| D-079 | AGENTS.md | — | `AGENTS.md:333` `## Protected paths` | added | `PRDs/` read-only; agents never write `tests/fixtures/` | open |
+| D-077 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:15` `## 3. Scientific & Numerical Standards` | `AGENTS.md:323` `## Scientific standards` | changed | Keeps the charge/spin rule only; the VRAM and caching rules belong to the slices that build them (04, 03) | open |
+| D-078 | AGENTS.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/AGENTS.md:20` `## 4. Required Checks Before Opening a PR` | `AGENTS.md:327` `## Required checks` | changed | The four `uv run` gates plus the runtime licence gate | open |
+| D-079 | AGENTS.md | — | `AGENTS.md:340` `## Protected paths` | added | `PRDs/` read-only; agents never write `tests/fixtures/` | open |
 | D-080 | README.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/README.md:1` `# Eta-RxnCat` | `README.md:1` | changed | Intro states what v0.1.0 ships | open |
 | D-081 | README.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/README.md:7` `## Scientific Heritage & Homage` | `README.md:10` `## Scientific heritage` | changed | Keeps the nMap citation and Eta_Scripts credit; drops the AutoRW paragraph | open |
 | D-082 | README.md | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/README.md:16` `## Licensing Philosophy` | `README.md:22` `## Licensing` | changed | States the allow-list and runtime-only gate | open |
@@ -133,15 +133,20 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-091 | package | — | `src/eta_rxncat/py.typed` | added | PEP 561 marker (slice 01 Task 4) | open |
 | D-092 | repo | — | `.python-version` `3.12` | added | Mission R14 | open |
 | D-093 | repo | — | `uv.lock` | added | Mission R14: committed lockfile | open |
-| D-094 | licence gate | — | `.github/workflows/ci.yml:29`, `AGENTS.md:313` runtime-only gate, `pip-licenses==5.5.5` reading `[tool.pip-licenses]` | added | Mission R3, R41 | open |
+| D-094 | licence gate | — | `.github/workflows/ci.yml:29`, `AGENTS.md:315` runtime-only base gate `tools/licence_gate.py --profile base` | added | Mission R3, R41; slice 06 R45 replaces the pip-licenses command (unsound `--partial-match`) | open |
 | D-095 | tests | — | `tests/unit/test_package.py` `test_version`, `test_import_loads_no_heavy_modules` | added | Slice 01 Task 4 | open |
-| D-096 | pyproject `[tool.ruff]` | — | `pyproject.toml:58` `force-exclude = true` | added | Mission R38: makes ruff honour excludes for explicit paths, as the HACF pre-commit hook passes them | open |
+| D-096 | pyproject `[tool.ruff]` | — | `pyproject.toml:57` `force-exclude = true` | added | Mission R38: makes ruff honour excludes for explicit paths, as the HACF pre-commit hook passes them | open |
 | D-097 | starter gate file | — | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml` (2 lines, `exclude = ["*"]`) | added | Mission R38: declared, not part of the starter; keeps ruff and the hook off the verbatim copy (23 verbatim + 1 gate file) | open |
-| D-098 | pyproject `[tool.pip-licenses]` | — | `pyproject.toml:90` `partial-match`, `allow-only`, `ignore-packages = ["geometric:1.1.1"]` | added | Mission R41 (TJ "B", 12:49Z; ADR-0011 PROPOSED): the only licence exception, pinned to geometric 1.1.1 | open |
-| D-379 | scaffold | — | `pyproject.toml:43` `[tool.uv] conflicts` | added | mlip-mace and mlip-uma declared conflicting so `uv lock` resolves both (F1, TJ Q2 A) | open |
-| D-380 | scaffold | — | `pyproject.toml:46` `[[tool.uv.index]] pytorch-cu128` (explicit) | added | torch from https://download.pytorch.org/whl/cu128 (plan: PyTorch ≥ 2.7.0+cu128, sm_120); locks torch 2.8.0+cu128 | open |
-| D-381 | scaffold | — | `pyproject.toml:51` `[tool.uv.sources] torch` | added | Routes only torch to the explicit cu128 index | open |
+| D-098 | pyproject `[tool.eta-rxncat.licence-gate]` | — | `pyproject.toml:89` `allowed`, `allowed-exceptions`, `classifiers`, `names`, `nvidia-rule`, pinned `exempt` (geometric 1.1.1 in every profile) | added | Mission R41 (TJ "B", 12:49Z; ADR-0011) for geometric; slice 06 R45 (ADR-0013 PROPOSED) replaces `[tool.pip-licenses]` | open |
+| D-379 | scaffold | — | `pyproject.toml:42` `[tool.uv] conflicts` | added | mlip-mace and mlip-uma declared conflicting so `uv lock` resolves both (F1, TJ Q2 A) | open |
+| D-380 | scaffold | — | `pyproject.toml:45` `[[tool.uv.index]] pytorch-cu128` (explicit) | added | torch from https://download.pytorch.org/whl/cu128 (plan: PyTorch ≥ 2.7.0+cu128, sm_120); locks torch 2.8.0+cu128 | open |
+| D-381 | scaffold | — | `pyproject.toml:50` `[tool.uv.sources] torch` | added | Routes only torch to the explicit cu128 index | open |
 | D-382 | scaffold | — | `tests/unit/test_package.py:44` AST import guard + `tests/unit/test_package.py:105` direct-dependency guard | added | Slice 06 Mini-req 5 (TJ Q1 A): no ase/matscipy/sella/tblite/psi4 import in src; no direct ase/matscipy dependency | open |
+| D-386 | scaffold | — | `tools/licence_gate.py:354` `tools/licence_gate.py` | added | R45: stdlib-only exact gate (SPDX AND/OR/WITH, exact classifier and name maps, no substring matching), run by the target env's interpreter, `--profile base|gpu|mlip-mace|mlip-uma` | open |
+| D-387 | scaffold | — | `tests/unit/tools/test_licence_gate.py` | added | R45 proof: the 14 synthetic cases plus NVIDIA-rule scoping and removal, profile scoping, precedence | open |
+| D-388 | scaffold | — | `pyproject.toml:95` `allowed` includes `Zlib`, `CC0-1.0`, `MIT-0`, `MIT-CMU`, `0BSD`, `Python-2.0` | added | R45: numpy's expression `BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0` and pillow's `MIT-CMU` passed the old gate only by substring; now listed explicitly (resolve's call, flagged for TJ) | open |
+| D-389 | scaffold | — | `pyproject.toml:123` `nvidia-rule` | added | TJ Q1 A: `nvidia-*` with a proprietary classifier or field, profiles gpu/mlip-mace/mlip-uma only | open |
+| D-390 | scaffold | — | `pyproject.toml:138` exemptions `ase:3.29.0` (mace, uma), `matscipy:1.3.1` (mace), `psycopg2-binary:2.9.13` (uma) | added | TJ Q1 A: LGPL, transitive only, never imported; pinned to the locked versions | open |
 
 ## Core
 

@@ -3,14 +3,14 @@ revision = 5
 requires-python = ">=3.11, <3.14"
 resolution-markers = [
     "python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra == 'extra-10-eta-rxncat-mlip-uma'",
-    "python_full_version < '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra == 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version >= '3.12' and sys_platform == 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version >= '3.12' and sys_platform == 'emscripten' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version >= '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
+    "python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
+    "python_full_version < '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra == 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform == 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform == 'emscripten' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
-    "python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
 ]
 conflicts = [[
@@ -832,7 +832,6 @@ mlip-uma = [
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
-    { name = "pip-licenses" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
@@ -861,7 +860,6 @@ provides-extras = ["gpu", "mlip-mace", "mlip-uma"]
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy" },
-    { name = "pip-licenses" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
@@ -2643,18 +2641,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pip-licenses"
-version = "5.5.5"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "prettytable" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/7d/18/ddd93af610a04f56a51a27095ddfe55238e1ec236f6758730a0d2c0b49f2/pip_licenses-5.5.5.tar.gz", hash = "sha256:60750c006adf7a0910347b726e8ee9fee3bc8d2e7c8307a5c4ec0776c8e2a276", size = 54955, upload-time = "2026-03-28T22:12:56.48Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/9a/6acfdb8d463eac7cdae7534d35d72237eca63f5fbafe797289d8a5fae447/pip_licenses-5.5.5-py3-none-any.whl", hash = "sha256:f4c4c6d9e6a03612cf59f29f19dc8ab54904d82e055b8e191498f2279a224e14", size = 23247, upload-time = "2026-03-28T22:12:54.89Z" },
-]
-
-[[package]]
 name = "platformdirs"
 version = "4.14.8"
 source = { registry = "https://pypi.org/simple" }
@@ -3494,10 +3480,10 @@ resolution-markers = [
     "python_full_version >= '3.12' and sys_platform == 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version >= '3.12' and sys_platform == 'emscripten' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version >= '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
+    "python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform == 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform == 'emscripten' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
-    "python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
     "python_full_version < '3.12' and extra != 'extra-10-eta-rxncat-mlip-mace' and extra != 'extra-10-eta-rxncat-mlip-uma'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/70/b3/c19426f783614d625699a4b247faf628ea9ab1db228674491767b417f9e1/setuptools-84.2.1.tar.gz", hash = "sha256:3ff8b3b5492a0aa66960f4419365a86b84e013070d4313e4d4a6894f5d64d6bc", size = 1230289, upload-time = "2026-10-20T19:01:37.742Z" }

@@ -36,7 +36,6 @@ dev = [
     "ruff",
     "mypy",
     "types-PyYAML",
-    "pip-licenses",
 ]
 
 [tool.uv]
@@ -73,7 +72,7 @@ quote-style = "double"
 
 [tool.mypy]
 strict = true
-files = ["src"]
+files = ["src", "tools"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
@@ -87,10 +86,71 @@ norecursedirs = [".*", "build", "dist", "docs", "*.egg"]
 markers = ["gpu: needs a CUDA GPU and the gpu extra"]
 addopts = "-m 'not gpu'"
 
-[tool.pip-licenses]
-# Licence gate (ADR-0006). One exception, ADR-0011 / R41 (TJ "B", 12:49Z):
-# geometric 1.1.1 is BSD 3-clause Non-AI (clause 4 restricts use in AI-training datasets);
-# pip-licenses reports its metadata as UNKNOWN. Version-pinned: any other version fails.
-partial-match = true
-allow-only = "MIT;BSD;Apache;ISC;PSF;Python Software Foundation"
-ignore-packages = ["geometric:1.1.1"]
+[tool.eta-rxncat.licence-gate]
+# Exact licence gate (R45, ADR-0013 PROPOSED), run by tools/licence_gate.py with the target env's
+# interpreter. Replaces the pip-licenses --partial-match allow-list (slice 01 / R3 / R41), which
+# passed LGPL matscipy on the substring "MIT" in "PERMITTED". No substring matching anywhere.
+allowed = [
+    "MIT", "MIT-0", "MIT-CMU", "BSD-2-Clause", "BSD-3-Clause", "0BSD",
+    "Apache-2.0", "ISC", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0",
+]
+allowed-exceptions = ["LLVM-exception"]
+
+[tool.eta-rxncat.licence-gate.classifiers]
+# Last segment of a "License ::" classifier -> SPDX id or LicenseRef-*.
+"MIT License" = "MIT"
+"BSD License" = "BSD-3-Clause"
+"Apache Software License" = "Apache-2.0"
+"ISC License (ISCL)" = "ISC"
+"Python Software Foundation License" = "PSF-2.0"
+"Mozilla Public License 2.0 (MPL 2.0)" = "MPL-2.0"
+"GNU General Public License (GPL)" = "LicenseRef-GPL-unversioned"
+"GNU Library or Lesser General Public License (LGPL)" = "LicenseRef-LGPL-unversioned"
+"Other/Proprietary License" = "LicenseRef-Proprietary"
+
+[tool.eta-rxncat.licence-gate.names]
+# Exact (case-insensitive) short License-field strings -> SPDX id or LicenseRef-*.
+"MIT" = "MIT"
+"MIT License" = "MIT"
+"BSD" = "BSD-3-Clause"
+"BSD License" = "BSD-3-Clause"
+"3-Clause BSD License" = "BSD-3-Clause"
+"Apache 2.0" = "Apache-2.0"
+"Apache License 2.0" = "Apache-2.0"
+"Apache Software License" = "Apache-2.0"
+"NVIDIA Proprietary Software" = "LicenseRef-NVIDIA-Proprietary"
+
+[tool.eta-rxncat.licence-gate.nvidia-rule]
+prefix = "nvidia-"
+licences = ["LicenseRef-Proprietary", "LicenseRef-NVIDIA-Proprietary"]
+profiles = ["gpu", "mlip-mace", "mlip-uma"]
+reason = "NVIDIA CUDA runtime wheels pulled in by the cu128 torch and CUDA extras"
+decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "geometric"
+version = "1.1.1"
+profiles = ["base", "gpu", "mlip-mace", "mlip-uma"]
+reason = "BSD 3-clause Non-AI (clause 4 restricts AI-training datasets); metadata UNKNOWN"
+decision = "R41 / ADR-0011 (TJ B, 12:49Z)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "ase"
+version = "3.29.0"
+profiles = ["mlip-mace", "mlip-uma"]
+reason = "LGPL-2.1-or-later; transitive only (mace-torch, fairchem-core), never imported by eta_rxncat"
+decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "matscipy"
+version = "1.3.1"
+profiles = ["mlip-mace"]
+reason = "LGPL-2.1 (full text in the License field); transitive only (mace-torch), never imported"
+decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "psycopg2-binary"
+version = "2.9.13"
+profiles = ["mlip-uma"]
+reason = "LGPL with exceptions; transitive only (fairchem-core > ase-db-backends), never imported"
+decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"

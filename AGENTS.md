@@ -304,19 +304,21 @@ These rules apply to everything outside the HACF managed block above.
 
 - Never import `ase`, `sella`, in-process `tblite` or `psi4` anywhere in `src/eta_rxncat/`.
   External copyleft or proprietary programs run only as subprocesses with serialised file I/O.
-- Every runtime dependency must report a licence on the allow-list
-  `MIT;BSD;Apache;ISC;PSF;Python Software Foundation`. No exceptions are added by agents; a failing
-  package is reported to the person.
-- Licence gate (runtime environment only):
+- Every runtime dependency must resolve to an allowed SPDX licence (`allowed` in
+  `[tool.eta-rxncat.licence-gate]` in `pyproject.toml`). `tools/licence_gate.py` judges each
+  package exactly, from its `License-Expression`, its `License ::` classifiers or its `License`
+  field, with no substring matching (R45, ADR-0013). Unrecognised or empty metadata fails. No
+  exceptions are added by agents; a failing package is reported to the person.
+- Licence gate (runtime environment only), base profile:
 
   ```sh
-  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
   ```
 
-  The allow-list and the one exception live in `[tool.pip-licenses]` in `pyproject.toml`, so run the
-  gate from the repo root. The exception is `geometric` 1.1.1 only (ADR-0011): its licence is BSD
-  3-clause Non-AI (clause 4 restricts use in AI-training datasets), and pip-licenses reports its
-  metadata as UNKNOWN; any other version still fails.
+  Exemptions are pinned to an exact package version and profile, each with its reason and
+  decision, and a stale exemption fails. The base profile has one: `geometric` 1.1.1 (ADR-0011,
+  R41). Its licence is BSD 3-clause Non-AI (clause 4 restricts use in AI-training datasets) and
+  its metadata reads UNKNOWN; any other version still fails.
 
 ## Scientific standards
 
@@ -332,7 +334,7 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy
 uv run pytest
-UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && uv run --no-project --with pip-licenses==5.5.5 pip-licenses --python .venv-runtime/bin/python
+UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
 ```
 
 ## Protected paths
