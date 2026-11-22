@@ -14,7 +14,7 @@ hacf_status: compiled
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [README.md, CHANGELOG.md, LICENSE, pyproject.toml, uv.lock, "media/**", AGENTS.md, src/eta_rxncat/__init__.py, tests/unit/test_identity.py, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
-hacf_oracle: [[python3, "-c", "import hashlib,sys;h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest();sys.exit(0 if h('media/logo.png')=='3b2a0b7680a59156097f2faa15195eecbb162c4816884a38a28260f50dda527e' and h('media/banner.webp')=='ca80c1018e65495d7c511a7360028ec31e353bbebb801ddee5036841140e7d25' else 1)"], [uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py]]
+hacf_oracle: [[python3, "-c", "import hashlib,sys;h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest();sys.exit(0 if h('media/logo.png')=='3b2a0b7680a59156097f2faa15195eecbb162c4816884a38a28260f50dda527e' and h('media/banner.webp')=='cc3fe67b17ea6e75358f9461623af2a814b75d2d724cb8842b11d751c8e9290f' else 1)"], [uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py]]
 lore_refs: []
 hacf_legacy_source: null
 hacf_legacy_order: null
@@ -66,12 +66,12 @@ style.
    - `~/.hacf/eta-rxncat-hacf/incoming/media/logo.png` → `media/logo.png`. 1024×1024 RGBA,
      already cropped with a transparent background. sha256
      `3b2a0b7680a59156097f2faa15195eecbb162c4816884a38a28260f50dda527e`.
-   - `~/.hacf/eta-rxncat-hacf/incoming/media/banner.webp` → `media/banner.webp`. 2576×1274,
-     TJ's regenerated banner (it says "Eta-RxnCat", with the full tagline and the eta/cat icon).
-     sha256 `ca80c1018e65495d7c511a7360028ec31e353bbebb801ddee5036841140e7d25`.
+   - `~/.hacf/eta-rxncat-hacf/incoming/media/banner.webp` → `media/banner.webp`. 2576×1439,
+     279188 bytes. This is TJ's final banner (13:05Z, corrected chemistry panel; it says "Eta-RxnCat", with the full tagline and the eta/cat icon).
+     sha256 `cc3fe67b17ea6e75358f9461623af2a814b75d2d724cb8842b11d751c8e9290f`.
    
-   No other media files are added. In particular, `banner-original.jpg`, `logo.webp` and the
-   superseded `old-catalysis-engine-banner.*` stay out of the repo.
+   No other media files are added. In particular, `banner-original.jpg`, `logo.webp` and every
+   superseded `old-*` file (e.g. `old-catalysis-engine-banner.*`, `old-sn2-attempt-banner.jpg`) stay out of the repo.
 2. `README.md`, in the sibling pattern:
    1. A centered header `<div align="center">` containing:
       - `<img src="./media/logo.png" alt="Eta-RxnCat logo" width="200" height="200"/>`;
