@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -27,19 +27,28 @@ nodes:
   description: >-
     uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, requires-python
     >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,
-    pydantic>=2, pyyaml, rdkit, geometric, pyscf; no optional extras; [project.scripts]
-    declares the eta-rxncat console script (eta_rxncat.cli:main, slice 05). src/eta_rxncat/__init__.py
-    exposes __version__ = "0.1.0" and imports no heavy backend; engines, conformers,
-    mapping, optimize and orchestrator are empty placeholder packages (filled v0.2.0-v0.8.0).
-    Gates in pyproject.toml: ruff (E,F,W,I,D; google docstrings; force-exclude with
-    extend-exclude docs/prd and .agents), strict mypy over src, pytest over tests
-    with gpu marker deselected. Runtime-only licence gate: [tool.pip-licenses] allow-only
-    MIT;BSD;Apache;ISC;PSF with one version-pinned exception geometric:1.1.1 (ADR-0011),
-    run against .venv-runtime with pip-licenses 5.5.5. CI (.github/workflows/ci.yml)
-    runs uv sync --locked, the four gates and the licence gate. docs/prd/v0.1.0/ holds
-    the verbatim v0.1.0 reference starter (23 files + .ruff.toml gate file) and DISCREPANCIES.md;
-    docs/prd/PLAN_DISCREPANCIES.md registers plan-copy differences. README and AGENTS.md
-    project rules sit outside the HACF managed blocks.
+    pydantic>=2, pyyaml, rdkit, geometric, pyscf. Optional extras (slice 06, floors
+    only): gpu = torch>=2.7.0, gpu4pyscf-cuda12x>=1.8.0, cupy-cuda12x; mlip-mace =
+    torch, mace-torch; mlip-uma = torch, fairchem-core. [tool.uv] conflicts makes
+    the MLIP extras mutually exclusive (one lock, forked e3nn 0.4.4 / 0.6.0); torch
+    comes only from the explicit pytorch-cu128 index (locked 2.8.0+cu128). [project.scripts]
+    declares the eta-rxncat console script (eta_rxncat.cli:main). __init__ exposes
+    __version__ and imports no heavy backend; engines, conformers, mapping, optimize
+    and orchestrator are empty placeholders. Gates: ruff (E,F,W,I,D; google docstrings;
+    force-exclude docs/prd and .agents), strict mypy over src and tools, pytest with
+    the gpu marker deselected. Licence gate tools/licence_gate.py (stdlib only, run
+    by the target env's interpreter with -I, --profile base|gpu|mlip-mace|mlip-uma)
+    judges each installed distribution exactly from License-Expression (SPDX AND/OR/WITH),
+    else License classifiers, else the License field, against [tool.eta-rxncat.licence-gate]
+    in pyproject.toml; no substring matching. Exemptions are version-pinned per profile
+    and stale ones fail: geometric:1.1.1 (R41) everywhere, nvidia-* proprietary wheels
+    in gpu and MLIP profiles (TJ Q1 A), and the R48 transitive copyleft/off-list lists
+    in mlip-mace / mlip-uma only. tests/unit/test_package.py bans importing sella,
+    tblite, psi4 and the copyleft-exempt modules under src and declaring those distributions
+    directly. CI: checks job (sync, four gates, base licence gate) plus a licence-extras
+    matrix (gpu, gpu+mlip-mace, gpu+mlip-uma); no GPU job. docs/prd/v0.1.0/ holds
+    the verbatim starter and DISCREPANCIES.md; README and AGENTS.md project rules
+    sit outside the HACF managed blocks.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -53,12 +62,12 @@ nodes:
   provenance:
     last_slice: 06-optional-extras
   review:
-    reviewed_at: '2026-11-22T13:34:00+00:00'
-    reviewed_by: audit:05-cli
+    reviewed_at: '2026-11-22T15:03:04+00:00'
+    reviewed_by: audit:OPR.0.1.0.6
     summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -102,12 +111,12 @@ nodes:
   provenance:
     last_slice: 06-optional-extras
   review:
-    reviewed_at: '2026-11-22T13:34:00+00:00'
-    reviewed_by: audit:05-cli
+    reviewed_at: '2026-11-22T15:03:04+00:00'
+    reviewed_by: audit:OPR.0.1.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -152,12 +161,12 @@ nodes:
   provenance:
     last_slice: 06-optional-extras
   review:
-    reviewed_at: '2026-11-22T13:34:00+00:00'
-    reviewed_by: audit:05-cli
+    reviewed_at: '2026-11-22T15:03:04+00:00'
+    reviewed_by: audit:OPR.0.1.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -167,26 +176,25 @@ nodes:
   description: >-
     eta_rxncat.utils.hw_probe (v0.1.0): hardware probe and GPU smoke test. probe_hardware()
     returns a HardwareReport (pydantic, extra=forbid; report_schema 1) of python/platform,
-    torch {installed, version, cuda_available, cuda_version (torch.version.cuda or
-    the +cuNNN tag)}, the first CUDA device {name, compute_capability 'M.m', total/free
-    VRAM, total GiB 2 dp} or null, gpu4pyscf {installed, version}, vram_budget_gib
-    6.5 and vram_budget_bytes = min(int(6.5 GiB), total) or null (free VRAM is reported,
-    never budgeted), and exact flags torch_missing / cuda_unavailable / torch_cuda_below_12.8
-    / gpu4pyscf_missing / gpu4pyscf_below_1.8.0 plus human notes; it does not raise
-    for a missing package, absent GPU or a failing CUDA query (a non-ImportError raised
-    by importing torch itself still propagates). Versions compare by numeric dotted
-    prefix (parse_version_prefix); constants VRAM_BUDGET_GIB, MIN_TORCH_CUDA (12,
-    8), MIN_GPU4PYSCF (1, 8, 0), SCF_TOLERANCE_EH 1e-6, MATMUL_TOLERANCE 1e-9. run_smoke(timeout_s=600)
-    returns a SmokeResult (result_schema 1): skipped with a reason, before any child
-    process, when torch, CUDA or gpu4pyscf is unavailable; otherwise runs python -m
-    eta_rxncat.utils._smoke_child (H2O RHF/STO-3G on gpu4pyscf and pyscf, seeded float64
-    512x512 CUDA matmul without TF32), validates its one JSON line, and passes only
-    if both SCFs converged, |dE| <= 1e-6 Eh, mo_coeff is a cupy.ndarray, the matmul
-    ran on cuda and max |dC| <= 1e-9 (NaN never passes); timeout, crash, unstartable
-    child or malformed output -> fail naming the cause. smoke_exit_code: pass 0, fail
-    1, skipped 3. torch/gpu4pyscf/cupy/pyscf are imported only inside functions; no
-    imports from core, store or cli; no git, nvidia-smi or network. GPU acceptance
-    test tests/gpu/test_smoke.py is gpu-marked and deselected by default.
+    torch {installed, version, cuda_available, cuda_version}, the first CUDA device
+    {name, compute_capability, total/free VRAM, total GiB} or null, gpu4pyscf {installed,
+    version}, vram_budget_gib 6.5 and vram_budget_bytes = min(int(6.5 GiB), total)
+    or null, and flags in the fixed order torch_missing, torch_import_failed, cuda_unavailable,
+    torch_cuda_below_12.8, gpu4pyscf_missing, gpu4pyscf_import_failed, gpu4pyscf_below_1.8.0,
+    plus notes. It never raises: imports go through the _import seam and catch Exception;
+    a distribution present in metadata whose import raises is reported installed with
+    its metadata version, the *_import_failed flag and the note 'Importing <pkg> raised
+    <Type>: <msg>' (R43); no retry or fallback. run_smoke(timeout_s=600) returns a
+    SmokeResult (result_schema 1): fail, before any child process, when an *_import_failed
+    flag is set; skipped, before any child, when torch, CUDA or gpu4pyscf is unavailable;
+    otherwise runs python -m eta_rxncat.utils._smoke_child (H2O RHF/STO-3G on gpu4pyscf
+    and pyscf, seeded float64 512x512 CUDA matmul without TF32) and passes only if
+    both SCFs converged, |dE| <= 1e-6 Eh, mo_coeff is a cupy.ndarray, the matmul ran
+    on cuda and max |dC| <= 1e-9; timeout, crash or malformed output -> fail naming
+    the cause. smoke_exit_code: pass 0, fail 1, skipped 3. torch/gpu4pyscf/cupy/pyscf
+    are imported only inside functions; no imports from core, store or cli; no git,
+    nvidia-smi or network. Unit tests use fake hosts via the import seam (R44); tests/gpu/test_smoke.py
+    is gpu-marked and deselected by default.
   inputs:
   - data_type: host_torch_cuda_gpu4pyscf_installation
     external: host_environment
@@ -202,12 +210,12 @@ nodes:
   provenance:
     last_slice: 06-optional-extras
   review:
-    reviewed_at: '2026-11-22T13:34:00+00:00'
-    reviewed_by: audit:05-cli
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T15:03:04+00:00'
+    reviewed_by: audit:OPR.0.1.0.6
+    summary: patched description
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -248,6 +256,6 @@ nodes:
   provenance:
     last_slice: 06-optional-extras
   review:
-    reviewed_at: '2026-11-22T13:34:00+00:00'
-    reviewed_by: audit:05-cli
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-22T15:03:04+00:00'
+    reviewed_by: audit:OPR.0.1.0.6
+    summary: reviewed; nothing patched

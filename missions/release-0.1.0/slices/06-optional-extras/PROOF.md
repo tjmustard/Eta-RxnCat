@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: four per-profile licence gates exit 0 (16/43/71/158 pkgs) and each MLIP exemption list equals its stripped FAIL set; oracle green in a fresh clone of ae9f7ba
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
