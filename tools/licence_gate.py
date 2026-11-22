@@ -305,18 +305,47 @@ def judge(name: str, version: str, metadata: Any, config: Config) -> Verdict:
     return Verdict(name, version, "license-field", shown, (stripped,) if ok else (), ok)
 
 
-def installed(path: Sequence[str] | None) -> list[tuple[str, str, Any]]:
-    """Return ``(name, version, metadata)`` of each distribution, deduplicated by name."""
+def _location(dist: md.Distribution) -> str:
+    """Return the metadata folder of ``dist`` (``PathDistribution`` keeps it as ``_path``)."""
+    return str(getattr(dist, "_path", "<unknown location>"))
+
+
+def installed(path: Sequence[str] | None) -> tuple[list[tuple[str, str, Any]], list[str]]:
+    """Return ``(name, version, metadata)`` of each distribution, and the structural ``FAIL`` lines.
+
+    A metadata folder without a ``Name`` fails as ``unnamed distribution at <path>``. Two folders
+    whose PEP 503-normalised names are equal fail as ``ambiguous: <name> (<versions>)``, and
+    neither is judged, since which one Python imports depends on ``sys.path`` order (R27). The
+    same folder reached twice through a repeated path entry is one distribution.
+    """
     dists: Iterable[md.Distribution] = (
         md.distributions(path=list(path)) if path is not None else md.distributions()
     )
-    seen: dict[str, tuple[str, str, Any]] = {}
+    groups: dict[str, list[tuple[str, str, Any]]] = {}
+    places: set[str] = set()
+    fails: list[str] = []
     for dist in dists:
-        name = dist.metadata["Name"]
-        if not name or normalise(name) in SKIPPED or normalise(name) in seen:
+        place = _location(dist)
+        resolved = str(Path(place).resolve()) if place != "<unknown location>" else place
+        if resolved in places and resolved != "<unknown location>":
             continue
-        seen[normalise(name)] = (name, dist.version, dist.metadata)
-    return [seen[k] for k in sorted(seen)]
+        places.add(resolved)
+        name = dist.metadata.get("Name")
+        if not name:
+            fails.append(f"FAIL unnamed distribution at {place}")
+            continue
+        if normalise(name) in SKIPPED:
+            continue
+        groups.setdefault(normalise(name), []).append((name, dist.version, dist.metadata))
+    found: list[tuple[str, str, Any]] = []
+    for key in sorted(groups):
+        entries = groups[key]
+        if len(entries) > 1:
+            versions = ", ".join(sorted(str(version) for _, version, _ in entries))
+            fails.append(f"FAIL ambiguous: {key} ({versions})")
+        else:
+            found.append(entries[0])
+    return found, fails
 
 
 def run(profile: str, config: Config, path: Sequence[str] | None) -> tuple[list[str], list[str]]:
@@ -324,8 +353,8 @@ def run(profile: str, config: Config, path: Sequence[str] | None) -> tuple[list[
     exemptions = [e for e in config.exemptions if profile in e.profiles]
     used: set[int] = set()
     rows: list[str] = []
-    fails: list[str] = []
-    for name, version, metadata in installed(path):
+    found, fails = installed(path)
+    for name, version, metadata in found:
         verdict = judge(name, version, metadata, config)
         status = "pass" if verdict.allowed else "FAIL"
         if not verdict.allowed:

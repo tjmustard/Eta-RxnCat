@@ -125,3 +125,14 @@ Cosmetic differences (formatting, comments, docstring wording) are not rows.
 | D-053 | tests | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/tests/unit/test_engines_v020.py:34` `test_pyscf_cpu_energy_gradient_and_vram_guard` | — | pending | Starter test; mapped by the engine slices | open |
 | D-054 | tests | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/tests/unit/test_engines_v020.py:38` `assert res.electronic_energy_hartree < -75.0` (B3LYP/STO-3G water) | — | pending | Seed: the `< −75.0` test (a loose bound, not a reference value) | open |
 
+## Stack and licence gate (slice 02)
+
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-055 | pyproject `[tool.uv]` | — (the starter has no torch index; v0.1.0 rewrite `pyproject.toml:45` `pytorch-cu128`, D-380 in the v0.1.0 register) | `pyproject.toml:45` `[[tool.uv.index]] name = "pytorch-cu129"`, `url = …/whl/cu129`; `pyproject.toml:50` `torch = [{ index = "pytorch-cu129" }]` | changed | TJ F1 "Q1. A" (16:24Z, `qitem-20261122162111-26e232a707f003e2`): torch 2.13.0+cu129 (locked) for native `uma-s-1p2p1`; ADR-0020 PROPOSED | open |
+| D-056 | pyproject extra | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/pyproject.toml:49` `fairchem-core>=2.16.0` (extra `mlip`) | `pyproject.toml:27` `mlip-uma = ["torch>=2.7.0", "fairchem-core>=2.22"]` (locks 2.26.0) | changed | TJ F1 "Q1. A": fairchem-core ≥ 2.22; the v0.1.0 rewrite had no floor | open |
+| D-057 | licence gate | — | `pyproject.toml:247` exempt `cuda-toolkit` 12.9.1 (gpu, mlip-mace, mlip-uma) | added | NVIDIA CUDA runtime wheel with no licence metadata, pulled in by torch 2.13.0+cu129; version-pinned; TJ v0.1.0 Q1 A; R1 v0.2.0 | open |
+| D-058 | licence gate | — | `pyproject.toml` exempt `ray-haproxy` 2.8.25 (mlip-uma) removed | dropped | ray is no longer locked under fairchem-core 2.26.0; the stale-exemption rule forces removal | open |
+| D-059 | licence gate | — | `tools/licence_gate.py:335` `FAIL unnamed distribution at <path>`; test `tests/unit/tools/test_licence_gate.py:307` | added | R27: a dist-info without `Name` was silently skipped | open |
+| D-060 | licence gate | — | `tools/licence_gate.py:345` `FAIL ambiguous: <name> (<versions>)`; tests `tests/unit/tools/test_licence_gate.py:320`, `:331` | added | R27: with two dist-infos for one PEP 503 name the first won; now neither is judged and the gate fails (the same folder seen twice through a repeated path entry is one distribution) | open |
+| D-061 | licence gate | — | `pyproject.toml:102` `allowed` gains `"BSL-1.0"`; tests `tests/unit/tools/test_licence_gate.py:123` (4 `test_verdicts` cases) | added | R34 (lead decision within TJ's 14:57Z policy): torch 2.13.0+cu129's expression includes BSL-1.0 (Boost Software License 1.0, OSI/FSF-approved permissive); an allowed licence, not an exemption | open |

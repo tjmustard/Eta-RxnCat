@@ -120,6 +120,10 @@ LGPL_FULL_TEXT = (
         ),
         ({"license_field": "UNKNOWN"}, False),
         ({"license_field": "MIT License\n\nCopyright (c) 2020 Someone"}, False),
+        ({"expression": "BSL-1.0"}, True),
+        ({"expression": "Apache-2.0 AND BSL-1.0 AND MIT"}, True),
+        ({"expression": "LicenseRef-Unknown-1"}, False),
+        ({"expression": "BSL-1.0 AND GPL-3.0-only"}, False),
     ],
     ids=[
         "full-text-lgpl-with-PERMITTED",
@@ -133,6 +137,10 @@ LGPL_FULL_TEXT = (
         "classifier-mpl",
         "field-unknown",
         "field-multiline-mit",
+        "bsl-1.0",
+        "apache-and-bsl-and-mit",
+        "licenseref-unknown",
+        "bsl-and-gpl3",
     ],
 )
 def test_verdicts(tmp_path: Path, kwargs: dict[str, Any], passes: bool) -> None:
@@ -296,6 +304,56 @@ def test_project_and_pip_are_skipped(tmp_path: Path) -> None:
     assert result.returncode == 0 and "0 packages, 0 failures" in result.stdout
 
 
+def test_unnamed_distribution_fails(tmp_path: Path) -> None:
+    """A dist-info without a Name fails with its path instead of being skipped (R27)."""
+    folder = tmp_path / "site" / "mystery-1.0.dist-info"
+    folder.mkdir(parents=True)
+    (folder / "METADATA").write_text(
+        "Metadata-Version: 2.4\nVersion: 1.0\nLicense-Expression: MIT\n", encoding="utf-8"
+    )
+    dist(tmp_path / "site", "fine", expression="MIT")
+    result = gate(tmp_path)
+    assert result.returncode == 1
+    assert fails(result) == [f"FAIL unnamed distribution at {folder}"]
+
+
+def test_duplicate_normalised_name_fails(tmp_path: Path) -> None:
+    """Two dist-infos with one PEP 503 name fail as ambiguous and neither is judged (R27)."""
+    dist(tmp_path / "site", "Foo_Bar", "1.0", expression="MIT")
+    dist(tmp_path / "site", "foo.bar", "2.0", expression="MIT")
+    dist(tmp_path / "site", "fine", expression="MIT")
+    result = gate(tmp_path)
+    assert result.returncode == 1
+    assert fails(result) == ["FAIL ambiguous: foo-bar (1.0, 2.0)"]
+    assert "1 packages, 1 failures" in result.stdout
+
+
+def test_same_folder_on_path_twice_is_not_ambiguous(tmp_path: Path) -> None:
+    """A site directory listed twice yields each dist-info once, so nothing is ambiguous."""
+    dist(tmp_path / "site", "fine", expression="MIT")
+    config = write_config(tmp_path, [])
+    site = str(tmp_path / "site")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            str(GATE),
+            "--profile",
+            "base",
+            "--path",
+            site,
+            "--path",
+            site,
+            "--config",
+            str(config),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout
+    assert "1 packages, 0 failures" in result.stdout
+
+
 def test_usage_and_config_errors(tmp_path: Path) -> None:
     """An unknown profile or a config without the gate table exits 2."""
     bad = subprocess.run(
@@ -329,15 +387,36 @@ def test_repo_config_loads() -> None:
     assert "pip-licenses" not in tomllib.loads((REPO / "pyproject.toml").read_text())["tool"]
 
 
+NVIDIA_DECISION = "TJ v0.1.0 Q1 A (NVIDIA CUDA wheels exempt); R1 v0.2.0"
+TORCH_PROFILES = {"gpu", "mlip-mace", "mlip-uma"}
+
+
+def is_nvidia_runtime(entry: dict[str, Any]) -> bool:
+    """Whether ``entry`` is a version-pinned NVIDIA CUDA runtime exemption (v0.2.0 R1)."""
+    return entry["decision"] == NVIDIA_DECISION
+
+
 def test_exemptions_only_in_mlip_profiles() -> None:
-    """Every exemption other than geometric lists only MLIP profiles, never base or gpu (R48)."""
+    """R48 exemptions list only MLIP profiles; NVIDIA runtime ones only torch profiles."""
     offenders = [
         f"{e['package']}:{e['version']} {e['profiles']}"
         for e in repo_gate_table()["exempt"]
         if e["package"] != "geometric"
-        and (not e["profiles"] or not set(e["profiles"]) <= {"mlip-mace", "mlip-uma"})
+        and (
+            not e["profiles"]
+            or not set(e["profiles"])
+            <= (TORCH_PROFILES if is_nvidia_runtime(e) else {"mlip-mace", "mlip-uma"})
+        )
     ]
     assert offenders == []
+
+
+def test_nvidia_runtime_exemptions() -> None:
+    """The NVIDIA CUDA runtime exemptions are exactly cuda-toolkit 12.9.1 in the torch profiles."""
+    entries = [e for e in repo_gate_table()["exempt"] if is_nvidia_runtime(e)]
+    assert [(e["package"], e["version"]) for e in entries] == [("cuda-toolkit", "12.9.1")]
+    assert all(set(e["profiles"]) == TORCH_PROFILES for e in entries)
+    assert all(e["reason"] == "NVIDIA CUDA runtime wheel" for e in entries)
 
 
 def test_exemption_entries_are_complete() -> None:
@@ -357,7 +436,7 @@ def test_r48_lists() -> None:
         return {
             f"{e['package']}:{e['version']}"
             for e in table
-            if profile in e["profiles"] and e["package"] != "geometric"
+            if profile in e["profiles"] and e["package"] != "geometric" and not is_nvidia_runtime(e)
         }
 
     assert listed("mlip-mace") == {
@@ -373,7 +452,6 @@ def test_r48_lists() -> None:
         "ase:3.29.0",
         "psycopg2-binary:2.9.13",
         "ase_db_backends:0.11.0",
-        "ray-haproxy:2.8.25",
         "lmdb:1.7.3",
         "certifi:2026.11.20",
         "tqdm:4.70.1",
@@ -381,5 +459,7 @@ def test_r48_lists() -> None:
         "clusterscope:0.0.18",
     }
     assert all(
-        e["decision"].startswith("R48 / ADR-0014") for e in table if e["package"] != "geometric"
+        e["decision"].startswith("R48 / ADR-0014")
+        for e in table
+        if e["package"] != "geometric" and not is_nvidia_runtime(e)
     )

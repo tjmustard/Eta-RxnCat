@@ -24,7 +24,7 @@ dependencies = [
 [project.optional-dependencies]
 gpu = ["torch>=2.7.0", "gpu4pyscf-cuda12x>=1.8.0", "cupy-cuda12x"]
 mlip-mace = ["torch>=2.7.0", "mace-torch"]
-mlip-uma = ["torch>=2.7.0", "fairchem-core"]
+mlip-uma = ["torch>=2.7.0", "fairchem-core>=2.22"]
 
 [project.scripts]
 eta-rxncat = "eta_rxncat.cli:main"
@@ -42,12 +42,12 @@ dev = [
 conflicts = [[{ extra = "mlip-mace" }, { extra = "mlip-uma" }]]
 
 [[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
 explicit = true
 
 [tool.uv.sources]
-torch = [{ index = "pytorch-cu128" }]
+torch = [{ index = "pytorch-cu129" }]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/eta_rxncat"]
@@ -99,7 +99,7 @@ addopts = "-m 'not gpu and not xtb and not mlip_mace and not mlip_uma and not sl
 # passed LGPL matscipy on the substring "MIT" in "PERMITTED". No substring matching anywhere.
 allowed = [
     "MIT", "MIT-0", "MIT-CMU", "BSD-2-Clause", "BSD-3-Clause", "0BSD",
-    "Apache-2.0", "ISC", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0",
+    "Apache-2.0", "ISC", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0", "BSL-1.0",
 ]
 allowed-exceptions = ["LLVM-exception"]
 
@@ -131,7 +131,7 @@ allowed-exceptions = ["LLVM-exception"]
 prefix = "nvidia-"
 licences = ["LicenseRef-Proprietary", "LicenseRef-NVIDIA-Proprietary"]
 profiles = ["gpu", "mlip-mace", "mlip-uma"]
-reason = "NVIDIA CUDA runtime wheels pulled in by the cu128 torch and CUDA extras"
+reason = "NVIDIA CUDA runtime wheels pulled in by the cu129 torch and CUDA extras"
 decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"
 
 [[tool.eta-rxncat.licence-gate.exempt]]
@@ -224,14 +224,6 @@ pulled-in-by = "fairchem-core"
 reason = "LGPL; downloaded, unmodified, transitive only; never imported, vendored or copied"
 decision = "R48 / ADR-0014 (TJ A, 14:49Z)"
 
-[[tool.eta-rxncat.licence-gate.exempt]]
-package = "ray-haproxy"
-version = "2.8.25"
-profiles = ["mlip-uma"]
-licence = "GPLv2"
-pulled-in-by = "ray (fairchem-core > ray[serve])"
-reason = "GPL; downloaded, unmodified, transitive only; never imported, vendored or copied"
-decision = "R48 / ADR-0014 (TJ A, 14:49Z)"
 
 [[tool.eta-rxncat.licence-gate.exempt]]
 package = "certifi"
@@ -250,3 +242,12 @@ licence = "full MIT text in the License field"
 pulled-in-by = "fairchem-core"
 reason = "Unrecognised (full-text) metadata, MIT licence; transitive only"
 decision = "R48 / ADR-0014 (TJ A, 14:49Z)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "cuda-toolkit"
+version = "12.9.1"
+profiles = ["gpu", "mlip-mace", "mlip-uma"]
+licence = "UNKNOWN (no licence metadata; NVIDIA CUDA Toolkit meta-package)"
+pulled-in-by = "torch 2.13.0+cu129 (cuda-toolkit[cublas,cudart,...] on linux)"
+reason = "NVIDIA CUDA runtime wheel"
+decision = "TJ v0.1.0 Q1 A (NVIDIA CUDA wheels exempt); R1 v0.2.0"
