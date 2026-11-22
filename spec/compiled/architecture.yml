@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -68,12 +68,12 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -120,14 +120,14 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,40 +271,40 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
-    eta_rxncat.engines (v0.2.0): what every engine shares; pure Python, heavy libraries
-    imported lazily inside engines. base.py: Engine ABC (class tag: EngineTag, ENGINE_IMPL,
-    OPTIONS); __init__/from_stage(stage, **runtime) rejects a foreign tag or unknown
-    runtime argument and stores the resolved stage; abstract identity and _evaluate
-    -> RawResult; evaluate times the call, checks forces/Hessian presence and shapes
-    against the state, copies lists and returns a validated PotentialResult (stage_engine_impl
-    = ENGINE_IMPL), invalid output -> EngineRuntimeError. errors.py: EngineError and
-    EngineUnavailableError, EngineInputError, ScfConvergenceError(steps tuple), EngineRuntimeError(tail:
-    last 40 lines, redacted). units.py: CODATA 2018 BOHR_ANGSTROM, HARTREE_EV, HARTREE_KCAL_MOL
-    and conversions. options.py: OptionSpec(type, default, allowed); resolve_options
-    fills defaults, rejects unknown keys, wrong types (bool never int/float), disallowed
-    values and a caller-set engine_impl, and adds engine_impl; resolved_stage returns
-    a new StageConfig with resolved options and the solvent lowercased, so implicit
-    and explicit defaults key the same (R6, ADR-0016). identity.py: sha256_file (1
-    MiB chunks), model_id '<name>@sha256:<hex>' (never a path), library_version via
-    importlib.metadata (absent -> EngineUnavailableError). fd.py: fd_hessian, central
-    differences of forces (6N calls), symmetrised, with the pre-symmetrisation max
-    asymmetry. rdkit_ff.py: RDKitFFEngine (method uff|mmff94, keyed fd_step_bohr)
-    refuses charge != 0 or multiplicity != 1 first (R35), then perception failure
-    (ValueError), a round-trip mismatch (elements, formal charge, radicals, implicit
-    H) and missing parameters; forces from a fresh force field per geometry (RDKit
-    2026.09 CalcGrad(positions) is history-dependent); FD Hessian; cpu. Tests in tests/unit/engines
-    (five-state test set in data/); acceptance tests will live in tests/acceptance.
+    eta_rxncat.engines (v0.2.0): shared engine interfaces plus engines; pure Python
+    at import, libraries imported lazily. base.py: Engine ABC (tag, ENGINE_IMPL, OPTIONS);
+    from_stage(stage, **runtime) rejects a foreign tag or unknown runtime arg and
+    keeps the resolved stage; evaluate times _evaluate -> RawResult, checks shapes,
+    copies lists, returns a validated PotentialResult. errors.py: EngineError > Unavailable,
+    Input, ScfConvergence(steps), Runtime(tail <= 40 lines, redacted). units.py: CODATA
+    2018. options.py: OptionSpec; resolve_options fills defaults, rejects unknown
+    keys, wrong types (bool never int/float), disallowed values and caller-set engine_impl;
+    resolved_stage lowercases the solvent so implicit and explicit defaults key the
+    same (R6). identity.py: sha256_file, model_id '<name>@sha256:<hex>', library_version.
+    fd.py: fd_hessian (6N force calls, symmetrised, max asymmetry). rdkit_ff.py: RDKitFFEngine
+    (uff|mmff94) refuses charge != 0 or multiplicity != 1 first (R35), then perception,
+    round-trip and parameter failures; forces from a fresh force field per geometry
+    (RDKit CalcGrad(positions) is history-dependent); FD Hessian. pyscf_gpu_cpu/:
+    PySCFEngine CPU path (DF RKS/UKS/RHF/UHF, mol.spin = multiplicity - 1); keyed
+    density_fit, auxbasis, ecp (auto, resolved per state by resolved_stage_for: def2
+    + Z > 36 -> the basis ECP, never written back, R36), grids_level, conv_tol, init_guess,
+    pcm_method, ladder_small_basis (minao for def2, else sto-3g), fd_step_bohr, hessian_mode;
+    SCF ladder diis -> level_shift -> soscf -> small_basis_projection, then mandatory
+    internal stability (<= 2 follows); ddCOSMO/C-PCM/IEF-PCM with the Minnesota dielectric
+    table (solvents.py); analytic gradients; analytic Hessian for HF only, FD of analytic
+    gradients for KS and ddCOSMO (R41, docs/prd/v0.2.0/evidence/pyscf-cpu-support.json).
+    Tests in tests/unit/engines (five-state test set in data/).
   inputs: []
   outputs: []
   edges:
@@ -320,6 +320,6 @@ nodes:
   provenance:
     last_slice: 06-pyscf-cpu
   review:
-    reviewed_at: '2026-11-22T17:44:27+00:00'
-    reviewed_by: audit:OPR.0.2.0.5
+    reviewed_at: '2026-11-22T21:16:49+00:00'
+    reviewed_by: audit:OPR.0.2.0.6
     summary: patched description

@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone b049ab5: pytest 596 passed; -m slow 14 passed (1498 s, audit run); HF and B3LYP water match plain PySCF to <1e-13 Eh
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -18,7 +18,7 @@
 | OPR.0.2.0.3 | 03-potential-result | audited | OPR.0.2.0.1 | 2026-11-22T17:20:29+00:00 audited |
 | OPR.0.2.0.4 | 04-engines-base | audited | OPR.0.2.0.3 | 2026-11-22T17:30:39+00:00 audited |
 | OPR.0.2.0.5 | 05-rdkit-ff | audited | OPR.0.2.0.4 | 2026-11-22T17:44:09+00:00 audited |
-| OPR.0.2.0.6 | 06-pyscf-cpu | executed | OPR.0.2.0.4, OPR.0.2.0.5 | 2026-11-22T20:49:22+00:00 executed |
+| OPR.0.2.0.6 | 06-pyscf-cpu | audited | OPR.0.2.0.4, OPR.0.2.0.5 | 2026-11-22T21:16:49+00:00 audited |
 | OPR.0.2.0.7 | 07-pyscf-gpu | compiled | OPR.0.2.0.6, OPR.0.2.0.2 | 2026-11-22T16:44:51+00:00 compiled |
 | OPR.0.2.0.8 | 08-xtb-subprocess | compiled | OPR.0.2.0.4, OPR.0.2.0.5 | 2026-11-22T16:45:33+00:00 compiled |
 | OPR.0.2.0.9 | 09-mace | compiled | OPR.0.2.0.4, OPR.0.2.0.5, OPR.0.2.0.2 | 2026-11-22T16:46:12+00:00 compiled |

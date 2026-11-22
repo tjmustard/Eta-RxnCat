@@ -2,7 +2,7 @@
 id: OPR.0.2.0.6
 slice: 06-pyscf-cpu
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the PySCF engine's CPU path: keyed DF and auxbasis, the def2 
 depends_on: [OPR.0.2.0.4, OPR.0.2.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/prd/v0.2.0/DISCREPANCIES.md, "docs/prd/v0.2.0/evidence/**", spec/compiled/architecture.yml]
