@@ -2,7 +2,7 @@
 id: OPR.0.1.0.5
 slice: 05-cli
 mission: release-0.1.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Implement the eta-rxncat console script with hardware-check [--smoke] a
 depends_on: [OPR.0.1.0.2, OPR.0.1.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_cli
 parent: null
 hacf_touches: [src/eta_rxncat/cli.py, src/eta_rxncat/__main__.py, "tests/unit/cli/**", pyproject.toml, uv.lock, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

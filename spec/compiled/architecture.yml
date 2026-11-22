@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -25,7 +25,8 @@ nodes:
   description: >-
     uv-managed MIT package skeleton for eta-rxncat 0.1.0 (hatchling, src layout, requires-python
     >=3.11,<3.14, .python-version 3.12, committed uv.lock). Runtime deps numpy, scipy,
-    pydantic>=2, pyyaml, rdkit, geometric, pyscf; no optional extras. src/eta_rxncat/__init__.py
+    pydantic>=2, pyyaml, rdkit, geometric, pyscf; no optional extras; [project.scripts]
+    declares the eta-rxncat console script (eta_rxncat.cli:main, slice 05). src/eta_rxncat/__init__.py
     exposes __version__ = "0.1.0" and imports no heavy backend; engines, conformers,
     mapping, optimize and orchestrator are empty placeholder packages (filled v0.2.0-v0.8.0).
     Gates in pyproject.toml: ruff (E,F,W,I,D; google docstrings; force-exclude with
@@ -50,12 +51,12 @@ nodes:
   provenance:
     last_slice: 05-cli
   review:
-    reviewed_at: '2026-11-22T13:28:54+00:00'
-    reviewed_by: audit:04-hw-probe
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-22T13:34:00+00:00'
+    reviewed_by: audit:05-cli
+    summary: patched description
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -99,12 +100,12 @@ nodes:
   provenance:
     last_slice: 05-cli
   review:
-    reviewed_at: '2026-11-22T13:28:54+00:00'
-    reviewed_by: audit:04-hw-probe
+    reviewed_at: '2026-11-22T13:34:00+00:00'
+    reviewed_by: audit:05-cli
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -149,12 +150,12 @@ nodes:
   provenance:
     last_slice: 05-cli
   review:
-    reviewed_at: '2026-11-22T13:28:54+00:00'
-    reviewed_by: audit:04-hw-probe
+    reviewed_at: '2026-11-22T13:34:00+00:00'
+    reviewed_by: audit:05-cli
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -199,12 +200,12 @@ nodes:
   provenance:
     last_slice: 05-cli
   review:
-    reviewed_at: '2026-11-22T13:28:54+00:00'
-    reviewed_by: audit:04-hw-probe
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-22T13:34:00+00:00'
+    reviewed_by: audit:05-cli
+    summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -213,9 +214,29 @@ nodes:
   - uv.lock
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
-  description: ''
-  inputs: []
-  outputs: []
+  description: >-
+    eta_rxncat.cli (v0.1.0): the eta-rxncat console script (pyproject [project.scripts]
+    eta-rxncat = eta_rxncat.cli:main; python -m eta_rxncat via __main__.py, the only
+    raise SystemExit(main())). main(argv) -> int on stdlib argparse, never calls sys.exit;
+    argparse usage errors (no or unknown command, missing argument) return 2. hardware-check
+    prints probe_hardware() as indented JSON and returns 0; hardware-check --smoke
+    prints run_smoke() as JSON and returns smoke_exit_code (0 pass, 1 fail, 3 skipped);
+    hw_probe is imported lazily inside the handler. validate <path> loads the graph
+    with load_reaction_graph and prints exactly 'OK <path>', 'nodes: N', 'edges: M',
+    'priority_order: ids' (exit 0); a GraphValidationError (the only exception caught)
+    becomes one 'error: <message>' stderr line with whitespace collapsed, empty stdout,
+    exit 1, no traceback. validate imports no torch, pyscf, gpu4pyscf, cupy, rdkit,
+    mace or fairchem; no store import; no dependency beyond the stdlib and the project.
+  inputs:
+  - data_type: reaction_graph_loader_and_models
+    source_id: eta_rxncat_core
+  - data_type: hardware_report_and_smoke_result
+    source_id: eta_rxncat_hw_probe
+  - data_type: command_line_arguments
+    external: user_shell
+  outputs:
+  - data_type: json_report_or_validation_summary_and_exit_code
+    external: user_shell
   edges:
     depends_on:
     - eta_rxncat_core
@@ -224,3 +245,7 @@ nodes:
     member_of: []
   provenance:
     last_slice: 05-cli
+  review:
+    reviewed_at: '2026-11-22T13:34:00+00:00'
+    reviewed_by: audit:05-cli
+    summary: patched description, inputs, outputs

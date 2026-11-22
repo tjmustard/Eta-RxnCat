@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Fresh clone of 7b01a92: four gates + licence gate exit 0; installed eta-rxncat validate prints the exact four lines (0), every invalid graph gives one error line and exit 1 with no traceback; --smoke -> 3 here; usage -> 2
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
