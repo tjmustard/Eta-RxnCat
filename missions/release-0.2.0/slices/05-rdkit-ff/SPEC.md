@@ -6,11 +6,11 @@ status: active
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
-intent: "Implement the rdkit_ff engine: UFF/MMFF94 energies, analytic forces and FD Hessians for multiplicity-1 states whose charge RDKit perception reproduces (round-trip checked), refusing everything else."
+intent: "Implement the rdkit_ff engine: UFF/MMFF94 energies, analytic forces and FD Hessians for neutral closed-shell states only (charge 0, multiplicity 1; R35), with perception and round-trip checks, refusing everything else."
 depends_on: [OPR.0.2.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/**", "tests/unit/engines/**", docs/prd/v0.2.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -30,12 +30,14 @@ refused with `EngineInputError`.
 
 Context the builder needs (self-contained).
 
-TJ v0.2.0 Q2 "A": engines that cannot represent a state's charge or spin refuse it. The architect
-default, kept by resolve:
-- RDKit accepts multiplicity 1 only;
-- the total charge must be reproduced by `rdDetermineBonds.DetermineBonds(mol, charge=state.charge)`;
-- plus resolve's round-trip check (R14): the perceived molecule's element multiset equals
-  `state.symbols`, and its total formal charge equals `state.charge`.
+TJ v0.2.0 Q2 "A": engines that cannot represent a state's charge or spin refuse it. Replan R35
+(lead decision A; mission US-003 governs) sets the rule:
+- `rdkit_ff` accepts **only charge 0 and multiplicity 1**. UFF has no electrostatics by default,
+  so ion energies are not meaningful, even though RDKit 2026.09.2 perceives `[H][O-]` and
+  `[H][O+]([H])[H]` and has parameters for them (builder's measurement).
+- For neutral molecules, the perception and round-trip check (R14) stays:
+  `rdDetermineBonds.DetermineBonds(mol, charge=0)`, the perceived element multiset equals
+  `state.symbols`, and the total formal charge is 0.
 
 The starter (`docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/src/eta_rxncat/engines/rdkit_xtb.py`, reference
 only) swallows perception errors and falls back to coordinates-only terms. That is a defect, and
@@ -67,11 +69,14 @@ base install.
    - Hessian, when requested: `fd_hessian` on the engine's own forces, with `hessian_method =
      "finite_difference"`.
    - `device = "cpu"`.
-3. Refusals with `EngineInputError`. The message names the engine, charge and multiplicity:
-   - multiplicity ≠ 1;
-   - perception raises;
-   - round-trip mismatch;
-   - missing UFF or MMFF parameters.
+3. Refusals with `EngineInputError`, checked in this order:
+   - (a) **charge ≠ 0 or multiplicity ≠ 1** (R35), before any RDKit call, with exactly the message
+     `rdkit_ff: charge <q>, multiplicity <m>: only neutral closed-shell states (charge 0, multiplicity 1) are supported`;
+   - (b) perception raises;
+   - (c) round-trip mismatch (element multiset, or a non-zero total formal charge);
+   - (d) missing UFF or MMFF parameters.
+   
+   The (b)–(d) messages also name the engine, charge and multiplicity.
    
    Catch only RDKit's specific exception types. Name them after checking what `DetermineBonds`
    raises on this RDKit version; no bare `Exception`.
