@@ -1,6 +1,403 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 0
+  ADR: 10
   STORY: 0
   CANON: 0
-nodes: []
+nodes:
+- id: ADR-0001
+  type: decision
+  title: 'Cache key: canonical versioned per-stage payload (key_schema 1)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0001-cache-key-canonical-versioned-per-stage-payload-key-schema-1.md
+  content_sha256: 195cde0d27e912c88b72a777084ef72ad71488804e18581f2bd8f5521d1c460c
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_store
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/store/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:13+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:13+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0002
+  type: decision
+  title: 'Artifact store: completed rows immutable, WAL, schema version 1, caller-supplied
+    path'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0002-artifact-store-completed-rows-immutable-wal-schema-version-1.md
+  content_sha256: f313e46a32d8eecee52869aeef3e225c07b794b5a14c553230634835584bba73
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_store
+    files:
+    - src/eta_rxncat/store/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:13+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:13+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0003
+  type: decision
+  title: 'Core models are strict: StrictInt chemistry ints, extra=forbid, element
+    table, electron parity, duplicate-key rejection'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0003-core-models-are-strict-strictint-chemistry-ints-extra-forbid.md
+  content_sha256: 9d397e383798f2461b5b24554902d1a87f9bb211e5f9f395d96f724495d99df6
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:13+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:13+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0004
+  type: decision
+  title: 'ReactionGraph: templates are ranked alternatives; components are a separated
+    state''s species; cycles allowed'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0004-reactiongraph-templates-are-ranked-alternatives-components-a.md
+  content_sha256: d0b29786b0f860f887a2e925066ee96d3fb70b977399aa0a7b17445e6e48a353
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:13+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:13+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0005
+  type: decision
+  title: 'AtomMappingSpec: full invariant list, including keep/delete partition of
+    template atoms'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0005-atommappingspec-full-invariant-list-including-keep-delete-pa.md
+  content_sha256: d1d31014bd2694d342a2bf6725d14f39fc778ee08cbecca4d9bb75d6f5c2b0a4
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:13+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:13+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0006
+  type: decision
+  title: 'Licence gate: runtime-only allow-list with partial match'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0006-licence-gate-runtime-only-allow-list-with-partial-match.md
+  content_sha256: 55cee2532de2497697a4dc7f6296d98169d12ad2cd89364fe9f6fc73c5c05798
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - pyproject.toml
+    - .github/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:14+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:14+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0007
+  type: decision
+  title: Reference starter under docs/prd is excluded from all gates; registers use
+    closed inventory and a pinned diff
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0007-reference-starter-under-docs-prd-is-excluded-from-all-gates.md
+  content_sha256: 2c50a00ed5153a00cda293e1bd0221fd967e3080e225c25b6920b4e69c2ef72a
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - docs/**
+    - pyproject.toml
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:14+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:14+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0008
+  type: decision
+  title: 'Hardware: 6.5 GiB budget of total VRAM; smoke pass is GPU-vs-CPU agreement;
+    one seat runs acceptance'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0008-hardware-6-5-gib-budget-of-total-vram-smoke-pass-is-gpu-vs-c.md
+  content_sha256: fa55635ad9a6bd48a5021500416378bbbd6353f0ee645eac71f2518acd607bf9
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_hw_probe
+    files:
+    - src/eta_rxncat/utils/**
+    - docs/prd/v0.1.0/GPU_SMOKE_RESULT.json
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:14+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:14+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0009
+  type: decision
+  title: 'Project rules live in AGENTS.md after the HACF block; core scope is PR #3
+    only'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0009-project-rules-live-in-agents-md-after-the-hacf-block-core-sc.md
+  content_sha256: 70d2544dac2a778f33198ea1fc97341c56328a3d4c771c0ac3af27690ce1ff34
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_scaffold
+    - eta_rxncat_core
+    files:
+    - AGENTS.md
+    - src/eta_rxncat/core/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T08:10:14+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T08:10:14+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
+- id: ADR-0010
+  type: decision
+  title: 'Optional extras: gpu, mlip-mace ⟂ mlip-uma; per-extra licence gate (LGPL
+    transitive-only, NVIDIA exempt)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0010-optional-extras-gpu-mlip-mace-mlip-uma-per-extra-licence-gat.md
+  content_sha256: 6313d2a0b96776d1dffd10f81baecebbfeaa0a44e60bb3331e5da93059cd930e
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - pyproject.toml
+    - uv.lock
+    - .github/workflows/ci.yml
+    - AGENTS.md
+  relates_to:
+  - ADR-0006
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-22T12:30:33+00:00'
+    source: OPR.0.1.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-22T12:30:33+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.1.0
