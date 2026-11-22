@@ -10,7 +10,7 @@ intent: "Declare the gpu, mlip-mace and mlip-uma optional extras (MLIP extras co
 depends_on: [OPR.0.1.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: blocked
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, AGENTS.md, ".github/**", ".gitignore", tests/unit/test_package.py, "tools/**", "tests/unit/tools/**", src/eta_rxncat/utils/hw_probe.py, "tests/unit/utils/**", "tests/unit/cli/**", docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -235,12 +235,12 @@ drop an extra.
 - [x] Task 3a (R45): write `tools/licence_gate.py` and `tests/unit/tools/test_licence_gate.py`;
   add `tools` to mypy `files`; move the config to `[tool.eta-rxncat.licence-gate]`; remove
   `[tool.pip-licenses]` and the `pip-licenses` dev dependency; `uv lock`.
-- [ ] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`
+- [x] Task 3: write the four gate commands (base, gpu, gpu+mlip-mace, gpu+mlip-uma) in `AGENTS.md`
   and `ci.yml`, character for character the same, with the R48 exemption lists in the config.
 - [x] Task 4: write the two exemption-guard tests (Mini-requirement 5).
-- [ ] Task 4b (R48): extend the guards per Mini-requirement 5 (c) and (d).
+- [x] Task 4b (R48): extend the guards per Mini-requirement 5 (c) and (d).
 - [x] Task 5: run mypy with each MLIP combination installed, then return to the base dev env.
-- [ ] Task 6: add the register rows. Re-run the four gates in the base dev env.
+- [x] Task 6: add the register rows. Re-run the four gates in the base dev env.
 
 ## 4. The Negative Space (Constraints)
 

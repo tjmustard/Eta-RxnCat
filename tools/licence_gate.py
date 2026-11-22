@@ -146,6 +146,8 @@ class Exemption:
     package: str
     version: str
     profiles: tuple[str, ...]
+    licence: str
+    pulled_in_by: str
     reason: str
     decision: str
 
@@ -233,6 +235,8 @@ def load_config(path: Path) -> Config:
                 package=_text(e, "package"),
                 version=_text(e, "version"),
                 profiles=_profiles(e),
+                licence=_text(e, "licence"),
+                pulled_in_by=_text(e, "pulled-in-by"),
                 reason=_text(e, "reason"),
                 decision=_text(e, "decision"),
             )

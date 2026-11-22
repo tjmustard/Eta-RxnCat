@@ -302,23 +302,35 @@ These rules apply to everything outside the HACF managed block above.
 
 ## Licence guardrails
 
-- Never import `ase`, `sella`, in-process `tblite` or `psi4` anywhere in `src/eta_rxncat/`.
-  External copyleft or proprietary programs run only as subprocesses with serialised file I/O.
+- Never import `ase`, `sella`, in-process `tblite` or `psi4`, or any package exempted for a
+  copyleft licence in the MLIP profiles, anywhere in `src/eta_rxncat/`. External copyleft or
+  proprietary programs run only as subprocesses with serialised file I/O.
 - Every runtime dependency must resolve to an allowed SPDX licence (`allowed` in
   `[tool.eta-rxncat.licence-gate]` in `pyproject.toml`). `tools/licence_gate.py` judges each
   package exactly, from its `License-Expression`, its `License ::` classifiers or its `License`
   field, with no substring matching (R45, ADR-0013). Unrecognised or empty metadata fails. No
   exceptions are added by agents; a failing package is reported to the person.
-- Licence gate (runtime environment only), base profile:
+- Licence gate (runtime environment only), one command per profile. CI runs `base` in the
+  `checks` job and the other three in the `licence-extras` matrix job:
 
   ```sh
   UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu && .venv-runtime/bin/python -I tools/licence_gate.py --profile gpu
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-mace && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-mace
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-uma && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-uma
   ```
 
-  Exemptions are pinned to an exact package version and profile, each with its reason and
-  decision, and a stale exemption fails. The base profile has one: `geometric` 1.1.1 (ADR-0011,
-  R41). Its licence is BSD 3-clause Non-AI (clause 4 restricts use in AI-training datasets) and
-  its metadata reads UNKNOWN; any other version still fails.
+  Exemptions are pinned to an exact package version and profile. Each records its licence, the
+  package that pulls it in, its reason and its decision, and a stale exemption fails.
+  - `base` has one: `geometric` 1.1.1 (ADR-0011, R41). Its licence is BSD 3-clause Non-AI
+    (clause 4 restricts use in AI-training datasets) and its metadata reads UNKNOWN; any other
+    version still fails.
+  - `gpu` adds the NVIDIA rule: `nvidia-*` CUDA wheels with a proprietary licence (TJ Q1 A).
+  - `mlip-mace` and `mlip-uma` add their version-pinned lists. TJ's rule (R48, ADR-0014, 14:49Z):
+    copyleft and off-list licences are allowed only as downloaded, unmodified, transitive
+    dependencies of these optional extras. Eta-RxnCat's own code stays MIT and never vendors,
+    copies or imports them. `tests/unit/test_package.py` bans their top-level modules and any
+    direct dependency on them.
 
 ## Scientific standards
 

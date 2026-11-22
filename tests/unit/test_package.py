@@ -37,8 +37,39 @@ def test_import_loads_no_heavy_modules() -> None:
 
 SRC = Path(__file__).parents[2] / "src" / "eta_rxncat"
 PYPROJECT = Path(__file__).parents[2] / "pyproject.toml"
-FORBIDDEN_IMPORTS = frozenset({"ase", "matscipy", "sella", "tblite", "psi4"})
-FORBIDDEN_DIRECT_DEPENDENCIES = frozenset({"ase", "matscipy"})
+# sella, tblite, psi4: never imported (slice 01 rule). The rest are the top-level modules of the
+# GPL/LGPL/MPL distributions exempted in the MLIP profiles (R48, ADR-0014), read from each
+# distribution's top_level.txt in the gpu+mlip-mace and gpu+mlip-uma envs.
+FORBIDDEN_IMPORTS = frozenset(
+    {
+        "sella",
+        "tblite",
+        "psi4",
+        "ase",  # ase 3.29.0, LGPL-2.1-or-later
+        "matscipy",  # matscipy 1.3.1, LGPL-2.1
+        "hostlist",  # python-hostlist 2.3.0, GPL-2.0-or-later
+        "psycopg2",  # psycopg2-binary 2.9.13, LGPL
+        "ase_db_backends",  # ase_db_backends 0.11.0, LGPL-2.1-or-later
+        "ray_haproxy",  # ray-haproxy 2.8.25, GPLv2
+        "tqdm",  # tqdm 4.70.1, MPL-2.0 AND MIT
+        "orjson",  # orjson 3.13.0, MPL-2.0 AND (Apache-2.0 OR MIT)
+        "certifi",  # certifi 2026.11.20, MPL-2.0
+    }
+)
+# Copyleft-exempt distributions (R48) must never be declared directly, in core or in any extra.
+FORBIDDEN_DIRECT_DEPENDENCIES = frozenset(
+    {
+        "ase",
+        "matscipy",
+        "python-hostlist",
+        "psycopg2-binary",
+        "ase-db-backends",
+        "ray-haproxy",
+        "tqdm",
+        "orjson",
+        "certifi",
+    }
+)
 
 
 def forbidden_imports(root: Path) -> list[str]:
@@ -71,7 +102,7 @@ def requirement_name(requirement: str) -> str:
 
 
 def test_no_copyleft_imports_in_package() -> None:
-    """No module under src/eta_rxncat imports ase, matscipy, sella, tblite or psi4."""
+    """No module under src/eta_rxncat imports a banned or copyleft-exempted package."""
     assert forbidden_imports(SRC) == []
 
 
@@ -95,6 +126,27 @@ def test_scanner_reports_forbidden_import(tmp_path: Path, source: str, module: s
     assert len(hits) == 1 and hits[0].startswith(f"{path}:") and hits[0].endswith(f": {module}")
 
 
+@pytest.mark.parametrize("module", sorted(FORBIDDEN_IMPORTS))
+def test_scanner_covers_every_banned_module(tmp_path: Path, module: str) -> None:
+    """Every banned module name, imported directly, is reported."""
+    (tmp_path / "mod.py").write_text(f"import {module}\n", encoding="utf-8")
+    assert len(forbidden_imports(tmp_path)) == 1
+
+
+def test_permissive_off_list_packages_are_not_banned() -> None:
+    """lmdb, torch_ema and clusterscope are exempt for metadata reasons only, not import-banned."""
+    assert not {"lmdb", "torch_ema", "clusterscope"} & FORBIDDEN_IMPORTS
+
+
+@pytest.mark.parametrize(
+    "requirement",
+    ["python_hostlist>=2", "psycopg2-binary", "ase_db_backends", "Ray.HAProxy", "certifi", "TQDM"],
+)
+def test_direct_dependency_check_covers_r48(requirement: str) -> None:
+    """The direct-dependency check recognises every R48 copyleft distribution, in any spelling."""
+    assert requirement_name(requirement) in FORBIDDEN_DIRECT_DEPENDENCIES
+
+
 def test_scanner_ignores_lookalikes(tmp_path: Path) -> None:
     """Names that merely start with a forbidden name, and relative imports, are not reported."""
     path = tmp_path / "mod.py"
@@ -103,7 +155,7 @@ def test_scanner_ignores_lookalikes(tmp_path: Path) -> None:
 
 
 def test_no_direct_copyleft_dependencies() -> None:
-    """Neither ase nor matscipy is declared directly in the dependencies or any extra."""
+    """No copyleft-exempted distribution is declared directly in the dependencies or any extra."""
     project = tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))["project"]
     declared = {"dependencies": project.get("dependencies", [])}
     declared |= {f"extra {k}": v for k, v in project.get("optional-dependencies", {}).items()}

@@ -149,7 +149,15 @@ def test_pinned_exemption_wrong_version(tmp_path: Path) -> None:
     """An exemption for pkg:1.0 does not cover pkg 1.1, and it is reported as stale."""
     dist(tmp_path / "site", "pkg", "1.1", license_field="UNKNOWN")
     exempt = [
-        {"package": "pkg", "version": "1.0", "profiles": ["base"], "reason": "r", "decision": "d"}
+        {
+            "package": "pkg",
+            "version": "1.0",
+            "profiles": ["base"],
+            "licence": "l",
+            "pulled-in-by": "p",
+            "reason": "r",
+            "decision": "d",
+        }
     ]
     result = gate(tmp_path, exempt=exempt)
     assert result.returncode == 1
@@ -163,7 +171,15 @@ def test_exact_exemption_passes(tmp_path: Path) -> None:
     """An exemption pinned to the installed version covers the package."""
     dist(tmp_path / "site", "pkg", "1.1", license_field="UNKNOWN")
     exempt = [
-        {"package": "pkg", "version": "1.1", "profiles": ["base"], "reason": "r", "decision": "d"}
+        {
+            "package": "pkg",
+            "version": "1.1",
+            "profiles": ["base"],
+            "licence": "l",
+            "pulled-in-by": "p",
+            "reason": "r",
+            "decision": "d",
+        }
     ]
     result = gate(tmp_path, exempt=exempt)
     assert result.returncode == 0, result.stdout
@@ -173,7 +189,15 @@ def test_stale_exemption_for_absent_package(tmp_path: Path) -> None:
     """An exemption naming a package that is not installed fails as stale."""
     dist(tmp_path / "site", "ok", expression="MIT")
     exempt = [
-        {"package": "gone", "version": "2.0", "profiles": ["base"], "reason": "r", "decision": "d"}
+        {
+            "package": "gone",
+            "version": "2.0",
+            "profiles": ["base"],
+            "licence": "l",
+            "pulled-in-by": "p",
+            "reason": "r",
+            "decision": "d",
+        }
     ]
     result = gate(tmp_path, exempt=exempt)
     assert result.returncode == 1 and fails(result)[0].startswith("FAIL gone:2.0 [stale exemption]")
@@ -187,6 +211,8 @@ def test_exemption_scoped_to_profile(tmp_path: Path) -> None:
             "package": "pkg",
             "version": "1.0",
             "profiles": ["mlip-mace"],
+            "licence": "l",
+            "pulled-in-by": "p",
             "reason": "r",
             "decision": "d",
         }
@@ -286,19 +312,74 @@ def test_usage_and_config_errors(tmp_path: Path) -> None:
     assert result.returncode == 2 and "licence-gate" in result.stderr
 
 
+def repo_gate_table() -> dict[str, Any]:
+    """Return the committed ``[tool.eta-rxncat.licence-gate]`` table."""
+    data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
+    table: dict[str, Any] = data["tool"]["eta-rxncat"]["licence-gate"]
+    return table
+
+
 def test_repo_config_loads() -> None:
-    """The committed pyproject.toml config parses and pins geometric 1.1.1 in every profile."""
-    gate_table = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))["tool"][
-        "eta-rxncat"
-    ]["licence-gate"]
-    geometric = [e for e in gate_table["exempt"] if e["package"] == "geometric"]
-    assert geometric == [
-        {
-            "package": "geometric",
-            "version": "1.1.1",
-            "profiles": ["base", "gpu", "mlip-mace", "mlip-uma"],
-            "reason": geometric[0]["reason"],
-            "decision": geometric[0]["decision"],
-        }
-    ]
+    """The committed config pins geometric 1.1.1 in every profile and has no pip-licenses table."""
+    geometric = [e for e in repo_gate_table()["exempt"] if e["package"] == "geometric"]
+    assert len(geometric) == 1
+    assert geometric[0]["version"] == "1.1.1"
+    assert geometric[0]["profiles"] == ["base", "gpu", "mlip-mace", "mlip-uma"]
+    assert geometric[0]["decision"].startswith("R41")
     assert "pip-licenses" not in tomllib.loads((REPO / "pyproject.toml").read_text())["tool"]
+
+
+def test_exemptions_only_in_mlip_profiles() -> None:
+    """Every exemption other than geometric lists only MLIP profiles, never base or gpu (R48)."""
+    offenders = [
+        f"{e['package']}:{e['version']} {e['profiles']}"
+        for e in repo_gate_table()["exempt"]
+        if e["package"] != "geometric"
+        and (not e["profiles"] or not set(e["profiles"]) <= {"mlip-mace", "mlip-uma"})
+    ]
+    assert offenders == []
+
+
+def test_exemption_entries_are_complete() -> None:
+    """Every exemption records package, exact version, profiles, licence, parent and reasons."""
+    required = {"package", "version", "profiles", "licence", "pulled-in-by", "reason", "decision"}
+    for entry in repo_gate_table()["exempt"]:
+        assert set(entry) == required, entry
+        assert all(entry[k] for k in required), entry
+        assert not any(c in entry["version"] for c in "<>=*~^,"), entry
+
+
+def test_r48_lists() -> None:
+    """The MLIP exemption lists are exactly R48's version-pinned sets."""
+    table = repo_gate_table()["exempt"]
+
+    def listed(profile: str) -> set[str]:
+        return {
+            f"{e['package']}:{e['version']}"
+            for e in table
+            if profile in e["profiles"] and e["package"] != "geometric"
+        }
+
+    assert listed("mlip-mace") == {
+        "ase:3.29.0",
+        "matscipy:1.3.1",
+        "python-hostlist:2.3.0",
+        "lmdb:1.7.3",
+        "torch-ema:0.3",
+        "tqdm:4.70.1",
+        "orjson:3.13.0",
+    }
+    assert listed("mlip-uma") == {
+        "ase:3.29.0",
+        "psycopg2-binary:2.9.13",
+        "ase_db_backends:0.11.0",
+        "ray-haproxy:2.8.25",
+        "lmdb:1.7.3",
+        "certifi:2026.11.20",
+        "tqdm:4.70.1",
+        "orjson:3.13.0",
+        "clusterscope:0.0.18",
+    }
+    assert all(
+        e["decision"].startswith("R48 / ADR-0014") for e in table if e["package"] != "geometric"
+    )
