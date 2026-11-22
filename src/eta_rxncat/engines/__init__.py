@@ -12,6 +12,7 @@ from eta_rxncat.engines.errors import (
     EngineUnavailableError,
     ScfConvergenceError,
 )
+from eta_rxncat.engines.esen_omol25 import ESENOMol25Engine
 from eta_rxncat.engines.fd import fd_hessian
 from eta_rxncat.engines.identity import library_version, model_id, sha256_file
 from eta_rxncat.engines.mace import MACEEngine
@@ -24,6 +25,7 @@ from eta_rxncat.engines.options import (
 )
 from eta_rxncat.engines.pyscf_gpu_cpu import PySCFEngine
 from eta_rxncat.engines.rdkit_ff import RDKitFFEngine
+from eta_rxncat.engines.uma_direct import UMADirectEngine
 from eta_rxncat.engines.units import (
     BOHR_ANGSTROM,
     HARTREE_EV,
@@ -43,6 +45,7 @@ __all__ = [
     "HARTREE_EV",
     "HARTREE_KCAL_MOL",
     "MACEEngine",
+    "ESENOMol25Engine",
     "Engine",
     "EngineError",
     "EngineInputError",
@@ -53,6 +56,7 @@ __all__ = [
     "RDKitFFEngine",
     "RawResult",
     "ScfConvergenceError",
+    "UMADirectEngine",
     "XTBSubprocessEngine",
     "angstrom_to_bohr",
     "bohr_to_angstrom",
