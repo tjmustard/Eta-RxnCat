@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -48,14 +48,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-hw-probe
+    last_slice: 05-cli
   review:
     reviewed_at: '2026-11-22T13:28:54+00:00'
     reviewed_by: audit:04-hw-probe
     summary: reviewed; nothing patched
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -97,14 +97,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-hw-probe
+    last_slice: 05-cli
   review:
     reviewed_at: '2026-11-22T13:28:54+00:00'
     reviewed_by: audit:04-hw-probe
     summary: reviewed; nothing patched
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -147,14 +147,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-hw-probe
+    last_slice: 05-cli
   review:
     reviewed_at: '2026-11-22T13:28:54+00:00'
     reviewed_by: audit:04-hw-probe
     summary: reviewed; nothing patched
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -197,8 +197,30 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-hw-probe
+    last_slice: 05-cli
   review:
     reviewed_at: '2026-11-22T13:28:54+00:00'
     reviewed_by: audit:04-hw-probe
     summary: patched description, inputs, outputs
+- id: eta_rxncat_cli
+  dimension: Module
+  status: dirty
+  files:
+  - src/eta_rxncat/cli.py
+  - src/eta_rxncat/__main__.py
+  - tests/unit/cli/**
+  - pyproject.toml
+  - uv.lock
+  - docs/prd/v0.1.0/DISCREPANCIES.md
+  - spec/compiled/architecture.yml
+  description: ''
+  inputs: []
+  outputs: []
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_hw_probe
+    implements: []
+    member_of: []
+  provenance:
+    last_slice: 05-cli

@@ -60,30 +60,30 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-018 | pyproject dependency | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:39` `pyscf>=2.6.0` | `pyproject.toml:21` `pyscf` | changed | As D-012 | open |
 | D-019 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:43` extra `gpu` | — | dropped | No extras in slice 01 (TJ F1/F2 decided 08:19Z; slice 06 re-adds `gpu`) | open |
 | D-020 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:46` extra `mlip` | — | dropped | No extras in slice 01; slice 06 adds conflicting `mlip-mace` / `mlip-uma` instead (mission R1) | open |
-| D-021 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:51` extra `dev` | `pyproject.toml:24` `[dependency-groups] dev` | changed | Dev tools are a uv dependency group, not a published extra; same six packages, unpinned | open |
-| D-022 | pyproject `[project.scripts]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:61` `eta-rxncat = "eta_rxncat.cli:main"` | — | dropped | No CLI in slice 01; slice 05 owns the CLI | open |
-| D-023 | pyproject `[tool.hatch]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:64` `packages = ["src/eta_rxncat"]` | `pyproject.toml:35` | same | — | open |
-| D-024 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:67` `line-length = 100` | `pyproject.toml:38` | same | — | open |
+| D-021 | pyproject optional deps | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:51` extra `dev` | `pyproject.toml:27` `[dependency-groups] dev` | changed | Dev tools are a uv dependency group, not a published extra; same six packages, unpinned | open |
+| D-022 | pyproject `[project.scripts]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:61` `eta-rxncat = "eta_rxncat.cli:main"` | `pyproject.toml:25` | same | Same entry point, added by slice 05 (dropped in slice 01, which had no CLI) | open |
+| D-023 | pyproject `[tool.hatch]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:64` `packages = ["src/eta_rxncat"]` | `pyproject.toml:38` | same | — | open |
+| D-024 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:67` `line-length = 100` | `pyproject.toml:41` | same | — | open |
 | D-025 | pyproject `[tool.ruff]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:68` `target-version = "py311"` | — | dropped | Not in slice 01 Task 3; ruff infers it from `requires-python` | open |
-| D-026 | pyproject `[tool.ruff.lint]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:71` `select = ["E","F","I","UP","B","SIM","RUF"]` | `pyproject.toml:43` `["E","F","W","I","D"]` | changed | Slice 01 Task 3 and `.agents/rules/python.md` | open |
+| D-026 | pyproject `[tool.ruff.lint]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:71` `select = ["E","F","I","UP","B","SIM","RUF"]` | `pyproject.toml:46` `["E","F","W","I","D"]` | changed | Slice 01 Task 3 and `.agents/rules/python.md` | open |
 | D-027 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:74` `python_version = "3.11"` | — | dropped | Not in slice 01 Task 3 | open |
-| D-028 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:75` `strict = true` | `pyproject.toml:56` | same | — | open |
-| D-029 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:76` `warn_return_any = true` | `pyproject.toml:56` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
-| D-030 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:77` `warn_unused_configs = true` | `pyproject.toml:56` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
-| D-031 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:78` `plugins = ["pydantic.mypy"]` | `pyproject.toml:58` | same | — | open |
-| D-032 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:81` `testpaths = ["tests"]` | `pyproject.toml:66` | same | — | open |
-| D-033 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:82` `addopts = "-ra -q"` | `pyproject.toml:69` `addopts = "-m 'not gpu'"` | changed | Slice 01 Task 3: GPU tests deselected by default | open |
-| D-034 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:84` marker `gpu` | `pyproject.toml:68` | changed | Text names the `gpu` extra | open |
+| D-028 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:75` `strict = true` | `pyproject.toml:59` | same | — | open |
+| D-029 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:76` `warn_return_any = true` | `pyproject.toml:59` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
+| D-030 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:77` `warn_unused_configs = true` | `pyproject.toml:59` (implied by `strict`) | dropped | Redundant under `strict = true` | open |
+| D-031 | pyproject `[tool.mypy]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:78` `plugins = ["pydantic.mypy"]` | `pyproject.toml:61` | same | — | open |
+| D-032 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:81` `testpaths = ["tests"]` | `pyproject.toml:69` | same | — | open |
+| D-033 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:82` `addopts = "-ra -q"` | `pyproject.toml:72` `addopts = "-m 'not gpu'"` | changed | Slice 01 Task 3: GPU tests deselected by default | open |
+| D-034 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:84` marker `gpu` | `pyproject.toml:71` | changed | Text names the `gpu` extra | open |
 | D-035 | pyproject `[tool.pytest]` | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/pyproject.toml:85` marker `e2e` | — | dropped | Not in slice 01 Task 3; e2e fixtures arrive with later versions | open |
 | D-036 | pyproject `[project]` | — | `pyproject.toml:11` `license-files = ["LICENSE"]` | added | Ships the root MIT `LICENSE` in the wheel | open |
-| D-037 | pyproject `[tool.ruff]` | — | `pyproject.toml:40` `extend-exclude = ["docs/prd", ".agents"]` | added | `docs/prd`: mission R4. `.agents`: mission R39 (HACF scripts may not be edited and fail 120 lint / 12 format checks) | open |
-| D-038 | pyproject `[tool.ruff.lint]` | — | `pyproject.toml:44` `ignore = ["D100","D104"]` | added | Slice 01 Task 3 | open |
-| D-039 | pyproject `[tool.ruff.lint.pydocstyle]` | — | `pyproject.toml:47` `convention = "google"` | added | Slice 01 Task 3 | open |
-| D-040 | pyproject `[tool.ruff.lint.isort]` | — | `pyproject.toml:50` `known-first-party` | added | Slice 01 Task 3 | open |
-| D-041 | pyproject `[tool.ruff.format]` | — | `pyproject.toml:53` `quote-style = "double"` | added | Slice 01 Task 3 | open |
-| D-042 | pyproject `[tool.mypy]` | — | `pyproject.toml:57` `files = ["src"]` | added | Mission R4: mypy never reads `docs/prd` | open |
-| D-043 | pyproject `[[tool.mypy.overrides]]` | — | `pyproject.toml:60` heavy-module overrides | added | Mission R13 | open |
-| D-044 | pyproject `[tool.pytest]` | — | `pyproject.toml:67` `norecursedirs` | added | Mission R4 | open |
+| D-037 | pyproject `[tool.ruff]` | — | `pyproject.toml:43` `extend-exclude = ["docs/prd", ".agents"]` | added | `docs/prd`: mission R4. `.agents`: mission R39 (HACF scripts may not be edited and fail 120 lint / 12 format checks) | open |
+| D-038 | pyproject `[tool.ruff.lint]` | — | `pyproject.toml:47` `ignore = ["D100","D104"]` | added | Slice 01 Task 3 | open |
+| D-039 | pyproject `[tool.ruff.lint.pydocstyle]` | — | `pyproject.toml:50` `convention = "google"` | added | Slice 01 Task 3 | open |
+| D-040 | pyproject `[tool.ruff.lint.isort]` | — | `pyproject.toml:53` `known-first-party` | added | Slice 01 Task 3 | open |
+| D-041 | pyproject `[tool.ruff.format]` | — | `pyproject.toml:56` `quote-style = "double"` | added | Slice 01 Task 3 | open |
+| D-042 | pyproject `[tool.mypy]` | — | `pyproject.toml:60` `files = ["src"]` | added | Mission R4: mypy never reads `docs/prd` | open |
+| D-043 | pyproject `[[tool.mypy.overrides]]` | — | `pyproject.toml:63` heavy-module overrides | added | Mission R13 | open |
+| D-044 | pyproject `[tool.pytest]` | — | `pyproject.toml:70` `norecursedirs` | added | Mission R4 | open |
 | D-045 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:13` `actions/checkout@v4` | `.github/workflows/ci.yml:11` | same | — | open |
 | D-046 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:14` `actions/setup-python@v5` (3.11) | `.github/workflows/ci.yml:16` `uv python install` | changed | Python comes from `.python-version` (3.12), slice 01 Task 11 | open |
 | D-047 | CI step | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.github/workflows/ci.yml:18` `astral-sh/setup-uv@v3` | `.github/workflows/ci.yml:12` `astral-sh/setup-uv@v6` with cache | changed | Slice 01 Task 11: setup-uv with cache | open |
@@ -135,9 +135,9 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-093 | repo | — | `uv.lock` | added | Mission R14: committed lockfile | open |
 | D-094 | licence gate | — | `.github/workflows/ci.yml:29`, `AGENTS.md:313` runtime-only gate, `pip-licenses==5.5.5` reading `[tool.pip-licenses]` | added | Mission R3, R41 | open |
 | D-095 | tests | — | `tests/unit/test_package.py` `test_version`, `test_import_loads_no_heavy_modules` | added | Slice 01 Task 4 | open |
-| D-096 | pyproject `[tool.ruff]` | — | `pyproject.toml:39` `force-exclude = true` | added | Mission R38: makes ruff honour excludes for explicit paths, as the HACF pre-commit hook passes them | open |
+| D-096 | pyproject `[tool.ruff]` | — | `pyproject.toml:42` `force-exclude = true` | added | Mission R38: makes ruff honour excludes for explicit paths, as the HACF pre-commit hook passes them | open |
 | D-097 | starter gate file | — | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/.ruff.toml` (2 lines, `exclude = ["*"]`) | added | Mission R38: declared, not part of the starter; keeps ruff and the hook off the verbatim copy (23 verbatim + 1 gate file) | open |
-| D-098 | pyproject `[tool.pip-licenses]` | — | `pyproject.toml:71` `partial-match`, `allow-only`, `ignore-packages = ["geometric:1.1.1"]` | added | Mission R41 (TJ "B", 12:49Z; ADR-0011 PROPOSED): the only licence exception, pinned to geometric 1.1.1 | open |
+| D-098 | pyproject `[tool.pip-licenses]` | — | `pyproject.toml:74` `partial-match`, `allow-only`, `ignore-packages = ["geometric:1.1.1"]` | added | Mission R41 (TJ "B", 12:49Z; ADR-0011 PROPOSED): the only licence exception, pinned to geometric 1.1.1 | open |
 
 ## Core
 
@@ -389,6 +389,27 @@ from the starter. Cosmetic differences (formatting, comments, docstring wording)
 | D-360 | hw_probe | — | `tests/gpu/test_smoke.py:9` `tests/gpu/test_smoke.py` | added | `@pytest.mark.gpu` acceptance test (deselected by default; slice 07 runs it) | open |
 
 ## CLI
+
+| ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
+|---|---|---|---|---|---|---|
+| D-361 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:14` `main(argv: list[str] | None)` | `src/eta_rxncat/cli.py:70` `main(argv: Sequence[str] | None)` | changed | Accepts any sequence; returns 2 on a usage error instead of letting argparse raise SystemExit | open |
+| D-362 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:16` parser `prog`/`description` | `src/eta_rxncat/cli.py:27` | changed | Same prog; description reworded | open |
+| D-363 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:21` subcommand `hardware-check` | `src/eta_rxncat/cli.py:31` | same | Same name | open |
+| D-364 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:30` `hardware-check` output `json.dumps(model_dump(), indent=2)` | `src/eta_rxncat/cli.py:51` `model_dump_json(indent=2)` | changed | Pydantic JSON serialisation of the slice-04 report (contract fields) | open |
+| D-365 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:31` `hardware-check` exit 0 | `src/eta_rxncat/cli.py:52` | same | Exit 0; flags are inside the JSON | open |
+| D-366 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:23` subcommand `validate` | `src/eta_rxncat/cli.py:38` | same | Same name | open |
+| D-367 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:24` argument `graph_file` (`type=Path`) | `src/eta_rxncat/cli.py:39` `path` | changed | Renamed `path` per the slice spec; still `type=Path` | open |
+| D-368 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:37` `validate` output: one sentence with name, counts and a Python list of ids | `src/eta_rxncat/cli.py:63` four lines `OK <path>`, `nodes:`, `edges:`, `priority_order:` | changed | Fixed four-line format (mission contract, CLI) | open |
+| D-369 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:35` order via `execution_order()` (declaration order within a tier) | `src/eta_rxncat/cli.py:66` `priority_order()` | changed | Sorted by `(priority, id)` (slice 02) | open |
+| D-370 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:34` invalid graph → uncaught exception and traceback | `src/eta_rxncat/cli.py:59` `error: <message>` on stderr, exit 1 | changed | One line, no traceback; only GraphValidationError is caught (mission R21) | open |
+| D-371 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:43` fall-through `return 1` | — | dropped | Unreachable: the subcommand is required and both are handled | open |
+| D-372 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:46` `sys.exit(main())` under `__main__` in cli.py | `src/eta_rxncat/__main__.py:6` `src/eta_rxncat/__main__.py` | changed | `python -m eta_rxncat` instead of `python -m eta_rxncat.cli` | open |
+| D-373 | cli | `docs/prd/v0.1.0/Eta-RxnCat-v0.1.0/src/eta_rxncat/cli.py:11` module-level import of `hw_probe` | `src/eta_rxncat/cli.py:45` | changed | Imported inside the hardware-check handler, so `validate` loads nothing from utils | open |
+| D-374 | cli | — | `src/eta_rxncat/cli.py:34` `hardware-check --smoke` | added | US-004a: smoke JSON on stdout, exit `smoke_exit_code` (0/1/3) | open |
+| D-375 | cli | — | `src/eta_rxncat/cli.py:3` exit-code table (0/1/2/3) | added | Mission R21: fixed table, documented in the module docstring | open |
+| D-376 | cli | — | `src/eta_rxncat/cli.py:79` usage error → exit 2 returned from `main` | added | argparse usage errors (no command, unknown command, missing/extra argument, unknown flag) return 2 | open |
+| D-377 | cli | — | `src/eta_rxncat/cli.py:60` multi-line error messages collapsed to one line | added | PyYAML syntax errors span lines; stderr stays one line | open |
+| D-378 | cli | — | `tests/unit/cli/test_cli.py` | added | CLI proof bullets: in-process `main()` and installed-script subprocess tests | open |
 
 ## Fixture
 

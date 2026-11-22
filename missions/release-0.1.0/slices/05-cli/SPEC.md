@@ -10,7 +10,7 @@ intent: "Implement the eta-rxncat console script with hardware-check [--smoke] a
 depends_on: [OPR.0.1.0.2, OPR.0.1.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_cli
 parent: null
 hacf_touches: [src/eta_rxncat/cli.py, src/eta_rxncat/__main__.py, "tests/unit/cli/**", pyproject.toml, uv.lock, docs/prd/v0.1.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -68,13 +68,13 @@ lets `validate` raise a traceback). Node `eta_rxncat_cli` (depends_on `eta_rxnca
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1 — `cli.py`: parser with subcommands `hardware-check` (`--smoke` flag) and `validate`
+- [x] Task 1 — `cli.py`: parser with subcommands `hardware-check` (`--smoke` flag) and `validate`
   (`path`, `type=Path`); handlers return an int.
-- [ ] Task 2 — `__main__.py`; `[project.scripts]` entry; `uv sync` so the script exists.
-- [ ] Task 3 — Tests under `tests/unit/cli/`: call `main([...])` with `capsys`, and one subprocess
+- [x] Task 2 — `__main__.py`; `[project.scripts]` entry; `uv sync` so the script exists.
+- [x] Task 3 — Tests under `tests/unit/cli/`: call `main([...])` with `capsys`, and one subprocess
   test of the installed `eta-rxncat` script; write invalid graphs to `tmp_path` (never to
   `tests/fixtures/`).
-- [ ] Task 4 — Register rows; four gates exit 0.
+- [x] Task 4 — Register rows; four gates exit 0.
 
 ## 4. The Negative Space (Constraints)
 

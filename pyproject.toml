@@ -21,6 +21,9 @@ dependencies = [
     "pyscf",
 ]
 
+[project.scripts]
+eta-rxncat = "eta_rxncat.cli:main"
+
 [dependency-groups]
 dev = [
     "pytest",
