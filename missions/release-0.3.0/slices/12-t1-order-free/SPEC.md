@@ -10,7 +10,7 @@ intent: "Make Tier 1's derived block order-free (class counts and sorted distinc
 depends_on: [OPR.0.3.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", spec/compiled/architecture.yml]
@@ -97,8 +97,8 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
-- [ ] Task 2: req 1 and req 2, with tests.
+- [x] Task 1: `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
+- [x] Task 2: req 1 and req 2, with tests.
 - [ ] Task 3: C1 on a clean tree (`git status --porcelain --untracked-files=no` empty); run T1 on both
   recipes at C1 (`-k tier1`), writing the candidates with `commit_sha = C1`.
 - [ ] Task 4: H13 check as slice 07 (`git add -n tests/candidate_outputs/v0.3.0/` succeeds;

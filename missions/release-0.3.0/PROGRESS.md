@@ -21,8 +21,8 @@
 | OPR.0.3.0.6 | 06-species-runner | audited | OPR.0.3.0.5 | 2026-11-23T06:44:01+00:00 audited |
 | OPR.0.3.0.7 | 07-human-fixtures | audited | OPR.0.3.0.6 | 2026-11-23T08:02:12+00:00 audited |
 | OPR.0.3.0.8 | 08-e2e5-tiers | audited | OPR.0.3.0.11 | 2026-11-23T09:24:13+00:00 audited |
-| OPR.0.3.0.9 | 09-acceptance-record | compiled | OPR.0.3.0.8 | 2026-11-23T03:40:10+00:00 compiled |
+| OPR.0.3.0.9 | 09-acceptance-record | compiled | OPR.0.3.0.12 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.10 | 10-acceptance-verdict | compiled | OPR.0.3.0.9 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.11 | 11-push-rededup | audited | OPR.0.3.0.7 | 2026-11-23T08:42:18+00:00 audited |
-| OPR.0.3.0.12 | 12-t1-order-free | compiled | OPR.0.3.0.8 | 2026-11-23T09:26:01+00:00 compiled |
+| OPR.0.3.0.12 | 12-t1-order-free | executed | OPR.0.3.0.8 | 2026-11-23T09:27:43+00:00 executed |
 <!-- END HACF GENERATED: slice-table -->

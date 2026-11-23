@@ -21,6 +21,7 @@ from derived import (
 )
 from e2e_env import DEVICES, RECIPE_PARAMS
 from fixtures import t1
+from rdkit import Chem
 
 from eta_rxncat.conformers import dihedral_deg
 from eta_rxncat.engines import HARTREE_KCAL_MOL
@@ -79,11 +80,16 @@ def test_e2e5_tier1_dimethoxybutadiene(
     assert abs(phi - constraint.value_deg) <= 0.1, phi
     de_planar = (planar.energy_hartree - low_t.thermo.electronic_energy_hartree) * HARTREE_KCAL_MOL
 
+    smiles = [reperceived_smiles(r) for r in records]
+    canonical_input = Chem.MolToSmiles(Chem.MolFromSmiles(spec.smiles))
+    for i, s in enumerate(smiles):
+        assert Chem.MolToSmiles(Chem.MolFromSmiles(s)) == canonical_input, (i, s)
     weights = dict.fromkeys(("s-trans", "s-cis-side"), 0.0)
     for w, c in zip(ens.boltzmann_weights, classes, strict=True):
         weights[c] += w
     derived = {
-        "classes": classes,
+        # R55: order-free; per-record classes and SMILES live on the record entries
+        "class_counts": {c: classes.count(c) for c in ("s-trans", "s-cis-side")},
         "dE_scis_strans_kcal_mol": (
             low_c.thermo.electronic_energy_hartree - low_t.thermo.electronic_energy_hartree
         )
@@ -91,7 +97,7 @@ def test_e2e5_tier1_dimethoxybutadiene(
         "dG_scis_strans_kcal_mol": dg_ct,
         "population_strans_percent": 100.0 * weights["s-trans"],
         "population_scis_side_percent": 100.0 * weights["s-cis-side"],
-        "reperceived_smiles": [reperceived_smiles(r) for r in records],
+        "reperceived_smiles_unique": sorted(set(smiles)),
         "dE_planar_scis_strans_kcal_mol": de_planar,
         "planar_point_energy_hartree": planar.energy_hartree,
         "literature": {
@@ -103,6 +109,9 @@ def test_e2e5_tier1_dimethoxybutadiene(
         },
     }
     failures = failure_report(spec.species_id, failure_rows(store_path, result.keys))
+    species_entry = species_payload(spec, result, diene_class, failures)
+    for entry, s in zip(species_entry["records"], smiles, strict=True):
+        entry["reperceived_smiles"] = s
     identity = build_engine(recipe.engine_stage, recipe.engine_runtime).identity
     payload = candidate(
         fixture=fixture.name,
@@ -110,7 +119,7 @@ def test_e2e5_tier1_dimethoxybutadiene(
         commit_sha=commit_sha,
         env=environment(identity, DEVICES[recipe_name]),
         thermo_config=recipe.thermo_config,
-        species={spec.species_id: species_payload(spec, result, diene_class, failures)},
+        species={spec.species_id: species_entry},
         derived=derived,
         checks={},
     )
@@ -126,7 +135,8 @@ def test_e2e5_tier1_dimethoxybutadiene(
     payload["checks"] = checks(fixture.name, recipe_name, payload, None, {})
     write(candidate_dir / f"{fixture.name}.{recipe_name}.json", payload)
     print(
-        f"\nT1 {recipe_name}: n_kept {len(records)} classes {classes}; duplicate_after_push "
+        f"\nT1 {recipe_name}: n_kept {len(records)} class_counts {derived['class_counts']}; "
+        f"reperceived_smiles_unique {derived['reperceived_smiles_unique']}; duplicate_after_push "
         f"{duplicates}; dropped {list(result.dropped)}; failures {failures}; "
         f"H12 ordering s-trans<s-cis-side {ordering} "
         f"(dG s-cis-side - s-trans {dg_ct:.3f} kcal/mol, "

@@ -555,3 +555,36 @@ def test_derived_regression_missing_keys_and_unclassified() -> None:
     unclassified = {"block": {"ratio": 0.5}}
     assert compare_derived(unclassified, unclassified) == ["unclassified derived value block/ratio"]
     assert compare_derived(old, json.loads(json.dumps(old))) == []
+
+
+# R55: T1 derived values are order-free ------------------------------------------------------------
+
+
+def t1_derived(records: list[tuple[str, str]]) -> dict[str, Any]:
+    """Build T1's order-free derived entries from (class, reperceived SMILES) per record."""
+    classes = [c for c, _ in records]
+    return {
+        "class_counts": {c: classes.count(c) for c in ("s-trans", "s-cis-side")},
+        "reperceived_smiles_unique": sorted({s for _, s in records}),
+        "dG_scis_strans_kcal_mol": 1.147,
+    }
+
+
+def test_t1_derived_is_order_free() -> None:
+    """The same records in a swapped (energy) order compare equal; a changed count fails."""
+    from regression import compare_derived
+
+    a = [
+        ("s-trans", "C=C(/C=C/OC)OC"),
+        ("s-cis-side", "C=C(/C=C/OC)OC"),
+        ("s-trans", "C=C(/C=C/OC)OC"),
+    ]
+    swapped = [a[1], a[2], a[0]]
+    assert compare_derived(t1_derived(a), t1_derived(swapped)) == []
+    changed = t1_derived(a)
+    changed["class_counts"]["s-trans"] = 3
+    assert compare_derived(t1_derived(a), changed) != []
+    # the old energy-ordered list form would have failed on the same swap
+    old = {"classes": [c for c, _ in a]}
+    new = {"classes": [c for c, _ in swapped]}
+    assert compare_derived(old, new) != []
