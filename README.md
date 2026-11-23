@@ -7,7 +7,7 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner.</strong>
 </p>
 
 <p align="center">
@@ -40,9 +40,10 @@ selectivity-determining transition state, can be computed first and used to prun
 
 The long-term goal, set out in the living master plan, is a workflow that combines force fields,
 subprocess-isolated tight binding, machine-learned potentials and DFT (PySCF / GPU4PySCF) under
-that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` adds the engines that compute
-energies, forces and Hessians on it. Everything beyond it is listed under [Roadmap](#-roadmap) and
-is not built yet.
+that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` added the engines that compute
+energies, forces and Hessians on it; `v0.3.0` turns one species into a Boltzmann ensemble of
+optimised conformers with free energies, and combines species into reaction free energies.
+Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 
 ## ✨ Features (v0.3.0)
 
@@ -108,6 +109,25 @@ is not built yet.
 
 ### Conformers, optimisation and ensembles (v0.3.0)
 
+- **Thermochemistry** (`eta_rxncat.thermo`). Ideal-gas quasi-RRHO (Grimme 2012) at a 1 M standard
+  state, from a Cartesian Hessian: Eckart-projected normal modes (nothing dropped by magnitude;
+  soft modes listed), a rotational symmetry number from the geometry and its graph automorphisms,
+  RDKit masses for Z 1–118, and log-sum-exp Boltzmann weights with degeneracies. A ground state
+  with an imaginary mode raises `NotAMinimumError`.
+- **Optimizer interface** (`eta_rxncat.optimize`). `GeometricOptimizer` runs geomeTRIC 1.1.1
+  through its lower-level API in a temporary directory, without touching the host's logging, and
+  records a three-step recovery ladder (`tric`, `tric_tight_trust`, then `cartesian`, or `hdlc`
+  under dihedral constraints). geomeTRIC is the optional `opt-geometric` extra, no longer a core
+  dependency.
+- **Conformers** (`eta_rxncat.conformers`). Two ETKDGv3 passes from a SMILES (the second without
+  experimental torsion preferences, so the s-cis-side class of a diene is sampled), optional
+  stereo-checked seed geometries, dedup by proper-rotation RMSD over graph automorphisms, an
+  energy window and a per-conformer mirror degeneracy. Isotope labels are refused.
+- **Single-species stage runner** (`eta_rxncat.orchestrator`). `run_species` runs conformer
+  search, optimisation, frequencies (with at most one imaginary-mode push, then a re-dedup) and
+  any extra single points, each stage cached in the v0.1.0 artifact store, so a rerun or an added
+  solvation single point reuses every earlier stage. `reaction_free_energy` gives ΔE, ΔH,
+  ΔG(1 atm) and ΔG(1 M); reports are deterministic JSON.
 - The v0.3.0 acceptance record
   ([ACCEPTANCE_RESULT.json](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)) passed: conformer
   ensembles, quasi-RRHO 1 M thermochemistry and the cached single-species stage runner ran end to
@@ -138,6 +158,7 @@ Optional extras, each installed from the lock:
 uv sync --extra gpu                       # PyTorch (CUDA 12.9 wheels), GPU4PySCF, CuPy
 uv sync --extra gpu --extra mlip-mace     # adds MACE (mace-torch)
 uv sync --extra gpu --extra mlip-uma      # adds UMA (fairchem-core)
+uv sync --extra opt-geometric             # geomeTRIC 1.1.1 for GeometricOptimizer
 ```
 
 `mlip-mace` and `mlip-uma` are **mutually exclusive**: they need incompatible `e3nn` versions, so
@@ -235,6 +256,7 @@ UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/
 CI also runs the licence gate for each optional extra:
 
 ```bash
+UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra opt-geometric && .venv-runtime/bin/python -I tools/licence_gate.py --profile opt-geometric
 UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu && .venv-runtime/bin/python -I tools/licence_gate.py --profile gpu
 UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-mace && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-mace
 UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-uma && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-uma
@@ -242,7 +264,8 @@ UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --ext
 
 The gate judges every installed package from its exact licence metadata (SPDX expression,
 classifiers or licence field), with no substring matching. GPU tests live under `tests/gpu/`
-behind the `gpu` marker and are skipped by default. Contributor and agent rules are in
+behind the `gpu` marker and are skipped by default, as are the end-to-end fixture runs under
+`tests/e2e/` (`e2e` marker). Contributor and agent rules are in
 `AGENTS.md`.
 
 ## 🧭 Roadmap
@@ -276,8 +299,14 @@ Eta-RxnCat is a clean-room rewrite inspired by:
   [`10.1021/cs501828e`](https://doi.org/10.1021/cs501828e). The geometry of the bond-forming and
   bond-breaking atoms in catalytic transition states stays nearly invariant across diverse
   catalysts, so new catalysts and substrates can be mapped onto conserved cores.
-- **`Eta_Scripts`**, which with `nMap` pioneered Kabsch/quaternion subgraph alignment and ordered
-  atom surgery (`keep`, `delete` and `alignment` atom lists).
+- **[`Eta_Scripts`](https://github.com/tjmustard/Eta_Scripts)**, the original Eta code (tools for
+  enhancing the efficiency of computational chemistry workflows), which with `nMap` pioneered
+  Kabsch/quaternion subgraph alignment and ordered atom surgery (`keep`, `delete` and `alignment`
+  atom lists).
+- **The thesis where that code is also published.** Mustard, T. J. L. *Computational
+  Investigations of Transition Metal Catalyses and Amorphous Metal Oxides: Accelerating Scientific
+  Discovery Through Automation.* Ph.D. dissertation, Chemistry, Oregon State University, 2015.
+  [ScholarsArchive@OSU](https://ir.library.oregonstate.edu/concern/graduate_thesis_or_dissertations/xp68kn058).
 
 ## 📄 License
 
@@ -286,7 +315,9 @@ The Eta-RxnCat core is released under the MIT licence (see `LICENSE`).
 - **MIT core.** The code in this repository, and every package the core install depends on, is
   MIT, BSD or an equivalent permissive licence. Every core dependency must resolve to an SPDX id on
   the allow-list in `pyproject.toml` (`MIT`, `BSD`, `Apache-2.0`, `ISC`, `PSF`, `Zlib`, `CC0-1.0`,
-  `BSL-1.0` and close variants), with one version-pinned exception, `geometric` 1.1.1 (BSD 3-clause Non-AI).
+  `BSL-1.0` and close variants). Since v0.3.0 the core install has no exception: `geometric`
+  1.1.1 (BSD 3-clause Non-AI) moved to the optional `opt-geometric` extra, with a version-pinned
+  exemption there.
 - **Copyleft only in optional engine extras.** The optional engine extras (`gpu`, `mlip-mace`,
   `mlip-uma`) may pull in NVIDIA CUDA wheels and copyleft or off-list packages, such as `ase`. You
   download these yourself when you install an extra. Each one is a version-pinned, per-extra
