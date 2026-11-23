@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Optimizer interface + GeometricOptimizer match Mini-req 1-12; geomeTRIC source facts confirmed; 1073 tests; five licence profiles and all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

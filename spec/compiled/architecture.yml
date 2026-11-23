@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -30,27 +30,29 @@ nodes:
   - tests/unit/test_test_policy.py
   description: >-
     uv-managed MIT package eta-rxncat 0.2.0 (hatchling, src layout, Python >=3.11,<3.14,
-    committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, geometric,
-    pyscf. Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
-    mlip-uma (fairchem-core>=2.22); [tool.uv] conflicts keep the MLIP extras exclusive;
-    torch 2.13.0+cu129 only from the explicit pytorch-cu129 index. Script eta-rxncat
-    = eta_rxncat.cli:main. __init__ imports no backend; conformers, mapping, optimize,
-    orchestrator are placeholders. Gates: ruff, strict mypy, pytest. Test policy (ADR-0019):
-    markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance deselected by default;
-    tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 and, under ETA_RXNCAT_ACCEPTANCE=1,
-    fails every skip and xfail; an AST rule bans module-level skips in engine and
-    acceptance tests; .venv-accept-* gitignored. tools/licence_gate.py (--profile
-    base|gpu|mlip-mace|mlip-uma) judges each installed distribution exactly against
-    [tool.eta-rxncat.licence-gate] with version-pinned per-profile exemptions; stale
-    exemptions, unnamed or duplicate dist-infos fail. test_package.py bans copyleft
-    imports and heavy imports at engines import. CI: checks plus licence-extras matrix.
-    Public face: README.md, CHANGELOG.md (scribe-owned), WebP media (test_media.py),
-    LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
-    Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
-    the pyproject version and its GPU_SMOKE_RESULT.json. docs/prd/v<version>/ hold
-    the verbatim starters (ruff-gated, excluded from every gate), each version's DISCREPANCIES.md
-    and acceptance record (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md
-    is the plan-copy register.
+    committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf.
+    Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
+    mlip-uma (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev;
+    TJ v0.3.0 Q3 A); [tool.uv] conflicts keep the MLIP extras exclusive; torch 2.13.0+cu129
+    only from the explicit pytorch-cu129 index. Script eta-rxncat = eta_rxncat.cli:main.
+    __init__ imports no backend; conformers, mapping, orchestrator are placeholders.
+    Gates: ruff, strict mypy, pytest. Test policy (ADR-0019): markers gpu, xtb, mlip_mace,
+    mlip_uma, slow, acceptance deselected by default; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1
+    and, under ETA_RXNCAT_ACCEPTANCE=1, fails every skip and xfail; an AST rule bans
+    module-level skips in engine and acceptance tests; .venv-accept-* gitignored.
+    tools/licence_gate.py (--profile base|opt-geometric|gpu|mlip-mace|mlip-uma) judges
+    each installed distribution exactly against [tool.eta-rxncat.licence-gate] with
+    version-pinned per-profile exemptions (base none; geometric 1.1.1 in opt-geometric
+    and, via gpu4pyscf-cuda12x, gpu/mlip-*); stale exemptions, unnamed or duplicate
+    dist-infos fail. test_package.py bans copyleft imports, heavy imports at engines/optimize
+    import, and geometric outside functions of optimize/geometric_impl.py. CI: checks
+    plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
+    WebP media (test_media.py), LICENSE (MIT); test_identity.py enforces the author
+    form Thomas J. L. Mustard Ph.D. and derives the README badge, Features heading,
+    roadmap and GPU claim from the pyproject version and its GPU_SMOKE_RESULT.json.
+    docs/prd/v<version>/ hold the verbatim starters (excluded from every gate), each
+    version's DISCREPANCIES.md and acceptance record (v0.2.0 also evidence/, calibration/);
+    docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -64,16 +66,16 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
   - OPR.0.3.0.4
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -117,15 +119,15 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,14 +174,14 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,12 +225,12 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,12 +271,12 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -324,12 +326,12 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -376,12 +378,12 @@ nodes:
   provenance:
     last_slice: 04-optimizer
   review:
-    reviewed_at: '2026-11-23T04:17:32+00:00'
-    reviewed_by: audit:03-thermo
-    summary: patched inputs, outputs
+    reviewed_at: '2026-11-23T05:55:42+00:00'
+    reviewed_by: audit:04-optimizer
+    summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -428,8 +430,8 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T04:42:45+00:00'
+    reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
-    summary: patched inputs, outputs
+    summary: reviewed; nothing patched
   provenance:
     last_slice: 04-optimizer

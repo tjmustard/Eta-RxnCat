@@ -2,7 +2,7 @@
 id: OPR.0.3.0.4
 slice: 04-optimizer
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.optimize: the Optimizer interface and errors, Geometr
 depends_on: [OPR.0.3.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", pyproject.toml, uv.lock, ".github/workflows/ci.yml", AGENTS.md, tools/licence_gate.py, "tests/unit/tools/**", tests/unit/test_package.py, tests/conftest.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
