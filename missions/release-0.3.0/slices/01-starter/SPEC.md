@@ -10,7 +10,7 @@ intent: "Unpack the v0.3.0 reference starter byte-identical into docs/prd/v0.3.0
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["docs/prd/v0.3.0/**", docs/prd/PLAN_DISCREPANCIES.md, pyproject.toml, spec/compiled/architecture.yml]
@@ -108,12 +108,12 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: `sha256sum PRDs/Eta-RxnCat-v0.3.0.zip` equals the value above; stop if not.
-- [ ] Task 2: unpack with Python `zipfile` into `docs/prd/v0.3.0/`; compare per-member sha256.
-- [ ] Task 3: confirm the gate exclusions cover the new directory (ruff, mypy, pytest, licence).
-- [ ] Task 4: write `DISCREPANCIES.md`; update PD-007.
-- [ ] Task 5: scaffold description trim; `python3 .agents/scripts/hyper_ledger.py validate`.
-- [ ] Task 6: required checks; commit.
+- [x] Task 1: `sha256sum PRDs/Eta-RxnCat-v0.3.0.zip` equals the value above; stop if not.
+- [x] Task 2: unpack with Python `zipfile` into `docs/prd/v0.3.0/`; compare per-member sha256.
+- [x] Task 3: confirm the gate exclusions cover the new directory (ruff, mypy, pytest, licence).
+- [x] Task 4: write `DISCREPANCIES.md`; update PD-007.
+- [x] Task 5: scaffold description trim; `python3 .agents/scripts/hyper_ledger.py validate`.
+- [x] Task 6: required checks; commit.
 
 ## 4. The Negative Space (Constraints)
 

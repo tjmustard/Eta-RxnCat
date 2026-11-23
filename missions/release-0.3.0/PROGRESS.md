@@ -13,7 +13,7 @@
 <!-- BEGIN HACF GENERATED: slice-table -->
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
-| OPR.0.3.0.1 | 01-starter | compiled |  | 2026-11-23T03:39:50+00:00 compiled |
+| OPR.0.3.0.1 | 01-starter | executed |  | 2026-11-23T03:47:59+00:00 executed |
 | OPR.0.3.0.2 | 02-core-contracts | compiled | OPR.0.3.0.1 | 2026-11-23T03:40:09+00:00 compiled |
 | OPR.0.3.0.3 | 03-thermo | compiled | OPR.0.3.0.2 | 2026-11-23T03:40:09+00:00 compiled |
 | OPR.0.3.0.4 | 04-optimizer | compiled | OPR.0.3.0.2 | 2026-11-23T03:40:09+00:00 compiled |

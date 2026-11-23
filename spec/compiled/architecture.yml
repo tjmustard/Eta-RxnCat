@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -33,27 +33,25 @@ nodes:
     uv-managed MIT package eta-rxncat 0.2.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, geometric,
     pyscf. Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
-    mlip-uma (fairchem-core>=2.22); [tool.uv] conflicts keeps the MLIP extras exclusive;
-    torch only from the explicit pytorch-cu129 index (torch 2.13.0+cu129). [project.scripts]
-    eta-rxncat = eta_rxncat.cli:main. __init__ imports no backend; conformers, mapping,
-    optimize, orchestrator are placeholders. Gates: ruff, strict mypy, pytest. Test
-    policy (ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance deselected
-    by default; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 for the
-    session and, under ETA_RXNCAT_ACCEPTANCE=1, fails every setup/call/collection
-    skip and every xfail (R32); an AST rule bans module-level skips in engine and
-    acceptance tests; acceptance envs .venv-accept-* gitignored. Licence gate tools/licence_gate.py
-    (--profile base|gpu|mlip-mace|mlip-uma) judges each installed distribution exactly
-    against [tool.eta-rxncat.licence-gate] (allowed includes BSL-1.0) with version-pinned
-    per-profile exemptions; stale ones fail; unnamed or duplicate dist-infos fail.
-    test_package.py bans copyleft imports and heavy imports at engines import. CI:
-    checks plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
-    WebP media (test_media.py), LICENSE (MIT); tests/unit/test_identity.py enforces
-    the author form Thomas J. L. Mustard Ph.D., and derives the README badge, Features
-    heading, Built/Planned roadmap and GPU claim from the pyproject version and its
-    GPU_SMOKE_RESULT.json (R50). docs/prd/v0.1.0/ and v0.2.0/ hold the verbatim starters
-    (ruff-gated), each version's DISCREPANCIES.md and GPU_SMOKE_RESULT.json acceptance
-    record (v0.2.0: record_schema 2, every engine on this host), plus v0.2.0 evidence/
-    and calibration/; docs/prd/PLAN_DISCREPANCIES.md: plan-copy register.
+    mlip-uma (fairchem-core>=2.22); [tool.uv] conflicts keep the MLIP extras exclusive;
+    torch 2.13.0+cu129 only from the explicit pytorch-cu129 index. Script eta-rxncat
+    = eta_rxncat.cli:main. __init__ imports no backend; conformers, mapping, optimize,
+    orchestrator are placeholders. Gates: ruff, strict mypy, pytest. Test policy (ADR-0019):
+    markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance deselected by default;
+    tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 and, under ETA_RXNCAT_ACCEPTANCE=1,
+    fails every skip and xfail; an AST rule bans module-level skips in engine and
+    acceptance tests; .venv-accept-* gitignored. tools/licence_gate.py (--profile
+    base|gpu|mlip-mace|mlip-uma) judges each installed distribution exactly against
+    [tool.eta-rxncat.licence-gate] with version-pinned per-profile exemptions; stale
+    exemptions, unnamed or duplicate dist-infos fail. test_package.py bans copyleft
+    imports and heavy imports at engines import. CI: checks plus licence-extras matrix.
+    Public face: README.md, CHANGELOG.md (scribe-owned), WebP media (test_media.py),
+    LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
+    Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
+    the pyproject version and its GPU_SMOKE_RESULT.json. docs/prd/v<version>/ hold
+    the verbatim starters (ruff-gated, excluded from every gate), each version's DISCREPANCIES.md
+    and acceptance record (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md
+    is the plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -65,16 +63,17 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
+  - OPR.0.3.0.1
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,7 +118,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
@@ -128,7 +127,7 @@ nodes:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -173,7 +172,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
@@ -182,7 +181,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -224,14 +223,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -270,14 +269,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -325,7 +324,7 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 11-acceptance
+    last_slice: 01-starter
   review:
     reviewed_at: '2026-11-23T00:51:58+00:00'
     reviewed_by: audit:OPR.0.2.0.11
