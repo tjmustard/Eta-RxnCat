@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: push re-dedup and recursive regression meet Mini-req 1-6; E2E re-run by audit on both recipes (UMA cyclohexene 4→3, no duplicates); all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

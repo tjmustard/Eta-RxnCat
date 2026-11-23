@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -64,9 +64,9 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
-    summary: patched description
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,15 +119,15 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +271,12 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -326,12 +326,12 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -378,12 +378,12 @@ nodes:
   provenance:
     last_slice: 11-push-rededup
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -430,14 +430,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
   provenance:
     last_slice: 11-push-rededup
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -488,14 +488,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: reviewed; nothing patched
   provenance:
     last_slice: 11-push-rededup
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -513,8 +513,9 @@ nodes:
     optimizer options + opt.name/opt.version; engine never sees opt. keys), dedup
     and energy window, frequency per kept (energy + full Hessian; thermo recomputed,
     never stored), one imaginary-mode push (both ways, 0.1 A, new geometry_opt rows)
-    then not_a_minimum, degeneracy, mirror-partner drop, build_ensemble, incremental
-    single points (R35 geometry check for energy_source single_point). Failures (OptimizationFailedError,
+    then not_a_minimum, re-dedup of the final geometries by G (duplicate_after_push,
+    R53), degeneracy, mirror-partner drop, build_ensemble, incremental single points
+    (R35 geometry check for energy_source single_point). Failures (OptimizationFailedError,
     ScfConvergenceError) are cached as completed rows with failed_reason and dropped;
     EngineUnavailable/Input/Runtime and OptimizerInputError propagate. Per-kind metrics
     (wall time, calls, hits, rows). run_constrained_point (R42): one geometry_opt
@@ -522,9 +523,9 @@ nodes:
     dihedrals refused. reaction.py: ReactionSpec (atoms and charge conserved from
     SMILES), reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON
     schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 E2E on the xtb
-    and uma recipes (marker e2e), loaders, derived/regression/accuracy helpers, TJ
-    reference transcription (R46); writes tests/candidate_outputs/v0.3.0 (never read
-    back).
+    and uma recipes (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind
+    derived regression (R54), assert_no_duplicate_records, TJ reference transcription
+    (R46); writes tests/candidate_outputs/v0.3.0 (never read back).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -560,8 +561,8 @@ nodes:
   - OPR.0.3.0.7
   - OPR.0.3.0.11
   review:
-    reviewed_at: '2026-11-23T08:01:45+00:00'
-    reviewed_by: audit:07-human-fixtures
+    reviewed_at: '2026-11-23T08:41:58+00:00'
+    reviewed_by: audit:11-push-rededup
     summary: patched description
   provenance:
     last_slice: 11-push-rededup

@@ -2,7 +2,7 @@
 id: OPR.0.3.0.11
 slice: 11-push-rededup
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Re-dedup a conformer moved by the imaginary-mode push against the kept 
 depends_on: [OPR.0.3.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", "tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", spec/compiled/architecture.yml]
