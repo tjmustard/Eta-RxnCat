@@ -7,7 +7,7 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state.</strong>
 </p>
 
 <p align="center">
@@ -42,8 +42,9 @@ The long-term goal, set out in the living master plan, is a workflow that combin
 subprocess-isolated tight binding, machine-learned potentials and DFT (PySCF / GPU4PySCF) under
 that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` added the engines that compute
 energies, forces and Hessians on it; `v0.3.0` turns one species into a Boltzmann ensemble of
-optimised conformers with free energies, and combines species into reaction free energies.
-Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
+optimised conformers with free energies, and combines species into reaction free energies;
+`v0.4.0` maps a fragment onto the conserved core of a known transition state to build a guess
+for a new one. Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 
 ## ✨ Features (v0.4.0)
 
@@ -142,6 +143,26 @@ Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 
 ### Conserved-core mapper (v0.4.0)
 
+- **Graft contracts** (`eta_rxncat.core`). `GraftSpec` holds the template's keep, delete and
+  alignment lists (ADR-0005), the ordered fragment atoms paired with them, an optional
+  `fragment_delete` list, an optional constrained core, and the product's charge and
+  multiplicity, which are always given and never inferred. `GraftResult` carries the product, the
+  source of every product atom, the alignment RMSD, the close contacts, the junction signed
+  volumes and a planar-pair-set flag.
+- **Alignment** (`eta_rxncat.mapping.superpose`). Horn quaternion superposition of ordered atom
+  pairs. It never reflects (det R = +1), computes the RMSD from the residuals, and refuses fewer
+  than three pairs, collinear pair sets and rotations that are not unique (`AlignmentError`).
+- **Graft surgery** (`eta_rxncat.mapping.graft`). The product lists the kept template atoms first,
+  with their coordinates copied bit for bit, then the fragment atoms that are neither paired nor
+  deleted. Paired fragment atoms are always dropped. Atoms closer than 0.5 Å raise
+  `GraftClashError`. Close contacts and the handedness across each new bond are recorded rather
+  than refused, so nothing about a graft is silent.
+- **Core-frozen pre-relaxation** (`eta_rxncat.mapping.relax_constrained_core`). It runs the
+  v0.3.0 `Optimizer` with the core atoms frozen and raises `CoreDisplacementError` if a core atom
+  moves more than 1e-6 Å. The result is a transition-state guess, not a minimum.
+- **Clean room.** The mapper was written from an approved behaviour specification, not from the
+  original `nMap` code, whose copyright is shared with Oregon State University, the author's
+  advisor and his co-authors. Checker-approved test vectors from that specification are part of the test suite.
 - The v0.4.0 acceptance record
   ([ACCEPTANCE_RESULT.json](docs/prd/v0.4.0/ACCEPTANCE_RESULT.json)) passed: the conserved-core
   mapper (quaternion alignment, ordered graft surgery with explicit charge/spin, core-frozen
@@ -294,7 +315,8 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.5.0**: transition-state optimisation and an active-core frequency validator.
+- **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
+  frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.

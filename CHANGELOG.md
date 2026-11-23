@@ -4,6 +4,105 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-23
+
+### Added
+- **Graft contracts** (`eta_rxncat.core`): `GraftSpec`, `GraftResult`, `CloseContact` and
+  `JunctionVolume`, in `core/mapping_models.py`. They are frozen and strict, with units in their
+  names. `GraftSpec` combines the ADR-0005 `AtomMappingSpec` (keep, delete, alignment) with
+  ordered `fragment_alignment` pairs, an optional `fragment_delete` list, an optional
+  `constrained_core`, and an explicit product charge and multiplicity. A non-empty `anchors` list
+  is refused. `eta_rxncat.core` still imports no numpy or RDKit.
+- **Conserved-core mapper** (`eta_rxncat.mapping`), a new MIT package that depends only on numpy at
+  import:
+  - `superpose`: Horn (1987) quaternion superposition of ordered atom pairs. It always gives a
+    proper rotation (det R = +1). The RMSD comes from the residuals, and optional weights are
+    accepted. Fewer than three pairs, a collinear pair set, or a rotation that is not unique
+    raises `AlignmentError`. `pair_set_shape` reports how far the pair set is from a line and
+    from a plane.
+  - `graft`: ordered atom surgery. The product lists the kept template atoms in keep order, with
+    their coordinates copied bit for bit, then the fragment atoms that are neither paired nor
+    deleted, in ascending order. Paired fragment atoms are always dropped. The product charge and
+    multiplicity come from the spec and are never inferred. Active atoms and the core are
+    re-indexed. Two atoms closer than 0.5 Å raise `GraftClashError`. Close contacts are recorded,
+    using RDKit covalent radii × 1.3 over pairs that are not source-graph bonds, as are the
+    junction signed volumes (handedness across each new bond) and a planar-pair-set flag.
+    `index_map` names each product atom's source.
+  - `relax_constrained_core`: a pre-relaxation with the core frozen, through the v0.3.0
+    `Optimizer` (`frozen_atom_indices`, never a dihedral constraint). If a core atom moves more
+    than 1e-6 Å, it raises `CoreDisplacementError`. The result is a TS guess, not a minimum.
+  - `report`: `perceive_bonds` (RDKit `DetermineConnectivity`, imported lazily),
+    `covalent_radius_angstrom`, `core_rmsd_angstrom` and `junction_volumes`.
+  - Typed errors under `MappingError`.
+- **Clean-room test vectors** (`tests/unit/mapping/data/cleanroom_nmap/`): seven checker-approved
+  vectors, with their provenance. Vectors 01–05 and 07 (adapted to eta's conventions) reproduce
+  at 1e-6 Å, and vector 06 (degenerate pairs) is refused. Alignment also agrees with an
+  independent SVD Kabsch, written in the test file, within 1e-10 Å on 1000 random sets.
+- **Fixture M1** (`tests/e2e/`): TJ's mapping, which grafts cyclobutene onto Liu's endo TS1a_n to
+  make a TS1b_n guess and compares it with Liu's own TS1b_n (DOI 10.1021/ja408437u). The three
+  XYZ files are byte-identical copies with sha256 provenance. The graft → TS1b_n atom map comes
+  from a stated rule (the lexicographically smallest of the 32 element-preserving graph
+  isomorphisms) and never from minimising an RMSD. Tier-D checks run in the default suite. The
+  xtb and UMA pre-relaxations run under the `e2e` marker. The fixtures TJ promoted are in
+  `tests/fixtures/v0.4.0/`.
+- **v0.4.0 acceptance** (`docs/prd/v0.4.0/ACCEPTANCE_RESULT.json`, verdict `pass`, run
+  2026-11-23 at `2dbc3ec`). It ran on an NVIDIA GeForce RTX 5060 Ti, with UMA `uma-s-1p2p1`
+  (fairchem 2.26.0) on CUDA and xtb 6.8.0 on the CPU:
+  - default suite: 1433 passed, 0 skipped; clean-room vector tests: 65 passed;
+  - M1 graft: forming-core RMSD to TS1b_n 0.0498 Å (bound 0.10); regression against the
+    promoted graft 0.0 Å (bound 1e-10); TJ confirmed the atom map by promoting the graft;
+  - M1 pre-relaxation, on both recipes: converged in 17 steps; core held to 4.19e-8 Å (xtb) and
+    3.54e-8 Å (UMA), bound 1e-6; perceived connectivity equal to TS1b_n's; junction signs
+    nonzero and equal to TS1b_n's (+1, −1);
+  - relaxed regression against the promoted fixtures: xtb |ΔE| 0.0 Eh and heavy-atom RMSD
+    4.5e-17 Å; UMA |ΔE| 2.2e-8 Eh and 7.7e-8 Å (bounds 1e-5 Eh and 0.01 Å).
+- **Records**: proposed ADR-0028 to ADR-0032 (awaiting approval), and the v0.4.0 starter
+  discrepancy register `docs/prd/v0.4.0/DISCREPANCIES.md` (DV-01 to DV-10 and CR-01 to CR-15, all
+  closed at release). PD-008 in `docs/prd/PLAN_DISCREPANCIES.md` is decided.
+
+### Changed
+- **Clean-room provenance.** `eta_rxncat.mapping` was written from an approved behaviour
+  specification and the mission's own spec. No code from `nMap` or the v0.4.0 starter was used.
+  TJ chose the clean room because the original code's copyright is shared with Oregon State
+  University, his advisor and his co-authors.
+- **Development toolchain**: the Hypergraph Coding Agent Framework was upgraded to v0.6.2
+  (`c3506e6`). The package and its dependencies did not change.
+- **README**: the mapper features and the v0.4.0 acceptance claims, derived from the record and
+  enforced by tests; the Roadmap lists v0.4.0 as built.
+
+### Known issues
+- **The core-freeze bound is 1e-6 Å, not 1e-8 Å.** geomeTRIC's `$freeze` holds frozen atoms to
+  about 1e-8–1e-7 Å, so the bound was set by measurement (mission R26). ADR-0032 still says
+  1e-8 Å and is waiting for TJ's lore review.
+- **The pure M1 graft has four close contacts by design**: two C…H at 1.12 Å and two C…C at
+  1.96 Å. They are recorded, not refused (TJ P1 A). The pre-relaxation is gated on TS1b_n's
+  connectivity instead.
+- **Junction handedness cannot be determined on a planar pair set.** On the pure M1 graft both
+  junction volumes are about −0.0006 Å³ (sign 0), which is reported. The sign check is applied
+  to the relaxed structures.
+- **Clean-room vector 07 is odd-electron.** Its request's multiplicity 1 is not a valid state.
+  The eta-adapted test uses multiplicity 2, which does not change the coordinates or the order.
+- **Lax `JunctionVolume` fields.** `sign` accepts `True` and `1.0` as 1, and
+  `signed_volume_angstrom3` accepts `True`. This is the same Pydantic laxness as
+  `PotentialResult`.
+- **UMA results vary slightly from run to run** because of GPU noise (|ΔE| about 1e-8 Eh, heavy-atom
+  RMSD about 1e-7 Å). Both are far inside the regression bounds.
+- **The M1 YAML is provisional** until the YAML/JSON graph format is defined (TJ Q-E3).
+  `GraftSpec` stands alone for now. From v0.8.0 the graph loader builds it from
+  `TemplateGeometry.mapping`.
+- **Scope.** R-group and ligand enumeration stays at v0.7.0 (TJ roadmap B). The Rh(I) (5+2)
+  complexes are v1.x.
+- **ADR-0001 to ADR-0032 are PROPOSED.**
+- **Carried forward from 0.3.0, still true:**
+  - `import mace` sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the whole process.
+  - A non-deterministic engine failure stays cached until `invalidate` (R50).
+  - The UMA cyclohexene boats sit at the dedup threshold, and UMA `dropped` reasons can swap
+    between runs.
+  - GFN2 is reported, not gated, and stays the default recipe until TJ decides.
+  - `stability.py` pins private PySCF 2.15.1 / GPU4PySCF 1.9.2 internals. The VRAM estimate
+    does not cover GPU Hessians.
+  - `PotentialResult` is frozen only shallowly, and its float fields are lax.
+
 ## [0.3.0] - 2026-11-23
 
 ### Added
