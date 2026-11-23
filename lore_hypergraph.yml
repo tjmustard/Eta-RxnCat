@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 27
+  ADR: 32
   STORY: 0
   CANON: 0
 nodes:
@@ -1098,3 +1098,213 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+- id: ADR-0028
+  type: decision
+  title: 'Graft input: template AtomMappingSpec plus ordered fragment pairs; paired
+    fragment atoms always dropped, optional fragment_delete, explicit charge and spin'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0028-graft-input-template-atommappingspec-plus-ordered-fragment-p.md
+  content_sha256: 7ef5c974c9fa8de203de1c91895850238d142e179eae0aeef3c7d7254c85cdb7
+  anchors:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/models.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_mapping
+    files:
+    - src/eta_rxncat/core/mapping_models.py
+    - src/eta_rxncat/mapping/graft.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T19:01:52+00:00'
+    source: OPR.0.4.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T19:01:52+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.4.0
+- id: ADR-0029
+  type: decision
+  title: Mapping alignment is Horn quaternion superposition with shape-based degeneracy
+    refusal and a planar-pair flag; thermo Kabsch untouched
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0029-mapping-alignment-is-horn-quaternion-superposition-with-shap.md
+  content_sha256: aa2ebcc2ae17ea5ab4da1f805d406b5747da0291835000e798369b8201c6b1c4
+  anchors:
+    components:
+    - eta_rxncat_thermo
+    files:
+    - src/eta_rxncat/thermo/_geometry.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_mapping
+    files:
+    - src/eta_rxncat/mapping/align.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T19:01:52+00:00'
+    source: OPR.0.4.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T19:01:52+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.4.0
+- id: ADR-0030
+  type: decision
+  title: Grafts raise only on overlap below 0.5 A; close contacts and junction signed
+    volumes are recorded; TS fixtures gate the pre-relaxed product on connectivity
+    and junction signs
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0030-grafts-raise-only-on-overlap-below-0-5-a-close-contacts-and.md
+  content_sha256: 198e69a5be39b49882ddb83232acc73b2aade537b8354184b2ba5490ed6ea694
+  anchors:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/models.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_mapping
+    files:
+    - src/eta_rxncat/mapping/graft.py
+    - src/eta_rxncat/mapping/report.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T19:01:52+00:00'
+    source: OPR.0.4.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T19:01:52+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.4.0
+- id: ADR-0031
+  type: decision
+  title: Graft-to-reference atom maps come from a coordinate-free stated rule (lexicographically
+    smallest isomorphism), never from minimising a gated RMSD; TJ confirms by promotion
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0031-graft-to-reference-atom-maps-come-from-a-coordinate-free-sta.md
+  content_sha256: da5599ba0b89e40d5a715d4e6f4b254334c6829aedce4eaa941c6888ab521f02
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/**
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_mapping
+    files:
+    - tests/e2e/m1.py
+    - tests/e2e/data/e2e5/m1_ts1a_n_to_ts1b_n.yaml
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T19:01:52+00:00'
+    source: OPR.0.4.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T19:01:52+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.4.0
+- id: ADR-0032
+  type: decision
+  title: Constrained-core pre-relaxation freezes the core via frozen_atom_indices,
+    never with a dihedral constraint, and raises CoreDisplacementError above 1e-8
+    A
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0032-constrained-core-pre-relaxation-freezes-the-core-via-frozen.md
+  content_sha256: 821e8cf70e089824696462c6ecd4d583e22eeabe4b249fa55b19a2f365491330
+  anchors:
+    components:
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/optimize/base.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_mapping
+    files:
+    - src/eta_rxncat/mapping/relax.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T19:01:52+00:00'
+    source: OPR.0.4.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T19:01:52+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.4.0

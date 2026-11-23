@@ -67,4 +67,5 @@ Describe the project in one sentence.
 - release-0.1.0 (OPR.0.1.0)
 - release-0.2.0 (OPR.0.2.0)
 - release-0.3.0 (OPR.0.3.0)
+- release-0.4.0 (OPR.0.4.0)
 <!-- END HACF GENERATED: missions-index -->
