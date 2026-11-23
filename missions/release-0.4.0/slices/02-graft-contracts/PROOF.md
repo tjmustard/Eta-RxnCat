@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: 83 contract tests, every validator both ways, core numpy/RDKit-free, all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

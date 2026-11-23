@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -83,27 +83,30 @@ nodes:
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
   description: >-
-    eta_rxncat.core: frozen, extra=forbid Pydantic v2 contracts and the ReactionGraph
+    eta_rxncat.core: frozen, extra=forbid, strict Pydantic v2 contracts and the ReactionGraph
     loader. elements.py: Z 1-118 symbols, ATOMIC_NUMBERS. models.py: MolecularState
-    (canonical symbols, finite N x 3 Angstrom coords, StrictInt charge, spin_multiplicity
-    >= 1 with electron parity, unique active_atom_indices, scalar metadata); Solvation
-    (none/ddcosmo/pcm/alpb); StageConfig (kind, one engine tag per model family, non-placeholder
-    method, basis iff pyscf, solvation-engine pairing, frozen atoms for constrained_preopt);
-    EngineIdentity; AtomMappingSpec (disjoint ordered lists, >= 3 alignment, check_atom_count);
-    ThermoConfig (grimme_qrrho). results.py: PotentialResult, engine return in atomic
-    units: energy, forces -dE/dx N x 3, Cartesian Hessian 3N x 3N exactly symmetric
-    (not mass-weighted), hessian_method/max_asymmetry iff Hessian, engine, device,
-    wall time, recovery_steps; shallow-frozen, consumers copy matrices. thermo_models.py:
-    ThermoAnalysisOptions (imag/sym/linear tolerances, max_automorphisms); ThermoResult
-    (E, energy_source, ZPE, H/G corrections, entropy total = four components, sigma,
-    is_linear, 0/3N-5/3N-6 ascending frequencies, imaginary and soft lists by imag_tol,
-    G = E + G corr, config, analysis, masses_source; no ground-state flag). optimization_models.py:
-    OptimizerIdentity (geometric), OptimizationResult (converged True, steps, engine
-    calls, recovery_steps, scalar options). ensemble_models.py: ConformerRecord (degeneracy
-    1/2, unique source_ids, atom count = thermo); ConformerEnsemble (weights >= 0
-    sum 1, lowest_index argmin G ties low, shared symbols/charge/multiplicity/temperature).
-    graph.py: ReactionGraph and its nodes, edges, templates, pruning rules. io.py:
-    YAML/JSON load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml only.
+    (symbols, finite Angstrom coords, StrictInt charge, multiplicity with electron
+    parity, unique active atoms, scalar metadata); Solvation (none/ddcosmo/pcm/alpb);
+    StageConfig (kind, engine tag, method, basis iff pyscf, solvation pairing, frozen
+    atoms for constrained_preopt); EngineIdentity; AtomMappingSpec (disjoint ordered
+    lists, >= 3 alignment, check_atom_count); ThermoConfig (grimme_qrrho). results.py:
+    PotentialResult (atomic units: energy, forces, symmetric Cartesian Hessian with
+    method/asymmetry, engine, device, wall time, recovery_steps; shallow-frozen).
+    thermo_models.py: ThermoAnalysisOptions; ThermoResult (E, ZPE, H/G corrections,
+    entropy = four components, sigma, is_linear, ascending frequencies, imaginary/soft
+    lists, G = E + G corr, masses_source; no ground-state flag). optimization_models.py:
+    OptimizerIdentity (geometric), OptimizationResult (converged, steps, engine calls,
+    recovery_steps). ensemble_models.py: ConformerRecord (degeneracy 1/2, unique source_ids);
+    ConformerEnsemble (weights sum 1, lowest_index argmin G ties low, shared identity/temperature).
+    mapping_models.py (v0.4.0, validation only): GraftSpec (template AtomMappingSpec
+    with empty anchors; unique fragment_alignment paired 1:1; fragment_delete disjoint
+    from pairs; constrained_core within keep; explicit product charge/multiplicity;
+    four tolerances); GraftResult (product, index_map per atom, unrounded alignment
+    RMSD, reported-only whole-input charge-sum flag, in-range strictly ascending core/active/bond/contact/junction
+    indices, product_charge == product.charge); CloseContact (i < j); JunctionVolume
+    (neighbours, volume, sign all set or all None); NonNegativeFiniteFloat. graph.py:
+    ReactionGraph and its nodes, edges, templates, pruning rules. io.py: YAML/JSON
+    load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml only.
   inputs:
   - data_type: reaction_graph_file_yaml_or_json
     external: graph_files
@@ -119,15 +122,15 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +177,14 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +228,12 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +274,12 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -326,12 +329,12 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -378,12 +381,12 @@ nodes:
   provenance:
     last_slice: 02-graft-contracts
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -430,14 +433,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: 02-graft-contracts
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -489,14 +492,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: 02-graft-contracts
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -567,8 +570,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
-    summary: patched description
+    reviewed_at: '2026-11-23T19:39:10+00:00'
+    reviewed_by: audit:02-graft-contracts
+    summary: reviewed; nothing patched
   provenance:
     last_slice: 02-graft-contracts
