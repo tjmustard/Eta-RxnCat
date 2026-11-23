@@ -16,8 +16,8 @@ HEAVY_MODULES = ("torch", "pyscf", "rdkit")
 
 
 def test_version() -> None:
-    """The package reports the v0.1.0 version string."""
-    assert eta_rxncat.__version__ == "0.1.0"
+    """The package reports the v0.2.0 version string."""
+    assert eta_rxncat.__version__ == "0.2.0"
 
 
 def test_import_loads_no_heavy_modules() -> None:

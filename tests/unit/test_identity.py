@@ -237,16 +237,70 @@ def test_binary_files_are_skipped(tmp_path: Path) -> None:
     assert find_author_violations(tmp_path, identity_paths(tmp_path)) == []
 
 
-README_SECTIONS = [
-    "What is Eta-RxnCat?",
-    "Features (v0.1.0)",
-    "Installation",
-    "Usage",
-    "Development",
-    "Roadmap",
-    "Acknowledgements",
-    "License",
-]
+PLAN_VERSIONS = tuple(f"0.{m}.0" for m in range(1, 10)) + ("1.0.0",)
+"""Every version in the master plan's roadmap, in order (R50)."""
+
+
+def project_version() -> str:
+    """``[project].version`` from ``pyproject.toml``."""
+    data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
+    return str(data["project"]["version"])
+
+
+def readme_sections(version: str) -> list[str]:
+    """The eight README section titles at ``version`` (the Features title carries the version)."""
+    return [
+        "What is Eta-RxnCat?",
+        f"Features (v{version})",
+        "Installation",
+        "Usage",
+        "Development",
+        "Roadmap",
+        "Acknowledgements",
+        "License",
+    ]
+
+
+def _bold_versions(text: str) -> set[str]:
+    """The ``**vX.Y.Z**`` versions named in ``text``."""
+    return set(re.findall(r"\*\*v(\d+\.\d+\.\d+)\*\*", text))
+
+
+def _section(text: str, start: str, end: str) -> str:
+    """The text after ``start`` up to the next ``end`` ("" when ``start`` is absent)."""
+    return text.split(start, 1)[1].split(end, 1)[0] if start in text else ""
+
+
+def check_version_identity(readme_text: str, version: str) -> list[str]:
+    """R50: the README's badge, Features heading and Roadmap match ``version``.
+
+    The release badge is ``release-v<version>``; the Features heading is ``Features (v<version>)``;
+    the Roadmap's ``### Built`` lists every plan version up to and including ``<version>``, and
+    ``### Planned, not yet built`` lists every later one and no built one. Each problem names the
+    part it is about (``badge``, ``heading``, ``roadmap``).
+    """
+    problems = []
+    badge = f"https://img.shields.io/badge/release-v{version}-blue"
+    if badge not in readme_text:
+        problems.append(f"badge: no release-v{version} badge")
+    headings = [line[3:] for line in readme_text.splitlines() if line.startswith("## ")]
+    titles = [h.split(" ", 1)[1] for h in headings if " " in h]
+    if f"Features (v{version})" not in titles:
+        problems.append(f"heading: no 'Features (v{version})' section")
+    roadmap = _section(readme_text, "## 🧭 Roadmap", "\n## ")
+    built_text = _section(roadmap, "### Built", "\n### ")
+    planned_text = _section(roadmap, "### Planned, not yet built", "\n### ")
+    index = PLAN_VERSIONS.index(version) if version in PLAN_VERSIONS else -1
+    built, later = set(PLAN_VERSIONS[: index + 1]), set(PLAN_VERSIONS[index + 1 :])
+    if index < 0:
+        problems.append(f"roadmap: {version} is not a plan version")
+    if missing := sorted(built - _bold_versions(built_text)):
+        problems.append(f"roadmap: '### Built' does not list {missing}")
+    if missing := sorted(later - _bold_versions(planned_text)):
+        problems.append(f"roadmap: '### Planned, not yet built' does not list {missing}")
+    if wrong := sorted(built & _bold_versions(planned_text)):
+        problems.append(f"roadmap: '### Planned, not yet built' lists built {wrong}")
+    return problems
 
 
 def github_anchor(heading: str) -> str:
@@ -281,7 +335,7 @@ def test_readme_pitch_and_badges() -> None:
     assert re.search(r'<p align="center">\s*<strong>[^<]+</strong>\s*</p>', text)
     repo = "tjmustard/Eta-RxnCat"
     for needle in (
-        f'href="https://github.com/{repo}/releases/latest"><img src="https://img.shields.io/badge/release-v0.1.0-blue"',
+        f'href="https://github.com/{repo}/releases/latest"><img src="https://img.shields.io/badge/release-v',
         f'src="https://github.com/{repo}/actions/workflows/ci.yml/badge.svg"',
         f'src="https://img.shields.io/github/stars/{repo}?style=social"',
         f'src="https://img.shields.io/github/license/{repo}"',
@@ -295,12 +349,12 @@ def test_readme_sections_and_toc() -> None:
     headings = [line[3:] for line in text.splitlines() if line.startswith("## ")]
     assert headings[0] == "Table of Contents"
     titles = [h.split(" ", 1)[1] for h in headings[1:]]
-    assert titles == README_SECTIONS
+    assert titles == readme_sections(project_version())
     assert all(not h[0].isascii() for h in headings[1:])  # emoji prefix
     anchors = {github_anchor(h) for h in re.findall(r"^#{2,6} (.+)$", text, flags=re.M)}
     toc = text.split("## Table of Contents", 1)[1].split("\n## ", 1)[0]
     links = re.findall(r"\]\((#[^)]+)\)", toc)
-    assert len(links) == len(README_SECTIONS)
+    assert len(links) == len(readme_sections(project_version()))
     assert [link for link in links if link not in anchors] == []
     body_links = re.findall(r"\]\((#[^)]+)\)", text)
     assert [link for link in body_links if link not in anchors] == []
@@ -313,8 +367,53 @@ def test_readme_slice01_requirements_kept() -> None:
     assert "uv sync" in text and "uv run pytest" in text
     assert "## 📄 License" in text and "MIT" in text
     assert "### Planned, not yet built" in text
-    for version in ("v0.2.0", "v0.5.0", "v1.0.0"):
-        assert f"**{version}**" in text.split("## 🧭 Roadmap", 1)[1]
+    assert check_version_identity(text, project_version()) == []
+
+
+def synthetic_readme(version: str, built: tuple[str, ...], planned: tuple[str, ...]) -> str:
+    """A minimal README with a badge, a Features heading and a Roadmap for the R50 checks."""
+    lines = [
+        f'<img src="https://img.shields.io/badge/release-v{version}-blue" alt="Latest Release"/>',
+        "",
+        f"## ✨ Features (v{version})",
+        "",
+        "## 🧭 Roadmap",
+        "",
+    ]
+    if built:
+        lines += ["### Built", "", *[f"- **v{v}**: done." for v in built], ""]
+    lines += ["### Planned, not yet built", "", *[f"- **v{v}**: later." for v in planned], ""]
+    lines += ["## 🙏 Acknowledgements", ""]
+    return "\n".join(lines)
+
+
+LATER_THAN_020 = PLAN_VERSIONS[2:]
+
+
+def test_version_identity_v010_readme_fails_at_020() -> None:
+    """A v0.1.0 README (badge, heading, roadmap) fails at 0.2.0, each part named."""
+    old = synthetic_readme("0.1.0", (), PLAN_VERSIONS[1:])
+    problems = check_version_identity(old, "0.2.0")
+    for part in ("badge:", "heading:", "roadmap:"):
+        assert any(p.startswith(part) for p in problems), (part, problems)
+
+
+def test_version_identity_correct_020_readme_passes() -> None:
+    """A correct v0.2.0 README passes."""
+    good = synthetic_readme("0.2.0", ("0.1.0", "0.2.0"), LATER_THAN_020)
+    assert check_version_identity(good, "0.2.0") == []
+
+
+def test_version_identity_built_version_under_planned_fails() -> None:
+    """v0.2.0 listed under Planned at version 0.2.0 fails."""
+    text = synthetic_readme("0.2.0", ("0.1.0", "0.2.0"), ("0.2.0", *LATER_THAN_020))
+    assert any("lists built ['0.2.0']" in p for p in check_version_identity(text, "0.2.0"))
+
+
+def test_version_identity_missing_planned_version_fails() -> None:
+    """v0.3.0 missing from Planned fails."""
+    text = synthetic_readme("0.2.0", ("0.1.0", "0.2.0"), PLAN_VERSIONS[3:])
+    assert any("does not list ['0.3.0']" in p for p in check_version_identity(text, "0.2.0"))
 
 
 GPU_PASS_PHRASE = "GPU acceptance passed"

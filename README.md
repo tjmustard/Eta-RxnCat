@@ -7,11 +7,11 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.1.0 lays the foundation: strict data contracts, a validating graph loader, a stage-level artifact store, a GPU hardware probe and a small command line.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing.</strong>
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.1.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.2.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.1.0)](#-features-v010)
+- [✨ Features (v0.2.0)](#-features-v020)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -40,10 +40,11 @@ selectivity-determining transition state, can be computed first and used to prun
 
 The long-term goal, set out in the living master plan, is a workflow that combines force fields,
 subprocess-isolated tight binding, machine-learned potentials and DFT (PySCF / GPU4PySCF) under
-that priority-gated graph. `v0.1.0` builds the foundation the later engines depend on. Everything
-beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
+that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` adds the engines that compute
+energies, forces and Hessians on it. Everything beyond it is listed under [Roadmap](#-roadmap) and
+is not built yet.
 
-## ✨ Features (v0.1.0)
+## ✨ Features (v0.2.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -62,15 +63,48 @@ beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 - **Hardware probe and GPU smoke test** (`eta_rxncat.utils.hw_probe`). A typed report of
   PyTorch/CUDA, the GPU, GPU4PySCF and a 6.5 GiB VRAM budget, which never raises for a missing or
   broken package. The smoke test compares GPU4PySCF with CPU PySCF and a CUDA matmul with the CPU
-  result, against fixed numeric tolerances. Without CUDA it reports `skipped`. In `v0.1.0` its
-  pass and failure logic is covered by unit tests on fake hosts; GPU acceptance passed on
-  2026-11-22 on an NVIDIA GeForce RTX 5060 Ti (compute capability 12.0), with GPU4PySCF and CPU
-  PySCF agreeing to |ΔE| ≈ 1e-12 Eh and the CUDA matmul matching the CPU result to ≈ 4e-13 (see
-  [GPU_SMOKE_RESULT.json](docs/prd/v0.1.0/GPU_SMOKE_RESULT.json)).
+  result, against fixed numeric tolerances. Without CUDA it reports `skipped`. GPU acceptance
+  passed on 2026-11-23 on an NVIDIA GeForce RTX 5060 Ti (compute capability 12.0, PyTorch
+  2.13.0+cu129), with GPU4PySCF and CPU PySCF agreeing to |ΔE| ≈ 1e-12 Eh in the smoke test and
+  every engine accepted on this host (see
+  [GPU_SMOKE_RESULT.json](docs/prd/v0.2.0/GPU_SMOKE_RESULT.json)).
 - **Command line**: `eta-rxncat validate` and `eta-rxncat hardware-check [--smoke]`, with a fixed
   exit-code table and one-line errors.
-- **Optional extras** `gpu`, `mlip-mace` and `mlip-uma` (declared and locked; no engine uses them
-  yet), and a per-environment **licence gate** (`tools/licence_gate.py`).
+- **Optional extras** `gpu` (GPU4PySCF, CuPy, PyTorch), `mlip-mace` (the `mace` engine) and
+  `mlip-uma` (the `uma_direct` and `esen_omol25` engines), and a per-environment **licence gate**
+  (`tools/licence_gate.py`).
+
+### Engines (v0.2.0)
+
+- **One engine contract** (`eta_rxncat.engines`). Every engine is built from a stage with
+  `from_stage`. Its resolved stage holds every keyed option (given or default) plus
+  `engine_impl`, and is what the stage cache key is built from. The device is never keyed.
+  Results are a `PotentialResult`: energy (Eh), forces (Eh/Bohr) and an optional Hessian
+  (Eh/Bohr², `analytic` or `finite_difference`), with the device, the reason for it, and the
+  recovery steps taken. Units are CODATA 2018. Failures are typed (`EngineInputError`,
+  `EngineUnavailableError`, `ScfConvergenceError`, `EngineRuntimeError`).
+- **Charge and spin are honoured exactly, or refused.** An engine that cannot represent a state
+  raises `EngineInputError` naming the engine, charge and multiplicity. It never silently
+  computes something else.
+- **Six engines**:
+  - `rdkit_ff`: RDKit UFF and MMFF94, neutral singlets only;
+  - `pyscf_gpu_cpu`: PySCF density-fitted RKS/UKS/RHF/UHF on the CPU, or GPU4PySCF on CUDA. It
+    applies the def2 ECP rule, ddCOSMO and C-PCM/IEF-PCM solvation, an SCF escalation ladder and a
+    mandatory internal stability analysis. The stability threshold is keyed and robust to
+    threaded-CPU noise. On CUDA, a stage over the VRAM budget, or one that hits a listed
+    out-of-memory error, runs on the CPU instead, with the reason recorded. A GPU KS analytic
+    Hessian is used only where the committed support record shows it correct; elsewhere the
+    Hessian is a finite difference of analytic gradients. Across the four test cases, GPU energies
+    match CPU to ≤ 2e-7 Eh;
+  - `xtb_subprocess`: GFN2-xTB 6.8.0 as a separate process (LGPL-3.0, never in-process), with a
+    Hessian from finite differences of its gradients;
+  - `mace`: MACE-MP-0 medium, neutral singlets only, with the model file pinned by SHA-256;
+  - `uma_direct` and `esen_omol25`: fairchem's UMA (`uma-s-1p2p1`) and eSEN OMol25 models at high
+    precision, with charge and spin passed through. They match fairchem's own predictor to
+    ≤ 3e-8 Eh on the four test cases.
+- **Known limits** are listed in the record's `known_limits`. One affects users: `import mace`
+  sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the whole process, so keep the `mlip-mace` and
+  `mlip-uma` environments separate (they are mutually exclusive extras anyway).
 
 ## ⚡ Installation
 
@@ -87,7 +121,7 @@ uv run pytest    # run the test suite
 Optional extras, each installed from the lock:
 
 ```bash
-uv sync --extra gpu                       # PyTorch (CUDA 12.8 wheels), GPU4PySCF, CuPy
+uv sync --extra gpu                       # PyTorch (CUDA 12.9 wheels), GPU4PySCF, CuPy
 uv sync --extra gpu --extra mlip-mace     # adds MACE (mace-torch)
 uv sync --extra gpu --extra mlip-uma      # adds UMA (fairchem-core)
 ```
@@ -192,11 +226,17 @@ behind the `gpu` marker and are skipped by default. Contributor and agent rules 
 
 ## 🧭 Roadmap
 
+### Built
+
+- **v0.1.0**: the foundation: data contracts, the reaction-graph loader, the stage artifact
+  store, the hardware probe and the command line.
+- **v0.2.0**: potentials and engines (RDKit force fields, PySCF / GPU4PySCF, xtb as a subprocess,
+  MACE, UMA and eSEN).
+
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.2.0**: potentials and engines (RDKit force fields, MACE, UMA, PySCF / GPU4PySCF, xtb as a subprocess).
 - **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles.
 - **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
 - **v0.5.0**: transition-state optimisation and an active-core frequency validator.
