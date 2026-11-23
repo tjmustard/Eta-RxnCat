@@ -106,6 +106,17 @@ is not built yet.
   sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the whole process, so keep the `mlip-mace` and
   `mlip-uma` environments separate (they are mutually exclusive extras anyway).
 
+### In acceptance: v0.3.0
+
+- The v0.3.0 acceptance record
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)) shows conformer ensembles,
+  quasi-RRHO 1 M thermochemistry and the cached single-species stage runner running end to end on
+  Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with both the xtb (GFN2) and UMA recipes.
+- Regression, reference accuracy and SMILES confirmation are pending TJ's promotion of the
+  candidate outputs.
+- UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside it and is
+  reported, not gated.
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
@@ -244,7 +255,8 @@ behind the `gpu` marker and are skipped by default. Contributor and agent rules 
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles.
+- **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles (in
+  acceptance; the release waits on TJ's review of the candidate outputs).
 - **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
 - **v0.5.0**: transition-state optimisation and an active-core frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.

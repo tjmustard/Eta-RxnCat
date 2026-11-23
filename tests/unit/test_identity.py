@@ -530,3 +530,104 @@ def test_gpu_claim_link_forms() -> None:
         check_gpu_claim(base + "(docs/prd/v0.2.0/GPU_SMOKE_RESULT.json).", PASSING_RECORD, "0.1.0")
         != []
     )
+
+
+# v0.3.0 claims derived from the acceptance record (slice 09) -----------------------------------
+
+V030_RECORD = REPO / "docs" / "prd" / "v0.3.0" / "ACCEPTANCE_RESULT.json"
+V030_FIXTURES = {"hf1_butane", "hf2_diels_alder", "e2e5_t1", "e2e5_t2"}
+
+
+def _v030_ran_everywhere(record: dict[str, Any]) -> bool:
+    """HF1, HF2, T1 and T2 each ran and passed on both recipes."""
+    fixtures = record.get("fixtures", {})
+    return set(fixtures) == V030_FIXTURES and all(
+        set(entries) == {"xtb", "uma"}
+        and all(e.get("test_outcome") == "passed" for e in entries.values())
+        for entries in fixtures.values()
+    )
+
+
+def _v030_pending(record: dict[str, Any]) -> bool:
+    """Regression, HF accuracy and T1/T2 SMILES all wait on TJ's promotion."""
+    entries = [(n, e) for n, by in record.get("fixtures", {}).items() for e in by.values()]
+    return bool(entries) and all(
+        e["regression"]["status"] == "pending_promotion"
+        and (n.startswith("e2e5") or e["accuracy"]["verdict"] == "pending_reference")
+        and (not n.startswith("e2e5") or e["smiles_confirmation"] == "pending_confirmation")
+        for n, e in entries
+    )
+
+
+def _v030_window(record: dict[str, Any]) -> bool:
+    """UMA's T2 dG_r(1 M) inside TJ's window (gated); GFN2's outside (reported, not gated)."""
+    t2 = record.get("fixtures", {}).get("e2e5_t2", {})
+    if set(t2) != {"xtb", "uma"}:
+        return False
+    uma, xtb = t2["uma"]["window"], t2["xtb"]["window"]
+    return (
+        uma["inside"] is True
+        and uma["gated"] is True
+        and xtb["inside"] is False
+        and xtb["gated"] is False
+        and uma["bounds_kcal_mol"] == [-42.0, -20.0]
+    )
+
+
+V030_CLAIMS = (
+    (
+        "shows conformer ensembles, quasi-RRHO 1 M thermochemistry and the cached single-species "
+        "stage runner running end to end on Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with "
+        "both the xtb (GFN2) and UMA recipes.",
+        _v030_ran_everywhere,
+    ),
+    (
+        "Regression, reference accuracy and SMILES confirmation are pending TJ's promotion of the "
+        "candidate outputs.",
+        _v030_pending,
+    ),
+    (
+        "UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside "
+        "it and is reported, not gated.",
+        _v030_window,
+    ),
+)
+
+
+def check_v030_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
+    """Each v0.3.0 README claim is present and true of the record; none without a record."""
+    text = " ".join(readme_text.split())
+    problems = []
+    for phrase, holds in V030_CLAIMS:
+        if record is None:
+            if phrase in text:
+                problems.append(f"README claims {phrase[:40]!r}… but there is no v0.3.0 record")
+            continue
+        if phrase not in text:
+            problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
+        elif not holds(record):
+            problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
+    if record is not None and "](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)" not in text:
+        problems.append(
+            "record present, but no Markdown link to docs/prd/v0.3.0/ACCEPTANCE_RESULT.json"
+        )
+    return problems
+
+
+def test_readme_v030_claims_match_record() -> None:
+    """Every README v0.3.0 claim is derived from (and true of) ACCEPTANCE_RESULT.json."""
+    record = json.loads(V030_RECORD.read_text(encoding="utf-8")) if V030_RECORD.is_file() else None
+    assert check_v030_claims(readme(), record) == []
+
+
+def test_v030_claim_check_catches_drift() -> None:
+    """A record that no longer supports a claim, or a missing record, is caught."""
+    record = json.loads(V030_RECORD.read_text(encoding="utf-8"))
+    flipped = json.loads(json.dumps(record))
+    flipped["fixtures"]["e2e5_t2"]["uma"]["window"]["inside"] = False
+    assert any("not what the record shows" in p for p in check_v030_claims(readme(), flipped))
+    promoted = json.loads(json.dumps(record))
+    promoted["fixtures"]["hf1_butane"]["uma"]["regression"]["status"] = "pass"
+    assert any("not what the record shows" in p for p in check_v030_claims(readme(), promoted))
+    assert check_v030_claims(readme(), None) != []
+    assert check_v030_claims("no claims here", None) == []

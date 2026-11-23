@@ -1,0 +1,930 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and not mlip_uma",
+        "tests/e2e",
+        "-p",
+        "no:cacheprovider",
+        "-rs",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "<scratch>/out",
+        "ETA_RXNCAT_CANDIDATE_DIR": "<scratch>/cand",
+        "ETA_RXNCAT_XTB": "~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-opt"
+      },
+      "exit_code": 0,
+      "wall_s": 558
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e",
+        "-p",
+        "no:cacheprovider",
+        "-rs",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "<scratch>/out",
+        "ETA_RXNCAT_CANDIDATE_DIR": "<scratch>/cand",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "wall_s": 532
+    }
+  ],
+  "commit_sha": "4403afa7d2d8a6b019c707ad7e2d6af2ff286140",
+  "devices": {
+    "uma": "cuda",
+    "xtb": "cpu"
+  },
+  "engines": {
+    "uma": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "xtb": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    }
+  },
+  "evidence": {
+    "candidates_phase3_set": {
+      "hf": "tests/candidate_outputs/v0.3.0/hf1_butane.{xtb,uma}.json and hf2_diels_alder.{xtb,uma}.json at e24777d",
+      "reference_values": "tests/candidate_outputs/v0.3.0/reference_values.json at 32ee699",
+      "t1": "e2e5_t1.{xtb,uma}.json at 1e3d4e9",
+      "t2_and_smiles": "e2e5_t2.{xtb,uma}.json and e2e5_smiles.json at 1c06fc6"
+    },
+    "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+    "verdict_run": "slice 10, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)"
+  },
+  "fixtures": {
+    "e2e5_t1": {
+      "uma": {
+        "accuracy": {
+          "deltas": [],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "verdict": "reported"
+        },
+        "class_counts": {
+          "s-cis-side": 3,
+          "s-trans": 3
+        },
+        "device": "cuda",
+        "failures": {},
+        "optimizer_steps_total": 1689,
+        "ordering_strans_below_scis": true,
+        "planar_point": {
+          "dE_planar_scis_strans_kcal_mol": 2.620978421542202,
+          "phi_deg": 0.008082060970748326
+        },
+        "recovery_steps": {
+          "tric": 79
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "smiles_confirmation": "pending_confirmation",
+        "species": {
+          "dimethoxybutadiene": {
+            "n_kept": 6,
+            "n_pool": 81
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.4553837040439248
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 9,
+            "wall_time_s": 9.839092279900797
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1768,
+            "wall_time_s": 123.65822329989169
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      },
+      "xtb": {
+        "accuracy": {
+          "deltas": [],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "verdict": "reported"
+        },
+        "class_counts": {
+          "s-cis-side": 3,
+          "s-trans": 2
+        },
+        "device": "cpu",
+        "failures": {},
+        "optimizer_steps_total": 1889,
+        "ordering_strans_below_scis": true,
+        "planar_point": {
+          "dE_planar_scis_strans_kcal_mol": 1.3532969656407972,
+          "phi_deg": -0.00679793123913931
+        },
+        "recovery_steps": {
+          "tric": 79
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "smiles_confirmation": "pending_confirmation",
+        "species": {
+          "dimethoxybutadiene": {
+            "n_kept": 5,
+            "n_pool": 81
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.5352689869469032
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 5,
+            "wall_time_s": 8.588691620971076
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1968,
+            "wall_time_s": 194.40195474703796
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      }
+    },
+    "e2e5_t2": {
+      "uma": {
+        "accuracy": {
+          "deltas": [],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "verdict": "reported"
+        },
+        "dG_r_1M_kcal_mol": -32.00477389395835,
+        "device": "cuda",
+        "failures": {},
+        "incremental_solvation": {
+          "plain_rerun": {
+            "expected_calls": 0,
+            "observed_calls": 0
+          }
+        },
+        "optimizer_steps_total": 51,
+        "recovery_steps": {
+          "tric": 7
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "smiles_confirmation": "pending_confirmation",
+        "species": {
+          "P1a_n": {
+            "n_kept": 1,
+            "n_pool": 21
+          },
+          "cyclopentadiene": {
+            "n_kept": 1,
+            "n_pool": 21
+          },
+          "cyclopropene": {
+            "n_kept": 1,
+            "n_pool": 21
+          }
+        },
+        "species_stage_cache": {
+          "frequency": {
+            "hits": 3,
+            "misses": 0
+          },
+          "geometry_opt": {
+            "hits": 3,
+            "misses": 0
+          },
+          "rerun": "plain",
+          "single_point": {
+            "hits": 0,
+            "misses": 3
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.04615988489240408
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 3,
+            "wall_time_s": 2.1459655908402056
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 58,
+            "wall_time_s": 8.85257947887294
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed",
+        "window": {
+          "bounds_kcal_mol": [
+            -42.0,
+            -20.0
+          ],
+          "gated": true,
+          "inside": true
+        }
+      },
+      "xtb": {
+        "accuracy": {
+          "deltas": [],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "verdict": "reported"
+        },
+        "dG_r_1M_kcal_mol": -52.35785495937119,
+        "device": "cpu",
+        "failures": {},
+        "incremental_solvation": {
+          "alpb_dioxane": {
+            "dG_r_1M_solvated_kcal_mol": -49.82253007538803,
+            "dG_solv_kcal_mol": {
+              "P1a_n": -5.496282127461491,
+              "cyclopentadiene": -4.63252735321987,
+              "cyclopropene": -3.399079658223664
+            },
+            "dG_solv_sign": {
+              "P1a_n": "negative",
+              "cyclopentadiene": "negative",
+              "cyclopropene": "negative"
+            },
+            "expected_calls": 3,
+            "observed_calls": 3,
+            "species_stage_cache": {
+              "frequency": {
+                "hits": 3,
+                "misses": 0
+              },
+              "geometry_opt": {
+                "hits": 3,
+                "misses": 0
+              },
+              "single_point": {
+                "hits": 0,
+                "misses": 3
+              }
+            },
+            "upstream_calls": 0
+          }
+        },
+        "optimizer_steps_total": 54,
+        "recovery_steps": {
+          "tric": 7
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "smiles_confirmation": "pending_confirmation",
+        "species": {
+          "P1a_n": {
+            "n_kept": 1,
+            "n_pool": 21
+          },
+          "cyclopentadiene": {
+            "n_kept": 1,
+            "n_pool": 21
+          },
+          "cyclopropene": {
+            "n_kept": 1,
+            "n_pool": 21
+          }
+        },
+        "species_stage_cache": {
+          "frequency": {
+            "hits": 3,
+            "misses": 0
+          },
+          "geometry_opt": {
+            "hits": 3,
+            "misses": 0
+          },
+          "rerun": "alpb_dioxane",
+          "single_point": {
+            "hits": 0,
+            "misses": 3
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.06473767396528274
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 3,
+            "wall_time_s": 3.278649538056925
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 61,
+            "wall_time_s": 5.852666079765186
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed",
+        "window": {
+          "bounds_kcal_mol": [
+            -42.0,
+            -20.0
+          ],
+          "gated": false,
+          "inside": false
+        }
+      }
+    },
+    "hf1_butane": {
+      "uma": {
+        "accuracy": {
+          "deltas": [
+            {
+              "delta": -0.026511566659874752,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.5828180228231663,
+              "quantity": "hf1.dE_gauche_anti",
+              "reference_1m": 0.6093295894830411
+            },
+            {
+              "delta": -0.009307979830364133,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.6485432883647402,
+              "quantity": "hf1.dH_gauche_anti",
+              "reference_1m": 0.6578512681951043
+            },
+            {
+              "bound": 0.5,
+              "delta": 0.008980547739732336,
+              "gated": true,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.6942502544308666,
+              "quantity": "hf1.dG_gauche_anti",
+              "reference_1m": 0.6852697066911343,
+              "within_bound": true
+            },
+            {
+              "delta": -0.35866884143732136,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 38.25797053959975,
+              "quantity": "hf1.gauche_population",
+              "reference_1m": 38.61663938103707
+            },
+            {
+              "delta": -0.23834935533640222,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.5828180228231663,
+              "quantity": "hf1.dE_gauche_anti",
+              "reference_1m": 0.8211673781595685
+            },
+            {
+              "delta": -0.22114576850689172,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.6485432883647402,
+              "quantity": "hf1.dH_gauche_anti",
+              "reference_1m": 0.8696890568716319
+            },
+            {
+              "delta": -0.20285724093679514,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.6942502544308666,
+              "quantity": "hf1.dG_gauche_anti",
+              "reference_1m": 0.8971074953676618
+            },
+            {
+              "delta": 7.702758855514155,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 38.25797053959975,
+              "quantity": "hf1.gauche_population",
+              "reference_1m": 30.55521168408559
+            }
+          ],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "status_against_tj_values": "pass",
+          "verdict": "pending_reference"
+        },
+        "device": "cuda",
+        "failures": {},
+        "optimizer_steps_total": 1371,
+        "recovery_steps": {
+          "imag_mode_push": 1,
+          "tric": 84
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "species": {
+          "n_butane": {
+            "n_kept": 2,
+            "n_pool": 100
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 2.0804995950311422
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 5,
+            "wall_time_s": 4.098702675080858
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1455,
+            "wall_time_s": 82.15975366299972
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      },
+      "xtb": {
+        "accuracy": {
+          "deltas": [
+            {
+              "delta": -0.012993669124819918,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.5963359203582211,
+              "quantity": "hf1.dE_gauche_anti",
+              "reference_1m": 0.6093295894830411
+            },
+            {
+              "delta": -0.026946382090655363,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.630904886104449,
+              "quantity": "hf1.dH_gauche_anti",
+              "reference_1m": 0.6578512681951043
+            },
+            {
+              "delta": -0.03042212364994845,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 0.6548475830411858,
+              "quantity": "hf1.dG_gauche_anti",
+              "reference_1m": 0.6852697066911343
+            },
+            {
+              "delta": 1.2240164803500022,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": 39.84065586138707,
+              "quantity": "hf1.gauche_population",
+              "reference_1m": 38.61663938103707
+            },
+            {
+              "delta": -0.2248314578013474,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.5963359203582211,
+              "quantity": "hf1.dE_gauche_anti",
+              "reference_1m": 0.8211673781595685
+            },
+            {
+              "delta": -0.23878417076718295,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.630904886104449,
+              "quantity": "hf1.dH_gauche_anti",
+              "reference_1m": 0.8696890568716319
+            },
+            {
+              "delta": -0.24225991232647592,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 0.6548475830411858,
+              "quantity": "hf1.dG_gauche_anti",
+              "reference_1m": 0.8971074953676618
+            },
+            {
+              "delta": 9.285444177301478,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": 39.84065586138707,
+              "quantity": "hf1.gauche_population",
+              "reference_1m": 30.55521168408559
+            }
+          ],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "status_against_tj_values": "reported",
+          "verdict": "pending_reference"
+        },
+        "device": "cpu",
+        "failures": {},
+        "optimizer_steps_total": 1409,
+        "recovery_steps": {
+          "tric": 82
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "species": {
+          "n_butane": {
+            "n_kept": 2,
+            "n_pool": 100
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 2.320296201040037
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 3,
+            "wall_time_s": 4.191476886044256
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1491,
+            "wall_time_s": 139.54267990787048
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      }
+    },
+    "hf2_diels_alder": {
+      "uma": {
+        "accuracy": {
+          "deltas": [
+            {
+              "delta": 0.0233204231934252,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -47.03176008986631,
+              "quantity": "hf2.dE_r",
+              "reference_1m": -47.055080513059735
+            },
+            {
+              "delta": 0.02084216634056446,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -42.69116330927358,
+              "quantity": "hf2.dH_r",
+              "reference_1m": -42.71200547561414
+            },
+            {
+              "bound": 2.0,
+              "delta": 0.05641886633809179,
+              "gated": true,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -30.86577640344985,
+              "quantity": "hf2.dG_r",
+              "reference_1m": -30.92219526978794,
+              "within_bound": true
+            },
+            {
+              "delta": -4.377231828651759,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -47.03176008986631,
+              "quantity": "hf2.dE_r",
+              "reference_1m": -42.65452826121455
+            },
+            {
+              "delta": -4.37971008550462,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -42.69116330927358,
+              "quantity": "hf2.dH_r",
+              "reference_1m": -38.31145322376896
+            },
+            {
+              "delta": -4.344133385507089,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -30.86577640344985,
+              "quantity": "hf2.dG_r",
+              "reference_1m": -26.52164301794276
+            }
+          ],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "status_against_tj_values": "pass",
+          "verdict": "pending_reference"
+        },
+        "dG_r_ensemble_minus_lowest_kcal_mol": -0.39578581949819736,
+        "device": "cuda",
+        "failures": {},
+        "incremental_solvation": {
+          "alpb_toluene": "n/a (UMA has no implicit solvation; dG_solv n/a)",
+          "pcm_toluene_ethylene_lowest": {
+            "expected_calls": 1,
+            "mechanism_only": true,
+            "observed_calls": 1,
+            "upstream_calls": 0
+          }
+        },
+        "optimizer_steps_total": 1308,
+        "recovery_steps": {
+          "imag_mode_push": 2,
+          "tric": 100
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "species": {
+          "butadiene": {
+            "n_kept": 2,
+            "n_pool": 100
+          },
+          "cyclohexene": {
+            "n_kept": 3,
+            "n_pool": 100
+          },
+          "ethylene": {
+            "n_kept": 1,
+            "n_pool": 100
+          }
+        },
+        "species_stage_cache": {
+          "frequency": {
+            "hits": 1,
+            "misses": 0
+          },
+          "geometry_opt": {
+            "hits": 1,
+            "misses": 0
+          },
+          "rerun": "pcm_ethylene_only",
+          "single_point": {
+            "hits": 0,
+            "misses": 1
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.22928116109687835
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 11,
+            "wall_time_s": 7.54118748975452
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1408,
+            "wall_time_s": 45.27165978716221
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      },
+      "xtb": {
+        "accuracy": {
+          "deltas": [
+            {
+              "delta": -20.387197042318405,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -67.44227755537814,
+              "quantity": "hf2.dE_r",
+              "reference_1m": -47.055080513059735
+            },
+            {
+              "delta": -19.81985617267572,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -62.53186164828986,
+              "quantity": "hf2.dH_r",
+              "reference_1m": -42.71200547561414
+            },
+            {
+              "delta": -19.751246478388424,
+              "gated": false,
+              "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+              "observed": -50.673441748176366,
+              "quantity": "hf2.dG_r",
+              "reference_1m": -30.92219526978794
+            },
+            {
+              "delta": -24.78774929416359,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -67.44227755537814,
+              "quantity": "hf2.dE_r",
+              "reference_1m": -42.65452826121455
+            },
+            {
+              "delta": -24.220408424520905,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -62.53186164828986,
+              "quantity": "hf2.dH_r",
+              "reference_1m": -38.31145322376896
+            },
+            {
+              "delta": -24.151798730233605,
+              "gated": false,
+              "level": "b3lyp_631gss",
+              "observed": -50.673441748176366,
+              "quantity": "hf2.dG_r",
+              "reference_1m": -26.52164301794276
+            }
+          ],
+          "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
+          "status_against_tj_values": "reported",
+          "verdict": "pending_reference"
+        },
+        "dG_r_ensemble_minus_lowest_kcal_mol": -0.3657274111860147,
+        "device": "cpu",
+        "failures": {},
+        "incremental_solvation": {
+          "alpb_toluene": {
+            "dG_r_1M_solvated_kcal_mol": -50.62206005564971,
+            "dG_solv_kcal_mol": {
+              "butadiene": -3.12351545295803,
+              "cyclohexene": -4.10162295578345,
+              "ethylene": -1.3952166065386467
+            },
+            "expected_calls": 5,
+            "observed_calls": 5,
+            "upstream_calls": 0
+          },
+          "pcm_toluene_ethylene_lowest": {
+            "expected_calls": 1,
+            "mechanism_only": true,
+            "observed_calls": 1,
+            "upstream_calls": 0
+          }
+        },
+        "optimizer_steps_total": 1391,
+        "recovery_steps": {
+          "imag_mode_push": 1,
+          "tric": 98
+        },
+        "regression": {
+          "status": "pending_promotion"
+        },
+        "species": {
+          "butadiene": {
+            "n_kept": 2,
+            "n_pool": 100
+          },
+          "cyclohexene": {
+            "n_kept": 2,
+            "n_pool": 100
+          },
+          "ethylene": {
+            "n_kept": 1,
+            "n_pool": 100
+          }
+        },
+        "species_stage_cache": {
+          "frequency": {
+            "hits": 3,
+            "misses": 0
+          },
+          "geometry_opt": {
+            "hits": 3,
+            "misses": 0
+          },
+          "rerun": "alpb_toluene",
+          "single_point": {
+            "hits": 0,
+            "misses": 3
+          }
+        },
+        "stages": {
+          "conformer_search": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.25040423090104014
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 9,
+            "wall_time_s": 10.82637249713298
+          },
+          "geometry_opt": {
+            "cache_hits": 0,
+            "engine_calls": 1489,
+            "wall_time_s": 149.71950416720938
+          },
+          "single_point": {
+            "cache_hits": 0,
+            "engine_calls": 0,
+            "wall_time_s": 0.0
+          }
+        },
+        "test_outcome": "passed"
+      }
+    }
+  },
+  "hardware": {
+    "flags": [],
+    "gpu": {
+      "compute_capability": "12.0",
+      "free_vram_bytes": 6219825152,
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "total_vram_bytes": 8073248768,
+      "total_vram_gib": 7.52
+    },
+    "gpu4pyscf": {
+      "installed": true,
+      "version": "1.9.2"
+    },
+    "notes": [],
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "python_version": "3.12.16",
+    "report_schema": 1,
+    "torch": {
+      "cuda_available": true,
+      "cuda_version": "12.9",
+      "installed": true,
+      "version": "2.13.0+cu129"
+    },
+    "vram_budget_bytes": 6979321856,
+    "vram_budget_gib": 6.5
+  },
+  "known_limits": [
+    "accuracy compares per-conformer quantities; our G is Grimme quasi-RRHO (ω₀ 100 cm⁻¹), the reference pure RRHO (≤ 0.01 kcal/mol on these Δ values per its README); the ensemble ΔG_r differs from the per-conformer ΔG_r by `dG_r_ensemble_minus_lowest` (reported).",
+    "a non-deterministic engine failure stays cached as a completed failure row until `invalidate`; it is not retried under the same key (R50)",
+    "GFN2 (xtb recipe) T2 ΔG_r(1 M) = -52.36 kcal/mol lies outside TJ's window (-42.0, -20.0); reported, not gated (TJ Q-E5 \"C\"); UMA gives -32.00, inside and gated. TJ's escalation rule, verbatim: \"Q5. C, if it turns out MACE, UMA, or OMol25 are needed then they should become standard.\" The default recipe stays GFN2 until TJ decides.",
+    "GFN2 (xtb recipe) hf1_butane vs TJ's ωB97M-V reference values (deltas, kcal/mol or percent; reported, xtb is never gated): hf1.dE_gauche_anti -0.01, hf1.dH_gauche_anti -0.03, hf1.dG_gauche_anti -0.03, hf1.gauche_population +1.22",
+    "GFN2 (xtb recipe) hf2_diels_alder vs TJ's ωB97M-V reference values (deltas, kcal/mol or percent; reported, xtb is never gated): hf2.dE_r -20.39, hf2.dH_r -19.82, hf2.dG_r -19.75"
+  ],
+  "logs": {
+    "accept-uma.log (scratch, not committed)": {
+      "exit_code": 0,
+      "summary": "5 passed, 56 deselected, 16 warnings in 528.27s; 0 skipped; started 10:22:34Z"
+    },
+    "accept-xtb.log (scratch, not committed)": {
+      "exit_code": 0,
+      "summary": "6 passed, 55 deselected in 556.58s; 0 skipped; started 10:10:04Z"
+    }
+  },
+  "record_schema": 1,
+  "run_at_utc": "2026-11-23T10:31:18+00:00"
+}
