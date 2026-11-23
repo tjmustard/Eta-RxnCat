@@ -1,0 +1,323 @@
+{
+  "commit_sha": "b872079d35aef37db9d0639b9ae033bed001c5e0",
+  "core_max_displacement_angstrom": 3.543583943130497e-08,
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "failed_checks": [],
+  "final_energy_hartree": -350.00312656847433,
+  "fixture": "m1_ts1a_n_to_ts1b_n",
+  "graft_to_ts1b_n_map": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    7,
+    8,
+    17,
+    18,
+    19,
+    20
+  ],
+  "input_sha256": {
+    "fragment": "8b25312f3c3b4948c4d3d4de6cdd2396516147dc5fc52ed2d94f7a259ab4e990",
+    "reference": "677d570d68f4d51cdf2efb29474cb26751e617b811350f77bf532d4d6785a457",
+    "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "yaml": "b08d7960651ce04bc1dc4f40673f3a08e2e8da3ec2591da9ffd30a31f0c3661d"
+  },
+  "map_rule": "mission R2: lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates",
+  "metrics": {
+    "n_engine_calls": 18,
+    "n_steps": 17,
+    "recovery_steps": [
+      "tric"
+    ],
+    "wall_time_s": 17.126462974003516
+  },
+  "optimizer": {
+    "name": "geometric",
+    "version": "1.1.1"
+  },
+  "optimizer_options": {
+    "constraints": "freeze:1,2,3,5",
+    "convergence_set": "GAU",
+    "coordsys": "tric",
+    "hessian": "never",
+    "maxiter": 200,
+    "trust": 0.1
+  },
+  "r50": {
+    "failure_count": 0,
+    "note": "no store or runner payload is read; relax raises on any engine or optimizer failure, so there is no failed_reason to check"
+  },
+  "recipe": "uma",
+  "relaxed_product": {
+    "charge": 0,
+    "coordinates_angstrom": [
+      [
+        -0.9005527166526075,
+        1.1448907147855212,
+        0.7167733827093798
+      ],
+      [
+        0.35056299741518393,
+        0.8300340079382661,
+        1.1593549951318225
+      ],
+      [
+        0.3505629869249529,
+        -1.4535669985682893,
+        0.6662759970606879
+      ],
+      [
+        0.35056303149364737,
+        -1.4535669874959656,
+        -0.6662760103681249
+      ],
+      [
+        -0.9014026024410156,
+        1.1439220208898593,
+        -0.7156407026656161
+      ],
+      [
+        0.3505629966465507,
+        0.8300339822763348,
+        -1.1593549989032752
+      ],
+      [
+        1.2978836639006708,
+        0.9614912123388175,
+        0.00045923761703589756
+      ],
+      [
+        -1.7746371298689396,
+        1.2806231876457406,
+        1.3381868641515604
+      ],
+      [
+        0.663740085125693,
+        0.8099999792452574,
+        2.1933887310668023
+      ],
+      [
+        1.1443898729788393,
+        -1.4613499381597883,
+        1.3996749582554082
+      ],
+      [
+        1.1453762800730558,
+        -1.4655848961502675,
+        -1.3983040019382478
+      ],
+      [
+        -1.7751644511482778,
+        1.2792629334204675,
+        -1.3372959459453346
+      ],
+      [
+        0.6622293091130701,
+        0.8053440068534581,
+        -2.1937226734188164
+      ],
+      [
+        1.678526977135948,
+        1.9915245175780436,
+        0.0031690017884551734
+      ],
+      [
+        2.1537725008917756,
+        0.2891096128387606,
+        -0.0019960117643477468
+      ],
+      [
+        -1.0793222210245172,
+        -1.9366850590276714,
+        0.7810426716673224
+      ],
+      [
+        -1.079150866308444,
+        -1.9383091117258129,
+        -0.7795475861837179
+      ],
+      [
+        -1.759622924529017,
+        -1.2128164630601894,
+        1.2239421601593024
+      ],
+      [
+        -1.2163704623053881,
+        -2.9156838090629154,
+        1.2407014870442226
+      ],
+      [
+        -1.2129124088828187,
+        -2.919450681170522,
+        -1.2346190514936335
+      ],
+      [
+        -1.7618938894228726,
+        -1.219307211446249,
+        -1.2270629878708483
+      ]
+    ],
+    "multiplicity": 1,
+    "symbols": [
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H"
+    ]
+  },
+  "reported": {
+    "active_rmsd_angstrom": 0.0415974992191313,
+    "appended_heavy_rmsd_angstrom": 0.010544582113151997,
+    "forming_core_rmsd_angstrom": 0.04975581834084372,
+    "full_rmsd_angstrom": 0.5523838309946405
+  },
+  "run_at_utc": "2026-11-23T21:02:00Z",
+  "schema": 1,
+  "spec": {
+    "constrained_core": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "degenerate_tolerance_angstrom": 0.001,
+    "fragment_alignment": [
+      0,
+      3,
+      4,
+      9
+    ],
+    "fragment_delete": [],
+    "junction_volume_tolerance_angstrom3": 0.05,
+    "min_distance_angstrom": 0.5,
+    "planar_tolerance_angstrom": 0.05,
+    "product_charge": 0,
+    "product_multiplicity": 1,
+    "template": {
+      "alignment": [
+        2,
+        3,
+        10,
+        11
+      ],
+      "anchors": [],
+      "delete": [
+        7,
+        16,
+        17
+      ],
+      "keep": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  },
+  "test_outcome": "passed",
+  "tier_gates": {
+    "g1_core_frozen": {
+      "bound_angstrom": 1e-06,
+      "core_max_displacement_angstrom": 3.543583943130497e-08,
+      "status": "pass"
+    },
+    "g2_connectivity_equals_ts1b_n": {
+      "extra_bonds_ts1b_n_indices": [],
+      "missing_bonds_ts1b_n_indices": [],
+      "status": "pass"
+    },
+    "g3_junction_signs_equal_ts1b_n": {
+      "relaxed": [
+        {
+          "appended_atom": 15,
+          "neighbour_a": 3,
+          "neighbour_b": 9,
+          "sign": 1,
+          "signed_volume_angstrom3": 0.5258794143421761,
+          "template_atom": 2
+        },
+        {
+          "appended_atom": 16,
+          "neighbour_a": 2,
+          "neighbour_b": 10,
+          "sign": -1,
+          "signed_volume_angstrom3": -0.536301054474867,
+          "template_atom": 3
+        }
+      ],
+      "status": "pass",
+      "ts1b_n": [
+        {
+          "appended_atom": 15,
+          "neighbour_a": 3,
+          "neighbour_b": 9,
+          "sign": 1,
+          "signed_volume_angstrom3": 0.8505201091042602,
+          "template_atom": 2
+        },
+        {
+          "appended_atom": 16,
+          "neighbour_a": 2,
+          "neighbour_b": 10,
+          "sign": -1,
+          "signed_volume_angstrom3": -0.8505201091042602,
+          "template_atom": 3
+        }
+      ]
+    }
+  }
+}
