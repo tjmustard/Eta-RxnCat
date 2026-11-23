@@ -2,7 +2,7 @@
 id: OPR.0.3.0.3
 slice: 03-thermo
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.thermo: CODATA 2018 constants, Eckart-projected norma
 depends_on: [OPR.0.3.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_thermo
 parent: null
 hacf_touches: ["src/eta_rxncat/thermo/**", "tests/unit/thermo/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

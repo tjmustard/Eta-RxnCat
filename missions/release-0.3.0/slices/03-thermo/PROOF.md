@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: eta_rxncat.thermo formulas match spec and literature (Ar S_trans 154.85, dG0 1.8943 kcal/mol); 180 tier-D tests; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
