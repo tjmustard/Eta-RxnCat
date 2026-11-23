@@ -1,0 +1,186 @@
+{
+  "entries": [
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/butane_gauche_minus_anti_kcal_mol/dE",
+      "quantity": "hf1.dE_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.6093295894830411
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/butane_gauche_minus_anti_kcal_mol/dH_298",
+      "quantity": "hf1.dH_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.6578512681951043
+    },
+    {
+      "gate": true,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/butane_gauche_minus_anti_kcal_mol/dG_298",
+      "quantity": "hf1.dG_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.6852697066911343
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/butane_gauche_population_percent_298K/from_dG",
+      "quantity": "hf1.gauche_population",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "percent",
+      "value": 38.61663938103707
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/diels_alder_kcal_mol/dE_r",
+      "quantity": "hf2.dE_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -47.055080513059735
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/diels_alder_kcal_mol/dH_r_298",
+      "quantity": "hf2.dH_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -42.71200547561414
+    },
+    {
+      "gate": true,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "\u03c9B97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key GATING REFERENCE/diels_alder_kcal_mol/dG_r_298_1M",
+      "quantity": "hf2.dG_r",
+      "standard_state": "1 M",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -30.92219526978794
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/butane_gauche_minus_anti_kcal_mol/dE",
+      "quantity": "hf1.dE_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.8211673781595685
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/butane_gauche_minus_anti_kcal_mol/dH_298",
+      "quantity": "hf1.dH_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.8696890568716319
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/butane_gauche_minus_anti_kcal_mol/dG_298",
+      "quantity": "hf1.dG_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.8971074953676618
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/butane_gauche_population_percent_298K/from_dG",
+      "quantity": "hf1.gauche_population",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "percent",
+      "value": 30.55521168408559
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/diels_alder_kcal_mol/dE_r",
+      "quantity": "hf2.dE_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -42.65452826121455
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/diels_alder_kcal_mol/dH_r_298",
+      "quantity": "hf2.dH_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -38.31145322376896
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+      "provenance": "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e; key B3LYP/6-31G** (RRHO)/diels_alder_kcal_mol/dG_r_298_1M",
+      "quantity": "hf2.dG_r",
+      "standard_state": "1 M",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -26.52164301794276
+    }
+  ],
+  "reference_species": {
+    "butadiene_strans": {
+      "conformer": "butadiene_strans",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "butane_anti": {
+      "conformer": "butane_anti",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "butane_gauche": {
+      "conformer": "butane_gauche",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "cyclohexene": {
+      "conformer": "cyclohexene",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "ethylene": {
+      "conformer": "ethylene",
+      "sigma": 4,
+      "thermo_model": "RRHO"
+    }
+  },
+  "schema": 1
+}
