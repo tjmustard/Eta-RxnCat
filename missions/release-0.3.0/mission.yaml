@@ -40,4 +40,7 @@ composition:
     - ref: slices/10-acceptance-verdict/slice.yaml
       order: 100
       active: true
+    - ref: slices/11-push-rededup/slice.yaml
+      order: 75
+      active: true
 # Optional team and SDLC sections are added here.

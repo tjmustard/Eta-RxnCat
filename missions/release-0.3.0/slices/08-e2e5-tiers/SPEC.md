@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
 intent: "Land TJ's four XYZ verbatim with provenance, re-derive the T1/T2 SMILES for TJ's confirmation, and run Tier 1 (dimethoxybutadiene) and Tier 2 (Cp + cyclopropene to endo P1a_n, with incremental ALPB dioxane) on both recipes into committed candidates."
-depends_on: [OPR.0.3.0.7]
+depends_on: [OPR.0.3.0.11]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -66,6 +66,10 @@ Context the builder needs:
 - **Standard state (mission R51):** every T2 ΔG_rxn (gas and the ALPB(dioxane) solvated value)
   goes through slice 07's `tests/e2e/derived.py: checked_reaction_free_energy`; never call
   `reaction_free_energy` directly.
+
+- **No duplicate records (mission R53):** the runner re-dedups pushed conformers (slice 11). Call
+  `tests/e2e/derived.py: assert_no_duplicate_records` for every T1/T2 species (the diene, Cp,
+  cyclopropene, P1a_n) and report per species n_kept and the count of `duplicate_after_push`.
 
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
@@ -172,7 +176,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R50–R52 (replan 3); R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
+- Mission §5 R53 (replan 4); R50–R52 (replan 3); R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
   Q-E2…Q-E5, R1.
 
 ## Intent visual
@@ -185,4 +189,5 @@ N/A: non-visual slice.
 
 ## Dependencies
 
+- OPR.0.3.0.11 (pushed-duplicate re-dedup and regenerated HF candidates; mission R53)
 - OPR.0.3.0.7 (e2e conftest, helpers, candidate writer use)

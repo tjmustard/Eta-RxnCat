@@ -85,6 +85,9 @@ quantities like for like (HF2 against the lowest records, not the ensemble). Onl
 Replan 3 (2026-11-23, R50–R52): failure rows cached as completed (lead: A, recorded) with a
 binding reader rule, and a standard-state check on every reaction ΔG_r. Slices 07–10 change.
 
+Replan 4 (2026-11-23, R53): a pushed duplicate in UMA cyclohexene; new rework slice 11 re-dedups
+after the push and regenerates the HF candidates before slice 08 and the Phase 3 gate.
+
 ## 1. Introduction & Goals
 
 **Problem.** v0.2.0 gives six engines that return energy, forces and a Hessian for one fixed
@@ -263,6 +266,7 @@ owed for one. Part A/B are red-team rev 1 (F1–F20); Part D is the rev-2 delta 
 | R50 | Replan 3: how drop-path failures are cached (audit 06 `qitem-20261123064423-65aa7510`, proof `slices/06-species-runner/proof/01-qa.md`) | — | resolved (lead: option A) | Recorded as built, not re-opened: `OptimizationFailedError` and `ScfConvergenceError` on the drop path are stored as `ArtifactStatus.COMPLETED` rows with payload `{failed_reason, message}`, not `FAILED`. Lead's reasons: `ArtifactStore.get` serves completed rows only; the "reruns are free" proof needs dropped conformers cached too; a store API change (option C) belongs to v0.8.0's orchestrator, not v0.3.0. Consequences: (a) a failure is permanent under its key until `invalidate`, so a non-deterministic failure (e.g. a GPU SCF) is never retried under the same key; (b) a COMPLETED `geometry_opt`/`frequency` row can hold a failure payload. **Reader rule (binding on slices 07–10):** any code that reads a stage payload from the store or a runner result checks `failed_reason` first; a payload carrying it is a failure — counted and reported (species, stage, reason), never used as a result. `known_limits` line (slice 09, kept in 10): "a non-deterministic engine failure stays cached as a completed failure row until `invalidate`; it is not retried under the same key (R50)". No ADR in v0.3.0: the decision is local to this mission, recorded here and in `known_limits`; an ADR becomes due when option C (store status for failures) is scheduled, and the lead raises it then. |
 | R51 | Replan 3: standard-state consistency in reaction energies (audit 06 note 1) | — | resolved | `reaction_free_energy` checks only temperature. Resolve read the code: `ThermoConfig` lives on `Recipe` (`orchestrator/species.py`), each record keeps its own `thermo.config`, and `dG_1atm` is derived from the passed config. So a v0.3.0 path mixes standard states only if a caller runs a reaction's species under different recipes or passes a different config — possible in 07 (HF2, incl. the ALPB rerun) and 08 (T2, incl. the ALPB(dioxane) stage) by caller error, not by design. Slice 07 adds `tests/e2e/derived.py: checked_reaction_free_energy(spec, ensembles, config)`: before calling `reaction_free_energy`, every record of every ensemble must have `thermo.config == config` (whole model: temperature, pressure, standard state, quasi-RRHO settings), else `ValueError` naming the species; unit-tested with one ensemble at `standard_state_mol_l=2.0` (refused) and one at another pressure (refused). Every HF2 and T2 ΔG_r (gas and solvated) goes through it. Slice 06 is not edited. |
 | R52 | Replan 3: other audit-06 notes | — | resolved (informational) | (1) A pushed conformer is not re-deduped against the other kept conformers: no v0.3.0 gate depends on it (counts are ≥, the regression compares the same deterministic code); not changed. (2) Dropped conformers are reported by their first `source_id` only: the candidate's `dropped` list carries that id and its reason, which is all 07/08 need. (3) The species-runner node's files include `tests/candidate_outputs/v0.3.0/**`: a path mapping, never read. |
+| R53 | Replan 4: R52(1) happened — a pushed duplicate in UMA HF2 cyclohexene (slice 07 builder, row `qitem-20261123072034-b092d8bb`; lead row `qitem-20261123072110-b8393068`) | — | resolved | Supersedes R52(1) only; R52(2) and R52(3) stand. Finding, quoted from the builder: "UMA HF2 cyclohexene keeps 4 records, two of them the SAME half-chair … record 0 (src [0,3,7], recovery ['tric']) and record 3 (src [52], recovery ['tric','imag_mode_push','tric']) have dG 0.000 / dE 0.000 kcal/mol … both σ 2, g 2. The pushed conformer is not re-deduped against kept ones". Effect: ensemble G(cyclohexene) and the ensemble ΔG_r low by ≈ RT ln 2 ≈ 0.41 kcal/mol; the gated per-conformer values (R47/R48) are unaffected. R52(1)'s "no later gate depends on it" was wrong: the ensemble ΔG_r is regression-gated (R47) and would be locked into the promoted fixture, and a duplicate contradicts g (which already counts the mirror). Cause (resolve read `orchestrator/species.py`): `dedup` runs before the frequency stage; the push moves a conformer; only `drop_mirror_partners` runs after it. Fix: new rework slice **11-push-rededup** (`OPR.0.3.0.11`, after 07, before 08; 08 now depends on it) — after frequency/push/thermo and before the mirror drop, re-run the existing `dedup` (R3 rule, no new tolerance) over the records' final geometries, ordered by G; a match is dropped as `duplicate_after_push`; no engine call or key changes. Why a new slice: 06 is finished and its node's runner code needs a code commit with its own audit; 08 must run on the fixed runner. Candidates: slice 11 regenerates all four HF candidates at its C1 (the Phase 3 set from one code commit), superseding `hf1_butane.{xtb,uma}.json` and `hf2_diels_alder.{xtb,uma}.json` of `32ee699`; `reference_values.json` is re-transcribed (expected byte-identical). Any species with a push can hit this on either recipe (xtb HF2 cyclohexene keeps 2 records, uninspected), including T1/T2 in slice 08 (diene, Cp, cyclopropene, P1a_n), which now assert no duplicate records. Slice 11 also characterizes every surviving cyclohexene record; more than one half-chair-like record with \|ΔG\| ≤ 0.01 kcal/mol above the RMSD threshold is stop-and-report. Slice 07's audit verdict stands for 07. |
 
 ### Seed deviations
 
@@ -288,6 +292,9 @@ Changes to slice specs after their first compile (replan mode; finished slices a
 | 3 | 08-e2e5-tiers | R50 reader rule; T2 ΔG_rxn (gas and solvated) via `checked_reaction_free_energy` | R50, R51 |
 | 3 | 09-acceptance-record | R50 reader rule; failures counted per species and stage; R50 `known_limits` line | R50 |
 | 3 | 10-acceptance-verdict | R50 reader rule; R50 `known_limits` line kept | R50 |
+| 4 | 11-push-rededup (new) | runner re-dedup after the push; unit tests; `assert_no_duplicate_records`; cyclohexene characterization; regenerated HF candidates | R53 |
+| 4 | 08-e2e5-tiers | depends on OPR.0.3.0.11; asserts no duplicate records per T1/T2 species | R53 |
+| 4 | 07, 09, 10 | none (07 under audit; its verdict stands) | — |
 
 ### Host facts and stop-and-report steps
 
@@ -354,6 +361,8 @@ Ledger changes (only via `hyper_ledger.py` / `hypergraph_updater.py`; `--id` on 
 6. `06-species-runner` — US-010; runner, counting, metrics, `ReactionSpec`, report writer; new node
    `eta_rxncat_species_runner`.
 7. `07-human-fixtures` — US-011, US-012; H5, H8, H13; HF1/HF2 on both recipes; candidates commit.
+7a. `11-push-rededup` — R53; runner re-dedup after the push; regenerated HF candidates (they
+    supersede 07's).
 8. `08-e2e5-tiers` — US-015…US-017; TJ's XYZ; T1/T2 on both recipes; candidates commit.
 9. `09-acceptance-record` — US-013; record with `pending_*`; README derivation.
 10. **Phase 3 gate (TJ; not a slice):** TJ reviews and promotes the candidates, confirms the SMILES,
@@ -687,6 +696,7 @@ DV-20 TJ's `hits_by_stage["gs_opt_freq"] == 3` → `species_stage_cache`; DV-21 
 | OPR.0.3.0.8 | slices/08-e2e5-tiers | Land TJ's four XYZ verbatim with provenance, re-derive the T1/T2 SMILES for TJ's confirmation, and run Tier 1 (dimethoxybutadiene) and Tier 2 (Cp + cyclopropene to endo P1a_n, with incremental ALPB dioxane) on both recipes into committed candidates. |
 | OPR.0.3.0.9 | slices/09-acceptance-record | Run HF1, HF2, T1 and T2 on both recipes in the named acceptance envs and write docs/prd/v0.3.0/ACCEPTANCE_RESULT.json with per-stage metrics and pending verdict states, deriving the README v0.3.0 claims from it, with no dependence on TJ acting first. |
 | OPR.0.3.0.10 | slices/10-acceptance-verdict | After TJ's Phase 3 promotion, rerun every fixture on both recipes on fresh stores with ETA_RXNCAT_ACCEPTANCE=1 and zero skips, record the regression, accuracy and SMILES-confirmation verdicts, bump the version to 0.3.0 and derive the final README claims. |
+| OPR.0.3.0.11 | slices/11-push-rededup | Re-dedup a conformer moved by the imaginary-mode push against the kept set with the existing proper-rotation rule, prove it with unit tests, and regenerate the Human Fixture candidates in a candidates-only commit before the Phase 3 gate. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
