@@ -295,6 +295,7 @@ MAPPING_MODULES = (
     "eta_rxncat.mapping.align",
     "eta_rxncat.mapping.errors",
     "eta_rxncat.mapping.graft",
+    "eta_rxncat.mapping.relax",
     "eta_rxncat.mapping.report",
 )
 MAPPING_HEAVY = ("geometric", "torch", "pyscf", "fairchem", "rdkit")

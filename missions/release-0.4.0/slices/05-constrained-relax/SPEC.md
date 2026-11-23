@@ -10,7 +10,7 @@ intent: "Implement relax_constrained_core: core-frozen pre-relaxation through Op
 depends_on: [OPR.0.4.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["src/eta_rxncat/mapping/**", "tests/unit/mapping/**", tests/unit/test_package.py, spec/compiled/architecture.yml]
@@ -169,10 +169,10 @@ slice 06, not here.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `optimize/base.py`, `optimize/geometric_impl.py`, `tests/unit/optimize/`.
-- [ ] Task 2: `relax.py`; export `relax_constrained_core`.
-- [ ] Task 3: `tests/unit/mapping/test_relax.py`; required checks (host check before the full suite).
-- [ ] Task 4: commit; updater (node `eta_rxncat_mapping`; no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `optimize/base.py`, `optimize/geometric_impl.py`, `tests/unit/optimize/`.
+- [x] Task 2: `relax.py`; export `relax_constrained_core`.
+- [x] Task 3: `tests/unit/mapping/test_relax.py`; required checks (host check before the full suite).
+- [x] Task 4: commit; updater (node `eta_rxncat_mapping`; no glob change).
 
 ## 4. The Negative Space (Constraints)
 

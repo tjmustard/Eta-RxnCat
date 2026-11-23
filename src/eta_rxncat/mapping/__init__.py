@@ -13,6 +13,7 @@ from eta_rxncat.mapping.errors import (
     MappingError,
 )
 from eta_rxncat.mapping.graft import graft
+from eta_rxncat.mapping.relax import relax_constrained_core
 from eta_rxncat.mapping.report import (
     core_rmsd_angstrom,
     covalent_radius_angstrom,
@@ -33,5 +34,6 @@ __all__ = [
     "junction_volumes",
     "pair_set_shape",
     "perceive_bonds",
+    "relax_constrained_core",
     "superpose",
 ]

@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -61,7 +61,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-graft
+    last_slice: 05-constrained-relax
   review:
     reviewed_at: '2026-11-23T20:32:40+00:00'
     reviewed_by: audit:04-graft
@@ -576,7 +576,7 @@ nodes:
     last_slice: 03-align
 - id: eta_rxncat_mapping
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -626,4 +626,4 @@ nodes:
     reviewed_by: audit:04-graft
     summary: patched description
   provenance:
-    last_slice: 04-graft
+    last_slice: 05-constrained-relax
