@@ -10,7 +10,7 @@ intent: "Land TJ's four XYZ verbatim with provenance, re-derive the T1/T2 SMILES
 depends_on: [OPR.0.3.0.11]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", tests/unit/conformers/test_e2e5_smiles_derivation.py, "tests/candidate_outputs/v0.3.0/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -151,8 +151,8 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: extract the XYZ (no execution), verify sha256s and the MANIFEST; H10 re-run.
-- [ ] Task 2: inputs, `SOURCES.md`, SMILES derivation test.
+- [x] Task 1: extract the XYZ (no execution), verify sha256s and the MANIFEST; H10 re-run.
+- [x] Task 2: inputs, `SOURCES.md`, SMILES derivation test.
 - [ ] Task 3: T1, T2, SMILES-candidate E2E tests; run on both recipes. A UMA T2 window miss, a
   missing class, or a failed ordering gate → stop and report to the lead with the numbers (no edit
   to the gate or window).

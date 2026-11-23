@@ -337,3 +337,21 @@ def near_degenerate_distinct(rows: list[dict[str, Any]], threshold: float) -> li
             if a["index"] < b["index"] and close and distinct:
                 out.append((a["index"], b["index"]))
     return out
+
+
+def reperceived_smiles(record: ConformerRecord) -> str:
+    """Canonical isomeric SMILES re-perceived from the record's geometry (bonds + 3D stereo)."""
+    from rdkit import Chem
+    from rdkit.Chem import rdDetermineBonds
+
+    rw = Chem.RWMol()
+    for symbol in record.state.symbols:
+        rw.AddAtom(Chem.Atom(symbol))
+    conformer = Chem.Conformer(len(record.state.symbols))
+    for i, (x, y, z) in enumerate(record.state.coordinates):
+        conformer.SetAtomPosition(i, (x, y, z))
+    rw.AddConformer(conformer, assignId=True)
+    mol = rw.GetMol()
+    rdDetermineBonds.DetermineBonds(mol, charge=record.state.charge)
+    Chem.AssignStereochemistryFrom3D(mol)
+    return str(Chem.MolToSmiles(Chem.RemoveHs(mol)))

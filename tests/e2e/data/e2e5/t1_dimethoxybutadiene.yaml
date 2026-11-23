@@ -1,0 +1,20 @@
+# TJ Tier 1 (provisional per TJ Q-E3; v0.3.0 format, DV-19): 1,3-dimethoxybutadiene conformers.
+schema: 1
+fixture: e2e5_t1
+species:
+  - species_id: dimethoxybutadiene
+    smiles: C=C(/C=C/OC)OC
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/2_dimethoxybutadiene.xyz]
+    conformer_options:
+      n_embed: 40
+      seed: 42
+literature:
+  quantity: dE_planar_scis_strans
+  value_kcal_mol: 2.2
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642 (SI p. S6), M06-2X/6-31G(d)"
+  label: "planar s-cis (diene dihedral constrained to 0°)"
+planar_point:
+  dihedral_atoms: [0, 1, 2, 3]
+  value_deg: 0.0

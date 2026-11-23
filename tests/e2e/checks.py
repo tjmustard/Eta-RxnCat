@@ -30,14 +30,20 @@ def checks(
     fixture: str,
     recipe: str,
     payload: Mapping[str, Any],
-    observed: Mapping[str, float],
+    observed: Mapping[str, float] | None,
     sigmas: Mapping[str, int],
 ) -> dict[str, Any]:
-    """Regression and accuracy; under ETA_RXNCAT_ACCEPTANCE=1 any pending_* fails the test."""
-    result = {
-        "regression": regression_status(fixture, recipe, payload),
-        "accuracy": accuracy(observed, sigmas, reference(), recipe=recipe),
-    }
+    """Regression and accuracy; under ETA_RXNCAT_ACCEPTANCE=1 any pending_* fails the test.
+
+    ``observed=None``: the fixture has no reference-values entries (T1/T2 compare with literature
+    values in their own derived block), so accuracy is ``reported``.
+    """
+    acc = (
+        {"status": "reported", "deltas": [], "note": "no reference_values entries for this fixture"}
+        if observed is None
+        else accuracy(observed, sigmas, reference(), recipe=recipe)
+    )
+    result = {"regression": regression_status(fixture, recipe, payload), "accuracy": acc}
     pending = [k for k, v in result.items() if str(v["status"]).startswith("pending_")]
     if pending and acceptance():
         pytest.fail(f"{fixture}.{recipe}: {pending} pending in an acceptance run")

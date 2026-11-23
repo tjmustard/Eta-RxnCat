@@ -1,0 +1,37 @@
+# TJ Tier 2 (provisional per TJ Q-E3; v0.3.0 format, DV-19): Cp + cyclopropene -> endo P1a_n, 1 M.
+schema: 1
+fixture: e2e5_t2
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclopropene
+    smiles: C1=CC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/5_cyclopropene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: P1a_n
+    smiles: C1=C[C@H]2C[C@@H]1[C@H]1C[C@H]12
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/P1a_n.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+reaction:
+  reactants: [[cyclopentadiene, 1], [cyclopropene, 1]]
+  products: [[P1a_n, 1]]
+window_dG_r_1M_kcal_mol: [-42.0, -20.0]
+literature:
+  dE_r_kcal_mol: -51.42
+  dG_r_1atm_kcal_mol: -32.28
+  dG_r_1M_kcal_mol: -34.17
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, M06-2X/6-31G(d), 1 atm (TJ's headers)"
