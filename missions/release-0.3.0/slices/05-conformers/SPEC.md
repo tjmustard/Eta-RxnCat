@@ -2,7 +2,7 @@
 id: OPR.0.3.0.5
 slice: 05-conformers
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.conformers: two-pass ETKDGv3 (second pass without exp
 depends_on: [OPR.0.3.0.3, OPR.0.3.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_conformers
 parent: null
 hacf_touches: ["src/eta_rxncat/conformers/**", "tests/unit/conformers/**", tests/unit/test_package.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
