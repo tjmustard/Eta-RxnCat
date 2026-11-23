@@ -2,7 +2,7 @@
 id: OPR.0.4.0.7
 slice: 07-acceptance-record
 mission: release-0.4.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Add the M1 regression and map-confirmation checks, run M1 on both recip
 depends_on: [OPR.0.4.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, spec/compiled/architecture.yml]

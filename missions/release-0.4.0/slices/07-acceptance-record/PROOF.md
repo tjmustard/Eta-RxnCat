@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: record pending w/ exactly 4 pending reasons; acceptance reproduced at C1 (xtb identical, UMA GPU noise); 1422 passed; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

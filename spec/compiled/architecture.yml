@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -46,10 +46,11 @@ nodes:
     plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
     WebP media (test_media.py), LICENSE (MIT); test_identity.py enforces the author
     form Thomas J. L. Mustard Ph.D. and derives the README badge, Features heading,
-    roadmap and GPU claim from GPU_SMOKE_RESULT.json; v0.3.0 claims from its ACCEPTANCE_RESULT.json.
-    docs/prd/v<version>/ hold the verbatim starters (excluded from every gate), each
-    version's DISCREPANCIES.md and acceptance record (v0.2.0 also evidence/, calibration/);
-    docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
+    roadmap and GPU claim from GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their
+    ACCEPTANCE_RESULT.json. docs/prd/v<version>/ hold the verbatim starters (excluded
+    from every gate), each version's DISCREPANCIES.md and acceptance record (v0.2.0
+    also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy
+    register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -63,9 +64,9 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -74,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -121,15 +122,15 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -176,14 +177,14 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -227,12 +228,12 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -273,12 +274,12 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -328,12 +329,12 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -380,12 +381,12 @@ nodes:
   provenance:
     last_slice: 07-acceptance-record
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -432,14 +433,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
   provenance:
     last_slice: 07-acceptance-record
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -491,14 +492,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
   provenance:
     last_slice: 07-acceptance-record
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -569,14 +570,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-23T21:13:52+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
   provenance:
     last_slice: 07-acceptance-record
 - id: eta_rxncat_mapping
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -591,22 +592,22 @@ nodes:
   description: >-
     Clean-room conserved-core mapper (v0.4.0; from approved nMAP behaviour specs only,
     TJ Q1). (1) align.py: Horn unit-quaternion superposition of ordered point pairs
-    (superpose, Superposition, pair_set_shape); proper rotations only (det +1 by construction,
-    no reflection fix-up), RMSD from residual coordinates, optional positive weights;
-    AlignmentError for fewer than 3 pairs, collinear/coincident sets and a non-unique
-    top eigenvalue; reports pair-set planarity. (2) graft.py: graft(template, fragment,
-    spec) -> GraftResult, template-first surgery: kept template atoms bitwise unchanged
-    in keep order, paired fragment atoms always dropped plus optional fragment_delete,
-    appended atoms in ascending fragment index, explicit product charge and multiplicity,
-    overlap floor GraftClashError, source graph with junction bonds, close contacts
-    (1.3 x covalent radii) recorded, planar-pair flag, junction signed volumes, index_map.
-    report.py: perceive_bonds, covalent_radius_angstrom, core_rmsd_angstrom, junction_volumes.
-    (3) relax.py: relax_constrained_core, core-frozen pre-relaxation (not a minimum)
-    through one Optimizer.minimize call with frozen_atom_indices, never a dihedral
-    constraint; bad core or a constraints option refused first; errors propagate;
-    CoreDisplacementError above CORE_FREEZE_TOLERANCE_ANGSTROM 1e-6 A (R26). Fixture
-    M1: tests/e2e/m1.py (stated-rule map), test_m1_graft.py (tier D), test_m1_relax.py
-    (xtb/UMA E2E; candidates in tests/candidate_outputs/v0.4.0). Errors: MappingError
+    (superpose, Superposition, pair_set_shape); det +1 by construction, residual RMSD,
+    optional positive weights; AlignmentError for fewer than 3 pairs, collinear/coincident
+    sets and a non-unique top eigenvalue; reports pair-set planarity. (2) graft.py:
+    graft(template, fragment, spec) -> GraftResult, template-first surgery: kept template
+    atoms bitwise unchanged in keep order, paired fragment atoms always dropped plus
+    optional fragment_delete, appended atoms in ascending fragment index, explicit
+    product charge and multiplicity, overlap floor GraftClashError, source graph with
+    junction bonds, close contacts (1.3 x covalent radii) recorded, planar-pair flag,
+    junction signed volumes, index_map. report.py: perceive_bonds, covalent_radius_angstrom,
+    core_rmsd_angstrom, junction_volumes. (3) relax.py: relax_constrained_core, core-frozen
+    pre-relaxation (not a minimum) through one Optimizer.minimize call with frozen_atom_indices,
+    never a dihedral constraint; bad core or a constraints option refused first; errors
+    propagate; CoreDisplacementError above CORE_FREEZE_TOLERANCE_ANGSTROM 1e-6 A (R26).
+    Fixture M1 (tests/e2e): m1.py (map rule, regression vs tests/fixtures/v0.4.0,
+    map confirmation), test_m1_graft (tier D), test_m1_relax (xtb/UMA), test_accept_v040
+    + acceptance_record_v040 -> docs/prd/v0.4.0/ACCEPTANCE_RESULT.json. Errors: MappingError
     with AlignmentError, GraftInputError, GraftClashError, CoreDisplacementError.
     numpy; RDKit lazily; no geometric/torch/pyscf/fairchem at import; never eta_rxncat.thermo.
     In: MolecularState + GraftSpec; out: GraftResult. MIT/BSD-only, no ase.
@@ -628,8 +629,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-23T21:13:59+00:00'
-    reviewed_by: audit:06-m1-fixture
+    reviewed_at: '2026-11-23T21:44:27+00:00'
+    reviewed_by: audit:07-acceptance-record
     summary: patched description
   provenance:
     last_slice: 07-acceptance-record
