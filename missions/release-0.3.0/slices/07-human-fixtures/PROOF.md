@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: HF1/HF2 E2E re-run by audit on both recipes (0 skips, incremental counts hold); TJ reference byte-identical and transcription verified; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -2,7 +2,7 @@
 id: OPR.0.3.0.7
 slice: 07-human-fixtures
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Run Human Fixtures 1 (n-butane) and 2 (butadiene + ethylene to cyclohex
 depends_on: [OPR.0.3.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", pyproject.toml, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
