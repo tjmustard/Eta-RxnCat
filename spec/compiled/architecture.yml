@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -65,15 +65,15 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -117,15 +117,15 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,14 +172,14 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,12 +223,12 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,12 +269,12 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -324,6 +324,6 @@ nodes:
   provenance:
     last_slice: 02-core-contracts
   review:
-    reviewed_at: '2026-11-23T03:51:42+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-23T04:04:23+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched

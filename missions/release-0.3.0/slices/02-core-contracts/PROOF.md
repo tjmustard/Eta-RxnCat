@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: six strict frozen core contracts with pass/reject tests; core imports no numpy/rdkit/geometric; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
