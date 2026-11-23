@@ -10,7 +10,7 @@ intent: "After TJ's Phase 3 promotion, rerun every fixture on both recipes on fr
 depends_on: [OPR.0.3.0.9]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.3.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, pyproject.toml, src/eta_rxncat/__init__.py, uv.lock, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -153,9 +153,9 @@ Context the builder needs:
 
 - [x] Task 0: req 0 with tests, committed as C1 (can be built before TJ's promotion; the
   precondition gates only Tasks 1–3, which run at C1 and end in C2).
-- [ ] Task 1: precondition check; stop if unmet.
-- [ ] Task 2: both acceptance runs; merge record.
-- [ ] Task 3: version, README, tests; commit; ledger updater; required checks; remove scratch.
+- [x] Task 1: precondition check; stop if unmet.
+- [x] Task 2: both acceptance runs; merge record.
+- [x] Task 3: version, README, tests; commit; ledger updater; required checks; remove scratch.
 
 ## 4. The Negative Space (Constraints)
 

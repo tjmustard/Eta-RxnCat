@@ -22,7 +22,7 @@
 | OPR.0.3.0.7 | 07-human-fixtures | audited | OPR.0.3.0.6 | 2026-11-23T08:02:12+00:00 audited |
 | OPR.0.3.0.8 | 08-e2e5-tiers | audited | OPR.0.3.0.11 | 2026-11-23T09:24:13+00:00 audited |
 | OPR.0.3.0.9 | 09-acceptance-record | audited | OPR.0.3.0.12 | 2026-11-23T11:20:30+00:00 audited |
-| OPR.0.3.0.10 | 10-acceptance-verdict | executing | OPR.0.3.0.9 | 2026-11-23T11:25:39+00:00 executing |
+| OPR.0.3.0.10 | 10-acceptance-verdict | executed | OPR.0.3.0.9 | 2026-11-23T15:04:28+00:00 executed |
 | OPR.0.3.0.11 | 11-push-rededup | audited | OPR.0.3.0.7 | 2026-11-23T08:42:18+00:00 audited |
 | OPR.0.3.0.12 | 12-t1-order-free | audited | OPR.0.3.0.8 | 2026-11-23T09:56:11+00:00 audited |
 <!-- END HACF GENERATED: slice-table -->
