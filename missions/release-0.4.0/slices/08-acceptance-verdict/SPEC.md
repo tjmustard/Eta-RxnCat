@@ -10,7 +10,7 @@ intent: "After TJ's Phase 3 promotion, rerun M1 on both recipes with ETA_RXNCAT_
 depends_on: [OPR.0.4.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, docs/prd/PLAN_DISCREPANCIES.md, docs/prd/v0.4.0/DISCREPANCIES.md, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
@@ -202,8 +202,8 @@ candidates TJ promotes; the dispatch states it.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; verify the precondition by names and blob ids.
-- [ ] Task 1b: R27 (a)–(e) code and tests; required checks; commit C1 (clean tree).
+- [x] Task 1: codegraph index → `index: ok`; record Start; verify the precondition by names and blob ids.
+- [x] Task 1b: R27 (a)–(e) code and tests; required checks; commit C1 (clean tree).
 - [ ] Task 2: host check → the xtb verdict run → host check → the UMA verdict run.
 - [ ] Task 3: record; version bump; `uv lock`; README; tests; required checks; commit C2; updater.
 

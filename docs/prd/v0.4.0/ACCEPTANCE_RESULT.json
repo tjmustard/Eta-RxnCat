@@ -352,7 +352,7 @@
     "the pre-relaxed structure is a TS guess, not a minimum; it is never ground-state checked",
     "the M1 YAML is provisional until the YAML/JSON graph format is defined (TJ Q-E3)",
     "GraftSpec is self-contained; from v0.8.0 the graph loader builds it from TemplateGeometry.mapping, the single source (mission R11)",
-    "R-group/ligand enumeration and the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))"
+    "R-group/ligand enumeration stays at v0.7.0 (TJ roadmap B); the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))"
   ],
   "logs": {
     "~/.hacf/eta-rxncat-hacf/v040-07-accept-uma.log": {

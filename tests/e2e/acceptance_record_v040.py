@@ -38,7 +38,8 @@ KNOWN_LIMITS = (
     "the M1 YAML is provisional until the YAML/JSON graph format is defined (TJ Q-E3)",
     "GraftSpec is self-contained; from v0.8.0 the graph loader builds it from "
     "TemplateGeometry.mapping, the single source (mission R11)",
-    "R-group/ligand enumeration and the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))",
+    "R-group/ligand enumeration stays at v0.7.0 (TJ roadmap B); the Rh(I) (5+2) complexes are v1.x "
+    "(TJ Q2 (b))",
 )
 TOP_KEYS = (
     "record_schema",
@@ -88,10 +89,50 @@ def _states(name: str, entry: dict[str, Any]) -> dict[str, Any]:
     return states
 
 
-def record_verdict(fixtures: dict[str, Any]) -> dict[str, Any]:
-    """``fail`` on any failed or missing entry or check, else ``pending`` on any ``pending_*``."""
+def _suite_failures(name: str, block: dict[str, Any]) -> list[str]:
+    """A failing pytest block: non-zero exit code, failed or errors (mission R27 a)."""
+    code, failed, errors = block.get("exit_code"), block.get("failed", 0), block.get("errors", 0)
+    if code != 0 or failed or errors:
+        return [
+            f"{name}: exit_code {code}, failed {failed}" + (f", errors {errors}" if errors else "")
+        ]
+    return []
+
+
+def _command_failures(commands: list[dict[str, Any]]) -> list[str]:
+    """Commands with a non-zero exit code or a reported skip (mission R27 a, c)."""
+    reasons = []
+    for i, command in enumerate(commands):
+        where = f"commands[{i}] {' '.join(command.get('argv', [])[:3])}"
+        if command.get("exit_code") != 0:
+            reasons.append(f"{where}: exit_code {command.get('exit_code')}")
+        skipped = pytest_counts(str(command.get("summary", "")))["skipped"]
+        if skipped:
+            reasons.append(f"{where}: {skipped} skipped")
+    return reasons
+
+
+def record_verdict(
+    fixtures: dict[str, Any],
+    default_suite: dict[str, Any] | None = None,
+    commands: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """The record's verdict (R56, R27).
+
+    ``fail`` on any failed or missing entry or check, a failing default suite or clean-room vector
+    run, a command with a non-zero exit code or a skip, or a missing default suite; else
+    ``pending`` on any ``pending_*``; else ``pass``.
+    """
     failures: list[str] = []
     pending: list[str] = []
+    if default_suite is None:
+        failures.append("default_suite: missing")
+    else:
+        failures += _suite_failures("default_suite", default_suite)
+        failures += _suite_failures(
+            "default_suite.cleanroom_vectors", default_suite.get("cleanroom_vectors", {})
+        )
+    failures += _command_failures(commands or [])
     m1 = fixtures.get("m1", {})
     for name in ENTRIES:
         entry = m1.get(name, {"test_outcome": "missing"})
@@ -162,7 +203,15 @@ def check(record: dict[str, Any]) -> list[str]:
             problems.append(f"default_suite: missing {key}")
     if record.get("verdict") not in VERDICTS["record"]:
         problems.append("verdict value")
-    expected = record_verdict(record.get("fixtures", {}))
+    if record.get("verdict") == "pass":
+        files = record.get("evidence", {}).get("promotion", {}).get("files", {})
+        if set(files) != set(PROMOTED_FILES) or not all(
+            f.get("equals_candidate") for f in files.values()
+        ):
+            problems.append("a pass verdict needs evidence.promotion for all three promoted files")
+    expected = record_verdict(
+        record.get("fixtures", {}), record.get("default_suite"), record.get("commands", [])
+    )
     stated = {k: record.get(k) for k in expected}
     if stated != expected:
         problems.append(f"verdict {stated} is not the fixtures' verdict {expected}")
@@ -212,6 +261,7 @@ def merge_runs(
     runs: dict[str, dict[str, Any]],
     commands: list[dict[str, Any]],
     default_suite: dict[str, Any],
+    promotion: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build the record from the per-recipe acceptance files (already parsed)."""
     shas = {r["commit_sha"] for r in runs.values()}
@@ -236,7 +286,13 @@ def merge_runs(
         "devices": {recipe: run["device"] for recipe, run in sorted(runs.items())},
         "fixture_sha256": runs["uma"].get("fixture_sha256", {}),
         "commands": [
-            {"argv": c["argv"], "env": c["env"], "exit_code": c["exit_code"], "wall_s": c["wall_s"]}
+            {
+                "argv": c["argv"],
+                "env": c["env"],
+                "exit_code": c["exit_code"],
+                "wall_s": c["wall_s"],
+                "summary": c["summary"],
+            }
             for c in commands
         ],
         "logs": {
@@ -251,14 +307,70 @@ def merge_runs(
             ),
             "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
             "verdict_run": "slice 08, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)",
+            **({"promotion": promotion} if promotion is not None else {}),
         },
         "fixtures": fixtures,
-        **record_verdict(fixtures),
+        **record_verdict(fixtures, default_suite, commands),
     }
     problems = check(record)
     if problems:
         raise ValueError(f"record invalid: {problems}")
     return record
+
+
+PROMOTION_COMMIT = "174a783"
+CANDIDATES_COMMIT = "035e289"
+PROMOTED_FILES = ("m1_graft.json", "m1_relaxed.uma.json", "m1_relaxed.xtb.json")
+TJ_PROMOTION = {
+    "queue_row": "qitem-20261123222552-7f2f3da801c4ec2c",
+    "answering": "qitem-20261123214530-98591a612a38f5db",
+    "relayed_by": "advisor",
+    "verbatim": (
+        "1. PROMOTED: TJ copied m1_graft.json, m1_relaxed.xtb.json and m1_relaxed.uma.json from "
+        "tests/candidate_outputs/v0.4.0/ into tests/fixtures/v0.4.0/ himself … That CONFIRMS THE "
+        "ATOM MAP (his P2 A)."
+    ),
+    "mission_row": "R28",
+}
+"""TJ's Phase 3 answer as mission R28 quotes it (R27 e)."""
+
+
+def promotion_evidence(repo: Path) -> dict[str, Any]:
+    """R27 (e): TJ's answer, the promotion commit, and per file sha256 and git blob ids.
+
+    The candidates are compared by blob id (``git ls-tree``) only, never read.
+    """
+    import hashlib
+    import subprocess
+
+    def blobs(commit: str, directory: str) -> dict[str, str]:
+        out = subprocess.run(
+            ["git", "ls-tree", commit, directory + "/"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        return {line.split("\t")[1].rsplit("/", 1)[1]: line.split()[2] for line in out.splitlines()}
+
+    promoted = blobs(PROMOTION_COMMIT, "tests/fixtures/v0.4.0")
+    candidates = blobs(CANDIDATES_COMMIT, "tests/candidate_outputs/v0.4.0")
+    files = {}
+    for name in PROMOTED_FILES:
+        path = repo / "tests" / "fixtures" / "v0.4.0" / name
+        files[name] = {
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "blob_id": promoted.get(name),
+            "candidate_blob_id": candidates.get(name),
+            "equals_candidate": promoted.get(name) is not None
+            and promoted.get(name) == candidates.get(name),
+        }
+    return {
+        "tj_answer": TJ_PROMOTION,
+        "promotion_commit": PROMOTION_COMMIT,
+        "candidates_commit": CANDIDATES_COMMIT,
+        "files": files,
+    }
 
 
 def _dump(path: Path, data: Any) -> None:
@@ -281,6 +393,7 @@ def main(argv: list[str]) -> int:
             runs,
             json.loads(Path(argv[3]).read_text(encoding="utf-8")),
             json.loads(Path(argv[4]).read_text(encoding="utf-8")),
+            promotion_evidence(Path(__file__).resolve().parents[2]),
         )
         _dump(Path(argv[5]), record)
         print(f"wrote {argv[5]}: verdict {record['verdict']}")

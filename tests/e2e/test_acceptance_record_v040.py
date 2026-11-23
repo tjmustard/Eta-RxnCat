@@ -94,7 +94,25 @@ SUITE = {
     "exit_code": 0,
     "passed": 10,
     "failed": 0,
-    "cleanroom_vectors": {"command": "uv run pytest tests/unit/mapping", "passed": 5, "failed": 0},
+    "cleanroom_vectors": {
+        "command": "uv run pytest tests/unit/mapping",
+        "exit_code": 0,
+        "passed": 5,
+        "failed": 0,
+    },
+}
+PROMOTION = {
+    "tj_answer": {"verbatim": "1. PROMOTED: …"},
+    "promotion_commit": "174a783",
+    "files": {
+        name: {
+            "sha256": "0" * 64,
+            "blob_id": "b",
+            "candidate_blob_id": "b",
+            "equals_candidate": True,
+        }
+        for name in ("m1_graft.json", "m1_relaxed.uma.json", "m1_relaxed.xtb.json")
+    },
 }
 
 
@@ -119,8 +137,13 @@ def test_everything_settled_is_pass() -> None:
         ),
         COMMANDS,
         SUITE,
+        PROMOTION,
     )
     assert record["verdict"] == "pass" and record["verdict_reasons"] == []
+    assert check(record) == []
+    no_evidence = copy.deepcopy(record)
+    del no_evidence["evidence"]["promotion"]
+    assert any("evidence.promotion" in p for p in check(no_evidence))
 
 
 @pytest.mark.parametrize(
@@ -151,9 +174,10 @@ def test_missing_fragment_is_fail() -> None:
 def test_record_verdict_never_pass_with_pending() -> None:
     """record_verdict reads pass only when nothing is fail, pending_* or missing (R56)."""
     fixtures = {"m1": {"graft": graft_fragment(), "xtb": recipe_fragment("xtb")}}
-    assert record_verdict(fixtures)["verdict"] == "fail"  # uma missing
+    assert record_verdict(fixtures, SUITE, COMMANDS)["verdict"] == "fail"  # uma missing
     fixtures["m1"]["uma"] = recipe_fragment("uma")
-    assert record_verdict(fixtures)["verdict"] == "pending"
+    assert record_verdict(fixtures, SUITE, COMMANDS)["verdict"] == "pending"
+    assert record_verdict(fixtures)["verdict"] == "fail"  # no default suite
 
 
 @pytest.mark.parametrize(
@@ -234,3 +258,75 @@ def test_committed_record_parses_and_is_pre_promotion() -> None:
     assert record["known_limits"] == list(KNOWN_LIMITS)
     assert record["default_suite"]["exit_code"] == 0
     assert record["default_suite"]["cleanroom_vectors"]["failed"] == 0
+
+
+# --- replan 2 (mission R27): the default suite, vectors, commands and skips gate the verdict -----
+
+
+def settled_runs() -> dict[str, dict[str, Any]]:
+    """Runs whose every fixture check passed (promoted and confirmed)."""
+    return runs(
+        graft=graft_fragment("pass", "confirmed"),
+        xtb=recipe_fragment("xtb", regression="pass"),
+        uma=recipe_fragment("uma", regression="pass"),
+    )
+
+
+def failing_suite() -> dict[str, Any]:
+    """SUITE with one failed test."""
+    suite = copy.deepcopy(SUITE)
+    suite["failed"] = 1
+    return suite
+
+
+def failing_vectors() -> dict[str, Any]:
+    """SUITE with a failing clean-room vector run."""
+    suite = copy.deepcopy(SUITE)
+    suite["cleanroom_vectors"]["exit_code"] = 1
+    return suite
+
+
+def command_with(**change: Any) -> list[dict[str, Any]]:
+    """COMMANDS with one field changed."""
+    return [{**COMMANDS[0], **change}]
+
+
+@pytest.mark.parametrize(
+    ("suite", "commands", "reason"),
+    [
+        (failing_suite, lambda: COMMANDS, "default_suite: exit_code 0, failed 1"),
+        (
+            failing_vectors,
+            lambda: COMMANDS,
+            "default_suite.cleanroom_vectors: exit_code 1, failed 0",
+        ),
+        (lambda: SUITE, lambda: command_with(exit_code=2), "commands[0] pytest: exit_code 2"),
+        (
+            lambda: SUITE,
+            lambda: command_with(summary="1 passed, 1 skipped, 1 deselected in 4.0s"),
+            "commands[0] pytest: 1 skipped",
+        ),
+    ],
+)
+def test_all_pass_fixtures_still_fail_on_suite_vectors_commands_or_skips(
+    suite: Any, commands: Any, reason: str
+) -> None:
+    """R27 (a), (c): a failing default suite, vector run, command or a skip gives fail."""
+    record = merge_runs(settled_runs(), commands(), suite(), PROMOTION)
+    assert record["verdict"] == "fail"
+    assert reason in record["verdict_reasons"]
+    assert check(record) == []
+
+
+def test_hand_edited_pass_is_refused() -> None:
+    """check() recomputes the verdict from fixtures, suite and commands."""
+    record = merge_runs(settled_runs(), COMMANDS, failing_suite(), PROMOTION)
+    record["verdict"], record["verdict_reasons"] = "pass", []
+    assert any("is not the fixtures' verdict" in p for p in check(record))
+
+
+def test_record_without_verdict_is_refused() -> None:
+    """R27 (b): a record without the verdict key is refused by check()."""
+    record = merge_runs(settled_runs(), COMMANDS, SUITE, PROMOTION)
+    del record["verdict"]
+    assert "missing verdict" in check(record)

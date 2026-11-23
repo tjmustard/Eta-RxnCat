@@ -29,7 +29,7 @@ v0.4.0 docs time.
 
 | ID | Source | Behaviour there | v0.4.0 decision | Status |
 |---|---|---|---|---|
-| DV-01 | starter plan, PR #9 | adds enumeration, constrained-core pre-relaxation, "<0.1 Å core RMSD on Rh(I) (5+2)" | TJ Q2 "(b)": pre-relaxation in v0.4.0; enumeration and Rh(I) (5+2) in v1.x. | decided |
+| DV-01 | starter plan, PR #9 | adds enumeration, constrained-core pre-relaxation, "<0.1 Å core RMSD on Rh(I) (5+2)" | TJ Q2 "(b)": pre-relaxation in v0.4.0; enumeration out of v0.4.0, kept at v0.7.0 (TJ roadmap B); Rh(I) (5+2) in v1.x. | decided |
 | DV-02 | `mapping/core_mapper.py` `kabsch_align` | SVD with determinant fix | Horn quaternion. | decided |
 | DV-03 | `tests/unit/test_v040_core_mapper.py` | substituent alignment atoms all deleted, which its own validator rejects | the fragment side is its own ordered list (`fragment_alignment`), paired fragment atoms always dropped. | decided |
 | DV-04 | `core/models.py` `AtomMappingSpec` | `keep_atoms`/`delete_atoms`/`alignment_atoms`/`attachment_anchors`, no partition | the ADR-0005 contract (`keep`, `delete`, `alignment`, `anchors`, partition) kept. | decided |

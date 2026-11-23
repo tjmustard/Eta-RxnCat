@@ -811,9 +811,10 @@ def check_v040_claims(readme_text: str, record: dict[str, Any] | None) -> list[s
     present = [phrase for phrase, _ in V040_CLAIMS if phrase in text]
     if record is None:
         return [f"README claims {p[:40]!r}… but there is no v0.4.0 record" for p in present]
-    if record.get("verdict") == "fail":
-        return [f"README claims {p[:40]!r}… but the record's verdict is fail" for p in present] or [
-            "the v0.4.0 record's verdict is fail"
+    if record.get("verdict") not in ("pass", "pending"):
+        state = "has no verdict" if "verdict" not in record else "verdict is fail"
+        return [f"README claims {p[:40]!r}… but the record {state}" for p in present] or [
+            f"the v0.4.0 record {state}"
         ]
     problems = []
     for phrase, holds in V040_CLAIMS:
@@ -852,3 +853,50 @@ def test_v040_claim_check_catches_drift() -> None:
     assert problems and all("verdict is fail" in p for p in problems)
     assert check_v040_claims(readme(), None) != []
     assert check_v040_claims("no claims here", None) == []
+
+
+def _v040_recomputed(change: Any) -> dict[str, Any]:
+    """The committed v0.4.0 record with one change and its verdict recomputed (mission R27)."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "tests" / "e2e"))
+    from acceptance_record_v040 import record_verdict
+
+    record = json.loads(V040_RECORD.read_text(encoding="utf-8"))
+    change(record)
+    record.update(
+        record_verdict(record["fixtures"], record.get("default_suite"), record.get("commands", []))
+    )
+    return record
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        (lambda r: r["default_suite"].update(failed=1), "default_suite: exit_code"),
+        (
+            lambda r: r["default_suite"]["cleanroom_vectors"].update(exit_code=1),
+            "default_suite.cleanroom_vectors",
+        ),
+        (lambda r: r["commands"][0].update(exit_code=1), "exit_code 1"),
+        (lambda r: r["commands"][1].update(summary="1 passed, 1 skipped in 3.0s"), "1 skipped"),
+    ],
+)
+def test_v040_claims_refused_when_suite_vectors_commands_or_skips_fail(
+    change: Any, reason: str
+) -> None:
+    """R27: a failing suite, vector run, command or a skip fails the record and every claim."""
+    record = _v040_recomputed(change)
+    assert record["verdict"] == "fail"
+    assert any(reason in r for r in record["verdict_reasons"])
+    problems = check_v040_claims(readme(), record)
+    assert problems and all("verdict is fail" in p for p in problems)
+
+
+def test_v040_claims_refused_without_verdict() -> None:
+    """R27 (b) / v0.3.0 slice 10 req 4: no ``verdict`` key refuses every claim, never KeyError."""
+    record = json.loads(V040_RECORD.read_text(encoding="utf-8"))
+    record.pop("verdict", None)
+    problems = check_v040_claims(readme(), record)
+    assert problems and all("has no verdict" in p for p in problems)
+    assert len(problems) == len(V040_CLAIMS)
