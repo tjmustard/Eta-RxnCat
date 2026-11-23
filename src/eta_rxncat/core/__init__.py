@@ -1,6 +1,7 @@
-"""Core data contracts, the ReactionGraph loader and PotentialResult (v0.1.0, v0.2.0)."""
+"""Core data contracts, the ReactionGraph loader, PotentialResult and the v0.3.0 records."""
 
 from eta_rxncat.core.elements import ATOMIC_NUMBERS, ELEMENT_SYMBOLS
+from eta_rxncat.core.ensemble_models import ConformerEnsemble, ConformerRecord
 from eta_rxncat.core.graph import (
     Component,
     NodeKind,
@@ -22,13 +23,17 @@ from eta_rxncat.core.models import (
     StageKind,
     ThermoConfig,
 )
+from eta_rxncat.core.optimization_models import OptimizationResult, OptimizerIdentity
 from eta_rxncat.core.results import Device, HessianMethod, PotentialResult
+from eta_rxncat.core.thermo_models import ThermoAnalysisOptions, ThermoResult
 
 __all__ = [
     "ATOMIC_NUMBERS",
     "ELEMENT_SYMBOLS",
     "AtomMappingSpec",
     "Component",
+    "ConformerEnsemble",
+    "ConformerRecord",
     "Device",
     "EngineIdentity",
     "EngineTag",
@@ -36,6 +41,8 @@ __all__ = [
     "HessianMethod",
     "MolecularState",
     "NodeKind",
+    "OptimizationResult",
+    "OptimizerIdentity",
     "PotentialResult",
     "PruningRule",
     "ReactionEdge",
@@ -46,7 +53,9 @@ __all__ = [
     "StageConfig",
     "StageKind",
     "TemplateGeometry",
+    "ThermoAnalysisOptions",
     "ThermoConfig",
+    "ThermoResult",
     "dump_reaction_graph_json",
     "load_reaction_graph",
 ]

@@ -34,6 +34,11 @@ class PotentialResult(CoreModel):
       pre-symmetrisation ``|H[i][j] - H[j][i]|`` in ``hessian_max_asymmetry`` (Eh/Bohr^2).
     - Wall time in seconds.
 
+    Consumers (DV-23): the model is frozen only shallowly; its force and Hessian lists are
+    ordinary mutable lists. A consumer that needs a matrix to transform copies it first (for
+    example ``numpy.array(result.hessian_hartree_per_bohr2)``) and never mutates the lists in
+    place.
+
     Attributes:
         energy_hartree: Total electronic energy (Eh).
         forces_hartree_per_bohr: Forces (Eh/Bohr), N x 3, or ``None`` if not computed.

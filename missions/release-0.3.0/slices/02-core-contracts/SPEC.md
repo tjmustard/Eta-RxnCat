@@ -10,7 +10,7 @@ intent: "Add frozen, strict core contracts (ThermoAnalysisOptions, ThermoResult,
 depends_on: [OPR.0.3.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", tests/unit/test_package.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -121,11 +121,11 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: `thermo_models.py` + tests `tests/unit/core/test_core_thermo_models.py`.
-- [ ] Task 2: `optimization_models.py` + `tests/unit/core/test_core_optimization_models.py`.
-- [ ] Task 3: `ensemble_models.py` + `tests/unit/core/test_core_ensemble_models.py`.
-- [ ] Task 4: re-exports; extend `test_package.py` heavy-module list.
-- [ ] Task 5: core description trim; `hyper_ledger.py validate`; required checks; commit.
+- [x] Task 1: `thermo_models.py` + tests `tests/unit/core/test_core_thermo_models.py`.
+- [x] Task 2: `optimization_models.py` + `tests/unit/core/test_core_optimization_models.py`.
+- [x] Task 3: `ensemble_models.py` + `tests/unit/core/test_core_ensemble_models.py`.
+- [x] Task 4: re-exports; extend `test_package.py` heavy-module list.
+- [x] Task 5: core description trim; `hyper_ledger.py validate`; required checks; commit.
 
 ## 4. The Negative Space (Constraints)
 

@@ -12,7 +12,7 @@ import pytest
 
 import eta_rxncat
 
-HEAVY_MODULES = ("torch", "pyscf", "rdkit")
+HEAVY_MODULES = ("torch", "pyscf", "rdkit", "numpy", "geometric")
 
 
 def test_version() -> None:
@@ -21,10 +21,11 @@ def test_version() -> None:
 
 
 def test_import_loads_no_heavy_modules() -> None:
-    """Importing the package in a fresh interpreter loads none of the heavy backends."""
+    """Importing the package and its data-only core loads none of the heavy backends or numpy."""
     code = (
         "import json, sys\n"
         "import eta_rxncat\n"
+        "import eta_rxncat.core\n"
         f"heavy = {HEAVY_MODULES!r}\n"
         "loaded = sorted(m for m in sys.modules if m.split('.')[0] in heavy)\n"
         "print(json.dumps(loaded))\n"

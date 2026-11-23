@@ -14,7 +14,7 @@
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
 | OPR.0.3.0.1 | 01-starter | audited |  | 2026-11-23T03:52:05+00:00 audited |
-| OPR.0.3.0.2 | 02-core-contracts | compiled | OPR.0.3.0.1 | 2026-11-23T03:40:09+00:00 compiled |
+| OPR.0.3.0.2 | 02-core-contracts | executed | OPR.0.3.0.1 | 2026-11-23T03:59:50+00:00 executed |
 | OPR.0.3.0.3 | 03-thermo | compiled | OPR.0.3.0.2 | 2026-11-23T03:40:09+00:00 compiled |
 | OPR.0.3.0.4 | 04-optimizer | compiled | OPR.0.3.0.2 | 2026-11-23T03:40:09+00:00 compiled |
 | OPR.0.3.0.5 | 05-conformers | compiled | OPR.0.3.0.3, OPR.0.3.0.4 | 2026-11-23T03:40:10+00:00 compiled |
