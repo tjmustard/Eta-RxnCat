@@ -8,7 +8,7 @@
       "status": "pending_promotion"
     }
   },
-  "commit_sha": "3014a714cedcb6c99ead67a395bab93b3b45c6f1",
+  "commit_sha": "07b5aaf649eb1dbb196deacde6390d71d9a38d1c",
   "derived": {
     "dE_r_lowest_records_kcal_mol": -67.44227755537814,
     "dG_r_ensemble_minus_lowest_kcal_mol": -0.3657274111860147,
@@ -67,7 +67,7 @@
       "charge": 0,
       "dropped": [
         {
-          "reason": "mirror_partner",
+          "reason": "duplicate_after_push",
           "source_id": 51
         },
         {
