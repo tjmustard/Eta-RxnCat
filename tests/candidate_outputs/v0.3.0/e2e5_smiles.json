@@ -1,0 +1,36 @@
+{
+  "commit_sha": "e0ccae0062132bacebbcbad260ac9e8a0e222bf3",
+  "fixture": "e2e5_smiles",
+  "schema": 1,
+  "species": {
+    "P1a_n": {
+      "derived_smiles": "C1=C[C@H]2C[C@@H]1[C@H]1C[C@H]12",
+      "input_smiles": "C1=C[C@H]2C[C@@H]1[C@H]1C[C@H]12",
+      "rdkit_version": "2026.09.2",
+      "xyz_file": "tests/e2e/data/e2e5/xyz/P1a_n.xyz",
+      "xyz_sha256": "c7b9792c062bdff47125a237620b1fc4e4b81d3b0c241daf7008de00ab0e5d7a"
+    },
+    "cyclopentadiene": {
+      "derived_smiles": "C1=CCC=C1",
+      "input_smiles": "C1=CCC=C1",
+      "rdkit_version": "2026.09.2",
+      "xyz_file": "tests/e2e/data/e2e5/xyz/1_cyclopentadiene.xyz",
+      "xyz_sha256": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812"
+    },
+    "cyclopropene": {
+      "derived_smiles": "C1=CC1",
+      "input_smiles": "C1=CC1",
+      "rdkit_version": "2026.09.2",
+      "xyz_file": "tests/e2e/data/e2e5/xyz/5_cyclopropene.xyz",
+      "xyz_sha256": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2"
+    },
+    "dimethoxybutadiene": {
+      "derived_smiles": "C=C(/C=C/OC)OC",
+      "input_smiles": "C=C(/C=C/OC)OC",
+      "rdkit_version": "2026.09.2",
+      "xyz_file": "tests/e2e/data/e2e5/xyz/2_dimethoxybutadiene.xyz",
+      "xyz_sha256": "12afa0690b7b3eac442032b35ac98b92534be93afd14bd6b09353f25fb3c8111"
+    }
+  },
+  "status": "pending_confirmation"
+}
