@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: verdict pass reproduced at C1 with ACCEPTANCE=1 (xtb identical, UMA dE 1.4e-8 Eh); promotion blob ids == candidates; 0.4.0; 1433 passed; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -2,7 +2,7 @@
 id: OPR.0.4.0.8
 slice: 08-acceptance-verdict
 mission: release-0.4.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "After TJ's Phase 3 promotion, rerun M1 on both recipes with ETA_RXNCAT_
 depends_on: [OPR.0.4.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, docs/prd/PLAN_DISCREPANCIES.md, docs/prd/v0.4.0/DISCREPANCIES.md, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]

@@ -20,5 +20,5 @@
 | OPR.0.4.0.5 | 05-constrained-relax | audited | OPR.0.4.0.4 | 2026-11-23T20:51:26+00:00 audited |
 | OPR.0.4.0.6 | 06-m1-fixture | audited | OPR.0.4.0.5 | 2026-11-23T21:14:24+00:00 audited |
 | OPR.0.4.0.7 | 07-acceptance-record | audited | OPR.0.4.0.6 | 2026-11-23T21:44:50+00:00 audited |
-| OPR.0.4.0.8 | 08-acceptance-verdict | executed | OPR.0.4.0.7 | 2026-11-23T22:52:17+00:00 executed |
+| OPR.0.4.0.8 | 08-acceptance-verdict | audited | OPR.0.4.0.7 | 2026-11-23T23:00:12+00:00 audited |
 <!-- END HACF GENERATED: slice-table -->
