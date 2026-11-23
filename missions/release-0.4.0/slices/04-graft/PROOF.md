@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: G1-G8 per SPEC; vectors 04/05 8.4e-7 A, 07(b) 6.7e-16 A, 07(a) refused; 96 mapping tests; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

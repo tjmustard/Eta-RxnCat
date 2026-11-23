@@ -2,7 +2,7 @@
 id: OPR.0.4.0.4
 slice: 04-graft
 mission: release-0.4.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Implement ordered graft surgery (paired fragment atoms dropped, optiona
 depends_on: [OPR.0.4.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["src/eta_rxncat/mapping/**", "tests/unit/mapping/**", tests/unit/test_package.py, spec/compiled/architecture.yml]

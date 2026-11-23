@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -63,9 +63,9 @@ nodes:
   provenance:
     last_slice: 04-graft
   review:
-    reviewed_at: '2026-11-23T19:54:21+00:00'
-    reviewed_by: audit:03-align
-    summary: patched description
+    reviewed_at: '2026-11-23T20:32:40+00:00'
+    reviewed_by: audit:04-graft
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -576,7 +576,7 @@ nodes:
     last_slice: 03-align
 - id: eta_rxncat_mapping
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -589,11 +589,15 @@ nodes:
     residual coordinates, optional positive weights; refuses fewer than 3 pairs, collinear
     or coincident sets (RMS off-line deviation at or below degenerate_tolerance_angstrom)
     and a non-unique top eigenvalue with AlignmentError; reports each pair set's RMS
-    off-plane deviation for the planar-pair flag. (2) graft.py (slice 04): ordered
-    template-first surgery driven by GraftSpec: kept template atoms bitwise unchanged,
-    paired fragment atoms always dropped plus optional fragment_delete, explicit product
-    charge and multiplicity, overlap floor GraftClashError, recorded close contacts
-    and junction signed volumes, index_map. (3) relax.py (slice 05): core-frozen pre-relaxation
+    off-plane deviation for the planar-pair flag. (2) graft.py: graft(template, fragment,
+    spec) -> GraftResult, ordered template-first surgery driven by GraftSpec: range/active/element
+    checks (GraftInputError), kept template atoms bitwise unchanged in keep order,
+    paired fragment atoms always dropped plus optional fragment_delete, appended atoms
+    in ascending fragment index, explicit product charge and multiplicity, overlap
+    floor GraftClashError, source graph incl. junction bonds, close contacts (1.3
+    x covalent radii) recorded, planar-pair flag, junction signed volumes, index_map.
+    report.py: perceive_bonds (RDKit DetermineConnectivity), covalent_radius_angstrom,
+    core_rmsd_angstrom, junction_volumes. (3) relax.py (slice 05): core-frozen pre-relaxation
     through the Engine and Optimizer interfaces (frozen_atom_indices, never a dihedral
     constraint), CoreDisplacementError above 1e-8 A. Errors: MappingError with AlignmentError,
     GraftInputError, GraftClashError, CoreDisplacementError. Dependencies: numpy;
@@ -618,8 +622,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-23T19:54:21+00:00'
-    reviewed_by: audit:03-align
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T20:32:40+00:00'
+    reviewed_by: audit:04-graft
+    summary: patched description
   provenance:
     last_slice: 04-graft
