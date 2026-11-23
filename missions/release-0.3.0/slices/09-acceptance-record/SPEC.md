@@ -38,9 +38,16 @@ Context the builder needs:
   `pending_confirmation` are expected values here. The verdict run with `ETA_RXNCAT_ACCEPTANCE=1` is
   slice 10, after TJ promotes.
 - R26: `known_limits` lists reported deviations only (GFN2 vs TJ's T2 window and vs the HF2/HF1
-  references once known) and, where GFN2 cannot carry a tier, the Q-E5 proposal that MACE/UMA/OMol25
+  references) and, where GFN2 cannot carry a tier, the Q-E5 proposal that MACE/UMA/OMol25
   become standard (TJ: "Q5. C, if it turns out MACE, UMA, or OMol25 are needed then they should
-  become standard."). A gated failure is never a known limit; it fails the run.
+  become standard."). A gated failure is never a known limit; it fails the run. One fixed
+  `known_limits` line (mission R47): "accuracy compares per-conformer quantities; our G is Grimme
+  quasi-RRHO (ω₀ 100 cm⁻¹), the reference pure RRHO (≤ 0.01 kcal/mol on these Δ values per its
+  README); the ensemble ΔG_r differs from the per-conformer ΔG_r by `dG_r_ensemble_minus_lowest`
+  (reported)."
+- R46–R48: TJ's reference exists only as the candidate until TJ promotes it, so `accuracy.verdict`
+  here is `pending_reference`. The deltas are the R48 quantities like for like: HF1 per conformer,
+  HF2 `dX_r_lowest_records` (never the ensemble ΔG_r), each with the σ check of R47.
 - The acceptance driver lives at `tests/e2e/test_accept_v030.py` (species-runner node; **not**
   `tests/acceptance/**`, which belongs to the engines node, R11).
 - The E2E tests write candidates; this slice must not rewrite the committed candidates. Point the
@@ -93,7 +100,8 @@ Context the builder needs:
    `engine_calls`, `cache_hits`; `n_pool`, `n_kept`; `optimizer_steps_total`, `recovery_steps`;
    `device`; `regression` with deltas; `accuracy` = {`verdict` (`pass`|`fail`|`reported`|
    `pending_reference`), `gating_level: "wb97mv_def2tzvpd//b3lyp_631gss"`, `deltas` per level per
-   quantity (both levels, R43)}; `smiles_confirmation` (T1/T2); 
+   quantity (both levels, R43; quantities per R47/R48)}; HF2 also `dG_r_ensemble_minus_lowest`;
+   `smiles_confirmation` (T1/T2); 
    `incremental_solvation` (observed vs expected calls); `species_stage_cache` (HF2, T2); plus
    `commit_sha`, `run_at_utc`, `hardware`, `commands`, `logs`, `known_limits`, `evidence`.
 3. A record-schema test (default suite): the committed record parses, has every fixture × recipe,
@@ -129,7 +137,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R4, R11, R22, R26, R43, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
+- Mission §5 R4, R11, R22, R26, R43, R46–R48, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
   `tests/unit/test_identity.py`.
 
 ## Intent visual

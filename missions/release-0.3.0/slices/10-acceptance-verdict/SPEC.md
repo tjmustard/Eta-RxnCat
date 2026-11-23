@@ -33,15 +33,19 @@ Context the builder needs:
 - **Precondition (R22), checked first, never acted on:** these exist in `tests/fixtures/v0.3.0/`
   (`ls`; promoted files are readable): `hf1_butane.{xtb,uma}.json`,
   `hf2_diels_alder.{xtb,uma}.json`, `e2e5_t1.{xtb,uma}.json`, `e2e5_t2.{xtb,uma}.json`,
-  `e2e5_smiles.json`, `reference_values.json`; and the mission SPEC's trade-off log has resolve's
+  `e2e5_smiles.json`, `reference_values.json` (TJ's promotion of the R46 candidate, or his own
+  file); and the mission SPEC's trade-off log has resolve's
   promotion R-row listing them with sha256. If anything is missing, stop and report to the lead:
   the slice does not start. If TJ corrected a SMILES, resolve has compiled a rework slice that runs
   before this one; do not edit inputs here.
 - Q5 "A" bounds (both recipes, fresh store, same device): class of the lowest record exact; σ and g
   of every matched record exact; |ΔE| ≤ 1e-5 Eh; G/ΔG/ΔG_r ≤ 0.05 kcal/mol; weights ±0.02; records
   matched by class and RMSD ≤ 0.125 Å with H (unmatched → fail); T1's planar point E within 1e-5
-  Eh. Accuracy (R43, TJ's reference level ωB97M-V/def2-TZVPD//B3LYP/6-31G**): UMA HF1 within 0.5
-  of the `gate: true` same-kind value, HF2 ΔG_r(1 M) within 2.0 of it; deltas against both tables
+  Eh. Accuracy (R43, TJ's reference level ωB97M-V/def2-TZVPD//B3LYP/6-31G**; like for like per
+  R47/R48): UMA HF1 `hf1.dG_gauche_anti` (per conformer) within 0.5 of the `gate: true` value, HF2
+  `dG_r_lowest_records` at 1 M within 2.0 of the `gate: true` `hf2.dG_r` (never the ensemble
+  ΔG_r); the compared records' σ equal `reference_species` σ, else `fail`; the gate flags are read
+  from the promoted file; deltas against both tables
   (ωB97M-V and B3LYP/6-31G**) reported for both recipes; xtb `reported`; a quantity with no gating
   entry `reported`; `hf1.gauche_population` always `reported`. The reference file is the
   advisor's values placed by TJ; it is read, never edited.
@@ -122,7 +126,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R10, R18, R22, R26, R42, R43, "Test tiers and tolerances"; TJ Q5, Q-E5.
+- Mission §5 R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
 
 ## Intent visual
 

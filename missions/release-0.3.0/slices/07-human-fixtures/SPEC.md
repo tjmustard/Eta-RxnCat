@@ -31,7 +31,16 @@ candidates-only commit nobody reads back.
 
 Context the builder needs:
 - TJ Q1 "C": the team drafts HF1/HF2 and runs them into `tests/candidate_outputs/v0.3.0/` for TJ to
-  promote; TJ supplies reference values (request `qitem-20261123015428-cc83f02a1853ab80`, open).
+  promote. TJ's reference values arrived (mission R46, TJ verbatim "Send as my reference"): source
+  `~/.hacf/eta-rxncat-hacf/incoming/tj-reference-b3lyp-20261123/`, `results.json` sha256
+  `40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e`, `README.md` sha256
+  `3933153bd3c750daf717b2ee5b35d0584fb539cc93e9fcc42c48503b751186be`. That approves the values,
+  not a seat writing `tests/fixtures/`: this slice transcribes them into a **candidate**.
+- Like for like (mission R47, R48): the reference is one conformer per species (σ by hand, no
+  degeneracy, pure RRHO). Our per-record G carries σ and no g; G_ens carries g. So accuracy reads
+  per-conformer quantities only: HF1 `hf1.dG_gauche_anti` (gate) and HF2 `dG_r_lowest_records` at
+  1 M (gate) — never the ensemble ΔG_r, which is ≈ 0.39 kcal/mol more negative (cyclohexene g = 2,
+  butadiene s-cis-side records).
   TJ Q2 "A": recipe `xtb` = `xtb_subprocess`/`gfn2` for every stage; recipe `uma` =
   `uma_direct`/`uma-s-1p2p1` with high-precision `inference_settings`. TJ R2 "A": butane ΔG(gauche −
   anti) **per conformer**, no RT ln 2. TJ R1 "A": candidates committed on the branch.
@@ -91,8 +100,9 @@ Context the builder needs:
    points on B3LYP/6-31G** geometries, with B3LYP/6-31G** RRHO thermal corrections. BOTH tables
    (B3LYP/6-31G** and ωB97M-V) are reported, and ONLY the ωB97M-V table gates." The advisor
    computes the values; no seat computes or writes `tests/fixtures/v0.3.0/reference_values.json`).
-   Format `schema: 1`, `entries`, each: `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`,
-   `hf1.dG_gauche_anti`, `hf1.gauche_population`, `hf2.dG_r`, `hf2.dH_r`}; `level` ∈
+   Format `schema: 1`, `reference_species` (per species id: `sigma`, `conformer`, `thermo_model`),
+   `entries`, each: `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`,
+   `hf1.dG_gauche_anti`, `hf1.gauche_population`, `hf2.dE_r`, `hf2.dH_r`, `hf2.dG_r`}; `level` ∈
    {`wb97mv_def2tzvpd//b3lyp_631gss`, `b3lyp_631gss`}; `method` (text); `value`; `unit`
    (`kcal/mol`|`percent`); `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`); `temperature_k`;
    `provenance` (text: who computed it, program/version, input/output references); `gate: bool`.
@@ -102,12 +112,49 @@ Context the builder needs:
    holds one entry per level per quantity with placeholder numbers, every entry marked
    `"provenance": "EXAMPLE — not a reference"`; the loader refuses any entry with that provenance
    when it loads `tests/fixtures/v0.3.0/reference_values.json` (tested). Unit-tested in the default suite.
+2a. TJ's reference as a candidate (mission R46; R23 order):
+   - Copy `results.json` and `README.md` byte-identical from the source directory into
+     `tests/e2e/data/reference/tj-reference-b3lyp-20261123/`, plus a `SOURCES.md` you write: origin
+     path, `sha256sum` of every file in the source directory, who computed it (the advisor's helper,
+     PySCF 2.15.1, geomeTRIC 1.1.1), and TJ's verbatim "Send as my reference" (2026-11-23). Scripts,
+     XYZs and logs are not committed, only listed with sha256.
+   - `transcribe_tj_results(path) -> dict` in `tests/e2e/reference_values.py`: a fixed table from
+     results.json key paths to (quantity, level). Block `GATING REFERENCE` → level
+     `wb97mv_def2tzvpd//b3lyp_631gss`; block `B3LYP/6-31G** (RRHO)` → `b3lyp_631gss`. Keys:
+     `butane_gauche_minus_anti_kcal_mol.{dE, dH_298, dG_298}` → `hf1.{dE,dH,dG}_gauche_anti`;
+     `butane_gauche_population_percent_298K.from_dG` → `hf1.gauche_population` (`percent`, `n/a`);
+     `diels_alder_kcal_mol.{dE_r, dH_r_298}` → `hf2.{dE_r,dH_r}` (`n/a`);
+     `diels_alder_kcal_mol.dG_r_298_1M` → `hf2.dG_r` (`1 M`). `temperature_k` from
+     `temperature_K`. Floats are copied as parsed: no arithmetic, no rounding. `gate: true` only on
+     `hf1.dG_gauche_anti` and `hf2.dG_r` at the ωB97M-V level (mission R48); every other entry
+     `gate: false`. `provenance` per entry: "TJ-approved 2026-11-23 'Send as my reference'; advisor
+     helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 <full>; key <block>/<path>".
+     `reference_species`: σ from `symmetry_numbers_used` (butane_anti 2, butane_gauche 2,
+     butadiene_strans 2, ethylene 4, cyclohexene 2), one conformer each, `thermo_model: "RRHO"`.
+     Not transcribed: the quasi-RRHO and D3(BJ) side blocks, the 1 atm ΔG_r, butadiene gauche −
+     s-trans (R49).
+   - Default-suite test: the committed results.json sha256 equals R46's value; the transcription
+     passes the fixtures-mode loader; each value equals its key's float exactly; and, as an
+     independent check against the relayed figures, rounding to 3 dp (population 1 dp) gives:
+     ωB97M-V HF1 ΔE 0.609, ΔH 0.658, ΔG 0.685, population 38.6, HF2 ΔE_r −47.055, ΔH_r −42.712,
+     ΔG_r(1 M) −30.922; B3LYP HF1 ΔH 0.870, ΔG 0.897, HF2 ΔH_r −38.311, ΔG_r(1 M) −26.522. A
+     mismatch is stop-and-report, never an edited value.
+   - A small entry point (e.g. `python -m tests.e2e.reference_values transcribe <results.json> <out>`)
+     writes the candidate `tests/candidate_outputs/v0.3.0/reference_values.json` after C1; it goes
+     in C2 with the other candidates. Never read it back: the test above proves it in memory.
 3. `tests/e2e/conftest.py`: markers `e2e` (new, registered in `pyproject.toml` markers and deselected
    by default addopts) plus `xtb` or `mlip_uma` + `slow`; a `recipes` fixture; a fresh store per test
    under `tmp_path`; the candidate directory `tests/candidate_outputs/v0.3.0/` (write only).
 4. `tests/e2e/derived.py`: HF1 torsion class (C1–C2–C3–C4 = atoms 0–3, |φ| > 120° anti, else
    gauche); ΔE/ΔH/ΔG(gauche − anti) per conformer = lowest gauche record − lowest anti record; gauche
-   population = summed weights of gauche records; `class_dG_gauche_anti` = −RT ln(P_g/P_a). Unit-tested.
+   population = summed weights of gauche records; `class_dG_gauche_anti` = −RT ln(P_g/P_a). HF2
+   (mission R47): `dX_r_lowest_records` (X ∈ E, H, G; G at 1 M) = X(lowest-G cyclohexene record) −
+   X(lowest-G s-trans butadiene record) − X(lowest-G ethylene record), from per-record values;
+   `dG_r_ensemble_minus_lowest` = ensemble ΔG_r(1 M) − `dG_r_lowest_records`. Accuracy helper:
+   compares a quantity only after checking each compared record's σ against `reference_species`
+   (mismatch → `fail` for UMA; `sigma_mismatch` beside the reported xtb delta). Unit-tested,
+   including a synthetic cyclohexene with g = 2 whose ensemble and per-conformer ΔG_r differ by
+   exactly −RT ln 2.
 5. `tests/e2e/test_hf1_butane.py` (per recipe): run, assert one anti record (σ 2, g 1) and one gauche
    record (σ 2, g 2), lowest record 0 imaginary modes; write `hf1_butane.<recipe>.json` (§5
    candidate schema plus the derived block); then regression if `tests/fixtures/v0.3.0/hf1_butane.<recipe>.json`
@@ -125,8 +172,11 @@ Context the builder needs:
      ethylene's lowest record, CPU device → exactly 1 call, 0 upstream; mechanism only (no ΔG_solv).
    - UMA ΔG_solv is `n/a`.
    - upstream rows keep their keys and `created_at_utc`.
-   Writes `hf2_diels_alder.<recipe>.json`; regression/accuracy as HF1 (UMA ΔG_r(1 M) within 2.0 of
-   the `gate: true` entry; both levels reported).
+   Writes `hf2_diels_alder.<recipe>.json` (ensemble ΔE_r/ΔH_r/ΔG_r, `dX_r_lowest_records`,
+   `dG_r_ensemble_minus_lowest`); σ asserted: s-trans butadiene 2, ethylene 4, cyclohexene 2.
+   Regression as HF1 (ensemble and per-conformer quantities). Accuracy (R47/R48): UMA
+   `dG_r_lowest_records` at 1 M within 2.0 of the `gate: true` `hf2.dG_r`; `dE_r`/`dH_r` per
+   conformer reported; both levels reported; the ensemble ΔG_r is never compared to the reference.
 7. Regression helper (`tests/e2e/regression.py`, unit-tested on synthetic payloads): match records
    by class and RMSD ≤ 0.125 Å with H over automorphisms (proper rotation); unmatched → fail; σ and g
    exact; |ΔE| ≤ 1e-5 Eh; G/ΔG ≤ 0.05 kcal/mol; weights ±0.02; same device required.
@@ -142,7 +192,8 @@ Context the builder needs:
   distinct pass-1 embeddings that converge to it, and from 3 displacements of 0.01 Å, on each recipe
   (UMA on cuda); record the spread of the lowest 3 frequencies and of G. Spread of G > 0.0167
   kcal/mol → stop and report to the lead.
-- [ ] Task 3: inputs, loaders, derived and regression helpers + unit tests.
+- [ ] Task 3: inputs, loaders, derived and regression helpers, the reference provenance copy and
+  `transcribe_tj_results` (req 2a) + unit tests.
 - [ ] Task 4: E2E tests; run both recipes in their envs.
 - [ ] Task 5: H13 — after C1 (below): `git add -n tests/candidate_outputs/v0.3.0/` succeeds and
   `git diff --stat <C1>..<C2> -- . ':(exclude)tests/candidate_outputs'` prints nothing; a denial
@@ -151,7 +202,7 @@ Context the builder needs:
 
 **Commit order (R23):** (1) commit the code as C1 on a clean tree (`git status --porcelain
 --untracked-files=no` empty); (2) run the E2E tests at C1 for both recipes, which write candidates
-with `commit_sha = C1`; (3) commit C2 containing only `tests/candidate_outputs/v0.3.0/*`, message
+with `commit_sha = C1`, and write the candidate `reference_values.json` with the req 2a entry point; (3) commit C2 containing only `tests/candidate_outputs/v0.3.0/*`, message
 `test(07-human-fixtures): candidates produced at <C1>`. Verify C2 with `git show --name-only
 --format=%s <C2>`. Never open, cat, diff or show the candidate contents.
 
@@ -159,7 +210,10 @@ with `commit_sha = C1`; (3) commit C2 containing only `tests/candidate_outputs/v
 
 - **DO NOT** read candidate files back (also not through git); **DO NOT** write `tests/fixtures/`.
 - **DO NOT** gate xtb accuracy; **DO NOT** loosen a Q5 bound.
-- **DO NOT** fold RT ln 2 into the gated HF1 quantity.
+- **DO NOT** fold RT ln 2 into the gated HF1 quantity, or compare the ensemble ΔG_r (or apply an
+  offset to it) against the reference (R47).
+- **DO NOT** retype, round, convert or edit a transcribed reference value; **DO NOT** commit the
+  source scripts, XYZs or logs.
 - **DO NOT** run the E2E suite in the default `uv run pytest` (markers deselect it).
 
 ## Proof contract
@@ -172,13 +226,14 @@ with `commit_sha = C1`; (3) commit C2 containing only `tests/candidate_outputs/v
 - [ ] The HF2 incremental assertions hold on both recipes (counts in the test output).
 - [ ] Unit tests for the loaders, derived and regression helpers and the writer pass in the
   default suite.
-- [ ] `git show --name-only --format=%s <C2>` lists exactly `hf1_butane.{xtb,uma}.json` and
-  `hf2_diels_alder.{xtb,uma}.json` and names C1.
+- [ ] `git show --name-only --format=%s <C2>` lists exactly `hf1_butane.{xtb,uma}.json`,
+  `hf2_diels_alder.{xtb,uma}.json` and `reference_values.json`, and names C1.
+- [ ] The req 2a test output (sha256 match, exact-float and rounded-figure checks) quoted.
 - [ ] Required checks exit 0 at C1.
 
 ## Source material
 
-- Mission §5 R6, R10, R13, R18, R20, R23, R27, R43, "Human fixture inputs", "Test tiers and tolerances",
+- Mission §5 R6, R10, R13, R18, R20, R23, R27, R43, R46–R49, "Human fixture inputs", "Test tiers and tolerances",
   "Contracts" (candidate output, reference values); TJ Q1, Q2, Q5, R1, R2.
 
 ## Intent visual

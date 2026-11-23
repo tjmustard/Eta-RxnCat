@@ -67,15 +67,20 @@ The core work this repo does needs to be purely MIT/BSD/equivalent. The engines 
 search can be copy left. Because they can be replaced with a new engine later. But the core
 remains." (14:59Z) "It's fine that the engine MACE pulls in ASE just not the core."
 
-Open with TJ (not decided here): the reference values (`qitem-20261123015428-cc83f02a1853ab80`,
-needed before slice 10; TJ asked the advisor to compute them, R43); confirmation of the four
-derived SMILES (at Phase 3 promotion). F32 is answered (R42): TJ "A the planar geometry"
+Open with TJ (not decided here): confirmation of the four derived SMILES and promotion of the
+candidates, including the candidate `reference_values.json` (both at Phase 3). The reference values
+arrived: TJ "Send as my reference" (R46, answers `qitem-20261123015428-cc83f02a1853ab80`). F32 is answered (R42): TJ "A the planar geometry"
 (`qitem-20261123032327-833f8c98768fa58f`).
 
 Replan 1 (2026-11-23, R42–R45): TJ's F32 answer (planar s-cis), TJ's reference level for the UMA
 accuracy gate (ωB97M-V/def2-TZVPD//B3LYP/6-31G**), and two geomeTRIC API corrections found while
 verifying the dihedral constraint. Slices 01 (executed), 02 and 03 are unchanged; see "Seed
 deviations".
+
+Replan 2 (2026-11-23, R46–R49): TJ's reference values ("Send as my reference") enter as a
+transcribed candidate `reference_values.json` that TJ promotes; accuracy compares per-conformer
+quantities like for like (HF2 against the lowest records, not the ensemble). Only slices 07, 09 and
+10 change.
 
 ## 1. Introduction & Goals
 
@@ -129,9 +134,8 @@ the blocker, is resolved by a second ETKDG pass, proved on the real recipe by re
 measurement (R21) and re-proved in slice 05 by an independent route.
 
 What keeps it from 10, and the questions that would make it 10:
-1. **TJ's reference values** (`cc83f02a…`, open). Needed before slice 10, not before the build.
-   Question for TJ: the per-conformer values per R2 "A" for HF1 (ΔE/ΔH/ΔG gauche − anti) and ΔG_r,
-   ΔH_r for HF2, with standard state and source.
+1. **TJ's reference values** arrived (R46, "Send as my reference"); they gate only after TJ promotes
+   the transcribed candidate at Phase 3. Compared like for like per R47/R48.
 2. **UMA on T2's window and on T1's s-cis-side survival is unmeasured** (needs the uma env and the
    pipeline). Both are stop-and-report host facts (H14, and the T2 UMA run in slice 08): a miss is a
    finding to the lead, never a widened bound. No spec text changes on either outcome.
@@ -249,6 +253,10 @@ owed for one. Part A/B are red-team rev 1 (F1–F20); Part D is the rev-2 delta 
 | R43 | Replan 1: TJ's reference level for the UMA accuracy gate (lead addendum 03:49Z, TJ via the advisor, relayed by the operator 03:48Z) | — | resolved (TJ) | Quoted: "the reference level for the v0.3.0 UMA accuracy gate (Q5 A: butane gauche−anti within 0.5 kcal/mol, Diels–Alder ΔG within 2.0) is now ωB97M-V/def2-TZVPD//B3LYP/6-31G**: ωB97M-V/def2-TZVPD single points on B3LYP/6-31G** geometries, with B3LYP/6-31G** RRHO thermal corrections. BOTH tables (B3LYP/6-31G** and ωB97M-V) are reported, and ONLY the ωB97M-V table gates." `reference_values.json` holds both levels per quantity, each entry with `level`, `method`, `standard_state`, `temperature_k`, `provenance` and `gate` (true only for the ωB97M-V level; the loader rejects `gate: true` on any other level and duplicate (quantity, level) pairs). Accuracy: UMA is gated against the `gate: true` entries with the unchanged bounds; every entry of both levels is reported as a delta for both recipes. The advisor computes the values (row `cc83f02a…`); no seat computes them. Slices 07 (format, example, loader, accuracy helper), 09 (record per level), 10 (verdict). |
 | R44 | Replan 1: R2's API names were wrong | — | resolved | `CoordSysDict` is a local inside `geometric.optimize.run_optimizer` (`optimize.py:1259`), not a module export (import fails, resolve measured). `GeometricOptimizer` builds its own table from `geometric.internal`: `tric` → (`DelocalizedInternalCoordinates`, connect False, addcart False), `cart` → (`CartesianCoordinates`, False, False), `dlc` → (`DelocalizedInternalCoordinates`, True, False), `hdlc` → (`DelocalizedInternalCoordinates`, False, True), copied from that line range. `parse_constraints` comes from `geometric.prepare`. Slice 04. |
 | R45 | Replan 1: Cartesian coordinates refuse constraints | — | resolved | geomeTRIC 1.1.1 raises `RuntimeError("Do not use constraints with Cartesian coordinates")` when any constraint is given with `cart` (resolve measured). The compiled ladder's step 3 (`cartesian`) would therefore crash for every constrained run, including `frozen_atom_indices`. For a run with any constraint (frozen atoms or dihedrals), ladder step 3 is `hdlc` (trust 0.05) instead, recorded by the name `hdlc`; unconstrained runs keep `cartesian`. Whether `hdlc` accepts both constraint kinds is H15; if it does not, the constrained ladder is the first two steps only, and exhausting them raises `OptimizationFailedError`. The `RuntimeError` is never caught generically. Slice 04. |
+| R46 | Replan 2: TJ's reference values (answers `qitem-20261123015428-cc83f02a1853ab80`; lead row `qitem-20261123051107-1844856e`) | — | resolved (TJ) | TJ, verbatim (relayed by the operator): "Send as my reference". Source: `~/.hacf/eta-rxncat-hacf/incoming/tj-reference-b3lyp-20261123/`, computed at TJ's request by the advisor's helper (PySCF 2.15.1, geomeTRIC 1.1.1); `results.json` sha256 `40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e`, `README.md` sha256 `3933153bd3c750daf717b2ee5b35d0584fb539cc93e9fcc42c48503b751186be` (resolve measured). "Send as my reference" approves the **values**; it is not TJ's word for a seat to write `tests/fixtures/`. Route: slice 07 (a) commits `results.json` and `README.md` byte-identical under `tests/e2e/data/reference/tj-reference-b3lyp-20261123/` with a `SOURCES.md` (origin path, sha256 of every file in the source directory, the TJ quote; scripts, XYZs and logs are not committed, only their sha256); (b) adds `transcribe_tj_results(path)` to `tests/e2e/reference_values.py`, a fixed table from results.json key paths to (quantity, level) — no arithmetic, floats copied as parsed; (c) writes its output as the **candidate** `tests/candidate_outputs/v0.3.0/reference_values.json` in the candidates-only commit C2 (R23), never read back. TJ promotes it to `tests/fixtures/v0.3.0/reference_values.json` at the Phase 3 gate (or writes his own); R22's promotion R-row lists its sha256. Every entry's `provenance`: "TJ-approved 2026-11-23 'Send as my reference'; advisor helper, PySCF 2.15.1 / geomeTRIC 1.1.1; results.json sha256 40fe7c7f…a35e, key <path>". Transcribed: `GATING REFERENCE` → level `wb97mv_def2tzvpd//b3lyp_631gss`, `B3LYP/6-31G** (RRHO)` → `b3lyp_631gss`; HF1 `dE`, `dH_298`, `dG_298` of `butane_gauche_minus_anti_kcal_mol` and `from_dG` of `butane_gauche_population_percent_298K`; HF2 `dE_r`, `dH_r_298` (`standard_state: n/a`) and `dG_r_298_1M` (`1 M`) of `diels_alder_kcal_mol`; `temperature_k` 298.15. Not transcribed (kept in the committed provenance only): the quasi-RRHO and D3(BJ) side results, the 1 atm ΔG_r, butadiene gauche − s-trans. The file also carries `reference_species` (σ used: butane anti 2, gauche 2, s-trans butadiene 2, ethylene 4, cyclohexene 2; one conformer each, pure RRHO). Tier-D test: committed results.json sha256 equals the value above; the transcription passes the fixtures-mode loader; each gating value rounds to the advisor's relayed figures (HF1 ΔE 0.609, ΔH 0.658, ΔG 0.685, population 38.6; HF2 ΔE_r −47.055, ΔH_r −42.712, ΔG_r(1 M) −30.922; B3LYP ΔH 0.870, ΔG 0.897, ΔH_r −38.311, ΔG_r(1 M) −26.522). Slices 07, 09, 10. |
+| R47 | Replan 2: the reference is per conformer; our HF2 ΔG_r is an ensemble quantity (architect's point, resolve verified) | — | resolved | Verified: per-record G carries its own σ in S_rot (`thermo/rrho.py`) and no degeneracy; g enters only the Boltzmann sum (`thermo/boltzmann.py`, G_ens = −RT ln Σ gᵢ e^(−Gᵢ/RT)); HF2 ΔG_r = Σν G_ens; cyclohexene half-chair has g = 2 and butadiene keeps s-cis-side records with g = 2. The reference is one conformer per species, σ by hand, no g. At the reference's own energetics, ensemble ΔG_r − per-conformer ΔG_r = −RT ln 2 (−0.4107) + RT ln(1 + 2e^(−2.504/RT)) (+0.0171) = −0.394 kcal/mol (resolve computed), and the term depends on the method. Decision: **accuracy compares per-conformer quantities**, the same rule as R2 "A" for HF1. HF2: `dX_r_lowest_records` (X ∈ E, H, G; G at 1 M) = X(lowest-G cyclohexene record) − X(lowest-G s-trans butadiene record, \|φ₀₁₂₃\| > 90°) − X(lowest-G ethylene record), from per-record values. HF1: unchanged (lowest gauche − lowest anti, per record). Precondition of every accuracy comparison: the σ of each compared record equals `reference_species` σ; a mismatch is `fail` for UMA and `sigma_mismatch` beside the reported delta for xtb. The ensemble ΔG_r (1 atm, 1 M) stays as specified: reported and regression-gated; the candidate also reports `dG_r_ensemble_minus_lowest` (the degeneracy-and-population term). Why not an offset: RT ln 2 alone still leaves the butadiene term, and any offset is a correction the reference never made; the per-conformer quantity is exactly the reference's definition. The 2.0 and 0.5 bounds are unchanged (TJ Q5 "A"). Stated, not corrected: our G is Grimme quasi-RRHO (ω₀ 100 cm⁻¹), the reference pure RRHO (≤ 0.01 kcal/mol on these Δ values per its README); both unscaled, 298.15 K, 1 M by the same ideal-gas term; recorded in `known_limits` (slice 09). Slices 07, 09, 10. |
+| R48 | Replan 2: which reference quantity each accuracy check reads | — | resolved | UMA HF1 gate: `hf1.dG_gauche_anti` (per conformer, R2 "A") within 0.5 kcal/mol. UMA HF2 gate: `hf2.dG_r` at 1 M against `dG_r_lowest_records` (R47) within 2.0 kcal/mol. In the candidate file only those two entries, at level `wb97mv_def2tzvpd//b3lyp_631gss`, carry `gate: true`; `hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`, `hf1.gauche_population`, `hf2.dE_r`, `hf2.dH_r` and every B3LYP entry carry `gate: false` and are reported as deltas for both recipes (`hf2.dE_r` added to the quantity set). TJ can flip a flag at promotion; the accuracy helper follows the promoted file's flags. Slices 07, 10. |
+| R49 | Replan 2: context — the reference's s-cis butadiene | — | resolved (informational) | The reference's s-cis-side butadiene is the twisted gauche minimum (C=C–C=C 30.3°), not planar and not T1's dimethoxybutadiene. It does not feed R42 and is not transcribed; HF2 accuracy uses only s-trans butadiene. |
 
 ### Seed deviations
 
@@ -266,6 +274,10 @@ Changes to slice specs after their first compile (replan mode; finished slices a
 | 1 | 08-e2e5-tiers | F32 block → TJ A; T1 computes and reports `dE_planar_scis_strans`; label data field; regression of the planar E | R42 |
 | 1 | 09-acceptance-record | `accuracy` recorded per level with the gating level named | R43 |
 | 1 | 10-acceptance-verdict | precondition and accuracy verdict against the `gate: true` entries; both tables in the record | R43 |
+| 2 | 01–06, 08 | none (01–03 executed; 04 in build; 05, 06, 08 untouched) | — |
+| 2 | 07-human-fixtures | committed reference provenance; `transcribe_tj_results`; candidate `reference_values.json` in C2; `reference_species` σ check; HF2 `dX_r_lowest_records` and `dG_r_ensemble_minus_lowest`; `hf2.dE_r` quantity; gate flags | R46–R48 |
+| 2 | 09-acceptance-record | accuracy deltas per R47/R48; `known_limits` quasi-RRHO vs RRHO line | R46–R48 |
+| 2 | 10-acceptance-verdict | precondition names the promoted candidate; accuracy reads the R48 quantities like-for-like | R46–R48 |
 
 ### Host facts and stop-and-report steps
 
@@ -335,7 +347,7 @@ Ledger changes (only via `hyper_ledger.py` / `hypergraph_updater.py`; `--id` on 
 8. `08-e2e5-tiers` — US-015…US-017; TJ's XYZ; T1/T2 on both recipes; candidates commit.
 9. `09-acceptance-record` — US-013; record with `pending_*`; README derivation.
 10. **Phase 3 gate (TJ; not a slice):** TJ reviews and promotes the candidates, confirms the SMILES,
-    writes `tests/fixtures/v0.3.0/reference_values.json`. Then resolve records the promotion (R22),
+    and promotes the candidate `reference_values.json` to `tests/fixtures/v0.3.0/` (R46). Then resolve records the promotion (R22),
     and compiles a rework slice first if TJ corrected a SMILES.
 11. `10-acceptance-verdict` — US-011/012/015–017 verdicts; `ETA_RXNCAT_ACCEPTANCE=1`, zero skips.
 
@@ -439,10 +451,13 @@ metrics live in the acceptance record.
 are allowed in slice 09; slice 10 runs with `ETA_RXNCAT_ACCEPTANCE=1`, where they fail.
 
 **Reference values (`tests/fixtures/v0.3.0/reference_values.json`; values computed by the advisor
-at TJ's request, R43, placed in `tests/fixtures/` by TJ; no seat computes or writes them):** the
-team writes the format and `tests/e2e/data/reference_values.example.json`. `schema: 1`, `entries`:
+at TJ's request, R43, approved by TJ, R46; no seat computes them or writes `tests/fixtures/`):** the
+team writes the format, `tests/e2e/data/reference_values.example.json`, and the transcribed candidate
+`tests/candidate_outputs/v0.3.0/reference_values.json` that TJ promotes (R46). `schema: 1`,
+`reference_species` (per species: σ used, conformer, thermo model; R47), `entries`:
 each has `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`, `hf1.dG_gauche_anti` (per
-conformer), `hf1.gauche_population` (reported only), `hf2.dG_r`, `hf2.dH_r`}; `level` ∈
+conformer), `hf1.gauche_population` (reported only), `hf2.dE_r`, `hf2.dH_r`, `hf2.dG_r` (per
+conformer, lowest records, R47)}; `level` ∈
 {`wb97mv_def2tzvpd//b3lyp_631gss`, `b3lyp_631gss`}; `method` (free text, e.g. "ωB97M-V/def2-TZVPD
 single points on B3LYP/6-31G** geometries, B3LYP/6-31G** RRHO thermal corrections"); `value`;
 `unit` (`kcal/mol`|`percent`); `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`); `temperature_k`;
@@ -509,9 +524,11 @@ with no `gate: true` entry is `reported`.
   exact (HF1 torsion class; T1 diene class; other species by RMSD ≤ 0.125 Å with H); σ and g of
   every matched record exact; \|ΔE\| ≤ 1e-5 Eh; G, ΔG, ΔG_r ≤ 0.05 kcal/mol; weights ±0.02 absolute;
   record matching per R18.
-- **Accuracy (Q5 "A", reference level per R43):** UMA: HF1 Δ(gauche − anti) within 0.5 kcal/mol
-  of the `gate: true` (ωB97M-V/def2-TZVPD//B3LYP/6-31G**) value of the same kind; HF2 ΔG_r(1 M)
-  within 2.0 kcal/mol of it. Both tables (ωB97M-V and B3LYP/6-31G**) are reported as deltas for both
+- **Accuracy (Q5 "A", reference level per R43, quantities per R47/R48):** UMA: HF1
+  `hf1.dG_gauche_anti` (per conformer) within 0.5 kcal/mol of the `gate: true`
+  (ωB97M-V/def2-TZVPD//B3LYP/6-31G**) value; HF2 `dG_r_lowest_records` at 1 M (per conformer, not
+  the ensemble ΔG_r) within 2.0 kcal/mol of `hf2.dG_r`. Compared records' σ must equal
+  `reference_species` σ (else `fail`). Both tables (ωB97M-V and B3LYP/6-31G**) are reported as deltas for both
   recipes; only the ωB97M-V entries gate. xtb: `reported`. A quantity with no gating entry:
   `reported`.
 - **T1/T2 tier gating (Q-E5 "C"):**
@@ -641,7 +658,7 @@ DV-20 TJ's `hits_by_stage["gs_opt_freq"] == 3` → `species_stage_cache`; DV-21 
   or `reported` (xtb); T1/T2 gates per the tier table; SMILES `confirmed`; per-stage metrics.
 - README and CHANGELOG v0.3.0 claims derived from that record (tests enforce it).
 - `DISCREPANCIES.md` ≥ 23 rows; PD-007 `decided`.
-- Candidates for HF1, HF2, T1, T2 (both recipes) and `e2e5_smiles.json` committed in
+- Candidates for HF1, HF2, T1, T2 (both recipes), `reference_values.json` (R46) and `e2e5_smiles.json` committed in
   candidates-only commits; `git diff --stat Base..HEAD -- tests/fixtures` shows only TJ's own
   commits there.
 
