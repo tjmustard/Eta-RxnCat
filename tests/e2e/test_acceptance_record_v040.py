@@ -8,7 +8,6 @@ from typing import Any
 import pytest
 from acceptance_record_v040 import (
     KNOWN_LIMITS,
-    VERDICTS,
     check,
     merge_runs,
     pytest_counts,
@@ -240,24 +239,26 @@ def test_pytest_counts(line: str, expected: dict[str, int]) -> None:
 RECORD = Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.4.0" / "ACCEPTANCE_RESULT.json"
 
 
-def test_committed_record_parses_and_is_pre_promotion() -> None:
-    """The committed record is valid; gates pass; regressions and the map are pending (R22)."""
+def test_committed_record_is_the_passing_verdict() -> None:
+    """The committed record is valid and passes: gates, regressions, map and suite (R56, R27)."""
     record = json.loads(RECORD.read_text(encoding="utf-8"))
     assert record["record_schema"] == 1
     assert check(record) == []
     m1 = record["fixtures"]["m1"]
     assert sorted(m1) == ["graft", "uma", "xtb"]
     assert m1["graft"]["forming_core_rmsd"]["status"] == "pass"
-    assert m1["graft"]["regression_graft"]["status"] in VERDICTS["regression"]
-    assert m1["graft"]["map_confirmation"] in VERDICTS["map_confirmation"]
+    assert m1["graft"]["regression_graft"]["status"] == "pass"
+    assert m1["graft"]["map_confirmation"] == "confirmed"
     for recipe in ("xtb", "uma"):
         assert m1[recipe]["test_outcome"] == "passed"
         assert m1[recipe]["relaxed_gates"]["status"] == "pass"
-        assert m1[recipe]["regression_relaxed"]["status"] in VERDICTS["regression"]
-    assert record["verdict"] in VERDICTS["record"]
+        assert m1[recipe]["regression_relaxed"]["status"] == "pass"
+    assert record["verdict"] == "pass" and record["verdict_reasons"] == []
     assert record["known_limits"] == list(KNOWN_LIMITS)
     assert record["default_suite"]["exit_code"] == 0
     assert record["default_suite"]["cleanroom_vectors"]["failed"] == 0
+    assert all(c["exit_code"] == 0 for c in record["commands"])
+    assert all(f["equals_candidate"] for f in record["evidence"]["promotion"]["files"].values())
 
 
 # --- replan 2 (mission R27): the default suite, vectors, commands and skips gate the verdict -----

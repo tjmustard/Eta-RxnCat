@@ -14,14 +14,16 @@
         "tests/e2e/test_accept_v040.py"
       ],
       "env": {
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-07-accept/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-07-accept/cand (scratch)",
-        "ETA_RXNCAT_XTB": "~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-08-verdict/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-08-verdict/cand (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-opt"
       },
       "exit_code": 0,
-      "wall_s": 4.0
+      "summary": "2 passed, 2 deselected in 5.09s",
+      "wall_s": 6.0
     },
     {
       "argv": [
@@ -37,16 +39,18 @@
         "tests/e2e/test_accept_v040.py"
       ],
       "env": {
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-07-accept/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-07-accept/cand (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-08-verdict/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-08-verdict/cand (scratch)",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "wall_s": 34.0
+      "summary": "2 passed, 2 deselected, 16 warnings in 33.57s",
+      "wall_s": 36.0
     }
   ],
-  "commit_sha": "17af9781d539dd7af012f87654e2a1e05be4cdf1",
+  "commit_sha": "2dbc3ec1a9efcedf0d93d033e93d5226f2eb0765",
   "default_suite": {
     "cleanroom_vectors": {
       "command": "uv run pytest tests/unit/mapping",
@@ -62,7 +66,7 @@
     "errors": 0,
     "exit_code": 0,
     "failed": 0,
-    "passed": 1419,
+    "passed": 1433,
     "skipped": 0
   },
   "devices": {
@@ -83,10 +87,45 @@
   },
   "evidence": {
     "candidates_phase3_set": "tests/candidate_outputs/v0.4.0/m1_graft.json, m1_relaxed.xtb.json and m1_relaxed.uma.json at 035e289 (produced at C1 b872079)",
+    "promotion": {
+      "candidates_commit": "035e289",
+      "files": {
+        "m1_graft.json": {
+          "blob_id": "3cb595590de13796dd572748e644f304175e474e",
+          "candidate_blob_id": "3cb595590de13796dd572748e644f304175e474e",
+          "equals_candidate": true,
+          "sha256": "2e01ebf600eadabad47c9b66ffe368c756506fdcad3da3cd65df5bb5af117031"
+        },
+        "m1_relaxed.uma.json": {
+          "blob_id": "1ca58afa48fe4edb6c0173bc372a7af326b929f6",
+          "candidate_blob_id": "1ca58afa48fe4edb6c0173bc372a7af326b929f6",
+          "equals_candidate": true,
+          "sha256": "ff3eb5b5ba61ef538c5d9681af619b7ee6f746d47f71bea0de42b140f417ccab"
+        },
+        "m1_relaxed.xtb.json": {
+          "blob_id": "af5f85a8781e1cab73bb57705012697a2197f37c",
+          "candidate_blob_id": "af5f85a8781e1cab73bb57705012697a2197f37c",
+          "equals_candidate": true,
+          "sha256": "b3ed5680612ac0d8fb4157312ec257bfb1ac1d854d8b6889306958d9756adf73"
+        }
+      },
+      "promotion_commit": "174a783",
+      "tj_answer": {
+        "answering": "qitem-20261123214530-98591a612a38f5db",
+        "mission_row": "R28",
+        "queue_row": "qitem-20261123222552-7f2f3da801c4ec2c",
+        "relayed_by": "advisor",
+        "verbatim": "1. PROMOTED: TJ copied m1_graft.json, m1_relaxed.xtb.json and m1_relaxed.uma.json from tests/candidate_outputs/v0.4.0/ into tests/fixtures/v0.4.0/ himself … That CONFIRMS THE ATOM MAP (his P2 A)."
+      }
+    },
     "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
     "verdict_run": "slice 08, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)"
   },
-  "fixture_sha256": {},
+  "fixture_sha256": {
+    "m1_graft.json": "2e01ebf600eadabad47c9b66ffe368c756506fdcad3da3cd65df5bb5af117031",
+    "m1_relaxed.uma.json": "ff3eb5b5ba61ef538c5d9681af619b7ee6f746d47f71bea0de42b140f417ccab",
+    "m1_relaxed.xtb.json": "b3ed5680612ac0d8fb4157312ec257bfb1ac1d854d8b6889306958d9756adf73"
+  },
   "fixtures": {
     "m1": {
       "graft": {
@@ -96,9 +135,12 @@
           "status": "pass",
           "value_angstrom": 0.049755824942756405
         },
-        "map_confirmation": "pending_confirmation",
+        "map_confirmation": "confirmed",
         "regression_graft": {
-          "status": "pending_promotion"
+          "bound_angstrom": 1e-10,
+          "coordinate_rmsd_angstrom": 0.0,
+          "mismatches": [],
+          "status": "pass"
         },
         "reported": {
           "active_rmsd_angstrom": 0.0421952760920801,
@@ -169,7 +211,7 @@
         }
       },
       "uma": {
-        "core_max_displacement_angstrom": 3.547938489632982e-08,
+        "core_max_displacement_angstrom": 3.542614738079382e-08,
         "failed_checks": [],
         "metrics": {
           "device": "cuda",
@@ -178,15 +220,20 @@
           "recovery_steps": [
             "tric"
           ],
-          "wall_time_s": 16.780218026950024
+          "wall_time_s": 19.359931645914912
         },
         "regression_relaxed": {
-          "status": "pending_promotion"
+          "abs_delta_energy_hartree": 2.2138522126624594e-08,
+          "energy_bound_hartree": 1e-05,
+          "heavy_atom_rmsd_angstrom": 7.681592654530838e-08,
+          "heavy_atom_rmsd_bound_angstrom": 0.01,
+          "mismatches": [],
+          "status": "pass"
         },
         "relaxed_gates": {
           "g1_core_frozen": {
             "bound_angstrom": 1e-06,
-            "core_max_displacement_angstrom": 3.547938489632982e-08,
+            "core_max_displacement_angstrom": 3.542614738079382e-08,
             "status": "pass"
           },
           "g2_connectivity_equals_ts1b_n": {
@@ -201,7 +248,7 @@
                 "neighbour_a": 3,
                 "neighbour_b": 9,
                 "sign": 1,
-                "signed_volume_angstrom3": 0.5258790486323743,
+                "signed_volume_angstrom3": 0.5258789439495999,
                 "template_atom": 2
               },
               {
@@ -209,7 +256,7 @@
                 "neighbour_a": 2,
                 "neighbour_b": 10,
                 "sign": -1,
-                "signed_volume_angstrom3": -0.5363009017369746,
+                "signed_volume_angstrom3": -0.536300864612089,
                 "template_atom": 3
               }
             ],
@@ -236,10 +283,10 @@
           "status": "pass"
         },
         "reported": {
-          "active_rmsd_angstrom": 0.0415975053960063,
-          "appended_heavy_rmsd_angstrom": 0.010544627128779066,
-          "forming_core_rmsd_angstrom": 0.04975581834185936,
-          "full_rmsd_angstrom": 0.5523838250672034
+          "active_rmsd_angstrom": 0.041597499080149605,
+          "appended_heavy_rmsd_angstrom": 0.010544592747591262,
+          "forming_core_rmsd_angstrom": 0.04975581834128871,
+          "full_rmsd_angstrom": 0.5523838517042144
         },
         "test_outcome": "passed"
       },
@@ -253,10 +300,15 @@
           "recovery_steps": [
             "tric"
           ],
-          "wall_time_s": 3.8532017190009356
+          "wall_time_s": 4.779583335039206
         },
         "regression_relaxed": {
-          "status": "pending_promotion"
+          "abs_delta_energy_hartree": 0.0,
+          "energy_bound_hartree": 1e-05,
+          "heavy_atom_rmsd_angstrom": 4.5324665185662624e-17,
+          "heavy_atom_rmsd_bound_angstrom": 0.01,
+          "mismatches": [],
+          "status": "pass"
         },
         "relaxed_gates": {
           "g1_core_frozen": {
@@ -324,7 +376,7 @@
     "flags": [],
     "gpu": {
       "compute_capability": "12.0",
-      "free_vram_bytes": 6204686336,
+      "free_vram_bytes": 5405540352,
       "name": "NVIDIA GeForce RTX 5060 Ti",
       "total_vram_bytes": 8073248768,
       "total_vram_gib": 7.52
@@ -355,22 +407,17 @@
     "R-group/ligand enumeration stays at v0.7.0 (TJ roadmap B); the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))"
   ],
   "logs": {
-    "~/.hacf/eta-rxncat-hacf/v040-07-accept-uma.log": {
+    "~/.hacf/eta-rxncat-hacf/v040-08-verdict-uma.log": {
       "exit_code": 0,
-      "summary": "2 passed, 2 deselected, 16 warnings in 31.03s"
+      "summary": "2 passed, 2 deselected, 16 warnings in 33.57s"
     },
-    "~/.hacf/eta-rxncat-hacf/v040-07-accept-xtb.log": {
+    "~/.hacf/eta-rxncat-hacf/v040-08-verdict-xtb.log": {
       "exit_code": 0,
-      "summary": "2 passed, 2 deselected in 4.17s"
+      "summary": "2 passed, 2 deselected in 5.09s"
     }
   },
   "record_schema": 1,
-  "run_at_utc": "2026-11-23T21:23:57+00:00",
-  "verdict": "pending",
-  "verdict_reasons": [
-    "m1.graft: regression_graft pending_promotion",
-    "m1.graft: map_confirmation pending_confirmation",
-    "m1.xtb: regression_relaxed pending_promotion",
-    "m1.uma: regression_relaxed pending_promotion"
-  ]
+  "run_at_utc": "2026-11-23T22:40:38+00:00",
+  "verdict": "pass",
+  "verdict_reasons": []
 }

@@ -769,25 +769,28 @@ def _v040_gates_pass(record: dict[str, Any]) -> bool:
     )
 
 
-def _v040_pending_promotion(record: dict[str, Any]) -> bool:
-    """Built and gated, with the M1 regression (and the map) still pending TJ's promotion."""
+def _v040_passed_everywhere(record: dict[str, Any]) -> bool:
+    """Verdict pass; gates, both regressions and the map settled against TJ's promoted fixtures."""
     m1 = _v040_m1(record)
     return (
         _v040_gates_pass(record)
-        and record["verdict"] == "pending"
-        and m1["graft"]["regression_graft"]["status"] == "pending_promotion"
-        and m1["graft"]["map_confirmation"] == "pending_confirmation"
-        and all(
-            m1[r]["regression_relaxed"]["status"] == "pending_promotion" for r in ("xtb", "uma")
-        )
+        and record["verdict"] == "pass"
+        and m1["graft"]["regression_graft"]["status"] == "pass"
+        and all(m1[r]["regression_relaxed"]["status"] == "pass" for r in ("xtb", "uma"))
     )
+
+
+def _v040_map_confirmed(record: dict[str, Any]) -> bool:
+    """The M1 atom map is confirmed by TJ's promotion of m1_graft.json (R2, TJ P2 A)."""
+    return bool(_v040_m1(record)["graft"]["map_confirmation"] == "confirmed")
 
 
 V040_CLAIMS = (
     (
-        "conserved-core mapper: quaternion alignment, ordered graft surgery with explicit "
-        "charge/spin, core-frozen pre-relaxation; M1 regression pending TJ promotion.",
-        _v040_pending_promotion,
+        "passed: the conserved-core mapper (quaternion alignment, ordered graft surgery with "
+        "explicit charge/spin, core-frozen pre-relaxation) ran TJ's Fixture M1 end to end with "
+        "both the xtb (GFN2) and UMA recipes, and every result matched the fixtures TJ promoted.",
+        _v040_passed_everywhere,
     ),
     (
         "TJ's Fixture M1 grafts within the 0.10 Å forming-core bound and pre-relaxes on the xtb "
@@ -795,9 +798,12 @@ V040_CLAIMS = (
         _v040_gates_pass,
     ),
     (
-        "**v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`); M1 "
-        "regression pending TJ promotion.",
-        _v040_pending_promotion,
+        "TJ confirmed the M1 atom map by promoting the graft.",
+        _v040_map_confirmed,
+    ),
+    (
+        "**v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).",
+        _v040_passed_everywhere,
     ),
 )
 
@@ -811,8 +817,8 @@ def check_v040_claims(readme_text: str, record: dict[str, Any] | None) -> list[s
     present = [phrase for phrase, _ in V040_CLAIMS if phrase in text]
     if record is None:
         return [f"README claims {p[:40]!r}… but there is no v0.4.0 record" for p in present]
-    if record.get("verdict") not in ("pass", "pending"):
-        state = "has no verdict" if "verdict" not in record else "verdict is fail"
+    if record.get("verdict") != "pass":
+        state = "has no verdict" if "verdict" not in record else f"verdict is {record['verdict']}"
         return [f"README claims {p[:40]!r}… but the record {state}" for p in present] or [
             f"the v0.4.0 record {state}"
         ]
@@ -833,7 +839,7 @@ def test_readme_v040_claims_match_record() -> None:
     """Every README v0.4.0 claim is derived from (and true of) the v0.4.0 record."""
     record = json.loads(V040_RECORD.read_text(encoding="utf-8")) if V040_RECORD.is_file() else None
     assert check_v040_claims(readme(), record) == []
-    assert project_version() == "0.3.0"
+    assert project_version() == "0.4.0"
 
 
 def test_v040_claim_check_catches_drift() -> None:
@@ -844,9 +850,12 @@ def test_v040_claim_check_catches_drift() -> None:
         "fail"
     )
     assert any("not what the record shows" in p for p in check_v040_claims(readme(), gate))
-    promoted = json.loads(json.dumps(record))
-    promoted["fixtures"]["m1"]["xtb"]["regression_relaxed"]["status"] = "pass"
-    assert any("not what the record shows" in p for p in check_v040_claims(readme(), promoted))
+    unconfirmed = json.loads(json.dumps(record))
+    unconfirmed["fixtures"]["m1"]["graft"]["map_confirmation"] = "pending_confirmation"
+    assert any("not what the record shows" in p for p in check_v040_claims(readme(), unconfirmed))
+    pending = json.loads(json.dumps(record))
+    pending["verdict"] = "pending"
+    assert all("verdict is pending" in p for p in check_v040_claims(readme(), pending))
     failed = json.loads(json.dumps(record))
     failed["verdict"] = "fail"
     problems = check_v040_claims(readme(), failed)

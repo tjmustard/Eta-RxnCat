@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.3.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.4.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.3.0)](#-features-v030)
+- [✨ Features (v0.4.0)](#-features-v040)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -45,7 +45,7 @@ energies, forces and Hessians on it; `v0.3.0` turns one species into a Boltzmann
 optimised conformers with free energies, and combines species into reaction free energies.
 Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 
-## ✨ Features (v0.3.0)
+## ✨ Features (v0.4.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -140,14 +140,16 @@ Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 - UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside it and is
   reported, not gated.
 
-### Conserved-core mapper (v0.4.0, pre-release)
+### Conserved-core mapper (v0.4.0)
 
 - The v0.4.0 acceptance record
-  ([ACCEPTANCE_RESULT.json](docs/prd/v0.4.0/ACCEPTANCE_RESULT.json)) shows the
-  conserved-core mapper: quaternion alignment, ordered graft surgery with explicit charge/spin,
-  core-frozen pre-relaxation; M1 regression pending TJ promotion.
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.4.0/ACCEPTANCE_RESULT.json)) passed: the conserved-core
+  mapper (quaternion alignment, ordered graft surgery with explicit charge/spin, core-frozen
+  pre-relaxation) ran TJ's Fixture M1 end to end with both the xtb (GFN2) and UMA recipes, and
+  every result matched the fixtures TJ promoted.
 - TJ's Fixture M1 grafts within the 0.10 Å forming-core bound and pre-relaxes on the xtb (GFN2)
   and UMA recipes with TS1b_n's connectivity and junction handedness.
+- TJ confirmed the M1 atom map by promoting the graft.
 
 ## ⚡ Installation
 
@@ -286,13 +288,12 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 - **v0.2.0**: potentials and engines (RDKit force fields, PySCF / GPU4PySCF, xtb as a subprocess,
   MACE, UMA and eSEN).
 - **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles.
+- **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`); M1
-  regression pending TJ promotion.
 - **v0.5.0**: transition-state optimisation and an active-core frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
