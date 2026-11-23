@@ -111,6 +111,15 @@ def test_record_verdict_pass_only_when_everything_passed() -> None:
             {"e2e5_t1__uma": _entry(smiles_confirmation="fail")},
             "e2e5_t1.uma: smiles_confirmation fail",
         ),
+        (
+            {
+                "e2e5_t2__uma": _entry(
+                    smiles_confirmation="confirmed",
+                    tier_gates={"window_dG_r_1M": {"status": "fail"}},
+                )
+            },
+            "e2e5_t2.uma: tier_gates.window_dG_r_1M fail",
+        ),
     ],
 )
 def test_record_verdict_fail_with_reasons(over: dict[str, Any], reason: str) -> None:
@@ -118,3 +127,31 @@ def test_record_verdict_fail_with_reasons(over: dict[str, Any], reason: str) -> 
     verdict = record_verdict(_fixtures(**over))
     assert verdict["verdict"] == "fail"
     assert reason in verdict["verdict_reasons"]
+
+
+def test_failed_tier_gate_fails_fragment_and_record() -> None:
+    """A recorded T1/T2 tier gate at fail: outcome failed, named, and the record verdict fail."""
+    tier = {"ordering_strans_below_scis": {"status": "fail"}, "planar": {"status": "pass"}}
+    checks = {**PASSING, "smiles_confirmation": "confirmed", "tier_gates": tier}
+    fields = outcome_fields(checks)
+    assert fields == {
+        "test_outcome": "failed",
+        "failed_checks": ["tier_gates.ordering_strans_below_scis"],
+    }
+    entry = _entry(smiles_confirmation="confirmed", tier_gates=tier, **fields)
+    verdict = record_verdict(_fixtures(e2e5_t1__xtb=entry))
+    assert verdict["verdict"] == "fail"
+    assert (
+        "e2e5_t1.xtb: test_outcome failed ['tier_gates.ordering_strans_below_scis']"
+        in verdict["verdict_reasons"]
+    )
+    assert "e2e5_t1.xtb: tier_gates.ordering_strans_below_scis fail" in verdict["verdict_reasons"]
+
+
+def test_reported_tier_gate_passes() -> None:
+    """The GFN2 T2 window is reported, not gated (TJ Q-E5): it does not fail anything."""
+    tier = {"window_dG_r_1M": {"status": "reported"}}
+    checks = {**PASSING, "smiles_confirmation": "confirmed", "tier_gates": tier}
+    assert gated_outcome(checks) == ("passed", [])
+    entry = _entry(smiles_confirmation="confirmed", tier_gates=tier)
+    assert record_verdict(_fixtures(e2e5_t2__xtb=entry))["verdict"] == "pass"

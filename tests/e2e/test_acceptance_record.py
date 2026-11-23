@@ -67,3 +67,18 @@ def test_check_rejects(mutate: object, fragment: str) -> None:
     data = record()
     mutate(data)  # type: ignore[operator]
     assert any(fragment in p for p in check(data)), check(data)
+
+
+def test_verdict_record_needs_fixture_hashes_and_tier_gates() -> None:
+    """A record that states a verdict (R56) must name its fixtures' sha256s and T1/T2 tier gates."""
+    from acceptance_record import record_verdict
+
+    data = record()
+    data.pop("fixture_sha256", None)
+    for name in ("e2e5_t1", "e2e5_t2"):
+        for recipe in RECIPES:
+            data["fixtures"][name][recipe].pop("tier_gates", None)
+    data.update(record_verdict(data["fixtures"]))
+    problems = check(data)
+    assert "missing fixture_sha256" in problems
+    assert "fixtures.e2e5_t1.uma: missing tier_gates" in problems

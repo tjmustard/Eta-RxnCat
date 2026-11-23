@@ -6,6 +6,7 @@ Runs last (tests/e2e/conftest.py orders it) in the same session as HF1, HF2, T1 
 ``docs/prd/v0.3.0/ACCEPTANCE_RESULT.json``.
 """
 
+import hashlib
 import json
 import platform
 import subprocess
@@ -14,7 +15,7 @@ from datetime import UTC, datetime
 
 import pytest
 from acceptance import out_dir
-from e2e_env import DEVICES, RECIPE_PARAMS, REPO
+from e2e_env import DEVICES, PROMOTED, RECIPE_PARAMS, REPO
 
 from eta_rxncat.orchestrator import Recipe, build_engine, write_report
 
@@ -39,6 +40,11 @@ def test_accept_v030(recipe_name: str, recipes: Callable[[str], Recipe], commit_
             if path.exists()
             else {"test_outcome": "missing"}
         )
+    # the promoted fixtures this run compared against (R57 lists the same sha256s)
+    fixture_sha256 = {
+        path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(PROMOTED.glob("*.json"))
+    }
     status = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=REPO,
@@ -61,6 +67,7 @@ def test_accept_v030(recipe_name: str, recipes: Callable[[str], Recipe], commit_
             ).identity.model_dump(),
             "python": platform.python_version(),
             "hardware": probe_hardware().model_dump(mode="json"),
+            "fixture_sha256": fixture_sha256,
             "fixtures": fixtures,
         },
     )

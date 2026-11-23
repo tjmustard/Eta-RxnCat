@@ -663,10 +663,14 @@ def _merged_with(entry_change: Any) -> dict[str, Any]:
             "hardware": record["hardware"],
             "engine": record["engines"][recipe],
             "device": record["devices"][recipe],
+            "fixture_sha256": {"hf1_butane.uma.json": "0" * 64},
             "fixtures": {n: dict(by[recipe]) for n, by in record["fixtures"].items()},
         }
         for recipe in RECIPES
     }
+    for run in runs.values():  # a verdict-run fragment records its T1/T2 tier gates
+        for name in ("e2e5_t1", "e2e5_t2"):
+            run["fixtures"][name]["tier_gates"] = {"gate": {"status": "pass"}}
     runs["uma"]["fixtures"]["hf1_butane"] = entry_change(runs["uma"]["fixtures"]["hf1_butane"])
     commands = [
         {"argv": [], "env": {}, "exit_code": 1, "wall_s": 0, "log": "x.log", "summary": "x"}

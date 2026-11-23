@@ -199,7 +199,19 @@ def test_e2e5_tier2_cp_cyclopropene(
         f"{p1.thermo.rotational_symmetry_number} g {p1.degeneracy}; incremental {incremental}"
     )
     smiles = smiles_confirmation()
-    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}}
+    # tier gates asserted above, recorded from the same values (R56; the window gates UMA only)
+    tier = {
+        "dG_r_1M_negative": {"status": "pass" if dg < 0.0 else "fail"},
+        "p1a_n_sigma1_g1": {
+            "status": "pass"
+            if p1.thermo.rotational_symmetry_number == 1 and p1.degeneracy == 1
+            else "fail"
+        },
+        "window_dG_r_1M": {
+            "status": ("pass" if inside else "fail") if recipe_name == "uma" else "reported"
+        },
+    }
+    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}, "tier_gates": tier}
     write_fragment(
         fixture.name,
         recipe_name,
@@ -210,6 +222,7 @@ def test_e2e5_tier2_cp_cyclopropene(
             "regression": payload["checks"]["regression"],
             "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
             "smiles_confirmation": smiles,
+            "tier_gates": tier,
             "dG_r_1M_kcal_mol": dg,
             "window": {
                 "bounds_kcal_mol": [low, high],

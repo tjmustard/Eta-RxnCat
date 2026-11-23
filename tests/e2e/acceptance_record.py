@@ -60,6 +60,8 @@ def record_verdict(fixtures: dict[str, dict[str, Any]]) -> dict[str, Any]:
             }
             if "smiles_confirmation" in entry:
                 states["smiles_confirmation"] = entry["smiles_confirmation"]
+            for gate, value in sorted(entry.get("tier_gates", {}).items()):
+                states[f"tier_gates.{gate}"] = value.get("status")
             for check_name, state in states.items():
                 if state == "fail" or str(state).startswith("pending_"):
                     reasons.append(f"{where}: {check_name} {state}")
@@ -154,6 +156,15 @@ def check(record: dict[str, Any]) -> list[str]:
             if name == "hf2_diels_alder" and "dG_r_ensemble_minus_lowest_kcal_mol" not in entry:
                 problems.append(f"fixtures.{name}.{recipe}: missing dG_r_ensemble_minus_lowest")
     if "verdict" in record:
+        # a verdict-run record (R56) also names the fixtures it compared against and the T1/T2
+        # tier gates
+        if not record.get("fixture_sha256"):
+            problems.append("missing fixture_sha256")
+        for name in ("e2e5_t1", "e2e5_t2"):
+            for recipe in RECIPES:
+                entry = record.get("fixtures", {}).get(name, {}).get(recipe, {})
+                if not missing(entry) and not entry.get("tier_gates"):
+                    problems.append(f"fixtures.{name}.{recipe}: missing tier_gates")
         expected = record_verdict(record.get("fixtures", {}))
         stated = {k: record.get(k) for k in expected}
         if stated != expected:
@@ -172,6 +183,9 @@ def merge_runs(runs: dict[str, dict[str, Any]], commands: list[dict[str, Any]]) 
     shas = {r["commit_sha"] for r in runs.values()}
     if len(shas) != 1 or not all(r["tree_clean"] for r in runs.values()):
         raise ValueError(f"recipes ran at different or unclean commits: {shas}")
+    hashes = [json.dumps(r.get("fixture_sha256"), sort_keys=True) for r in runs.values()]
+    if len(set(hashes)) != 1:
+        raise ValueError("the recipes compared against different promoted fixtures")
     fixtures: dict[str, dict[str, Any]] = {name: {} for name in FIXTURES}
     for recipe, run in runs.items():
         for name in FIXTURES:
@@ -185,6 +199,7 @@ def merge_runs(runs: dict[str, dict[str, Any]], commands: list[dict[str, Any]]) 
         "commit_sha": shas.pop(),
         "run_at_utc": max(r["run_at_utc"] for r in runs.values()),
         "hardware": runs["uma"]["hardware"],
+        "fixture_sha256": runs["uma"].get("fixture_sha256", {}),
         "engines": {recipe: run["engine"] for recipe, run in runs.items()},
         "devices": {recipe: run["device"] for recipe, run in runs.items()},
         "commands": [

@@ -156,7 +156,15 @@ def test_e2e5_tier1_dimethoxybutadiene(
         f"{payload['checks']['regression']['status']}/{payload['checks']['accuracy']['status']}"
     )
     smiles = smiles_confirmation()
-    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}}
+    # tier gates asserted above, recorded from the same values (R56)
+    tier = {
+        "both_classes_kept": {"status": "pass" if strans and scis else "fail"},
+        "ordering_strans_below_scis": {"status": "pass" if ordering else "fail"},
+        "planar_phi_within_0p1_deg": {
+            "status": "pass" if abs(phi - constraint.value_deg) <= 0.1 else "fail"
+        },
+    }
+    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}, "tier_gates": tier}
     write_fragment(
         fixture.name,
         recipe_name,
@@ -167,6 +175,7 @@ def test_e2e5_tier1_dimethoxybutadiene(
             "regression": payload["checks"]["regression"],
             "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
             "smiles_confirmation": smiles,
+            "tier_gates": tier,
             "class_counts": derived["class_counts"],
             "ordering_strans_below_scis": ordering,
             "planar_point": {"phi_deg": phi, "dE_planar_scis_strans_kcal_mol": de_planar},
