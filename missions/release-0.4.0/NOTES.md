@@ -12,3 +12,4 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 ## Notes
 
 - 2026-11-23 - mission scaffolded.
+- 2026-11-23 [field-note] (agent:hyper-execute, slice 01-starter) ruff given explicit starter paths (as a commit hook does) lints them under the starter's own pyproject [tool.ruff] (nested config wins; root extend-exclude/force-exclude do not reach it): 55 errors, 9 files unformatted. `ruff check .` from the root excludes docs/prd and passes. anchors: none
