@@ -24,7 +24,8 @@ hacf_legacy_order: null
 
 ## Intent
 
-After TJ has promoted the candidates, confirmed the T1/T2 SMILES and written the reference values,
+After TJ has promoted the candidates (including the candidate reference values) and confirmed the
+T1/T2 SMILES,
 rerun every fixture on both recipes on a fresh store with `ETA_RXNCAT_ACCEPTANCE=1` and zero skips,
 record the regression, accuracy and confirmation verdicts in `ACCEPTANCE_RESULT.json`, bump the
 version to 0.3.0, and derive the README's final v0.3.0 claims from that record.
@@ -35,7 +36,11 @@ Context the builder needs:
   `hf2_diels_alder.{xtb,uma}.json`, `e2e5_t1.{xtb,uma}.json`, `e2e5_t2.{xtb,uma}.json`,
   `e2e5_smiles.json`, `reference_values.json` (TJ's promotion of the R46 candidate, or his own
   file); and the mission SPEC's trade-off log has resolve's
-  promotion R-row listing them with sha256. If anything is missing, stop and report to the lead:
+  promotion R-row listing them with sha256. The candidate set TJ reviews (replans 4–5, R53, R55):
+  HF1/HF2 from `e24777d` (slice 11), `reference_values.json` from `32ee699` (slice 07),
+  `e2e5_t2.{xtb,uma}.json` and `e2e5_smiles.json` from `1c06fc6` (slice 08), `e2e5_t1.{xtb,uma}.json`
+  from `1e3d4e9` (slice 12); the HF files of `32ee699` and the T1 files of `1c06fc6` are superseded.
+  If anything is missing, stop and report to the lead:
   the slice does not start. If TJ corrected a SMILES, resolve has compiled a rework slice that runs
   before this one; do not edit inputs here.
 - Q5 "A" bounds (both recipes, fresh store, same device): class of the lowest record exact; σ and g
@@ -52,6 +57,11 @@ Context the builder needs:
 - R26: any gated check that fails, fails this slice; the result goes to the lead (who raises it to
   TJ). `known_limits` holds only reported deviations and the Q-E5 escalation proposal.
 - Fixtures under `tests/fixtures/` are TJ's and may be read; candidates may not.
+- **Real test outcome (mission R56):** today every fixture test writes its acceptance fragment
+  before `assert_checks_pass`, with `test_outcome` hard-coded `"passed"` (HF2, T1, T2) or derived
+  from accuracy alone (HF1). In the verdict run a promoted-regression or gated-accuracy failure
+  would leave `"passed"`, and the README claim `_v030_ran_everywhere` keys on it. Fixed in req 0,
+  before the verdict run.
 
 - **Reader rule (mission R50, binding):** drop-path failures are cached as COMPLETED rows with
   payload `{failed_reason, message}`. Any code here that reads a stage payload from the store or a
@@ -96,13 +106,35 @@ Context the builder needs:
 
 ## Mini-requirements
 
+0. Code part, before the verdict run (mission R56), with its tests. Commit order (stated
+   exception to one-commit-per-slice, like R23): C1 = req 0 code and tests on a clean tree; the
+   verdict runs at C1 (the record's `commit_sha` = C1); C2 = the record, version and README only.
+   `git show --name-only <C2>` lists only `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json`, `README.md`,
+   the version files and `tests/unit/test_identity.py`:
+   - `tests/e2e/checks.py: gated_outcome(checks) -> (outcome, failed)`: one function that lists
+     every gated check whose status is `fail` — regression, accuracy, `smiles_confirmation` (T1/T2)
+     and any tier gate the fixture records — and returns `("passed", [])` only when the list is empty,
+     else `("failed", [names])`. Under `ETA_RXNCAT_ACCEPTANCE=1` a `pending_*` status counts as
+     failed. `assert_checks_pass` calls it, so the fragment and the assertion cannot disagree.
+   - All four fixture tests write `test_outcome` and `failed_checks` from `gated_outcome` (no
+     literal), then assert. A test that raises before writing leaves no fragment; the merge records
+     that fixture/recipe as `test_outcome: "missing"`, never omits it.
+   - The merged record gets a top-level `verdict`: `pass` only if every fixture × recipe has
+     `test_outcome: "passed"`, no status is `fail` or `pending_*`, and no fragment is missing; else
+     `fail` with the reasons. The final README claims require `verdict == "pass"`.
+   - Tests (default suite): a checks dict with a regression `fail` (and one with a gated accuracy
+     `fail`, and one with a SMILES `fail`) gives `"failed"` and names it; `assert_checks_pass` then
+     raises; a merged record holding that fragment has `verdict: "fail"`; and
+     `check_v030_claims` refuses the README's v0.3.0 claims for that record (a missing fragment is
+     refused too).
 1. Precondition check as above, quoted in the proof.
 2. Acceptance runs with `ETA_RXNCAT_ACCEPTANCE=1`, fresh stores, scratch candidate dir:
    `UV_PROJECT_ENVIRONMENT=.venv-accept-opt ETA_RXNCAT_ACCEPTANCE=1 uv run --no-sync pytest -m
    "e2e and not mlip_uma" tests/e2e` and `UV_PROJECT_ENVIRONMENT=.venv-accept-uma
    ETA_RXNCAT_ACCEPTANCE=1 uv run --no-sync pytest -m "e2e and mlip_uma" tests/e2e`, each exit 0
    with zero skips, zero `pending_*`.
-3. `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json` rewritten from this run: every regression `pass`,
+3. `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json` rewritten from this run: `verdict: "pass"`, every
+   `test_outcome: "passed"`, every regression `pass`,
    accuracy `pass` (UMA) or `reported` (xtb), `smiles_confirmation: confirmed`, T1/T2 tier gates
    `pass`, metrics per stage, devices, the fixture sha256s it compared against, and `accuracy`
    per fixture with `gating_level` and both levels' deltas.
@@ -111,6 +143,8 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
+- [ ] Task 0: req 0 with tests, committed as C1 (can be built before TJ's promotion; the
+  precondition gates only Tasks 1–3, which run at C1 and end in C2).
 - [ ] Task 1: precondition check; stop if unmet.
 - [ ] Task 2: both acceptance runs; merge record.
 - [ ] Task 3: version, README, tests; commit; ledger updater; required checks; remove scratch.
@@ -118,6 +152,8 @@ Context the builder needs:
 ## 4. The Negative Space (Constraints)
 
 - **DO NOT** start without the precondition; **DO NOT** edit inputs or fixtures.
+- **DO NOT** write `test_outcome` as a literal or before the checks are evaluated; **DO NOT**
+  report `verdict: "pass"` with any gated check failed, pending or missing.
 - **DO NOT** loosen a bound, widen a window, or move a gated failure into `known_limits`.
 - **DO NOT** read candidates; **DO NOT** reuse a populated store for the verdict run.
 
@@ -125,14 +161,15 @@ Context the builder needs:
 
 - [ ] Precondition: `ls tests/fixtures/v0.3.0/` output and the promotion R-row quoted.
 - [ ] Both acceptance commands exit 0 with 0 skips (pytest summary quoted).
-- [ ] The record shows `pass`/`reported`/`confirmed` only, no `pending_*`, and the T2 UMA
+- [ ] Req 0 tests pass (each failing-check case named).
+- [ ] The record shows `verdict: "pass"`, `pass`/`reported`/`confirmed` only, no `pending_*`, and the T2 UMA
   ΔG_rxn(1 M) inside (−42, −20).
 - [ ] `git diff --stat Start..HEAD -- tests/fixtures tests/candidate_outputs` is empty.
 - [ ] README derivation tests pass; required checks exit 0.
 
 ## Source material
 
-- Mission §5 R50–R52 (replan 3); R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
+- Mission §5 R56 (replan 6); R53, R55 (superseded candidates); R50–R52 (replan 3); R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
 
 ## Intent visual
 
