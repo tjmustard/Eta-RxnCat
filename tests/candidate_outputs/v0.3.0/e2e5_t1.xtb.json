@@ -9,15 +9,12 @@
       "status": "pending_promotion"
     }
   },
-  "commit_sha": "e0ccae0062132bacebbcbad260ac9e8a0e222bf3",
+  "commit_sha": "09c7a0317dcd1f5e65470216563ab4504bac701b",
   "derived": {
-    "classes": [
-      "s-trans",
-      "s-cis-side",
-      "s-trans",
-      "s-cis-side",
-      "s-cis-side"
-    ],
+    "class_counts": {
+      "s-cis-side": 3,
+      "s-trans": 2
+    },
     "dE_planar_scis_strans_kcal_mol": 1.3532969656407972,
     "dE_scis_strans_kcal_mol": 1.3532975053001042,
     "dG_scis_strans_kcal_mol": 1.14672971238618,
@@ -31,11 +28,7 @@
     "planar_point_energy_hartree": -26.02031495401,
     "population_scis_side_percent": 12.096745554148814,
     "population_strans_percent": 87.90325444585119,
-    "reperceived_smiles": [
-      "C=C(/C=C/OC)OC",
-      "C=C(/C=C/OC)OC",
-      "C=C(/C=C/OC)OC",
-      "C=C(/C=C/OC)OC",
+    "reperceived_smiles_unique": [
       "C=C(/C=C/OC)OC"
     ]
   },
@@ -221,6 +214,7 @@
           "recovery_steps": [
             "tric"
           ],
+          "reperceived_smiles": "C=C(/C=C/OC)OC",
           "rotational_symmetry_number": 1,
           "source_ids": [
             1,
@@ -387,6 +381,7 @@
           "recovery_steps": [
             "tric"
           ],
+          "reperceived_smiles": "C=C(/C=C/OC)OC",
           "rotational_symmetry_number": 1,
           "source_ids": [
             49,
@@ -539,6 +534,7 @@
           "recovery_steps": [
             "tric"
           ],
+          "reperceived_smiles": "C=C(/C=C/OC)OC",
           "rotational_symmetry_number": 1,
           "source_ids": [
             0,
@@ -708,6 +704,7 @@
           "recovery_steps": [
             "tric"
           ],
+          "reperceived_smiles": "C=C(/C=C/OC)OC",
           "rotational_symmetry_number": 1,
           "source_ids": [
             42,
@@ -858,6 +855,7 @@
           "recovery_steps": [
             "tric"
           ],
+          "reperceived_smiles": "C=C(/C=C/OC)OC",
           "rotational_symmetry_number": 1,
           "source_ids": [
             41
