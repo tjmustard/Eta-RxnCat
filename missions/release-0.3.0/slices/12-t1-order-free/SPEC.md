@@ -2,7 +2,7 @@
 id: OPR.0.3.0.12
 slice: 12-t1-order-free
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Make Tier 1's derived block order-free (class counts and sorted distinc
 depends_on: [OPR.0.3.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", spec/compiled/architecture.yml]

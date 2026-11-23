@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: T1 derived order-free (class_counts, sorted SMILES); T1 re-run by audit on both recipes; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -24,5 +24,5 @@
 | OPR.0.3.0.9 | 09-acceptance-record | compiled | OPR.0.3.0.12 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.10 | 10-acceptance-verdict | compiled | OPR.0.3.0.9 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.11 | 11-push-rededup | audited | OPR.0.3.0.7 | 2026-11-23T08:42:18+00:00 audited |
-| OPR.0.3.0.12 | 12-t1-order-free | executed | OPR.0.3.0.8 | 2026-11-23T09:27:43+00:00 executed |
+| OPR.0.3.0.12 | 12-t1-order-free | audited | OPR.0.3.0.8 | 2026-11-23T09:56:11+00:00 audited |
 <!-- END HACF GENERATED: slice-table -->
