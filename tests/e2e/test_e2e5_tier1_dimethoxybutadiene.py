@@ -18,7 +18,7 @@ from acceptance import (
     write_fragment,
 )
 from candidates import candidate, environment, species_payload
-from checks import assert_checks_pass, checks, write
+from checks import assert_checks_pass, checks, outcome_fields, write
 from derived import (
     assert_no_duplicate_records,
     diene_class,
@@ -155,6 +155,8 @@ def test_e2e5_tier1_dimethoxybutadiene(
         f"{derived['population_scis_side_percent']:.1f}%; checks "
         f"{payload['checks']['regression']['status']}/{payload['checks']['accuracy']['status']}"
     )
+    smiles = smiles_confirmation()
+    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}}
     write_fragment(
         fixture.name,
         recipe_name,
@@ -164,12 +166,12 @@ def test_e2e5_tier1_dimethoxybutadiene(
             **stage_metrics([result, planar]),
             "regression": payload["checks"]["regression"],
             "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
-            "smiles_confirmation": smiles_confirmation(),
+            "smiles_confirmation": smiles,
             "class_counts": derived["class_counts"],
             "ordering_strans_below_scis": ordering,
             "planar_point": {"phi_deg": phi, "dE_planar_scis_strans_kcal_mol": de_planar},
             "failures": failures_by_species(failures),
-            "test_outcome": "passed",
+            **outcome_fields(gated),
         },
     )
-    assert_checks_pass(payload["checks"])
+    assert_checks_pass(gated)

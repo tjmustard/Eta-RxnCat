@@ -19,7 +19,7 @@ from acceptance import (
     write_fragment,
 )
 from candidates import candidate, environment, species_payload
-from checks import assert_checks_pass, checks, write
+from checks import assert_checks_pass, checks, outcome_fields, write
 from derived import (
     assert_no_duplicate_records,
     characterize,
@@ -240,7 +240,7 @@ def test_hf2_diels_alder(
                 **species_stage_cache(cache_runs),
             },
             "failures": failures_by_species(failures),
-            "test_outcome": "passed",
+            **outcome_fields(payload["checks"]),
         },
     )
     assert_checks_pass(payload["checks"])

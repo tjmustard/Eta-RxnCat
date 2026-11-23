@@ -594,10 +594,24 @@ V030_CLAIMS = (
 )
 
 
+def _holds(holds: Any, record: dict[str, Any]) -> bool:
+    """A claim holds; a record lacking the keys it needs (a missing fragment) does not."""
+    try:
+        return bool(holds(record))
+    except (KeyError, TypeError):
+        return False
+
+
 def check_v030_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
     """Each v0.3.0 README claim is present and true of the record; none without a record."""
     text = " ".join(readme_text.split())
     problems = []
+    # R56: a merged record carries a top-level verdict; the README makes v0.3.0 claims only on a
+    # pass (a record without the key predates R56: slice 09's pre-promotion record).
+    if record is not None and record.get("verdict", "pass") != "pass":
+        for phrase, _ in V030_CLAIMS:
+            if phrase in text:
+                problems.append(f"README claims {phrase[:40]!r}… but the record's verdict is fail")
     for phrase, holds in V030_CLAIMS:
         if record is None:
             if phrase in text:
@@ -605,7 +619,7 @@ def check_v030_claims(readme_text: str, record: dict[str, Any] | None) -> list[s
             continue
         if phrase not in text:
             problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
-        elif not holds(record):
+        elif not _holds(holds, record):
             problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
     if record is not None and "](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)" not in text:
         problems.append(
@@ -631,3 +645,54 @@ def test_v030_claim_check_catches_drift() -> None:
     assert any("not what the record shows" in p for p in check_v030_claims(readme(), promoted))
     assert check_v030_claims(readme(), None) != []
     assert check_v030_claims("no claims here", None) == []
+
+
+def _merged_with(entry_change: Any) -> dict[str, Any]:
+    """The committed record re-merged (R56 merge) with one HF1 UMA fragment changed."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "tests" / "e2e"))
+    from acceptance_record import RECIPES, merge_runs
+
+    record = json.loads(V030_RECORD.read_text(encoding="utf-8"))
+    runs = {
+        recipe: {
+            "commit_sha": record["commit_sha"],
+            "tree_clean": True,
+            "run_at_utc": record["run_at_utc"],
+            "hardware": record["hardware"],
+            "engine": record["engines"][recipe],
+            "device": record["devices"][recipe],
+            "fixtures": {n: dict(by[recipe]) for n, by in record["fixtures"].items()},
+        }
+        for recipe in RECIPES
+    }
+    runs["uma"]["fixtures"]["hf1_butane"] = entry_change(runs["uma"]["fixtures"]["hf1_butane"])
+    commands = [
+        {"argv": [], "env": {}, "exit_code": 1, "wall_s": 0, "log": "x.log", "summary": "x"}
+    ]
+    return merge_runs(runs, commands)
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        (
+            lambda e: {
+                **e,
+                "regression": {**e["regression"], "status": "fail"},
+                "test_outcome": "failed",
+                "failed_checks": ["regression"],
+            },
+            "hf1_butane.uma: test_outcome failed ['regression']",
+        ),
+        (lambda e: {"test_outcome": "missing"}, "hf1_butane.uma: test_outcome missing"),
+    ],
+)
+def test_v030_claims_refused_for_failed_or_missing_fragment(change: Any, reason: str) -> None:
+    """R56: a failed or missing fragment merges to verdict fail; the README claims are refused."""
+    merged = _merged_with(change)
+    assert merged["verdict"] == "fail"
+    assert reason in merged["verdict_reasons"]
+    problems = check_v030_claims(readme(), merged)
+    assert any("verdict is fail" in p for p in problems), problems

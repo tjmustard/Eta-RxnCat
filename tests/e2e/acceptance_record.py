@@ -31,11 +31,48 @@ FIXED_LIMITS = (
 )
 
 
+OUTCOMES = {"passed", "failed", "missing"}
+
+
+def missing(entry: dict[str, Any]) -> bool:
+    """A fixture x recipe whose test raised before writing its fragment (R56)."""
+    return entry.get("test_outcome") == "missing"
+
+
+def record_verdict(fixtures: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """R56: ``pass`` only if every fixture x recipe passed; nothing failed, pending or missing."""
+    reasons = []
+    for name in FIXTURES:
+        for recipe in RECIPES:
+            entry = fixtures.get(name, {}).get(recipe, {"test_outcome": "missing"})
+            where = f"{name}.{recipe}"
+            outcome = entry.get("test_outcome")
+            if outcome != "passed":
+                failed = entry.get("failed_checks", [])
+                reasons.append(
+                    f"{where}: test_outcome {outcome}" + (f" {failed}" if failed else "")
+                )
+            if missing(entry):
+                continue
+            states = {
+                "regression": entry.get("regression", {}).get("status"),
+                "accuracy": entry.get("accuracy", {}).get("verdict"),
+            }
+            if "smiles_confirmation" in entry:
+                states["smiles_confirmation"] = entry["smiles_confirmation"]
+            for check_name, state in states.items():
+                if state == "fail" or str(state).startswith("pending_"):
+                    reasons.append(f"{where}: {check_name} {state}")
+    return {"verdict": "fail" if reasons else "pass", "verdict_reasons": reasons}
+
+
 def known_limits(fixtures: dict[str, dict[str, Any]]) -> list[str]:
     """R26: reported deviations only (never a gated failure), plus the fixed lines."""
     limits = list(FIXED_LIMITS)
     t2 = fixtures["e2e5_t2"]
     xtb, uma = t2["xtb"], t2["uma"]
+    if missing(xtb) or missing(uma):
+        return limits
     if not xtb["window"]["inside"]:
         low, high = xtb["window"]["bounds_kcal_mol"]
         limits.append(
@@ -46,7 +83,7 @@ def known_limits(fixtures: dict[str, dict[str, Any]]) -> list[str]:
             'standard." The default recipe stays GFN2 until TJ decides.'
         )
     for name in ("hf1_butane", "hf2_diels_alder"):
-        deltas = fixtures[name]["xtb"]["accuracy"].get("deltas", [])
+        deltas = fixtures[name]["xtb"].get("accuracy", {}).get("deltas", [])
         gating = [d for d in deltas if d["level"].startswith("wb97mv")]
         if gating:
             parts = ", ".join(f"{d['quantity']} {d['delta']:+.2f}" for d in gating)
@@ -78,6 +115,10 @@ def check(record: dict[str, Any]) -> list[str]:
             entry = record.get("fixtures", {}).get(name, {}).get(recipe)
             if entry is None:
                 problems.append(f"missing fixtures.{name}.{recipe}")
+                continue
+            if entry.get("test_outcome", "passed") not in OUTCOMES:
+                problems.append(f"fixtures.{name}.{recipe}: test_outcome")
+            if missing(entry):
                 continue
             for key in (
                 "stages",
@@ -112,20 +153,29 @@ def check(record: dict[str, Any]) -> list[str]:
                         problems.append(f"fixtures.{name}.{recipe}: missing {key}")
             if name == "hf2_diels_alder" and "dG_r_ensemble_minus_lowest_kcal_mol" not in entry:
                 problems.append(f"fixtures.{name}.{recipe}: missing dG_r_ensemble_minus_lowest")
+    if "verdict" in record:
+        expected = record_verdict(record.get("fixtures", {}))
+        stated = {k: record.get(k) for k in expected}
+        if stated != expected:
+            problems.append(f"verdict {stated} is not the fixtures' verdict {expected}")
     return problems
 
 
 def merge(xtb_path: Path, uma_path: Path, commands_path: Path) -> dict[str, Any]:
     """Build the record from both recipe files and the command list."""
     runs = {"xtb": json.loads(xtb_path.read_text()), "uma": json.loads(uma_path.read_text())}
+    return merge_runs(runs, json.loads(commands_path.read_text()))
+
+
+def merge_runs(runs: dict[str, dict[str, Any]], commands: list[dict[str, Any]]) -> dict[str, Any]:
+    """Build the record from the per-recipe acceptance files (already parsed)."""
     shas = {r["commit_sha"] for r in runs.values()}
     if len(shas) != 1 or not all(r["tree_clean"] for r in runs.values()):
         raise ValueError(f"recipes ran at different or unclean commits: {shas}")
-    commands = json.loads(commands_path.read_text())
     fixtures: dict[str, dict[str, Any]] = {name: {} for name in FIXTURES}
     for recipe, run in runs.items():
         for name in FIXTURES:
-            entry = dict(run["fixtures"][name])
+            entry = dict(run["fixtures"].get(name, {"test_outcome": "missing"}))
             entry.pop("fixture", None)
             entry.pop("recipe", None)
             entry.pop("schema", None)
@@ -159,6 +209,7 @@ def merge(xtb_path: Path, uma_path: Path, commands_path: Path) -> dict[str, Any]
             "verdict_run": "slice 10, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)",
         },
         "fixtures": fixtures,
+        **record_verdict(fixtures),
     }
     problems = check(record)
     if problems:

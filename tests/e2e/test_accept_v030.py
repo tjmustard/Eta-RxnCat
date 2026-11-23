@@ -33,8 +33,12 @@ def test_accept_v030(recipe_name: str, recipes: Callable[[str], Recipe], commit_
     fixtures = {}
     for name in FIXTURES:
         path = out / "fragments" / f"{name}.{recipe_name}.json"
-        assert path.exists(), f"{name}.{recipe_name}: no fragment (did the fixture test run?)"
-        fixtures[name] = json.loads(path.read_text(encoding="utf-8"))
+        # R56: a test that raised before writing leaves no fragment; record it, never omit it
+        fixtures[name] = (
+            json.loads(path.read_text(encoding="utf-8"))
+            if path.exists()
+            else {"test_outcome": "missing"}
+        )
     status = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=REPO,

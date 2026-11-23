@@ -19,7 +19,7 @@ from acceptance import (
     write_fragment,
 )
 from candidates import candidate, environment, species_payload
-from checks import assert_checks_pass, checks, write
+from checks import assert_checks_pass, checks, outcome_fields, write
 from derived import (
     assert_no_duplicate_records,
     checked_reaction_free_energy,
@@ -198,6 +198,8 @@ def test_e2e5_tier2_cp_cyclopropene(
         f"gated {recipe_name == 'uma'} deviation {deviation:.3f}; P1a_n sigma "
         f"{p1.thermo.rotational_symmetry_number} g {p1.degeneracy}; incremental {incremental}"
     )
+    smiles = smiles_confirmation()
+    gated = {**payload["checks"], "smiles_confirmation": {"status": smiles}}
     write_fragment(
         fixture.name,
         recipe_name,
@@ -207,7 +209,7 @@ def test_e2e5_tier2_cp_cyclopropene(
             **stage_metrics(gas.values()),
             "regression": payload["checks"]["regression"],
             "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
-            "smiles_confirmation": smiles_confirmation(),
+            "smiles_confirmation": smiles,
             "dG_r_1M_kcal_mol": dg,
             "window": {
                 "bounds_kcal_mol": [low, high],
@@ -220,7 +222,7 @@ def test_e2e5_tier2_cp_cyclopropene(
                 **species_stage_cache(cache_runs),
             },
             "failures": failures_by_species(failures),
-            "test_outcome": "passed",
+            **outcome_fields(gated),
         },
     )
-    assert_checks_pass(payload["checks"])
+    assert_checks_pass(gated)

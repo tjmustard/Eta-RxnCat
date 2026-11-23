@@ -12,7 +12,7 @@ from acceptance import (
     write_fragment,
 )
 from candidates import candidate, environment, species_payload
-from checks import assert_checks_pass, checks, write
+from checks import assert_checks_pass, checks, outcome_fields, write
 from derived import (
     assert_no_duplicate_records,
     butane_class,
@@ -98,9 +98,7 @@ def test_hf1_butane(
             "regression": payload["checks"]["regression"],
             "accuracy": accuracy_block(payload["checks"], observed, sigmas, recipe_name),
             "failures": failures_by_species(failures),
-            "test_outcome": "passed"
-            if payload["checks"]["accuracy"]["status"] != "fail"
-            else "failed",
+            **outcome_fields(payload["checks"]),
         },
     )
     assert_checks_pass(payload["checks"])

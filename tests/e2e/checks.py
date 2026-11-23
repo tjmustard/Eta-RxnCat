@@ -5,7 +5,6 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-import pytest
 from derived import accuracy
 from e2e_env import PROMOTED, acceptance
 from reference_values import load_reference_file
@@ -43,17 +42,50 @@ def checks(
         if observed is None
         else accuracy(observed, sigmas, reference(), recipe=recipe)
     )
-    result = {"regression": regression_status(fixture, recipe, payload), "accuracy": acc}
-    pending = [k for k, v in result.items() if str(v["status"]).startswith("pending_")]
-    if pending and acceptance():
-        pytest.fail(f"{fixture}.{recipe}: {pending} pending in an acceptance run")
-    return result
+    return {"regression": regression_status(fixture, recipe, payload), "accuracy": acc}
+
+
+GATED_CHECKS = ("regression", "accuracy", "smiles_confirmation", "tier_gates")
+"""The checks ``gated_outcome`` reads (R56); ``tier_gates`` is ``{name: {"status": ...}}``."""
+
+
+def gated_outcome(result: Mapping[str, Any]) -> tuple[str, list[str]]:
+    """A fixture run's outcome from its checks (R56): ``("passed", [])`` or ``("failed", names)``.
+
+    Every gated check whose status is ``fail`` is named: regression, accuracy,
+    ``smiles_confirmation`` (T1/T2) and any recorded tier gate. Under ``ETA_RXNCAT_ACCEPTANCE=1``
+    a ``pending_*`` status fails too (R22: the verdict run settles every pending state). The
+    fragment's ``test_outcome``/``failed_checks`` and ``assert_checks_pass`` both come from here,
+    so they cannot disagree.
+    """
+
+    def status(value: Any) -> str:
+        return str(value["status"]) if isinstance(value, Mapping) else str(value)
+
+    statuses: list[tuple[str, str]] = []
+    for name in ("regression", "accuracy", "smiles_confirmation"):
+        if name in result:
+            statuses.append((name, status(result[name])))
+    for gate, value in sorted(result.get("tier_gates", {}).items()):
+        statuses.append((f"tier_gates.{gate}", status(value)))
+    failed = [
+        name
+        for name, status in statuses
+        if status == "fail" or (acceptance() and status.startswith("pending_"))
+    ]
+    return ("failed", failed) if failed else ("passed", [])
+
+
+def outcome_fields(result: Mapping[str, Any]) -> dict[str, Any]:
+    """The fragment's ``test_outcome`` and ``failed_checks`` (from ``gated_outcome``)."""
+    outcome, failed = gated_outcome(result)
+    return {"test_outcome": outcome, "failed_checks": failed}
 
 
 def assert_checks_pass(result: Mapping[str, Any]) -> None:
-    """A regression or gated accuracy failure fails the test (R26)."""
-    assert result["regression"]["status"] != "fail", result["regression"]
-    assert result["accuracy"]["status"] != "fail", result["accuracy"]
+    """Fail the test when ``gated_outcome`` does (R26, R56)."""
+    outcome, failed = gated_outcome(result)
+    assert outcome == "passed", f"gated checks failed: {failed}; {dict(result)}"
 
 
 def write(path: Path, payload: Mapping[str, Any]) -> None:
