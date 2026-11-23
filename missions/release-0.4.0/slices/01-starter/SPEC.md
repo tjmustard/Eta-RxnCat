@@ -121,9 +121,9 @@ Context the builder needs:
   Remove temp clones, venvs and scratch directories at the end of each step.
 - **HACF.** HACF is v0.6.2. No `HACF-install.sh` (a plain run silently DOWNGRADES to 0.6.1 right
   now), no `HACF-uninstall.sh`, no `hyper_migrate.py apply`.
-- **OpenRig 0.7.21.** `hyper_spec.py` and `hyper_migrate.py` warn "outside the pinned contract",
-  `hyper_spec.py proof` writes the proof natively, and `verify` skips `rig scope audit`. All of
-  this is expected: note it in the proof, not as a finding.
+- **OpenRig 0.7.21.** `hyper_migrate.py verify` runs `rig scope audit` (HACF v0.6.2 on OpenRig
+  0.7.21). If `hyper_spec.py` or `hyper_migrate.py` warn "outside the pinned contract", note it in
+  the proof, not as a finding.
 - **Firewall.** Never read `tests/candidate_outputs/` or `spec/archive/`, also not through git.
   Every `git diff`, `git show` and `git log -p` over a range containing a candidates commit uses
   `-- . ':(exclude)tests/candidate_outputs'`; a candidates commit is checked by file names only.
