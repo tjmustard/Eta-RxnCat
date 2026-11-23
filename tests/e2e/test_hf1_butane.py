@@ -6,7 +6,13 @@ from pathlib import Path
 import pytest
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
-from derived import butane_class, failure_report, failure_rows, hf1_derived
+from derived import (
+    assert_no_duplicate_records,
+    butane_class,
+    failure_report,
+    failure_rows,
+    hf1_derived,
+)
 from e2e_env import DEVICES, RECIPE_PARAMS
 from fixtures import hf1
 
@@ -33,6 +39,8 @@ def test_hf1_butane(
         result = run_species(spec, recipe, store)
     failures = failure_report(spec.species_id, failure_rows(store_path, result.keys))
     records = result.ensemble.records
+    assert_no_duplicate_records(result.ensemble, spec.smiles, spec.conformer_options)
+    duplicates = sum(reason == "duplicate_after_push" for _, reason in result.dropped)
     classes = [butane_class(r) for r in records]
     assert sorted(classes) == ["anti", "gauche"], classes
     by_class = dict(zip(classes, records, strict=True))
@@ -67,7 +75,8 @@ def test_hf1_butane(
     payload["checks"] = checks(fixture.name, recipe_name, payload, observed, sigmas)
     write(candidate_dir / f"{fixture.name}.{recipe_name}.json", payload)
     print(
-        f"\nHF1 {recipe_name}: records {len(records)} {classes}; dropped {len(result.dropped)}; "
+        f"\nHF1 {recipe_name}: n_butane n_kept {len(records)} {classes}; "
+        f"duplicate_after_push {duplicates}; dropped {list(result.dropped)}; "
         f"failures {failures}; engine calls {result.metrics.engine_calls}; "
         f"checks {payload['checks']['regression']['status']}/"
         f"{payload['checks']['accuracy']['status']}"

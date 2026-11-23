@@ -562,6 +562,7 @@ def run_species(
             freq_geometry[tuple(done[0].source_ids)] = done[1]
             records.append(done[0])
 
+    records = _dedup_after_push(records, spec, dropped)
     kept_records, mirrored = drop_mirror_partners(records, spec.smiles, spec.conformer_options)
     for index, reason in mirrored:
         dropped.append((records[index].source_ids[0], reason))
@@ -601,6 +602,34 @@ def run_species(
         metrics=runner.metrics,
         keys={k: tuple(v) for k, v in runner.keys.items()},
     )
+
+
+def _dedup_after_push(
+    records: list[ConformerRecord], spec: SpeciesSpec, dropped: list[tuple[int, str]]
+) -> list[ConformerRecord]:
+    """Drop a record whose final geometry duplicates an earlier kept record (R53).
+
+    The imaginary-mode push re-optimizes a conformer after the first dedup, so it can land on
+    another kept conformer. The existing ``dedup`` rule (R3: proper-rotation RMSD over graph
+    automorphisms at ``rmsd_dedup_angstrom``) runs again over the final geometries, visited by
+    record G (ties to the lower index). A match is dropped as ``duplicate_after_push`` under its
+    first source id; the survivor is unchanged and keeps its own source ids. Without a push no pair
+    can match (the geometries were deduplicated already), so the record set is then unchanged.
+    """
+    if len(records) < 2:
+        return records
+    kept = dedup(
+        [r.state for r in records],
+        [r.thermo.gibbs_free_energy_hartree for r in records],
+        spec.conformer_options,
+        smiles=spec.smiles,
+    )
+    survivors = sorted(k.index for k in kept)
+    for k in kept:
+        for i in k.source_ids:
+            if i != k.index:
+                dropped.append((records[i].source_ids[0], "duplicate_after_push"))
+    return [records[i] for i in survivors]
 
 
 def _thermo(

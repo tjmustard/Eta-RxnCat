@@ -253,3 +253,87 @@ def accuracy(
     if mismatched:
         result["sigma_mismatch"] = mismatched
     return result
+
+
+# R53: no duplicate records; per-record characterization ---------------------------------------
+
+
+def _pairwise(
+    ensemble: ConformerEnsemble, smiles: str, options: Any, mirror: bool
+) -> list[list[float]]:
+    """Least proper-rotation RMSD (with H, over automorphisms) between every pair of records."""
+    import numpy as np
+
+    from eta_rxncat.conformers._rmsd import atom_subset, graph_permutations, min_rmsds
+
+    perms = graph_permutations(smiles, options.max_automorphisms)
+    atoms = atom_subset(smiles, True, options.max_automorphisms)
+    xyz = [np.asarray(r.state.coordinates, dtype=np.float64) for r in ensemble.records]
+    flip = np.array([-1.0, 1.0, 1.0]) if mirror else np.ones(3)
+    return [[float(min_rmsds(a, [b * flip], perms, atoms)[0]) for b in xyz] for a in xyz]
+
+
+def assert_no_duplicate_records(ensemble: ConformerEnsemble, smiles: str, options: Any) -> None:
+    """No two kept records within ``rmsd_dedup_angstrom`` (proper rotation, with H; R53).
+
+    Raises:
+        AssertionError: naming the pair and its RMSD.
+    """
+    rmsd = _pairwise(ensemble, smiles, options, mirror=False)
+    n = len(ensemble.records)
+    pairs = [
+        (i, j, rmsd[i][j])
+        for i in range(n)
+        for j in range(i + 1, n)
+        if rmsd[i][j] <= options.rmsd_dedup_angstrom
+    ]
+    assert not pairs, f"{ensemble.species_id}: duplicate records (i, j, rmsd) {pairs}"
+
+
+RING_TORSIONS = ((5, 0, 1, 2), (0, 1, 2, 3), (1, 2, 3, 4), (2, 3, 4, 5), (3, 4, 5, 0), (4, 5, 0, 1))
+"""Cyclohexene ``C1CC=CCC1``: the six ring torsions in SMILES atom order."""
+
+
+def characterize(ensemble: ConformerEnsemble, smiles: str, options: Any) -> list[dict[str, Any]]:
+    """Characterize each kept record (R53).
+
+    Per record: dG and dE to the lowest (kcal/mol), ring torsions, lowest two frequencies,
+    recovery steps, and the least RMSD to every other record (proper rotation, and mirror).
+    """
+    recs = ensemble.records
+    g0 = min(r.thermo.gibbs_free_energy_hartree for r in recs)
+    e0 = min(r.thermo.electronic_energy_hartree for r in recs)
+    proper = _pairwise(ensemble, smiles, options, mirror=False)
+    mirror = _pairwise(ensemble, smiles, options, mirror=True)
+    rows = []
+    for i, r in enumerate(recs):
+        rows.append(
+            {
+                "index": i,
+                "source_ids": list(r.source_ids),
+                "degeneracy": r.degeneracy,
+                "sigma": r.thermo.rotational_symmetry_number,
+                "dG_to_lowest_kcal_mol": (r.thermo.gibbs_free_energy_hartree - g0)
+                * HARTREE_KCAL_MOL,
+                "dE_to_lowest_kcal_mol": (r.thermo.electronic_energy_hartree - e0)
+                * HARTREE_KCAL_MOL,
+                "ring_torsions_deg": [round(dihedral_deg(r.state, *t), 1) for t in RING_TORSIONS],
+                "lowest_two_cm1": [round(f, 1) for f in r.thermo.frequencies_cm1[:2]],
+                "recovery_steps": list(r.optimization.recovery_steps),
+                "min_rmsd_proper": [round(x, 3) for x in proper[i]],
+                "min_rmsd_mirror": [round(x, 3) for x in mirror[i]],
+            }
+        )
+    return rows
+
+
+def near_degenerate_distinct(rows: list[dict[str, Any]], threshold: float) -> list[tuple[int, int]]:
+    """Pairs with |dG| <= 0.01 kcal/mol but proper RMSD above the dedup threshold (stop rule)."""
+    out = []
+    for a in rows:
+        for b in rows:
+            close = abs(a["dG_to_lowest_kcal_mol"] - b["dG_to_lowest_kcal_mol"]) <= 0.01
+            distinct = a["min_rmsd_proper"][b["index"]] > threshold
+            if a["index"] < b["index"] and close and distinct:
+                out.append((a["index"], b["index"]))
+    return out

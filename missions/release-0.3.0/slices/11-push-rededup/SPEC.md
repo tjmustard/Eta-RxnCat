@@ -10,7 +10,7 @@ intent: "Re-dedup a conformer moved by the imaginary-mode push against the kept 
 depends_on: [OPR.0.3.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", "tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", spec/compiled/architecture.yml]
@@ -130,9 +130,9 @@ measures and reports.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
-- [ ] Task 2: runner change (req 1) + unit tests (req 2).
-- [ ] Task 3: `assert_no_duplicate_records` (req 3) wired into the HF1/HF2 tests; the recursive
+- [x] Task 1: `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
+- [x] Task 2: runner change (req 1) + unit tests (req 2).
+- [x] Task 3: `assert_no_duplicate_records` (req 3) wired into the HF1/HF2 tests; the recursive
   derived regression (req 6) and its tests.
 - [ ] Task 4: C1 on a clean tree; run HF1 and HF2 on both recipes at C1 (writes candidates with
   `commit_sha = C1`); the cyclohexene characterization (req 4); the transcription entry point.

@@ -23,5 +23,5 @@
 | OPR.0.3.0.8 | 08-e2e5-tiers | compiled | OPR.0.3.0.11 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.9 | 09-acceptance-record | compiled | OPR.0.3.0.8 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.10 | 10-acceptance-verdict | compiled | OPR.0.3.0.9 | 2026-11-23T03:40:10+00:00 compiled |
-| OPR.0.3.0.11 | 11-push-rededup | compiled | OPR.0.3.0.7 | 2026-11-23T07:22:58+00:00 compiled |
+| OPR.0.3.0.11 | 11-push-rededup | executed | OPR.0.3.0.7 | 2026-11-23T08:09:14+00:00 executed |
 <!-- END HACF GENERATED: slice-table -->

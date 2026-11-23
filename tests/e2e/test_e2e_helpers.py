@@ -430,7 +430,11 @@ def payload(
     sp["smiles"] = "CCCC"
     sp["records"][0]["class"] = cls
     sp["records"][0]["boltzmann_weight"] = weight
-    return {"environment": {"device": device}, "species": {"n_butane": sp}, "derived": {"dG": 0.7}}
+    return {
+        "environment": {"device": device},
+        "species": {"n_butane": sp},
+        "derived": {"dG_kcal_mol": 0.7},
+    }
 
 
 def test_regression_pass_and_failures() -> None:
@@ -441,7 +445,7 @@ def test_regression_pass_and_failures() -> None:
     assert compare(payload(cls="gauche"), payload())["status"] == "fail"
     assert compare(payload(device="cuda"), payload())["status"] == "fail"
     drifted = payload()
-    drifted["derived"]["dG"] = 0.8
+    drifted["derived"]["dG_kcal_mol"] = 0.8
     assert compare(drifted, payload())["status"] == "fail"
 
 
@@ -462,3 +466,92 @@ def test_reaction_spec_in_fixture_conserves() -> None:
     """HF2's reaction is ReactionSpec-valid (atoms and charge)."""
     spec = hf2().reaction
     assert isinstance(spec, ReactionSpec)
+
+
+# R54: recursive derived regression ---------------------------------------------------------------
+
+
+def hf2_derived_block() -> dict[str, Any]:
+    """A nested derived block shaped like HF2's."""
+    return {
+        "ensemble": {"dG_1M_kcal_mol": -30.0, "dE_kcal_mol": -45.0, "delta_n": -1},
+        "dG_r_lowest_records_kcal_mol": -29.6,
+        "lowest_records_sigma": {"ethylene": 4},
+        "incremental_solvation": {
+            "alpb_toluene": {
+                "observed_calls": 5,
+                "dG_solv_kcal_mol": {"cyclohexene": -4.1, "ethylene": -1.4},
+            },
+            "pcm_toluene_ethylene_lowest": {"mechanism_only": True, "observed_calls": 1},
+        },
+        "note": "x",
+        "energy_hartree": -1.0,
+        "gauche_population_percent": 38.0,
+    }
+
+
+def nested_set(d: dict[str, Any], path: tuple[str, ...], value: Any) -> dict[str, Any]:
+    """Return a deep copy of ``d`` with the leaf at ``path`` replaced."""
+    out = json.loads(json.dumps(d))
+    node = out
+    for key in path[:-1]:
+        node = node[key]
+    node[path[-1]] = value
+    return out
+
+
+@pytest.mark.parametrize(
+    ("path", "value", "fails"),
+    [
+        (("ensemble", "dG_1M_kcal_mol"), -30.06, True),
+        (("ensemble", "dG_1M_kcal_mol"), -30.04, False),
+        (("incremental_solvation", "alpb_toluene", "dG_solv_kcal_mol", "cyclohexene"), -4.16, True),
+        (
+            ("incremental_solvation", "alpb_toluene", "dG_solv_kcal_mol", "cyclohexene"),
+            -4.14,
+            False,
+        ),
+        (("energy_hartree",), -1.0 + 2e-5, True),
+        (("energy_hartree",), -1.0 + 5e-6, False),
+        (("gauche_population_percent",), 40.5, True),
+        (("gauche_population_percent",), 39.5, False),
+        (("incremental_solvation", "alpb_toluene", "observed_calls"), 6, True),
+        (("ensemble", "delta_n"), -2, True),
+        (("incremental_solvation", "pcm_toluene_ethylene_lowest", "mechanism_only"), False, True),
+        (("note",), "y", True),
+    ],
+    ids=[
+        "kcal_mol 0.06 fails",
+        "kcal_mol 0.04 passes",
+        "nested dG_solv 0.06 fails",
+        "nested dG_solv 0.04 passes",
+        "hartree 2e-5 fails",
+        "hartree 5e-6 passes",
+        "percent 2.5 fails",
+        "percent 1.5 passes",
+        "count changed fails",
+        "delta_n changed fails",
+        "bool changed fails",
+        "string changed fails",
+    ],
+)
+def test_derived_regression_by_unit(path: tuple[str, ...], value: Any, fails: bool) -> None:
+    """R54: each leaf compared by the unit of its path; counts, bools and strings exact."""
+    from regression import compare_derived
+
+    old = hf2_derived_block()
+    assert bool(compare_derived(old, nested_set(old, path, value))) is fails
+
+
+def test_derived_regression_missing_keys_and_unclassified() -> None:
+    """A key on one side only fails (either side); a float with no unit fails as unclassified."""
+    from regression import compare_derived
+
+    old = hf2_derived_block()
+    new = json.loads(json.dumps(old))
+    del new["incremental_solvation"]["alpb_toluene"]["dG_solv_kcal_mol"]["ethylene"]
+    assert any("present only in the promoted" in f for f in compare_derived(old, new))
+    assert any("present only in the new" in f for f in compare_derived(new, old))
+    unclassified = {"block": {"ratio": 0.5}}
+    assert compare_derived(unclassified, unclassified) == ["unclassified derived value block/ratio"]
+    assert compare_derived(old, json.loads(json.dumps(old))) == []

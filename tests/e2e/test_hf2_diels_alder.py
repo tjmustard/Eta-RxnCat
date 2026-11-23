@@ -13,12 +13,15 @@ import pytest
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
 from derived import (
+    assert_no_duplicate_records,
+    characterize,
     checked_reaction_free_energy,
     diene_class,
     failure_report,
     failure_rows,
     hf2_derived,
     hf2_lowest_records,
+    near_degenerate_distinct,
     solvated_ensemble,
 )
 from e2e_env import DEVICES, RECIPE_PARAMS
@@ -84,6 +87,18 @@ def test_hf2_diels_alder(
             gas[spec.species_id] = run_species(spec, recipe, store)
     before = rows(store_path)
     ensembles = {k: v.ensemble for k, v in gas.items()}
+    for spec in fixture.species:
+        assert_no_duplicate_records(ensembles[spec.species_id], spec.smiles, spec.conformer_options)
+    duplicates = {
+        k: sum(reason == "duplicate_after_push" for _, reason in v.dropped) for k, v in gas.items()
+    }
+    cyclo = fixture.spec("cyclohexene")
+    character = characterize(ensembles["cyclohexene"], cyclo.smiles, cyclo.conformer_options)
+    print(f"\nHF2 {recipe_name} cyclohexene records (R53 characterization):")
+    for row in character:
+        print(f"  {row}")
+    stop = near_degenerate_distinct(character, cyclo.conformer_options.rmsd_dedup_angstrom)
+    assert not stop, f"STOP AND REPORT (R53): |dG| <= 0.01 kcal/mol above the RMSD threshold {stop}"
 
     # classes, sigma and degeneracy
     classes = [diene_class(r) for r in ensembles["butadiene"].records]
@@ -191,7 +206,9 @@ def test_hf2_diels_alder(
     payload["checks"] = checks(fixture.name, recipe_name, payload, observed, sigmas)
     write(candidate_dir / f"{fixture.name}.{recipe_name}.json", payload)
     print(
-        f"\nHF2 {recipe_name}: n_kept {n_kept}; butadiene classes {classes}; failures {failures}; "
+        f"\nHF2 {recipe_name}: n_kept {n_kept}; duplicate_after_push {duplicates}; "
+        f"dropped { {k: list(v.dropped) for k, v in gas.items()} }; "
+        f"butadiene classes {classes}; failures {failures}; "
         f"incremental {incremental}; checks {payload['checks']['regression']['status']}/"
         f"{payload['checks']['accuracy']['status']}"
     )
