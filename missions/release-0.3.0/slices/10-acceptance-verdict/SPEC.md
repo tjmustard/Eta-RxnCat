@@ -57,6 +57,11 @@ Context the builder needs:
 - R26: any gated check that fails, fails this slice; the result goes to the lead (who raises it to
   TJ). `known_limits` holds only reported deviations and the Q-E5 escalation proposal.
 - Fixtures under `tests/fixtures/` are TJ's and may be read; candidates may not.
+- **Promotion done (mission R57, R58):** TJ promoted all ten files in `ef6a88c`; R57 lists them with
+  sha256 and is the precondition's promotion R-row. TJ confirmed the four SMILES by that promotion
+  ("All look good"); `smiles_confirmation()` reads the promoted `derived_smiles`, not the file's
+  top-level `status` (still `pending_confirmation`, the candidate's own state at `e0ccae0`). Do not
+  add a reader of that `status`, and never edit the fixture. No SMILES was corrected: no rework slice.
 - **Real test outcome (mission R56):** today every fixture test writes its acceptance fragment
   before `assert_checks_pass`, with `test_outcome` hard-coded `"passed"` (HF2, T1, T2) or derived
   from accuracy alone (HF1). In the verdict run a promoted-regression or gated-accuracy failure
@@ -139,7 +144,10 @@ Context the builder needs:
    `pass`, metrics per stage, devices, the fixture sha256s it compared against, and `accuracy`
    per fixture with `gating_level` and both levels' deltas.
 4. Version 0.3.0 (where v0.2.0 set its version) and README v0.3.0 claims derived from the record;
-   derivation tests updated.
+   derivation tests updated. The final claims require the record's `verdict` key to be present and `"pass"`:
+   C1's `check_v030_claims` defaults a missing `verdict` to `"pass"` (`tests/unit/test_identity.py`,
+   right for slice 09's record, which has none); in C2 a record without `verdict` is refused for the
+   final claims, with a test.
 
 ## 3. Implementation Plan (Task List)
 
@@ -159,7 +167,11 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] Precondition: `ls tests/fixtures/v0.3.0/` output and the promotion R-row quoted.
+- [ ] Precondition: `ls tests/fixtures/v0.3.0/` output and `sha256sum tests/fixtures/v0.3.0/*` equal
+  to R57's values; the promotion R-row (R57) quoted.
+- [ ] SMILES (R58): `smiles_confirmation: confirmed` in every T1/T2 fragment and in the scratch
+  `e2e5_smiles.json` candidate's `status`; `grep` shows no code reading the promoted file's
+  top-level `status`.
 - [ ] Both acceptance commands exit 0 with 0 skips (pytest summary quoted).
 - [ ] Req 0 tests pass (each failing-check case named).
 - [ ] The record shows `verdict: "pass"`, `pass`/`reported`/`confirmed` only, no `pending_*`, and the T2 UMA
@@ -169,7 +181,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R56 (replan 6); R53, R55 (superseded candidates); R50–R52 (replan 3); R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
+- Mission §5 R57, R58 (promotion); R56 (replan 6); R53, R55 (superseded candidates); R50–R52 (replan 3); R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
 
 ## Intent visual
 
