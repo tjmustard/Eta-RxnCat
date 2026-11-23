@@ -288,3 +288,20 @@ def test_no_direct_copyleft_dependencies() -> None:
 def test_direct_dependency_check_catches(requirement: str) -> None:
     """The requirement-name normaliser recognises forbidden names in any spelling."""
     assert requirement_name(requirement) in FORBIDDEN_DIRECT_DEPENDENCIES
+
+
+MAPPING_MODULES = ("eta_rxncat.mapping", "eta_rxncat.mapping.align", "eta_rxncat.mapping.errors")
+MAPPING_HEAVY = ("geometric", "torch", "pyscf", "fairchem", "rdkit")
+
+
+def test_mapping_import_loads_no_heavy_modules() -> None:
+    """Importing the mapping modules in a fresh interpreter loads none of MAPPING_HEAVY (R9)."""
+    imports = "; ".join(f"import {module}" for module in MAPPING_MODULES)
+    code = (
+        f"{imports}; import sys; "
+        f"print(sorted(m for m in sys.modules if m.split('.')[0] in {MAPPING_HEAVY!r}))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, text=True, check=True
+    )
+    assert result.stdout.strip() == "[]"

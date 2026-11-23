@@ -1,0 +1,57 @@
+# Provenance: clean-room nMAP test vectors
+
+**Origin.** `~/.hacf/eta-rxncat-hacf/incoming/cleanroom-nmap/test_vectors/` (directories
+`01_rigid_recovery` … `07_delete_lists_and_order`), copied here byte-identical: 33 files in seven
+directories (`06_degenerate_pairs` has no `request.json` and no `expected_product.xyz`).
+
+**Transfer.** Transfer 1 of `TRANSFER_LOG.md` (cleanroom-nmap → eta-rxncat),
+2026-11-23T18:44:06Z, "approved by room-checker (rows 2df20f9f + 04f688a2)". `CHECKER_REPORT.md`
+(sha256 `be1de23c076a775bdbbd8ecf6a2400edada07a41ad0c99e347f3d597ad5e7006`): "Approved for
+transfer". The vectors are described in `NMAP_BEHAVIOUR_SPEC.md` §4 and §9 (sha256
+`a56c449b39e92eab23a766739e0bccce111619329ae4e066355876e35dee662d`).
+
+**Clean room.** TJ Q1: eta is a clean-room rewrite; only checker-approved behaviour documents and
+these vectors cross from the clean-room rig. No eta seat reads the original code.
+
+**Conventions.**
+- 1-based indices; converted to 0-based by the test loader (`tests/unit/mapping/cleanroom.py`).
+- Compare at 1e-6 Å (six-decimal files).
+- These files are never edited.
+
+## Per-file sha256 (transfer 1; each verified equal on copy, 2026-11-23)
+
+```
+4bba31baeef0c8036e9a08128f41de0f5dd5b753942017fa26119a7ea5ea53ea  01_rigid_recovery/expected_product.xyz
+560695b806a930656c2d83c4cce919f6a420557df7dcaf2b6e79ee4abffbfbcd  01_rigid_recovery/incoming.xyz
+075750b23083584681e5d5ceeddd955733d231d7879e1fc5fe9a6a9bc225a751  01_rigid_recovery/README.md
+a2d6447b764d9663331d3e418a104e07344ee02a1c87cb984b1693e5277fbca3  01_rigid_recovery/request.json
+3fbd244704def53161daa42c2f096ee6fea09b1195290c616fb357d6fdedd054  01_rigid_recovery/template.xyz
+c209d97f53d0652a4b4df77e7dc03f195bb8e313704d275eacaf76db8c0971f8  02_quarter_turn/expected_product.xyz
+ff80cc1e69fad88551a6614b41a48e1dfa688df901267b5487e81fcb885a8488  02_quarter_turn/incoming.xyz
+f883ecf9beca67aff4d16ebe313f1af9a85e1caf569b94ca40bfca470dadea4a  02_quarter_turn/README.md
+93946620d23ee93c7010c71748de8990b42ad29a7947c41ff1b174b03f06942d  02_quarter_turn/request.json
+ed4df8b6dcc68640f5f01701ac66d7605f0036ae7c5a2cda9782ea1fcb315b84  02_quarter_turn/template.xyz
+c868791a6cfc27bc8b7b56f4a35aac74aed05e5d3919bc7ca3e8bae5a05a73b0  03_mirror_image/expected_product.xyz
+97d546c831bc27e5111ff920fc473d5ffc95413190397f868b5e7015da5b8ba8  03_mirror_image/incoming.xyz
+0ce60e2426e68f5ed81ed401c35fbadd4bd68e547ffd777c667d7e0c68ffe604  03_mirror_image/README.md
+dcc0b2f3d26629ec3941e27dbba984d74542c5595bc3438f05c4e2541a6f4ab9  03_mirror_image/request.json
+27338a4586a363bbd717235f4a6b4966ee687cd6097a2637dfa04658bbad6d55  03_mirror_image/template.xyz
+ff53aa29e8cdd22f4e3ab386c7baa65f0b3d084e045915dda079329af31eda5f  04_aryl_graft_para/expected_product.xyz
+2d414a657480f83185197522233bc7ac554097aac7a326d485acaf9bd232a9ad  04_aryl_graft_para/incoming.xyz
+ffc96157186db6a392dce27b8f96ef1a9e0fd1de11b6a878f2539b50ed392527  04_aryl_graft_para/README.md
+e8012393d61edf1448a06d7803fa27d035c685114a71b72c4a101f13b65a37de  04_aryl_graft_para/request.json
+3b211fcb98e42d8b4e37c20c3594b371875c5775120ecc7276b8e52622558c48  04_aryl_graft_para/template.xyz
+ae1bdeb3c65f2e3590e0cfa3528337cc20e8cffd0d5926288571826c81c7ee8c  05_planar_reversed_order/expected_product.xyz
+2d414a657480f83185197522233bc7ac554097aac7a326d485acaf9bd232a9ad  05_planar_reversed_order/incoming.xyz
+8b088f7df282b28a35a7cd7666d6bdf248ac242bd3b69e89a649c4ade9a14a82  05_planar_reversed_order/README.md
+1217423de072e04d189c5000f6b28b8d53906fee8e42558d1cda51e3bc5f1610  05_planar_reversed_order/request.json
+3b211fcb98e42d8b4e37c20c3594b371875c5775120ecc7276b8e52622558c48  05_planar_reversed_order/template.xyz
+d220d6837cdea80e693b12c22f3d384bfa503cffc5a92d3d89180ffa432ab6a4  06_degenerate_pairs/incoming.xyz
+9d932adc6332be9f034a7b0536591b9d2b35d251bd7b7ee3460735b2a9635367  06_degenerate_pairs/README.md
+56a6572a09d4f15ff4dfaf512b9ef9ed54171678fa03c0e82a709f667ba67df5  06_degenerate_pairs/template.xyz
+5430db26604fb9b85ceeb59f3296e18377ff56e348ea4022ee23854aa267e83f  07_delete_lists_and_order/expected_product.xyz
+640fd0fd37e7ed5c45b76d068b7705dafabe5aa0e88ef7c154629ebaa6d0a441  07_delete_lists_and_order/incoming.xyz
+4661a35c1ff395d16a31a4d2f22dd1865eb8c44b5e947d9e778dfcaebf99a6b2  07_delete_lists_and_order/README.md
+d3a3a5e109371e6c1289d8c06848b25e168dfe41fd412ba9a0933726b166bbd5  07_delete_lists_and_order/request.json
+0abd54e864d7722f8effb9244825a9511f1bef879d8b88cf9a4b77f15eae7922  07_delete_lists_and_order/template.xyz
+```

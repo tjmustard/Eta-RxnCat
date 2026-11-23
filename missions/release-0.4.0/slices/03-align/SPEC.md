@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.mapping with its errors and Horn-quaternion superpose
 depends_on: [OPR.0.4.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["src/eta_rxncat/mapping/**", "tests/unit/mapping/**", tests/unit/test_package.py, spec/compiled/architecture.yml]
@@ -213,10 +213,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `src/eta_rxncat/mapping/__init__.py` (the scaffold placeholder) and `architecture.yml`.
-- [ ] Task 2: ledger ensure-node (new node + scaffold glob move); validate; count the globs.
-- [ ] Task 3: errors, align and `__init__`; copy the vectors and verify their sha256; write PROVENANCE.md.
-- [ ] Task 4: tests (`tests/unit/mapping/test_align.py`, `_svd_reference.py`, the vector loader `tests/unit/mapping/cleanroom.py`); required checks; commit; updater.
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `src/eta_rxncat/mapping/__init__.py` (the scaffold placeholder) and `architecture.yml`.
+- [x] Task 2: ledger ensure-node (new node + scaffold glob move); validate; count the globs.
+- [x] Task 3: errors, align and `__init__`; copy the vectors and verify their sha256; write PROVENANCE.md.
+- [x] Task 4: tests (`tests/unit/mapping/test_align.py`, `_svd_reference.py`, the vector loader `tests/unit/mapping/cleanroom.py`); required checks; commit; updater.
 
 ## 4. The Negative Space (Constraints)
 

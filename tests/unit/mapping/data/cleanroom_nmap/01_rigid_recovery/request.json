@@ -1,0 +1,29 @@
+{
+ "pairs_template_incoming_1based": [
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   4
+  ]
+ ],
+ "template_delete_1based": [],
+ "incoming_delete_1based": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "charge": 0,
+ "multiplicity": 1
+}

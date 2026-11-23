@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -14,7 +14,6 @@ nodes:
   - docs/**
   - src/eta_rxncat/__init__.py
   - src/eta_rxncat/py.typed
-  - src/eta_rxncat/mapping/**
   - tests/unit/test_package.py
   - tests/conftest.py
   - spec/compiled/architecture.yml
@@ -62,7 +61,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 01-starter
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:13:00+00:00'
     reviewed_by: audit:01-starter
@@ -75,7 +74,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -120,7 +119,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
@@ -130,7 +129,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -175,7 +174,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
@@ -184,7 +183,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -226,14 +225,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -272,14 +271,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -327,14 +326,14 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -379,14 +378,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
   review:
     reviewed_at: '2026-11-23T19:39:10+00:00'
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -437,10 +436,10 @@ nodes:
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
 - id: eta_rxncat_conformers
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -496,10 +495,10 @@ nodes:
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -574,4 +573,53 @@ nodes:
     reviewed_by: audit:02-graft-contracts
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 02-graft-contracts
+    last_slice: 03-align
+- id: eta_rxncat_mapping
+  dimension: Module
+  status: dirty
+  associated_file: src/eta_rxncat/mapping/__init__.py
+  files:
+  - src/eta_rxncat/mapping/**
+  - tests/unit/mapping/**
+  description: >-
+    Clean-room conserved-core structure mapper (v0.4.0; nMAP rewritten from approved
+    behaviour specs only, TJ Q1). Three parts. (1) align.py: Horn unit-quaternion
+    superposition of ordered point pairs (superpose, Superposition, pair_set_shape);
+    proper rotations only (det +1 by construction, no reflection fix-up), RMSD from
+    residual coordinates, optional positive weights; refuses fewer than 3 pairs, collinear
+    or coincident sets (RMS off-line deviation at or below degenerate_tolerance_angstrom)
+    and a non-unique top eigenvalue with AlignmentError; reports each pair set's RMS
+    off-plane deviation for the planar-pair flag. (2) graft.py (slice 04): ordered
+    template-first surgery driven by GraftSpec: kept template atoms bitwise unchanged,
+    paired fragment atoms always dropped plus optional fragment_delete, explicit product
+    charge and multiplicity, overlap floor GraftClashError, recorded close contacts
+    and junction signed volumes, index_map. (3) relax.py (slice 05): core-frozen pre-relaxation
+    through the Engine and Optimizer interfaces (frozen_atom_indices, never a dihedral
+    constraint), CoreDisplacementError above 1e-8 A. Errors: MappingError with AlignmentError,
+    GraftInputError, GraftClashError, CoreDisplacementError. Dependencies: numpy;
+    RDKit only lazily; no geometric, torch, pyscf or fairchem at import; never eta_rxncat.thermo.
+    Inputs: MolecularState coordinates and a GraftSpec (core contracts). Output: GraftResult.
+    MIT/BSD-only, no ase.
+  inputs:
+  - data_type: graft_spec_and_molecular_state_template_and_fragment
+    source_id: eta_rxncat_core
+  - data_type: ordered_pair_coordinates_angstrom
+    external: eta_rxncat_consumers
+  outputs:
+  - data_type: superposition_rotation_centroids_rmsd_and_pair_shapes
+    external: eta_rxncat_consumers
+  - data_type: graft_result_product_index_map_contacts_junctions
+    external: eta_rxncat_consumers
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_engines
+    - eta_rxncat_optimize
+    implements: []
+    member_of: []
+  review:
+    reviewed_at: '2026-11-23T19:43:33+00:00'
+    reviewed_by: audit:03-align-builder
+    summary: patched inputs, outputs
+  provenance:
+    last_slice: 03-align
