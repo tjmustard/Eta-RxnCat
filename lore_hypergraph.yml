@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 22
+  ADR: 27
   STORY: 0
   CANON: 0
 nodes:
@@ -894,3 +894,207 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+- id: ADR-0023
+  type: decision
+  title: geomeTRIC moves behind an Optimizer interface into the opt-geometric extra
+    (TJ Q3 A), amending ADR-0011's scope
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0023-geometric-moves-behind-an-optimizer-interface-into-the-opt-g.md
+  content_sha256: 4085752745c0257d9c4a0247c5b7315ba1abd81c119f823b0f5afcf79bfd0cb6
+  anchors:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - pyproject.toml
+    - tools/licence_gate.py
+    - uv.lock
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/optimize/**
+  relates_to:
+  - ADR-0011
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T03:40:47+00:00'
+    source: OPR.0.3.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T03:40:47+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.3.0
+- id: ADR-0024
+  type: decision
+  title: GeometricOptimizer uses geomeTRIC's lower-level API, never run_optimizer,
+    to keep host logging intact
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0024-geometricoptimizer-uses-geometric-s-lower-level-api-never-ru.md
+  content_sha256: c311f519d3eb9f1b72a848bdb57900db9138ceeeb7d65243ec7a8d301b493a9a
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/optimize/geometric_impl.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T03:40:47+00:00'
+    source: OPR.0.3.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T03:40:47+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.3.0
+- id: ADR-0025
+  type: decision
+  title: Two-pass ETKDGv3, own proper-rotation dedup and per-conformer mirror degeneracy
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0025-two-pass-etkdgv3-own-proper-rotation-dedup-and-per-conformer.md
+  content_sha256: c4cfb794cf05a4157d593ae43a65b6de5054337292111a13b1cc8a1bde81e494
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_conformers
+    files:
+    - src/eta_rxncat/conformers/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T03:40:47+00:00'
+    source: OPR.0.3.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T03:40:47+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.3.0
+- id: ADR-0026
+  type: decision
+  title: Thermochemistry is derived from stored Hessians in eta_rxncat.thermo with
+    its own CODATA constants
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0026-thermochemistry-is-derived-from-stored-hessians-in-eta-rxnca.md
+  content_sha256: 555147288fde053b05330e6eec642a9d31fb70b1a28a29407931c5bc790a5731
+  anchors:
+    components:
+    - eta_rxncat_core
+    - eta_rxncat_engines
+    files:
+    - src/eta_rxncat/engines/units.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_thermo
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/thermo/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T03:40:47+00:00'
+    source: OPR.0.3.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T03:40:47+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.3.0
+- id: ADR-0027
+  type: decision
+  title: Candidate outputs committed in candidates-only commits read by no seat; acceptance
+    split around TJ's Phase 3 gate
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0027-candidate-outputs-committed-in-candidates-only-commits-read.md
+  content_sha256: ed91fafd8bf0b4cd5bdd31d891df5a531a4cde5a5a3179ab486ad514c4b92794
+  anchors:
+    components: []
+    files: []
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/**
+    - tests/candidate_outputs/v0.3.0/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-23T03:40:47+00:00'
+    source: OPR.0.3.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-23T03:40:47+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.3.0
