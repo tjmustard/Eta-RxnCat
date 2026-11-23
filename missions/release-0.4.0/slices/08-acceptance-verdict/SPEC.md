@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_mapping
 parent: null
-hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
+hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, docs/prd/PLAN_DISCREPANCIES.md, docs/prd/v0.4.0/DISCREPANCIES.md, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -29,9 +29,16 @@ skips, and record the regression and map-confirmation verdicts. Bump the version
 a `pass` verdict, and derive the final README claims.
 
 Context the builder needs:
-- **Precondition (stop if not met):** the lead's dispatch names TJ's promotion commit.
-  - `tests/fixtures/v0.4.0/` holds `m1_graft.json`, and the relaxed files TJ chose to promote.
-  - The lead's dispatch records TJ's verbatim answer.
+- **Precondition (stop if not met). TJ promoted all three files in commit `174a783` (mission R28):**
+  - `tests/fixtures/v0.4.0/` holds exactly `m1_graft.json`, `m1_relaxed.xtb.json` and
+    `m1_relaxed.uma.json`, with these sha256 (recompute them):
+    - `m1_graft.json` `2e01ebf600eadabad47c9b66ffe368c756506fdcad3da3cd65df5bb5af117031`
+    - `m1_relaxed.uma.json` `ff3eb5b5ba61ef538c5d9681af619b7ee6f746d47f71bea0de42b140f417ccab`
+    - `m1_relaxed.xtb.json` `b3ed5680612ac0d8fb4157312ec257bfb1ac1d854d8b6889306958d9756adf73`
+  - Their blob ids at `174a783` equal those of `tests/candidate_outputs/v0.4.0/` at `035e289`.
+    Compare by `git ls-tree` ids only.
+  - TJ's answer (relayed by the advisor, `qitem-20261123222552-7f2f3da801c4ec2c`) is quoted in
+    mission R28. Copy R28's quote and these facts into `evidence.promotion` (R27 e).
   - Check by file names and git blob ids against the candidates commit; never by reading the
     candidates. A missing promoted file leaves its check `pending_promotion`, which fails under
     acceptance. That is a stop-and-report, never a skip.
@@ -90,6 +97,15 @@ Context the builder needs:
     - a record without `verdict` is refused by `check()` and by `check_v040_claims` ("has no
       verdict");
     - a promoted `m1_graft.json` whose map differs from the YAML gives `map_confirmation: fail`.
+- **Roadmap correction (mission R28; TJ "B: keep at v0.7.0"), in C1.** Group enumeration stays at
+  v0.7.0; only the Rh(I) (5+2) complexes are v1.x. Correct three committed texts:
+  - (1) the `KNOWN_LIMITS` line in `tests/e2e/acceptance_record_v040.py` becomes
+    `"R-group/ligand enumeration stays at v0.7.0 (TJ roadmap B); the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))"`;
+  - (2) PD-008's status cell in `docs/prd/PLAN_DISCREPANCIES.md` becomes
+    `decided (TJ v0.4.0 Q2: "Q2. (b)", row qitem-20261123174816-79277143c4b9b81a: constrained-core pre-relaxation in v0.4.0; R-group/ligand enumeration not in v0.4.0 and kept at v0.7.0 (TJ roadmap "B: keep at v0.7.0", row qitem-20261123222552-7f2f3da801c4ec2c); the Rh(I) (5+2) complexes in v1.x)`
+    (that cell only; no hash changes);
+  - (3) DV-01's decision cell in `docs/prd/v0.4.0/DISCREPANCIES.md` becomes
+    `TJ Q2 "(b)": pre-relaxation in v0.4.0; enumeration out of v0.4.0, kept at v0.7.0 (TJ roadmap B); Rh(I) (5+2) in v1.x.`
 - **What the promotion must contain:** exactly the three Phase 3 candidates, promoted to
   `tests/fixtures/v0.4.0/m1_graft.json`, `m1_relaxed.xtb.json` and `m1_relaxed.uma.json`.
   Nothing else is expected: no reference-values file and no SMILES file. A `pass` needs all
