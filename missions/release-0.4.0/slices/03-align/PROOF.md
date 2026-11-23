@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Horn vs SVD 1000 sets dRMSD<=4.4e-15 dR<=1.9e-14 (audit, independent), 33/33 vectors, all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
