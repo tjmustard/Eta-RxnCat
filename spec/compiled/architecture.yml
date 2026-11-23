@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -15,7 +15,6 @@ nodes:
   - src/eta_rxncat/__init__.py
   - src/eta_rxncat/py.typed
   - src/eta_rxncat/mapping/**
-  - src/eta_rxncat/orchestrator/**
   - tests/unit/test_package.py
   - tests/conftest.py
   - spec/compiled/architecture.yml
@@ -63,7 +62,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
@@ -73,9 +72,10 @@ nodes:
   - OPR.0.3.0.1
   - OPR.0.3.0.4
   - OPR.0.3.0.5
+  - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -117,7 +117,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
@@ -127,7 +127,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,7 +172,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
@@ -181,7 +181,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,14 +223,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,14 +269,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -324,14 +324,14 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -376,14 +376,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
   review:
     reviewed_at: '2026-11-23T06:21:15+00:00'
     reviewed_by: audit:05-conformers
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -434,10 +434,10 @@ nodes:
     reviewed_by: audit:05-conformers
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
 - id: eta_rxncat_conformers
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -492,4 +492,72 @@ nodes:
     reviewed_by: audit:05-conformers
     summary: patched inputs, edges.depends_on
   provenance:
-    last_slice: 05-conformers
+    last_slice: 06-species-runner
+- id: eta_rxncat_species_runner
+  dimension: Module
+  status: dirty
+  associated_file: src/eta_rxncat/orchestrator/species.py
+  files:
+  - src/eta_rxncat/orchestrator/**
+  - tests/unit/orchestrator/**
+  - tests/e2e/**
+  - tests/candidate_outputs/v0.3.0/**
+  description: >-
+    eta_rxncat.orchestrator (v0.3.0): the single-species stage runner (TJ Q4 C), reactions
+    and reports. counting.py: CountingEngine wraps an Engine, counting evaluations
+    per stage kind (optimizer calls included). species.py: SpeciesSpec, Recipe, SinglePoint;
+    ENGINE_CLASSES tag registry; run_species caches every stage in the v0.1.0 ArtifactStore
+    under build_stage_key: conformer_search (0 engine calls; keyed on pass-1 embedding
+    0; options = conformer options + canonical SMILES, rdkit_version, seed hash),
+    geometry_opt per pre-dedup survivor (engine options + opt.-prefixed requested
+    optimizer options + opt.name/opt.version; engine never sees opt. keys), dedup
+    and energy window, frequency per kept (energy + full Hessian; thermo recomputed,
+    never stored), one imaginary-mode push (both ways, 0.1 A, new geometry_opt rows)
+    then not_a_minimum, degeneracy, mirror-partner drop, build_ensemble, incremental
+    single points (R35 geometry check for energy_source single_point). Failures (OptimizationFailedError,
+    ScfConvergenceError) are cached as completed rows with failed_reason and dropped;
+    EngineUnavailable/Input/Runtime and OptimizerInputError propagate. Per-kind metrics
+    (wall time, calls, hits, rows). run_constrained_point (R42): one geometry_opt
+    row keyed with opt.constraints, no frequency/thermo/ensemble; frozen atoms plus
+    dihedrals refused. reaction.py: ReactionSpec (atoms and charge conserved from
+    SMILES), reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON
+    schema 1. Tests in tests/unit/orchestrator; tests/e2e and tests/candidate_outputs/v0.3.0
+    (path mapping only).
+  inputs:
+  - data_type: species_spec_recipe_and_single_points
+    external: eta_rxncat_consumers
+  - data_type: conformer_pool_dedup_degeneracy_and_ensemble
+    source_id: eta_rxncat_conformers
+  - data_type: optimization_result
+    source_id: eta_rxncat_optimize
+  - data_type: potential_result_energy_forces_hessian
+    source_id: eta_rxncat_engines
+  - data_type: thermo_result_and_normal_modes
+    source_id: eta_rxncat_thermo
+  - data_type: cached_stage_artifacts
+    source_id: eta_rxncat_store
+  outputs:
+  - data_type: species_result_ensemble_dropped_metrics
+    external: eta_rxncat_consumers
+  - data_type: stage_artifact_rows
+    target_id: eta_rxncat_store
+  - data_type: reaction_energies_and_json_report
+    external: eta_rxncat_consumers
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_thermo
+    - eta_rxncat_optimize
+    - eta_rxncat_conformers
+    - eta_rxncat_engines
+    - eta_rxncat_store
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.3.0.6
+  review:
+    reviewed_at: '2026-11-23T06:31:22+00:00'
+    reviewed_by: audit:builder-06-species-runner
+    summary: patched inputs, outputs
+  provenance:
+    last_slice: 06-species-runner

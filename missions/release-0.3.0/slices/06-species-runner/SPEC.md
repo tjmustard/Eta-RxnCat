@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.orchestrator: the single-species stage runner with st
 depends_on: [OPR.0.3.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -139,12 +139,12 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: ledger node; `counting.py` + tests.
-- [ ] Task 2: `species.py` stages and keys + tests with `rdkit_ff`/`uff` on butane (small
+- [x] Task 1: ledger node; `counting.py` + tests.
+- [x] Task 2: `species.py` stages and keys + tests with `rdkit_ff`/`uff` on butane (small
   `n_embed`) and a fake engine for the push and drop paths.
-- [ ] Task 3: `reaction.py`, `report.py` + tests.
-- [ ] Task 4: incremental test `tests/unit/orchestrator/test_incremental_stage.py`.
-- [ ] Task 5: `hypergraph_updater.py --from-diff`; required checks; commit.
+- [x] Task 3: `reaction.py`, `report.py` + tests.
+- [x] Task 4: incremental test `tests/unit/orchestrator/test_incremental_stage.py`.
+- [x] Task 5: `hypergraph_updater.py --from-diff`; required checks; commit.
 
 ## 4. The Negative Space (Constraints)
 

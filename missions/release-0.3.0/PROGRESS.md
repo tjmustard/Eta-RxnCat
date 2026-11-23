@@ -18,7 +18,7 @@
 | OPR.0.3.0.3 | 03-thermo | audited | OPR.0.3.0.2 | 2026-11-23T04:17:55+00:00 audited |
 | OPR.0.3.0.4 | 04-optimizer | audited | OPR.0.3.0.2 | 2026-11-23T05:56:17+00:00 audited |
 | OPR.0.3.0.5 | 05-conformers | audited | OPR.0.3.0.3, OPR.0.3.0.4 | 2026-11-23T06:21:35+00:00 audited |
-| OPR.0.3.0.6 | 06-species-runner | compiled | OPR.0.3.0.5 | 2026-11-23T03:40:10+00:00 compiled |
+| OPR.0.3.0.6 | 06-species-runner | executed | OPR.0.3.0.5 | 2026-11-23T06:31:31+00:00 executed |
 | OPR.0.3.0.7 | 07-human-fixtures | compiled | OPR.0.3.0.6 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.8 | 08-e2e5-tiers | compiled | OPR.0.3.0.7 | 2026-11-23T03:40:10+00:00 compiled |
 | OPR.0.3.0.9 | 09-acceptance-record | compiled | OPR.0.3.0.8 | 2026-11-23T03:40:10+00:00 compiled |
