@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: M1 data byte-exact via ast; tier-D 6/6; E2E rerun at C1: xtb g1 4.19e-8 A, uma 3.54e-8 A, g2/g3 pass, 0 skips; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -2,7 +2,7 @@
 id: OPR.0.4.0.6
 slice: 06-m1-fixture
 mission: release-0.4.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Land TJ's three M1 structures with provenance and the provisional M1 YA
 depends_on: [OPR.0.4.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/data/e2e5/**", tests/e2e/m1.py, "tests/e2e/test_m1_*.py", "tests/candidate_outputs/v0.4.0/**", spec/compiled/architecture.yml]
