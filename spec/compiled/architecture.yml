@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -64,9 +64,9 @@ nodes:
   provenance:
     last_slice: 01-starter
   review:
-    reviewed_at: '2026-11-23T17:19:20+00:00'
-    reviewed_by: audit:10-acceptance-verdict
-    summary: patched description
+    reviewed_at: '2026-11-23T19:13:00+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1

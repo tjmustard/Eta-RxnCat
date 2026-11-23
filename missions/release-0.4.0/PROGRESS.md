@@ -13,7 +13,7 @@
 <!-- BEGIN HACF GENERATED: slice-table -->
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
-| OPR.0.4.0.1 | 01-starter | executed |  | 2026-11-23T19:08:00+00:00 executed |
+| OPR.0.4.0.1 | 01-starter | audited |  | 2026-11-23T19:13:24+00:00 audited |
 | OPR.0.4.0.2 | 02-graft-contracts | compiled | OPR.0.4.0.1 | 2026-11-23T19:01:22+00:00 compiled |
 | OPR.0.4.0.3 | 03-align | compiled | OPR.0.4.0.2 | 2026-11-23T19:01:22+00:00 compiled |
 | OPR.0.4.0.4 | 04-graft | compiled | OPR.0.4.0.3 | 2026-11-23T19:01:23+00:00 compiled |
