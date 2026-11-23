@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.conformers: two-pass ETKDGv3 (second pass without exp
 depends_on: [OPR.0.3.0.3, OPR.0.3.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_conformers
 parent: null
 hacf_touches: ["src/eta_rxncat/conformers/**", "tests/unit/conformers/**", tests/unit/test_package.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -139,22 +139,22 @@ a defined stop.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: H4 — two `generate` calls (butane, T1, butadiene) give bit-identical coordinates for
+- [x] Task 1: H4 — two `generate` calls (butane, T1, butadiene) give bit-identical coordinates for
   both passes; record. H3 note in the proof.
-- [ ] Task 2: H12 (independent of this slice's code): in a scratch dir, with RDKit and the xtb CLI
+- [x] Task 2: H12 (independent of this slice's code): in a scratch dir, with RDKit and the xtb CLI
   only, optimize TJ's T1 XYZ (s-trans seed; from the `XYZ_FILES` literal of
   `~/.hacf/eta-rxncat-hacf/incoming/e2e-5tier-20261123/Eta-RxnCat_5-Tier_E2E_Bundle_Zip_Builder.py`
   via `ast.literal_eval`, never executing it) and every pass-2 s-cis-side embedding (seed 42, n 40)
   with `--gfn 2 --opt tight`; lowest s-cis-side E − s-trans E must be > 0 and every optimized
   s-cis-side geometry must keep |φ| ≤ 90° for at least one member. Record numbers. A contradiction
   is stop-and-report (the gate is not re-decided).
-- [ ] Task 3: options, errors, generate (+ seeds) + tests.
-- [ ] Task 4: dedup, window, degeneracy, ensemble + tests.
-- [ ] Task 5: H14 in `.venv-accept-uma` (create/sync it per AGENTS.md as `--extra gpu --extra
+- [x] Task 3: options, errors, generate (+ seeds) + tests.
+- [x] Task 4: dedup, window, degeneracy, ensemble + tests.
+- [x] Task 5: H14 in `.venv-accept-uma` (create/sync it per AGENTS.md as `--extra gpu --extra
   mlip-uma --extra opt-geometric`): optimize one pass-2 s-cis-side embedding of butadiene and of T1
   with `GeometricOptimizer` on `uma_direct`/`uma-s-1p2p1`; record final φ. |φ| > 90° for either →
   stop and report to the lead with the dihedrals.
-- [ ] Task 6: ledger; required checks; commit.
+- [x] Task 6: ledger; required checks; commit.
 
 ## 4. The Negative Space (Constraints)
 

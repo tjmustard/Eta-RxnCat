@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -14,7 +14,6 @@ nodes:
   - docs/**
   - src/eta_rxncat/__init__.py
   - src/eta_rxncat/py.typed
-  - src/eta_rxncat/conformers/**
   - src/eta_rxncat/mapping/**
   - src/eta_rxncat/orchestrator/**
   - tests/unit/test_package.py
@@ -64,7 +63,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
@@ -73,9 +72,10 @@ nodes:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
   - OPR.0.3.0.4
+  - OPR.0.3.0.5
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -117,7 +117,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
@@ -127,7 +127,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -172,7 +172,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
@@ -181,7 +181,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -223,14 +223,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -269,14 +269,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -324,14 +324,14 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -376,14 +376,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
   review:
     reviewed_at: '2026-11-23T05:55:42+00:00'
     reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -434,4 +434,59 @@ nodes:
     reviewed_by: audit:04-optimizer
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 04-optimizer
+    last_slice: 05-conformers
+- id: eta_rxncat_conformers
+  dimension: Module
+  status: dirty
+  associated_file: src/eta_rxncat/conformers/generate.py
+  files:
+  - src/eta_rxncat/conformers/**
+  - tests/unit/conformers/**
+  description: >-
+    eta_rxncat.conformers (v0.3.0): conformer pools, dedup, degeneracy and ensembles
+    from a SMILES with explicit charge and multiplicity; RDKit (BSD-3) and numpy,
+    no geomeTRIC/torch/PySCF/fairchem at import. options.py: ConformerOptions (frozen
+    pydantic: n_embed 50, seed 42, torsion_free_pass true, pre_dedup and dedup RMSD
+    0.125 A, energy window 6 kcal/mol, include_h_in_rmsd, max_automorphisms 100000;
+    as_stage_options sorted for the runner key). errors.py: ConformerError -> ConformerInputError,
+    EmbeddingFailedError(counts), EnsembleEmptyError(reasons); no function returns
+    its input as a fallback. generate.py: input checks (parse, isotope labels refused,
+    formal charge, electron parity); pass 1 ETKDGv3 (seed, pruneRmsThresh -1, one
+    thread, enforceChirality), pass 2 identical without experimental torsion preferences
+    (F21, ids n..2n-1); seeds bond-perceived, stereo assigned from 3D, canonical isomeric
+    SMILES and chirality-aware substructure match required, reordered to SMILES order
+    (ids 2n..), R28 seed hash; pre-dedup with H, seeds first, a seed never removed;
+    ConformerPool with members, per-pass RDKit failure counts and survivors. _rmsd.py:
+    least proper-rotation RMSD over graph automorphisms (reuses thermo._geometry,
+    explicit maxMatches). dedup.py: dedup into the lowest-energy member (ties lower
+    index), energy_window. degeneracy.py: graph_achiral (tetrahedral tags inverted;
+    E/Z ignored, R37), conformer_chiral (mirror image farther than the dedup RMSD),
+    assign_degeneracy (2 iff both), drop_mirror_partners (lower G stays). ensemble.py:
+    build_ensemble via thermo.boltzmann with degeneracies. geometry.py: dihedral_deg
+    for class labels. Tests in tests/unit/conformers.
+  inputs:
+  - data_type: smiles_charge_multiplicity_and_seed_states
+    external: eta_rxncat_consumers
+  - data_type: molecular_state_and_conformer_records
+    source_id: eta_rxncat_core
+  - data_type: automorphisms_proper_rotation_rmsd_and_boltzmann
+    source_id: eta_rxncat_thermo
+  outputs:
+  - data_type: conformer_pool_dedup_degeneracy
+    external: eta_rxncat_consumers
+  - data_type: conformer_ensemble
+    external: eta_rxncat_consumers
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_thermo
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.3.0.5
+  review:
+    reviewed_at: '2026-11-23T06:08:11+00:00'
+    reviewed_by: audit:builder-05-conformers
+    summary: patched inputs, outputs
+  provenance:
+    last_slice: 05-conformers
