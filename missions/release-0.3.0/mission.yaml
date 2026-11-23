@@ -31,16 +31,19 @@ composition:
     - ref: slices/07-human-fixtures/slice.yaml
       order: 70
       active: true
+    - ref: slices/11-push-rededup/slice.yaml
+      order: 75
+      active: true
     - ref: slices/08-e2e5-tiers/slice.yaml
       order: 80
+      active: true
+    - ref: slices/12-t1-order-free/slice.yaml
+      order: 85
       active: true
     - ref: slices/09-acceptance-record/slice.yaml
       order: 90
       active: true
     - ref: slices/10-acceptance-verdict/slice.yaml
       order: 100
-      active: true
-    - ref: slices/11-push-rededup/slice.yaml
-      order: 75
       active: true
 # Optional team and SDLC sections are added here.

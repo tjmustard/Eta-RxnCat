@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
 intent: "Run HF1, HF2, T1 and T2 on both recipes in the named acceptance envs and write docs/prd/v0.3.0/ACCEPTANCE_RESULT.json with per-stage metrics and pending verdict states, deriving the README v0.3.0 claims from it, with no dependence on TJ acting first."
-depends_on: [OPR.0.3.0.8]
+depends_on: [OPR.0.3.0.12]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -158,4 +158,5 @@ N/A: non-visual slice.
 
 ## Dependencies
 
+- OPR.0.3.0.12 (order-free T1 derived block; regenerated T1 candidates; mission R55)
 - OPR.0.3.0.8 (T1/T2)
