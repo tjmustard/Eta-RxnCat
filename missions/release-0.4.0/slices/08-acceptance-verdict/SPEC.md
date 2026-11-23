@@ -49,6 +49,56 @@ Context the builder needs:
   reads `confirmed` when the promoted `m1_graft.json`'s map equals the YAML's.
 - The README's final v0.4.0 lines are derived from the verdict record, and
   `tests/unit/test_identity.py` enforces them. CHANGELOG is the scribe's, not this slice's.
+- **Replan 2 (mission R27), binding. Do these before the verdict run, in C1:**
+  - **(a) The default suite gates the verdict.** Audit 07 found that `record_verdict` in
+    `tests/e2e/acceptance_record_v040.py` reads only the fixture checks, so a failing default suite
+    still gave `pass`. Change it to `record_verdict(fixtures, default_suite, commands)`.
+    - It returns `fail` when any of these holds:
+      - `default_suite.exit_code != 0`, or `default_suite.failed > 0`, or `default_suite.errors > 0`;
+      - the same for `default_suite.cleanroom_vectors`;
+      - any entry of `commands` has `exit_code != 0`.
+    - Each failure adds a reason to `verdict_reasons`: `default_suite: exit_code 1, failed 2`,
+      `default_suite.cleanroom_vectors: …`, `commands[<i>] <argv[0..2]>: exit_code <n>`.
+    - `check()` recomputes the verdict with the same three inputs, so a hand-edited `pass` is
+      refused. `merge_runs` passes them.
+  - **(b) A record without `verdict` is refused.** `check()` already flags a bad verdict value.
+    `check_v040_claims` in `tests/unit/test_identity.py` must also refuse every claim, with the
+    message "has no verdict", when the key is absent. It must never raise `KeyError`; this is
+    v0.3.0 slice 10 req 4.
+  - **(c) Zero skips.** The acceptance runs must show `skipped == 0` in their logs.
+    - The xtb command sets `ETA_RXNCAT_XTB=$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb`.
+      Without it the xtb test SKIPS (audit 06 gap).
+    - `record_verdict` also fails when any `commands[*].summary` reports a skip. Read
+      `commands[*].summary` as `merge_runs` stores it; if a summary has no skip count, derive one
+      with `pytest_counts`.
+  - **(d) Map confirmation is the promotion itself** (TJ "P2 A", mission R2).
+    `map_confirmation` reads `graft_to_ts1b_n_map` from the promoted
+    `tests/fixtures/v0.4.0/m1_graft.json` and compares it with the M1 YAML. It never reads a
+    status field the candidate carried over (same rule as v0.3.0 R58).
+  - **(e) Promotion evidence** (as v0.3.0 R57). The record's `evidence.promotion` holds:
+    - TJ's verbatim answer and its queue row (both from the lead's dispatch);
+    - the promotion commit;
+    - per promoted file, its sha256 and git blob id, with the candidates-commit blob id it equals
+      (compared by blob id, never by reading the candidate).
+
+    The proof repeats it. The lead writes the matching mission R-row when the promotion lands.
+  - **Tests (default suite, `tests/e2e/test_acceptance_record_v040.py` and `tests/unit/test_identity.py`):**
+    - a record that is all-pass except `default_suite.failed = 1` gives `verdict: fail`, with the
+      reason, and `check_v040_claims` then refuses (the v0.3.0 R56 family);
+    - the same for a non-zero `cleanroom_vectors.exit_code`, a non-zero command exit code, and a
+      reported skip;
+    - a record without `verdict` is refused by `check()` and by `check_v040_claims` ("has no
+      verdict");
+    - a promoted `m1_graft.json` whose map differs from the YAML gives `map_confirmation: fail`.
+- **What the promotion must contain:** exactly the three Phase 3 candidates, promoted to
+  `tests/fixtures/v0.4.0/m1_graft.json`, `m1_relaxed.xtb.json` and `m1_relaxed.uma.json`.
+  Nothing else is expected: no reference-values file and no SMILES file. A `pass` needs all
+  three. If TJ promotes fewer, a regression check stays `pending_promotion`, which fails under
+  acceptance. That is a stop-and-report to the lead (a TJ or replan question), never a skip.
+- **The README after a pass:** replace the slice 07 "pending TJ promotion" claims with claims
+  derived from the verdict record. `check_v040_claims` gets the matching predicates
+  (verdict `pass`, regressions `pass`, map `confirmed`). `test_readme_v040_claims_match_record`
+  then asserts `project_version() == "0.4.0"`.
 
 **Seat rules for every v0.4.0 slice.** These are self-contained. The mission SPEC is
 `missions/release-0.4.0/SPEC.md`; its R-rows are cited by number.
@@ -126,6 +176,7 @@ candidates TJ promotes; the dispatch states it.
 
 ## Mini-requirements
 
+0. Replan 2 (R27) items (a)–(e) and their tests, committed in C1, before any verdict run.
 1. The verdict run on both recipes, zero skips, under `ETA_RXNCAT_ACCEPTANCE=1` (each under
    `timeout 3600`, after a host check).
 2. `docs/prd/v0.4.0/ACCEPTANCE_RESULT.json` is rewritten with the real outcomes and `verdict: pass`.
@@ -136,6 +187,7 @@ candidates TJ promotes; the dispatch states it.
 ## 3. Implementation Plan (Task List)
 
 - [ ] Task 1: codegraph index → `index: ok`; record Start; verify the precondition by names and blob ids.
+- [ ] Task 1b: R27 (a)–(e) code and tests; required checks; commit C1 (clean tree).
 - [ ] Task 2: host check → the xtb verdict run → host check → the UMA verdict run.
 - [ ] Task 3: record; version bump; `uv lock`; README; tests; required checks; commit C2; updater.
 
@@ -145,17 +197,20 @@ candidates TJ promotes; the dispatch states it.
 - **DO NOT** bump the version or write claims on a non-`pass` verdict.
 - **DO NOT** loosen a regression bound (TJ Q6 "A") or relabel a failure as a known limit.
 - **DO NOT** tag, push or edit the CHANGELOG.
+- **DO NOT** derive the verdict from the fixture checks alone; **DO NOT** run the xtb acceptance without `ETA_RXNCAT_XTB`.
 
 ## Proof contract
 
 - [ ] Both verdict runs exit 0 with 0 skips under `ETA_RXNCAT_ACCEPTANCE=1` (commands, host checks, wall times).
-- [ ] The record's `verdict` is `pass`; regression `pass`; map `confirmed`; the gates `pass`.
+- [ ] The record's `verdict` is `pass`; regression `pass`; map `confirmed`; the gates `pass`; `default_suite` exit 0 with 0 failed and 0 errors (clean-room vectors too); every command exit 0 with 0 skipped.
+- [ ] The R27 tests pass: a failing default suite, vector run, command or skip each give `verdict: fail`, and the README claims are refused; a record without `verdict` is refused.
+- [ ] `evidence.promotion` lists TJ's verbatim answer, the promotion commit and each promoted file's sha256 and blob id.
 - [ ] `uv run python -c "import eta_rxncat; print(eta_rxncat.__version__)"` prints `0.4.0`; `uv sync --locked` exits 0.
 - [ ] `git diff --stat Start..HEAD -- tests/fixtures tests/candidate_outputs` is empty; the required checks exit 0.
 
 ## Source material
 
-- Mission SPEC §4 US-009, §5 R2, R13, R25, "Test tiers"; ADR-0027; `missions/release-0.3.0/slices/10-acceptance-verdict/SPEC.md` (precedent, read-only).
+- Mission SPEC §4 US-009, §5 R2, R13, R25, R27, "Test tiers"; audit 07 handback `qitem-20261123214503-e4782517`; ADR-0027; `missions/release-0.3.0/slices/10-acceptance-verdict/SPEC.md` (precedent, read-only).
 
 ## Intent visual
 
