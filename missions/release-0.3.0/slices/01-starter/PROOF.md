@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: 30/30 starter files byte-identical, 23 DV rows, PD-007 decided, scaffold desc 1781, all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
