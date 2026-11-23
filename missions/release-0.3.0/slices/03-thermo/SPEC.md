@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.thermo: CODATA 2018 constants, Eckart-projected norma
 depends_on: [OPR.0.3.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_thermo
 parent: null
 hacf_touches: ["src/eta_rxncat/thermo/**", "tests/unit/thermo/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -133,12 +133,12 @@ tier-D tests pin down.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: create the ledger node.
-- [ ] Task 2: `constants.py` + derivation test vs `engines.units`.
-- [ ] Task 3: `_geometry.py`, `modes.py` + tests.
-- [ ] Task 4: `symmetry.py` + tests (idealized geometries built in the test from known parameters).
-- [ ] Task 5: `rrho.py`, `boltzmann.py`, `errors.py` + tests; H9 full loop Z 1–118.
-- [ ] Task 6: `hypergraph_updater.py --from-diff Start..HEAD`; required checks; commit.
+- [x] Task 1: create the ledger node.
+- [x] Task 2: `constants.py` + derivation test vs `engines.units`.
+- [x] Task 3: `_geometry.py`, `modes.py` + tests.
+- [x] Task 4: `symmetry.py` + tests (idealized geometries built in the test from known parameters).
+- [x] Task 5: `rrho.py`, `boltzmann.py`, `errors.py` + tests; H9 full loop Z 1–118.
+- [x] Task 6: `hypergraph_updater.py --from-diff Start..HEAD`; required checks; commit.
 
 ## 4. The Negative Space (Constraints)
 

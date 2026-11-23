@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -63,7 +63,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
@@ -73,7 +73,7 @@ nodes:
   - OPR.0.3.0.1
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -115,7 +115,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
@@ -125,7 +125,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -170,7 +170,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
@@ -179,7 +179,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -221,14 +221,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -267,14 +267,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -322,8 +322,48 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 02-core-contracts
+    last_slice: 03-thermo
   review:
     reviewed_at: '2026-11-23T04:04:23+00:00'
     reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
+- id: eta_rxncat_thermo
+  dimension: Module
+  status: dirty
+  associated_file: src/eta_rxncat/thermo/__init__.py
+  files:
+  - src/eta_rxncat/thermo/**
+  - tests/unit/thermo/**
+  description: >-
+    eta_rxncat.thermo (v0.3.0): ideal-gas thermochemistry derived from a stored Cartesian
+    Hessian (never stored itself), in its own package so eta_rxncat.core stays numpy-free.
+    constants.py: CODATA 2018 h, k_B, c, N_A, e, amu, E_h, a0, cal, atm, R = N_A k_B
+    and the Eh/(Bohr^2 amu) -> cm^-1 conversion; a test derives engines.units HARTREE_KCAL_MOL
+    and BOHR_ANGSTROM from them (engines.units is not edited). masses.py: RDKit most-common-isotope
+    masses for Z 1-118, recorded as masses_source, error on a miss, no fallback table.
+    _geometry.py: shared helpers for thermo and conformers: centre of mass, principal
+    moments, linearity (N = 2, or every atom within linear_tol of the smallest-moment
+    axis), proper-rotation (det +1) Kabsch RMSD, batched permuted RMSD, graph automorphisms
+    with an explicit maxMatches cap. modes.py: normal_modes copies, symmetrises and
+    mass-weights the Hessian, projects translations/rotations (SVD rank 3/5/6) and
+    diagonalises in the complement, giving exactly 0/3N-5/3N-6 ascending frequencies
+    in cm^-1 (imaginary negative) and Cartesian mode vectors; |nu| < 1e-3 cm^-1 is
+    an error. symmetry.py: rotational symmetry number from automorphisms realised
+    by a proper rotation within sym_tol (linear: 2 if centrosymmetric, else 1); cap
+    reached is an error. rrho.py: Sackur-Tetrode translation, rigid rotor with sigma,
+    RRHO ZPE/thermal energy, Grimme quasi-RRHO entropy with B_av, electronic R ln(2S+1),
+    1 M standard-state term; returns core ThermoResult; imaginary modes excluded and
+    listed, soft modes at |nu|. boltzmann.py: log-sum-exp weights and ensemble G with
+    degeneracies. errors.py: ThermoError, ThermoInputError, NotAMinimumError, check_ground_state.
+    Tests in tests/unit/thermo (tier D, closed forms).
+  inputs: []
+  outputs: []
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.3.0.3
+  provenance:
+    last_slice: 03-thermo
