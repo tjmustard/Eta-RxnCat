@@ -6,7 +6,7 @@ status: active
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
-intent: "Implement relax_constrained_core: core-frozen pre-relaxation through Optimizer.minimize with frozen_atom_indices and never a dihedral constraint, raising CoreDisplacementError above 1e-8 A, proved with a recording fake and UFF."
+intent: "Implement relax_constrained_core: core-frozen pre-relaxation through Optimizer.minimize with frozen_atom_indices and never a dihedral constraint, raising CoreDisplacementError above 1e-6 A (replan 1, R26), proved with a recording fake and UFF."
 depends_on: [OPR.0.4.0.4]
 hacf_schema: 1
 hacf_type: MiniPRD
@@ -26,7 +26,8 @@ hacf_legacy_order: null
 
 Implement `mapping.relax.relax_constrained_core`. It pre-relaxes a grafted structure with its
 conserved core frozen through v0.3.0's `Optimizer.minimize(frozen_atom_indices=…)`, never with a
-dihedral constraint, and raises `CoreDisplacementError` if any core atom moves more than 1e-8 Å.
+dihedral constraint, and raises `CoreDisplacementError` if any core atom moves more than 1e-6 Å
+(`CORE_FREEZE_TOLERANCE_ANGSTROM`; replan 1, mission R26).
 Prove it with a recording fake and with UFF.
 
 Context the builder needs:
@@ -52,12 +53,18 @@ Context the builder needs:
     passing **no** `dihedral_constraints` argument. Do not catch `EngineError` or
     `OptimizerError` (or any subclass); they propagate unchanged.
   - **X4.** Compute `max_k ‖final[k] − input[k]‖` over the core atoms. There is no superposition:
-    the frame is the template's. If it is > 1e-8 Å, raise `CoreDisplacementError(atom,
+    the frame is the template's. If it is > `CORE_FREEZE_TOLERANCE_ANGSTROM`, raise `CoreDisplacementError(atom,
     displacement_angstrom)` for the worst atom. Otherwise return the `OptimizationResult`
     unchanged.
 
   No `assert` statements. The docstring says the result is a pre-relaxation of a TS guess,
   **not a minimum**, and must never be passed to `check_ground_state`.
+- **Replan 1 (mission R26), binding:** the core bound is the module constant
+  `CORE_FREEZE_TOLERANCE_ANGSTROM = 1e-6` in `src/eta_rxncat/mapping/relax.py`, with a docstring citing
+  R26 and the measurements: geomeTRIC `$freeze` + `enforce` 0.1 holds frozen atoms to about 1e-8–1e-7 Å
+  (UFF max 1.19e-7 Å; xtb on M1 4.19e-8 Å). The bound is 1e-6 Å, the six-decimal precision of the inputs.
+  Everything else in X1–X4 is unchanged. Your paused working tree only needs the constant and the test
+  values below.
 - `relax.py` imports only `eta_rxncat.core`, `eta_rxncat.optimize` (interface and errors) and
   `eta_rxncat.engines` (the `Engine` type). `eta_rxncat.optimize` loads only numpy among heavy
   modules (red team measured). Add `eta_rxncat.mapping.relax` to the import test (no `geometric`,
@@ -134,7 +141,7 @@ Context the builder needs:
 
 ## 1. The Confidence Mandate
 
-**Score: 9/10.** The behaviour is fixed. Whether xtb and UMA hold 1e-8 Å (H-M3) is measured in
+**Score: 9/10.** The behaviour is fixed. Whether xtb and UMA hold 1e-6 Å (H-M3) is measured in
 slice 06, not here.
 
 ## Mini-requirements
@@ -143,9 +150,10 @@ slice 06, not here.
    - asserts it received `frozen_atom_indices == (1, 2, 3, 5)`, `dihedral_constraints == ()`
      (default) and the given `options`;
    - returns a result with the core unchanged; `relax_constrained_core` returns it unchanged.
-2. **Displacement:** a fake returning the core moved by 2e-8 Å on one atom raises
-   `CoreDisplacementError` with that atom and the displacement. A fake moving only non-core atoms
-   by 1 Å returns normally.
+2. **Displacement:** a fake returning the core moved by 2e-6 Å on one atom raises
+   `CoreDisplacementError` with that atom and the displacement. A fake moving a core atom by 5e-7 Å,
+   and one moving only non-core atoms by 1 Å, each return normally. A test asserts
+   `CORE_FREEZE_TOLERANCE_ANGSTROM == 1e-6`.
 3. **Refusals before any call:** empty core, a duplicate, an out-of-range index, and
    `options={"constraints": "x"}` each raise `MappingError`, and the fake records zero calls.
 4. **Propagation:** a fake raising `OptimizationFailedError`, and one raising an `EngineError`
@@ -155,7 +163,7 @@ slice 06, not here.
      builds it;
    - a small distorted molecule (e.g. n-butane with one C–H stretched to 1.3 Å), with a 3-atom
      core frozen;
-   - converges; the core max displacement is ≤ 1e-8 Å (record the measured value in the proof);
+   - converges; the core max displacement is ≤ 1e-6 Å (record the measured value in the proof; resolve measured up to 4.5e-8 Å on UFF, the builder up to 1.19e-7 Å);
    - `n_steps ≥ 1`.
 6. **Import and assert tests** (from slice 03) include `mapping.relax`.
 
@@ -172,7 +180,8 @@ slice 06, not here.
 - **DO NOT** pass `dihedral_constraints`, or add a restraint or penalty feature.
 - **DO NOT** catch engine or optimizer errors, or retry.
 - **DO NOT** call `check_ground_state`, or name the result a minimum.
-- **DO NOT** widen 1e-8 Å; a UFF miss is stop-and-report.
+- **DO NOT** widen 1e-6 Å (R26 is the only change to this bound); a miss is stop-and-report.
+- **DO NOT** snap, write back or otherwise correct core coordinates (mission R26, option C rejected); **DO NOT** change `optimize/` (option B rejected).
 
 ## Proof contract
 

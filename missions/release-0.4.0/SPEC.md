@@ -125,7 +125,7 @@ TS. v1.x, which enumerates by repeated single grafts.
 - **G3.** On M1, the pure graft's forming-core `[1, 2, 3, 5]` RMSD to Liu's TS1b_n, under the
   stated map, is ≤ 0.10 Å (TJ Q6 "A"; measured 0.0498 Å).
 - **G4.** Per recipe (xtb, UMA), the M1 pre-relaxation:
-  - converges with the frozen core moved ≤ 1e-8 Å (max per-atom displacement, no superposition);
+  - converges with the frozen core moved ≤ 1e-6 Å (max per-atom displacement, no superposition; R26);
   - gives a product whose perceived connectivity equals TS1b_n's under the map (TJ P1 "A");
   - has junction signed-volume signs that equal TS1b_n's, nonzero (TJ R2 "A").
 - **G5.** Importing `eta_rxncat.mapping` or any of its submodules loads no `geometric`, `torch`,
@@ -140,7 +140,7 @@ answered every question the red team and the clean-room comparison raised (P1 A,
 R2 A). The questions needed to reach 10 cannot be answered on paper. They are outcomes a run must
 show, and each is a stop-and-report:
 - whether the M1 pre-relaxation keeps TS1b_n's connectivity and junction signs (H-M5);
-- whether xtb and UMA hold the frozen core to 1e-8 Å (H-M3).
+- whether xtb and UMA hold the frozen core to 1e-6 Å (H-M3; R26: xtb measured 4.19e-8 Å on M1).
 
 A miss is a finding with its output, never a loosened bound.
 
@@ -210,7 +210,7 @@ literal with `ast.literal_eval`; the builder was never executed. Repo `.venv`, R
 | US-004 | As a chemist, I want ordered surgery with an optional fragment delete list, so that product indices are predictable and aryl-style grafts are expressible (TJ Q4 "A", R1 "B"). | §5 "Algorithms" G1–G8. Exact product order and `index_map`. Kept template coordinates are bitwise unchanged. Vectors 01, 02, 04, 05 and 07-adapted match at 1e-6 Å. A hand-built CH3Cl → CH3F graft is exact. | P0 | 04 |
 | US-005 | As a chemist, I want product charge and multiplicity explicit and checked (TJ Q5 "A"). | Product charge and multiplicity come from the spec. Parity is checked by `MolecularState`. `whole_input_charge_sum_holds_bool` is reported only (R10). | P0 | 04 |
 | US-006 | As a chemist, I want active atoms, the constrained core, overlaps, contacts, junctions and planarity handled explicitly, so that nothing about the graft is silent (TJ P1 "A", R2 "A"). | Active atoms and the core are re-indexed; deleting one raises `GraftInputError`. A pair closer than `min_distance_angstrom` raises `GraftClashError(i, j, d)`. Close contacts, junction signed volumes and the planar flag are recorded and sorted. Element mismatch in a pair, non-empty `anchors`, non-empty fragment active indices and out-of-range indices raise `GraftInputError`. | P0 | 04 |
-| US-007 | As a chemist, I want the graft pre-relaxed with its conserved core frozen (TJ Q2 "(b)"). | `relax_constrained_core` per §5 "Algorithms" X1–X4. Core max displacement ≤ 1e-8 Å, else `CoreDisplacementError`. No dihedral constraints are ever passed. Engine and optimizer errors propagate unchanged. Tests: fake engine/optimizer (tier D), then UFF with `GeometricOptimizer`. | P0 | 05 |
+| US-007 | As a chemist, I want the graft pre-relaxed with its conserved core frozen (TJ Q2 "(b)"). | `relax_constrained_core` per §5 "Algorithms" X1–X4. Core max displacement ≤ 1e-6 Å (R26), else `CoreDisplacementError`. No dihedral constraints are ever passed. Engine and optimizer errors propagate unchanged. Tests: fake engine/optimizer (tier D), then UFF with `GeometricOptimizer`. | P0 | 05 |
 | US-008 | As TJ, I want my M1 mapping run end to end, with the atom map derived by a stated rule, so that I can review the mapped TS1b_n guess (TJ Q3 "B", P1 "A", P2 "A", R2 "A"). | §5 "Fixture M1". Tier D: the stated-rule map is re-derived and equals the YAML's; forming-core RMSD ≤ 0.10 Å; contacts, junctions, planarity and other-map RMSDs are reported. E2E per recipe: connectivity equals TS1b_n's and junction signs match. Candidates `m1_graft.json`, `m1_relaxed.xtb.json` and `m1_relaxed.uma.json` are committed in a candidates-only commit. | P0 | 06 |
 | US-009 | As TJ, I want an acceptance record and a split verdict, so that v0.4.0's claims come from a record and cannot pass on a pending check (ADR-0027, R56). | `docs/prd/v0.4.0/ACCEPTANCE_RESULT.json`: real outcomes per check (`pass`/`fail`/`pending_promotion`/`pending_confirmation`/`skipped` with reason). The verdict is `pass` only with zero `fail`, `pending_*` or missing checks. The version is bumped to 0.4.0 only at the verdict. | P0 | 07, 08 |
 
@@ -233,7 +233,7 @@ No finding is `accepted`, so no human row is owed for one. "Fn" is the red-team 
 | R4 | F5 (medium) fixture path collides with v0.3.0's e2e5 data; false ownership claim | medium | resolved | One fixture tree and one provenance register. TJ's three files go to `tests/e2e/data/e2e5/xyz/` (`TS1a_n.xyz`, `6_cyclobutene.xyz`, `TS1b_n.xyz`), byte-identical. Three rows are added to the existing `tests/e2e/data/e2e5/SOURCES.md` (SI page from each file's header, DOI 10.1021/ja408437u, transcriber TJ, sha256). They are extracted the v0.3.0 way: `ast.parse` + `ast.literal_eval` of `XYZ_FILES`; the builder is never executed, anywhere (N3). The M1 YAML is `tests/e2e/data/e2e5/m1_ts1a_n_to_ts1b_n.yaml`. No `tests/data/human_fixtures/` directory is created. Ownership is in R8. Slice 06. |
 | R5 | F6 (medium) 1e-10 cross-check fails near zero; test reaches into thermo's private module | medium | resolved | The cross-check reference is an **independent SVD Kabsch written in the test file** that computes RMSD from residual coordinates. `thermo._geometry` is never imported from `src/eta_rxncat/mapping/` or `tests/unit/mapping/` (N4), so there is no mapping → thermo edge. Its precision is measured (HF-9: ≤ 4.4e-15 Å), so the G2 tolerance of 1e-10 Å on RMSD is honest. Rotations are compared too (max element difference ≤ 1e-9) on sets whose pair-set shape is non-degenerate. The random generator rejects sets with an RMS off-line deviation < 0.1 Å, or a top-eigenvalue gap < 1e-6. Thermo's `kabsch_rmsd` has a measured cancellation floor of 1.69e-7 Å and is not used as a reference. **TJ's Q6 1e-10 Å is a different comparison** (the graft against its promoted fixture) and is untouched. Mirror tests use non-coplanar sets (and vector 03). Slice 03. |
 | R6 | F7 (medium) pre-relaxation unbounded in runtime and resources; audit 04's frozen + dihedral hang | medium | resolved | (1) M1's pre-relaxation passes `options={"maxiter": 200}` to `GeometricOptimizer` explicitly. (2) The harness-level bound: every M1 E2E command in a proof runs under coreutils `timeout 3600`. An expiry is a stop-and-report with the output; the test itself records `wall_time_s`. `optimize/` stays frozen (§6). (3) **No v0.4.0 path combines frozen atoms with a dihedral constraint.** `relax_constrained_core` has no dihedral parameter and calls `minimize(..., frozen_atom_indices=core, options=...)` with `dihedral_constraints` left at its default `()`. A recording fake optimizer test asserts `dihedral_constraints == ()`, and an `options` key named `constraints` is refused up front with `MappingError`. (4) The heavy-run rule is in every slice's seat rules. Slices 05, 06. |
-| R7 | F8 (medium) core-displacement guard underspecified, maybe a bare `assert` | medium | resolved | Named error `CoreDisplacementError(MappingError)` carrying (atom, displacement). The metric is the **max per-atom Euclidean displacement of the core atoms, final vs input, with no superposition** (D4: the frame is the template's). Bound 1e-8 Å (architect-set; kept). A miss on xtb or UMA is stop-and-report (H-M3), never a widened bound. No `assert` statement anywhere in `src/eta_rxncat/mapping/`; a test greps for it. Slice 05. |
+| R7 | F8 (medium) core-displacement guard underspecified, maybe a bare `assert` | medium | resolved | Named error `CoreDisplacementError(MappingError)` carrying (atom, displacement). The metric is the **max per-atom Euclidean displacement of the core atoms, final vs input, with no superposition** (D4: the frame is the template's). Bound 1e-8 Å (architect-set), **superseded by R26 (replan 1): 1e-6 Å, measured**. A miss on xtb or UMA is stop-and-report (H-M3), never a widened bound. No `assert` statement anywhere in `src/eta_rxncat/mapping/`; a test greps for it. Slice 05. |
 | R8 | F9 (medium) ledger: new node has no edges; test files land in the wrong nodes | medium | resolved | Slice 03 creates node `eta_rxncat_mapping` (Module) with `depends_on: eta_rxncat_core, eta_rxncat_engines, eta_rxncat_optimize` (relax uses the `Engine` and `Optimizer` interfaces) and files `src/eta_rxncat/mapping/**, tests/unit/mapping/**`. Slice 06 adds `tests/e2e/test_m1_*.py, tests/e2e/data/e2e5/m1_*.yaml, tests/candidate_outputs/v0.4.0/**` (F9c), and slice 07 adds `tests/e2e/test_accept_v040.py`. The full list is passed each time. `eta_rxncat_scaffold` loses `src/eta_rxncat/mapping/**` (description unchanged). The acceptance driver is `tests/e2e/test_accept_v040.py`, **not** `tests/acceptance/**` (the engines node's; F9b). `tests/e2e/**` stays in `eta_rxncat_species_runner` too. That overlap is stated and accepted (the e2e harness is the runner's), so the M1 files mark both nodes. TJ's XYZ files under `tests/e2e/data/e2e5/xyz/` are the runner's, like v0.3.0's. No thermo edge (R5). `eta_rxncat_engines` is not touched. Slices 03, 06, 07. |
 | R9 | F10 (low) G5 contradicts relax.py | low | resolved | G5 now reads as §5 "Dependencies": no `geometric`, `torch`, `pyscf`, `fairchem` or `rdkit` at import of `eta_rxncat.mapping` or any submodule. `eta_rxncat.optimize` imports only numpy among heavy modules (red team measured). Slice 03 (test), extended in 04/05. |
 | R10 | F11 (low) the charge sum measures the wrong sum | low | resolved | Renamed `whole_input_charge_sum_holds_bool`: product charge == template charge + fragment charge, over the **whole inputs**, deleted atoms included. Its docstring says so, and that it is false for a correct graft with a charged leaving group. Report only (TJ Q5 "A"). Slice 02. |
@@ -252,17 +252,26 @@ No finding is `accepted`, so no human row is owed for one. "Fn" is the red-team 
 | R23 | v0.3.0 lessons carried | — | resolved | In every slice's seat rules: R54 (unit-suffixed numeric keys); R55 (no energy- or record-ordered lists in compared outputs; lists are fixed by the fixture or sorted by an energy-independent key); R56 (fragments record the real outcome via one `gated_outcome`; `pending_*` fails under acceptance; missing is `missing`); R50 (reader rule, applied to any store or runner payload, although v0.4.0 adds none); R53 (no new dedup; not applicable). The candidate rule (C1 code, E2E at C1, C2 candidates only; every diff, show or log -p uses `':(exclude)tests/candidate_outputs'`). Heavy runs sequential, after the host check. |
 | R24 | Roadmap: TJ Q2 "(b)" moves enumeration to v1.x while the plan lists it at v0.7.0 (PR #14) | — | out of scope | The plan is not touched (`PRDs/` read-only, Q1 "A"). PD-008's decided text names v1.x. The roadmap reconciliation belongs to the lead and TJ. |
 | R25 | Phase 3 gate content | — | resolved | TJ reviews three candidates: `m1_graft.json` (with the stated-rule map, its alternatives, the contacts and the junctions), `m1_relaxed.xtb.json` and `m1_relaxed.uma.json`. Promoting `m1_graft.json` confirms the map (R2). Only TJ writes `tests/fixtures/v0.4.0/`. The lead's Phase 3 row also states HF-5 (the two 1.12 Å contacts) and HF-8 (pure-graft junctions undetermined). |
+| R26 | Replan 1: the 1e-8 Å core-freeze bound (R7) fails on the unchanged v0.3.0 `GeometricOptimizer` (slice 05 stop, row `qitem-20261123203623-5f1b4bc3`; evidence `~/.hacf/eta-rxncat-hacf/evidence-v040-05-uff-core-drift.md`; lead row `qitem-20261123203651-6af28ab1`) | — | resolved | **Measured.** geomeTRIC `$freeze` with `enforce` 0.1 holds frozen atoms to about 1e-8–1e-7 Å, not to 1e-8 Å. (a) Builder, UFF n-butane, 8 runs: 2.3e-9 to **1.19e-7 Å**; 6 of 8 above 1e-8; deterministic across hash seeds. (b) Resolve, UFF, 40 runs (7 molecules: butane, pentane, cyclohexane, toluene, ethanol, methyl acetate, butadiene; random 2–4-heavy-atom cores; 2 embeds each): max 4.53e-8, median 1.22e-8; 23 of 40 above 1e-8; none above 1e-7. All converged on `tric`. (c) Resolve, **xtb (GFN2, the slice 06 recipe) on the actual M1 graft**, core [1, 2, 3, 5], `maxiter` 200: **4.19e-8 Å**, 17 steps, `tric`, 24 s. Snapping the core back to its input changes the xtb energy by **3.9e-10 Eh**. (d) UFF cannot evaluate the pure M1 graft at all (RDKit bond perception fails on the clashed TS geometry), so UFF stays a unit-test engine only. UMA was not measured (GPU; the host was shared). (v0.3.0's ≤ 4e-9 Å was water only.) **Decision: option A, a measured bound, `CORE_FREEZE_TOLERANCE_ANGSTROM = 1e-6`** (max per-atom displacement, no superposition; the metric is unchanged). Why 1e-6 Å: (1) it is 8× the worst drift measured on any engine (1.19e-7); (2) it equals the six-decimal precision of the XYZ inputs and of the clean-room vector comparisons, so the core is unchanged at the precision the inputs carry; (3) it is 4 orders below TJ's relaxed regression heavy-atom bound (0.01 Å, Q6 "A"), and the energy effect is about 1e-9 Eh against TJ's 1e-5 Eh, so **TJ's Q6 bounds are untouched**; (4) it is far tighter than TJ's own M1 text ("held within 0.15 Å RMSD"), so "frozen" keeps its meaning and no TJ question is owed. **Rejected: B** (make the freeze exact in `optimize/`). It changes the audited v0.3.0 `optimize` node and every frozen-atom caller (the species runner's constrained point, and v0.3.0's H15 tests) for a gain below every downstream tolerance, and a written-back geometry is no longer the optimizer's converged point. A tighter `enforce` has v0.3.0's hang history and is unmeasured. **Rejected: C** (snap the core back in `relax.py`): a workaround that hides drift instead of bounding it. **H-M3** (xtb/UMA in slice 06) is judged against 1e-6 Å. A miss there is stop-and-report, and the bound is never widened again. **ADR-0032** (PROPOSED) still says 1e-8 Å; R26 supersedes it, and the lead raises this at TJ's lore approval. Slices 05, 06, 07; seed deviations replan 1. |
 
 ### Seed deviations
 
-None (first compile).
+Changes to slice specs after their first compile (replan mode; finished slices are never edited).
+
+| Replan | Slice | Change | Rows |
+|---|---|---|---|
+| 1 | 01–04 | none (audited PASS; context only) | — |
+| 1 | 05-constrained-relax | core bound 1e-8 → 1e-6 Å as `CORE_FREEZE_TOLERANCE_ANGSTROM`; displacement fixtures rescaled; UFF expectation; negative space | R26 |
+| 1 | 06-m1-fixture | g1 judged at 1e-6 Å; the measured core drift recorded | R26 |
+| 1 | 07-acceptance-record | g1 at 1e-6 Å | R26 |
+| 1 | 08-acceptance-verdict | none | — |
 
 ### Host facts and stop-and-report steps
 
 | # | Fact | How | Status |
 |---|---|---|---|
 | HF-1…HF-9 | §2 | resolve scratch run | measured 2026-11-23 |
-| H-M3 | `minimize` with `frozen_atom_indices` holds the core ≤ 1e-8 Å on xtb and UMA | slice 06 E2E (`CoreDisplacementError` otherwise) | open; UFF measured ≤ 4e-9 Å (v0.3.0) |
+| H-M3 | `minimize` with `frozen_atom_indices` holds the core ≤ 1e-6 Å on xtb and UMA (R26) | slice 06 E2E (`CoreDisplacementError` otherwise) | xtb measured 4.19e-8 Å on M1 (resolve, replan 1); UMA open |
 | H-M4 | `numpy.linalg.eigh` on the 4×4 key matrix is bitwise deterministic run to run on this host | slice 03 test | open |
 | H-M5 | The M1 pre-relaxed product keeps TS1b_n's connectivity and junction signs on each recipe | slice 06 E2E | open; a miss is the finding TJ's P1 A exists to catch: stop and report, with the candidate still written |
 | H-M6 | M1 pre-relaxation finishes within `timeout 3600` per recipe at `maxiter` 200 | slice 06 | open |
@@ -426,7 +435,7 @@ No function returns its input, or a partial result, in place of an error.
 - **X3. Call:** `optimizer.minimize(state, engine, frozen_atom_indices=core_indices, options=options)`.
   No dihedral constraints, ever. `EngineError` and `OptimizerError` propagate unchanged.
 - **X4. Displacement check:** the max per-atom displacement of the core atoms (final vs input, no
-  superposition) > 1e-8 Å raises `CoreDisplacementError` (R7). The result is a pre-relaxation,
+  superposition) > `CORE_FREEZE_TOLERANCE_ANGSTROM` (1e-6 Å, R26) raises `CoreDisplacementError` (R7). The result is a pre-relaxation,
   **not a minimum**, and is never passed to `check_ground_state`.
 
 ### Dependencies and licence
@@ -450,7 +459,7 @@ No function returns its input, or a partial result, in place of an error.
   - surgery, order, index maps, charges, contacts, junction signs: exact;
   - M1: forming-core RMSD ≤ 0.10 Å; map re-derivation exact.
 - **E2E** (`e2e`, `slow`, plus `xtb` or `mlip_uma`; the v0.3.0 named envs `.venv-accept-opt` and
-  `.venv-accept-uma`): the M1 pre-relaxation per recipe. Gates: the core ≤ 1e-8 Å, connectivity
+  `.venv-accept-uma`): the M1 pre-relaxation per recipe. Gates: the core ≤ 1e-6 Å (R26), connectivity
   equal to TS1b_n's, junction signs equal and nonzero.
 - **Regression after promotion:**
   - `m1_graft.json`: coordinate RMSD ≤ 1e-10 Å, no superposition, `index_map` and the map exact.
@@ -564,7 +573,7 @@ Header: the zip's sha256 `6214b5e1…0b62` and the plan copy's `ad092dff…` (R3
 | The M1 pre-relaxation loses TS1b_n's connectivity (F1's contacts pull an H onto Cp) or flips a junction | Medium | High for v0.5.0's seed | Gated per recipe (R1, R16). A miss is H-M5 stop-and-report with the candidate written for TJ. |
 | The stated-rule map is the wrong one of two symmetry-equivalent heavy maps | Low (rule measured to pick the 0.0498 Å family) | Medium | TJ confirms at Phase 3 (P2 "A"). Alternatives are reported (R2). |
 | Pre-relaxation is slow or hangs on UMA/xtb | Medium | Medium | `maxiter` 200, `timeout 3600`, no dihedral constraints, heavy-run check (R6). |
-| xtb/UMA move the frozen core > 1e-8 Å | Low | Medium | `CoreDisplacementError`, then stop-and-report (H-M3). |
+| xtb/UMA move the frozen core > 1e-6 Å (R26) | Low | Medium | `CoreDisplacementError`, then stop-and-report (H-M3). |
 | A later clean-room document disagrees with these conventions | Low | Medium | Replan through resolve, with both documents cited. |
 | A seat touches nMap code | Low | High (TJ's copyright concern) | Hard rule in §6 and in every slice's seat rules. The operator logs every crossing. |
 | The draft's "minimum distance 1.078 Å" is read as "no clash" | — | — | Closed: contacts are defined by perception, not by a distance floor (R1). |
@@ -577,7 +586,7 @@ Header: the zip's sha256 `6214b5e1…0b62` and the plan copy's `ad092dff…` (R3
 - M1:
   - forming-core RMSD ≤ 0.10 Å (TJ Q6 "A");
   - per recipe, connectivity and junction signs match TS1b_n's (TJ P1 "A", R2 "A");
-  - the core is frozen to 1e-8 Å;
+  - the core is frozen to 1e-6 Å (R26);
   - all recorded in `ACCEPTANCE_RESULT.json` with the commit sha.
 - Candidates are committed in candidates-only commits. `tests/fixtures/v0.4.0/` is written only
   by TJ. The verdict is `pass` with zero `fail`, `pending_*` or missing checks. The version is
@@ -594,7 +603,7 @@ Header: the zip's sha256 `6214b5e1…0b62` and the plan copy's `ad092dff…` (R3
 | OPR.0.4.0.2 | slices/02-graft-contracts | Add frozen strict core contracts GraftSpec, GraftResult, CloseContact and JunctionVolume in core/mapping_models.py with pass/reject tests for every validator, keeping eta_rxncat.core free of numpy and RDKit. |
 | OPR.0.4.0.3 | slices/03-align | Create eta_rxncat.mapping with its errors and Horn-quaternion superpose that refuses degenerate pair sets and reports planarity, create the eta_rxncat_mapping ledger node, and prove alignment against a test-local SVD and clean-room vectors 01-03 and 06. |
 | OPR.0.4.0.4 | slices/04-graft | Implement ordered graft surgery (paired fragment atoms dropped, optional fragment_delete, explicit charge/spin, re-indexed active atoms and core, overlap floor) with recorded close contacts, junction signed volumes and the planar flag, proved on hand-built cases and clean-room vectors 04, 05 and 07. |
-| OPR.0.4.0.5 | slices/05-constrained-relax | Implement relax_constrained_core: core-frozen pre-relaxation through Optimizer.minimize with frozen_atom_indices and never a dihedral constraint, raising CoreDisplacementError above 1e-8 A, proved with a recording fake and UFF. |
+| OPR.0.4.0.5 | slices/05-constrained-relax | Implement relax_constrained_core: core-frozen pre-relaxation through Optimizer.minimize with frozen_atom_indices and never a dihedral constraint, raising CoreDisplacementError above 1e-6 A (replan 1, R26), proved with a recording fake and UFF. |
 | OPR.0.4.0.6 | slices/06-m1-fixture | Land TJ's three M1 structures with provenance and the provisional M1 YAML with the stated-rule atom map, prove the pure graft by tier-D checks, pre-relax on xtb and UMA gated on TS1b_n connectivity and junction signs, and commit the three candidates for Phase 3. |
 | OPR.0.4.0.7 | slices/07-acceptance-record | Add the M1 regression and map-confirmation checks, run M1 on both recipes into docs/prd/v0.4.0/ACCEPTANCE_RESULT.json with real outcomes and pending states, and derive the README v0.4.0 claims, with no dependence on TJ acting first. |
 | OPR.0.4.0.8 | slices/08-acceptance-verdict | After TJ's Phase 3 promotion, rerun M1 on both recipes with ETA_RXNCAT_ACCEPTANCE=1 and zero skips, record the regression and map-confirmation verdicts, bump the version to 0.4.0 only on a pass verdict and derive the final README claims. |

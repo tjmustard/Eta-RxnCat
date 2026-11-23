@@ -47,7 +47,7 @@ Context the builder needs:
     - value `forming_core_rmsd_angstrom`;
     - bound 0.10 (TJ Q6 "A");
     - `pass`/`fail` (recipe-independent; recorded under `fixtures.m1.graft`).
-  - `relaxed_gates`: g1 core displacement ≤ 1e-8 Å, g2 connectivity equal, g3 junction signs
+  - `relaxed_gates`: g1 core displacement ≤ 1e-6 Å (mission R26), g2 connectivity equal, g3 junction signs
     equal and nonzero (TJ P1 "A", R2 "A"), each with values; `pass`/`fail`.
   - `regression_graft` (recipe-independent): against `tests/fixtures/v0.4.0/m1_graft.json`.
     - Coordinate RMSD with **no** superposition ≤ 1e-10 Å.

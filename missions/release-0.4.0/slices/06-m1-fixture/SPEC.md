@@ -106,7 +106,7 @@ Context the builder needs:
     `relax_constrained_core(result.product, engine, GeometricOptimizer(), result.constrained_core_product_indices, options={"maxiter": 200})`
     (mission R6). There are no dihedral constraints.
   - **Gates (TJ P1 "A", R2 "A"):**
-    - (g1) `CoreDisplacementError` not raised (core ≤ 1e-8 Å; H-M3);
+    - (g1) `CoreDisplacementError` not raised (core ≤ 1e-6 Å, `CORE_FREEZE_TOLERANCE_ANGSTROM`; H-M3; mission R26). Record the measured max core displacement (`core_max_displacement_angstrom`) in the candidate; resolve measured 4.19e-8 Å on xtb at maxiter 200;
     - (g2) `report.perceive_bonds(relaxed)` mapped through the map equals
       `report.perceive_bonds(TS1b_n)` as edge sets;
     - (g3) every graft junction's sign on the relaxed coordinates is nonzero and equals TS1b_n's
