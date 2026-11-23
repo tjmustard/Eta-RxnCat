@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, tests/unit/engines/test_pyscf_cpu.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
+hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, tests/unit/engines/test_pyscf_cpu.py, tests/unit/engines/test_pyscf_stability.py, docs/prd/v0.2.0/evidence/pyscf-stability-noise.json, docs/prd/v0.2.0/DISCREPANCIES.md, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py, tests/unit/test_package.py], [python3, "-c", "import json,re,sys;d=json.load(open('docs/prd/v0.2.0/GPU_SMOKE_RESULT.json'));s=d['smoke'];L=' '.join(str(v) for c in d['logs'].values() for v in c.values()).lower();raw=json.dumps(d);ok=d['record_schema']==2 and s['status']=='pass' and s['scf']['abs_diff_eh']<=1e-6 and s['scf']['mo_on_device'] and s['torch_op']['device']=='cuda' and '2.13.0' in d['hardware']['torch']['version'] and d['hardware']['flags']==[] and all(c['exit_code']==0 for c in d['commands']) and isinstance(d['hf_token_present'],bool) and not re.search(r'hf_[A-Za-z0-9]{20,}',raw) and not any(k in L for k in ('no kernel image','no_binary_for_gpu','nokernelimagefordevice','ptx jit'));sys.exit(0 if ok else 1)"]]
 lore_refs: []
 hacf_legacy_source: null
@@ -124,7 +124,45 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
      identically in `.venv` and `.venv-accept-gpu`. The real-CUDA path stays covered by the GPU
      tests (command 2). No assertion is weakened.
 
-   Commit (a)–(e) with the acceptance modules, before the run (Task 1).
+   - (f) **R9 stability verdict robust to threaded CPU noise** (R54; a product defect found before
+     run 2). This slice **touches slice 06's engine code** in `engines/pyscf_gpu_cpu/` and changes
+     R9's semantics, stated here, and this slice's audit judges it.
+     - **Defect.** CPU hydroxyl (B3LYP/def2-SVP UKS, DF) intermittently raised `ScfConvergenceError`
+       ("still internally unstable after 2 follows"), about 1 in 6. PySCF's threaded reductions
+       are not bit-reproducible, and PySCF's verdict is `stable = not (λ_min < −1e-5)` with a
+       Davidson `tol` of 1e-4.
+     - **Measured by resolve** (scratch env from the lock, PySCF 2.15.1, separate processes):
+       - hydroxyl at `OMP_NUM_THREADS=8`: λ_min scatters −5.3e-5 … +2.0e-5 over 12 runs at
+         Davidson tol 1e-4, and −3.4e-5 … +1.75e-5 over 8 runs at tol 1e-7. So the noise is in
+         the converged SCF, not the eigen-solver. Energies span 3.4e-7 Eh;
+       - hydroxyl at `OMP=1`: deterministic λ_min = −7.1e-5. The state is real but flat:
+         following it lowers E by 3.3e-7 Eh, below a 1e-6 noise floor;
+       - PdCl₂ (R30's high, Hückel-guess state): λ_min = −6.5e-2 at both tolerances, a genuine
+         instability about 1000× larger.
+     - **New rule**, keyed in `engine.stage`; `ENGINE_IMPL` → 2 for `pyscf_gpu_cpu`:
+       - `stability_tol` (float, default 1e-3): the state is **unstable iff λ_min < −stability_tol**.
+         That is 14× above hydroxyl's worst measured |λ_min| and 65× below PdCl₂'s.
+       - λ_min is computed with PySCF's own internal-stability Hessian operator and Davidson
+         solver, the objects `pyscf.scf.stability.{rhf,uhf}_internal` use (document the exact
+         call, which may be private API, pinned to 2.15.1), at Davidson tol 1e-6. On GPU, use the
+         GPU4PySCF equivalent, or R43's CPU copy.
+       - `stability_noise_eh` (float, default 1e-6): a follow that lowers the energy by less than
+         this ends the loop as stable, recorded `"stability:followed_no_progress dE=<%.1e>"`, and
+         does not consume the follow budget.
+       - Otherwise R9 is unchanged: at most 2 progressive follows, then `ScfConvergenceError`.
+       - Every verdict string carries λ_min: `"stability:stable lambda_min=<%+.2e>"` and
+         `"stability:followed lambda_min=<%+.2e>"`.
+     - **Proofs** (seat runs recorded in `docs/prd/v0.2.0/evidence/pyscf-stability-noise.json`,
+       plus tests):
+       - hydroxyl CPU at `OMP_NUM_THREADS=8`, **N ≥ 30 separate processes** → 0 failures. Every
+         energy is within 1e-6 Eh of the `OMP_NUM_THREADS=1` result;
+       - PdCl₂ Hückel-guess high state (the R30 geometry) → λ_min < −1e-3, followed, energy
+         lowered by > 1e-3 Eh, recorded. The threshold must not mask a real instability;
+       - unit tests with injected λ_min, including a fake follow with ΔE below the noise floor;
+       - slice 06's fake stability tests are adapted to the new call path, with their intent
+         kept (unstable once then stable; always unstable → error after 2 progressive follows).
+
+   Commit (a)–(f) with the acceptance modules, before the run (Task 1).
 2. `tests/acceptance/`, one module per engine (`test_accept_rdkit.py`, `test_accept_pyscf.py`,
    `test_accept_xtb.py`, `test_accept_mace.py`, `test_accept_uma.py`, `test_accept_esen.py`), each
    marked `acceptance` plus its piece markers:
@@ -257,6 +295,10 @@ TJ's UMA weights access. Without it this slice is a blocked finding (R23), never
 
   Also: `hf_token_present` is a bool, `hf_access` holds
   only integer status codes, and no string in the record matches `hf_[A-Za-z0-9]{20,}`.
+- [ ] R54: `pyscf-stability-noise.json` shows hydroxyl at 8 threads, ≥30 runs, 0 failures, max
+  |E − E_omp1| ≤1e-6 Eh. PdCl₂ is detected (λ_min < −1e-3) and followed with ΔE < −1e-3 Eh.
+  `engine.stage.options` holds `stability_tol == 1e-3`, `stability_noise_eh == 1e-6` and
+  `engine_impl == 2`. The injected-λ and no-progress unit tests pass.
 - [ ] R51:
   - `test_gpu_support_record_matches_code` asserts the class rule (record `routing.analytic_classes`
     == the derived classes == the code constant) and no blanket verdict;
