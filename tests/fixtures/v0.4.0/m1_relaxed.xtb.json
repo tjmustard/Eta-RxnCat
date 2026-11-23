@@ -1,0 +1,321 @@
+{
+  "commit_sha": "b872079d35aef37db9d0639b9ae033bed001c5e0",
+  "core_max_displacement_angstrom": 4.190659296613141e-08,
+  "environment": {
+    "device": "cpu",
+    "engine": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    },
+    "versions": {
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2"
+    }
+  },
+  "failed_checks": [],
+  "final_energy_hartree": -25.26144369,
+  "fixture": "m1_ts1a_n_to_ts1b_n",
+  "graft_to_ts1b_n_map": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    7,
+    8,
+    17,
+    18,
+    19,
+    20
+  ],
+  "input_sha256": {
+    "fragment": "8b25312f3c3b4948c4d3d4de6cdd2396516147dc5fc52ed2d94f7a259ab4e990",
+    "reference": "677d570d68f4d51cdf2efb29474cb26751e617b811350f77bf532d4d6785a457",
+    "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "yaml": "b08d7960651ce04bc1dc4f40673f3a08e2e8da3ec2591da9ffd30a31f0c3661d"
+  },
+  "map_rule": "mission R2: lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates",
+  "metrics": {
+    "n_engine_calls": 18,
+    "n_steps": 17,
+    "recovery_steps": [
+      "tric"
+    ],
+    "wall_time_s": 3.3376083970069885
+  },
+  "optimizer": {
+    "name": "geometric",
+    "version": "1.1.1"
+  },
+  "optimizer_options": {
+    "constraints": "freeze:1,2,3,5",
+    "convergence_set": "GAU",
+    "coordsys": "tric",
+    "hessian": "never",
+    "maxiter": 200,
+    "trust": 0.1
+  },
+  "r50": {
+    "failure_count": 0,
+    "note": "no store or runner payload is read; relax raises on any engine or optimizer failure, so there is no failed_reason to check"
+  },
+  "recipe": "xtb",
+  "relaxed_product": {
+    "charge": 0,
+    "coordinates_angstrom": [
+      [
+        -0.907070814142839,
+        1.0956091931284941,
+        0.7104805713154502
+      ],
+      [
+        0.3505629985945057,
+        0.8300340020766078,
+        1.1593549921687547
+      ],
+      [
+        0.3505629849664585,
+        -1.4535670105170913,
+        0.6662760029557516
+      ],
+      [
+        0.3505630182230278,
+        -1.4535669634454524,
+        -0.6662760093727712
+      ],
+      [
+        -0.9070626919528979,
+        1.095579376460374,
+        -0.7104426213993069
+      ],
+      [
+        0.3505630017779285,
+        0.8300339886434807,
+        -1.1593550052490984
+      ],
+      [
+        1.2924402312727263,
+        0.9782499727091647,
+        1.4721859473137203e-06
+      ],
+      [
+        -1.789261224759963,
+        1.2007108393712065,
+        1.3178132601953034
+      ],
+      [
+        0.6738105955651229,
+        0.8385835305063428,
+        2.184783835434858
+      ],
+      [
+        1.1263043349433142,
+        -1.4583160467658702,
+        1.4112108684879991
+      ],
+      [
+        1.1263503984469692,
+        -1.4584275235103679,
+        -1.4112194179576494
+      ],
+      [
+        -1.7892683539432148,
+        1.2004683208852645,
+        -1.3177936612161385
+      ],
+      [
+        0.6737871592860549,
+        0.8385857951671665,
+        -2.184791346225979
+      ],
+      [
+        1.671069566851102,
+        2.0083469934419367,
+        2.445650627417982e-06
+      ],
+      [
+        2.1536206362869734,
+        0.31643983700717593,
+        2.0645367371656296e-05
+      ],
+      [
+        -1.0657782791188302,
+        -1.9565098669075809,
+        0.7740376400013916
+      ],
+      [
+        -1.0654603957708972,
+        -1.9573813248653107,
+        -0.773787601252166
+      ],
+      [
+        -1.7806702247596011,
+        -1.281668516132765,
+        1.2367296915894226
+      ],
+      [
+        -1.1579078603893547,
+        -2.945013555755598,
+        1.222765266090302
+      ],
+      [
+        -1.156369823792458,
+        -2.946657271112923,
+        -1.221089931503304
+      ],
+      [
+        -1.7808110464960423,
+        -1.284118057085471,
+        -1.2380686404474128
+      ]
+    ],
+    "multiplicity": 1,
+    "symbols": [
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H"
+    ]
+  },
+  "reported": {
+    "active_rmsd_angstrom": 0.04438025349399048,
+    "appended_heavy_rmsd_angstrom": 0.017818884375386514,
+    "forming_core_rmsd_angstrom": 0.04975581506489682,
+    "full_rmsd_angstrom": 0.5511682295892257
+  },
+  "run_at_utc": "2026-11-23T21:01:22Z",
+  "schema": 1,
+  "spec": {
+    "constrained_core": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "degenerate_tolerance_angstrom": 0.001,
+    "fragment_alignment": [
+      0,
+      3,
+      4,
+      9
+    ],
+    "fragment_delete": [],
+    "junction_volume_tolerance_angstrom3": 0.05,
+    "min_distance_angstrom": 0.5,
+    "planar_tolerance_angstrom": 0.05,
+    "product_charge": 0,
+    "product_multiplicity": 1,
+    "template": {
+      "alignment": [
+        2,
+        3,
+        10,
+        11
+      ],
+      "anchors": [],
+      "delete": [
+        7,
+        16,
+        17
+      ],
+      "keep": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  },
+  "test_outcome": "passed",
+  "tier_gates": {
+    "g1_core_frozen": {
+      "bound_angstrom": 1e-06,
+      "core_max_displacement_angstrom": 4.190659296613141e-08,
+      "status": "pass"
+    },
+    "g2_connectivity_equals_ts1b_n": {
+      "extra_bonds_ts1b_n_indices": [],
+      "missing_bonds_ts1b_n_indices": [],
+      "status": "pass"
+    },
+    "g3_junction_signs_equal_ts1b_n": {
+      "relaxed": [
+        {
+          "appended_atom": 15,
+          "neighbour_a": 3,
+          "neighbour_b": 9,
+          "sign": 1,
+          "signed_volume_angstrom3": 0.5288629701405482,
+          "template_atom": 2
+        },
+        {
+          "appended_atom": 16,
+          "neighbour_a": 2,
+          "neighbour_b": 10,
+          "sign": -1,
+          "signed_volume_angstrom3": -0.5300032692521883,
+          "template_atom": 3
+        }
+      ],
+      "status": "pass",
+      "ts1b_n": [
+        {
+          "appended_atom": 15,
+          "neighbour_a": 3,
+          "neighbour_b": 9,
+          "sign": 1,
+          "signed_volume_angstrom3": 0.8505201091042602,
+          "template_atom": 2
+        },
+        {
+          "appended_atom": 16,
+          "neighbour_a": 2,
+          "neighbour_b": 10,
+          "sign": -1,
+          "signed_volume_angstrom3": -0.8505201091042602,
+          "template_atom": 3
+        }
+      ]
+    }
+  }
+}

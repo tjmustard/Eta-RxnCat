@@ -1,0 +1,565 @@
+{
+  "active_product_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "active_rmsd_angstrom": 0.0421952760920801,
+  "alignment_rmsd_angstrom": 0.1157252395959073,
+  "close_contacts": [
+    {
+      "distance_angstrom": 1.9598014954003413,
+      "i": 0,
+      "j": 15
+    },
+    {
+      "distance_angstrom": 1.1217660736980426,
+      "i": 0,
+      "j": 17
+    },
+    {
+      "distance_angstrom": 1.961062580811064,
+      "i": 4,
+      "j": 16
+    },
+    {
+      "distance_angstrom": 1.125078588920126,
+      "i": 4,
+      "j": 20
+    }
+  ],
+  "commit_sha": "b872079d35aef37db9d0639b9ae033bed001c5e0",
+  "constrained_core_product_indices": [
+    1,
+    2,
+    3,
+    5
+  ],
+  "environment": {
+    "versions": {
+      "numpy": "2.5.5",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2"
+    }
+  },
+  "failed_checks": [],
+  "fixture": "m1_ts1a_n_to_ts1b_n",
+  "forming_core_rmsd_angstrom": 0.049755824942756405,
+  "fragment_pair_planarity_rms_angstrom": 5.0829514876483114e-05,
+  "full_rmsd_angstrom": 0.7794040003081257,
+  "graft_to_ts1b_n_map": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    7,
+    8,
+    17,
+    18,
+    19,
+    20
+  ],
+  "heavy_map_forming_core_rmsd_angstrom": [
+    {
+      "forming_core_rmsd_angstrom": 0.049755824942756405,
+      "heavy_map": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "forming_core_rmsd_angstrom": 0.9637332835072856,
+      "heavy_map": [
+        0,
+        1,
+        3,
+        2,
+        4,
+        5,
+        6,
+        8,
+        7
+      ]
+    },
+    {
+      "forming_core_rmsd_angstrom": 0.9637332835072856,
+      "heavy_map": [
+        4,
+        5,
+        2,
+        3,
+        0,
+        1,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "forming_core_rmsd_angstrom": 0.04975582494275604,
+      "heavy_map": [
+        4,
+        5,
+        3,
+        2,
+        0,
+        1,
+        6,
+        8,
+        7
+      ]
+    }
+  ],
+  "index_map": [
+    [
+      "template",
+      0
+    ],
+    [
+      "template",
+      1
+    ],
+    [
+      "template",
+      2
+    ],
+    [
+      "template",
+      3
+    ],
+    [
+      "template",
+      4
+    ],
+    [
+      "template",
+      5
+    ],
+    [
+      "template",
+      6
+    ],
+    [
+      "template",
+      8
+    ],
+    [
+      "template",
+      9
+    ],
+    [
+      "template",
+      10
+    ],
+    [
+      "template",
+      11
+    ],
+    [
+      "template",
+      12
+    ],
+    [
+      "template",
+      13
+    ],
+    [
+      "template",
+      14
+    ],
+    [
+      "template",
+      15
+    ],
+    [
+      "fragment",
+      1
+    ],
+    [
+      "fragment",
+      2
+    ],
+    [
+      "fragment",
+      5
+    ],
+    [
+      "fragment",
+      6
+    ],
+    [
+      "fragment",
+      7
+    ],
+    [
+      "fragment",
+      8
+    ]
+  ],
+  "input_sha256": {
+    "fragment": "8b25312f3c3b4948c4d3d4de6cdd2396516147dc5fc52ed2d94f7a259ab4e990",
+    "reference": "677d570d68f4d51cdf2efb29474cb26751e617b811350f77bf532d4d6785a457",
+    "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "yaml": "b08d7960651ce04bc1dc4f40673f3a08e2e8da3ec2591da9ffd30a31f0c3661d"
+  },
+  "junctions": [
+    {
+      "appended_atom": 15,
+      "neighbour_a": 3,
+      "neighbour_b": 9,
+      "sign": 0,
+      "signed_volume_angstrom3": -0.0005549771355909949,
+      "template_atom": 2
+    },
+    {
+      "appended_atom": 16,
+      "neighbour_a": 2,
+      "neighbour_b": 10,
+      "sign": 0,
+      "signed_volume_angstrom3": -0.0005549771355898292,
+      "template_atom": 3
+    }
+  ],
+  "map_rule": "mission R2: lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates",
+  "min_interatomic_distance_angstrom": 1.0782109932462198,
+  "n_isomorphisms": 32,
+  "planar_pair_set_bool": true,
+  "product": {
+    "charge": 0,
+    "coordinates_angstrom": [
+      [
+        -0.921078,
+        1.107082,
+        0.710775
+      ],
+      [
+        0.350563,
+        0.830034,
+        1.159355
+      ],
+      [
+        0.350563,
+        -1.453567,
+        0.666276
+      ],
+      [
+        0.350563,
+        -1.453567,
+        -0.666276
+      ],
+      [
+        -0.921078,
+        1.107082,
+        -0.710775
+      ],
+      [
+        0.350563,
+        0.830034,
+        -1.159355
+      ],
+      [
+        1.298027,
+        0.998198,
+        0.0
+      ],
+      [
+        -1.803322,
+        1.204459,
+        1.333357
+      ],
+      [
+        0.663981,
+        0.849415,
+        2.197024
+      ],
+      [
+        0.93309,
+        -1.696639,
+        1.540414
+      ],
+      [
+        0.93309,
+        -1.696639,
+        -1.540414
+      ],
+      [
+        -1.803322,
+        1.204459,
+        -1.333357
+      ],
+      [
+        0.663981,
+        0.849415,
+        -2.197024
+      ],
+      [
+        1.664523,
+        2.037316,
+        0.0
+      ],
+      [
+        2.164359,
+        0.334518,
+        0.0
+      ],
+      [
+        -1.1134172010427528,
+        -0.8419746234491711,
+        0.7815267611410915
+      ],
+      [
+        -1.113925375542471,
+        -0.8431924739905629,
+        -0.7815267611410905
+      ],
+      [
+        -1.1793294676842638,
+        0.151042397677408,
+        1.237703441374829
+      ],
+      [
+        -1.866000303638133,
+        -1.4917581377500846,
+        1.2396413832103572
+      ],
+      [
+        -1.8661099002998816,
+        -1.4948409005645824,
+        -1.2377034413748276
+      ],
+      [
+        -1.1814435566208288,
+        0.1487960526533718,
+        -1.239641383210356
+      ]
+    ],
+    "multiplicity": 1,
+    "symbols": [
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "H",
+      "C",
+      "C",
+      "H",
+      "H",
+      "H",
+      "H"
+    ]
+  },
+  "r50": {
+    "failure_count": 0,
+    "note": "no store or runner payload is read; relax raises on any engine or optimizer failure, so there is no failed_reason to check"
+  },
+  "reference_junctions": [
+    {
+      "appended_atom": 15,
+      "neighbour_a": 3,
+      "neighbour_b": 9,
+      "sign": 1,
+      "signed_volume_angstrom3": 0.8505201091042602,
+      "template_atom": 2
+    },
+    {
+      "appended_atom": 16,
+      "neighbour_a": 2,
+      "neighbour_b": 10,
+      "sign": -1,
+      "signed_volume_angstrom3": -0.8505201091042602,
+      "template_atom": 3
+    }
+  ],
+  "run_at_utc": "2026-11-23T21:01:18Z",
+  "schema": 1,
+  "source_bonds": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      9
+    ],
+    [
+      2,
+      15
+    ],
+    [
+      3,
+      10
+    ],
+    [
+      3,
+      16
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      11
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      5,
+      12
+    ],
+    [
+      6,
+      13
+    ],
+    [
+      6,
+      14
+    ],
+    [
+      15,
+      16
+    ],
+    [
+      15,
+      17
+    ],
+    [
+      15,
+      18
+    ],
+    [
+      16,
+      19
+    ],
+    [
+      16,
+      20
+    ]
+  ],
+  "spec": {
+    "constrained_core": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "degenerate_tolerance_angstrom": 0.001,
+    "fragment_alignment": [
+      0,
+      3,
+      4,
+      9
+    ],
+    "fragment_delete": [],
+    "junction_volume_tolerance_angstrom3": 0.05,
+    "min_distance_angstrom": 0.5,
+    "planar_tolerance_angstrom": 0.05,
+    "product_charge": 0,
+    "product_multiplicity": 1,
+    "template": {
+      "alignment": [
+        2,
+        3,
+        10,
+        11
+      ],
+      "anchors": [],
+      "delete": [
+        7,
+        16,
+        17
+      ],
+      "keep": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  },
+  "template_pair_planarity_rms_angstrom": 1.152676178963032e-16,
+  "test_outcome": "passed",
+  "tier_gates": {
+    "d2_map_equals_yaml": {
+      "status": "pass"
+    },
+    "d3_forming_core_rmsd": {
+      "bound_angstrom": 0.1,
+      "status": "pass",
+      "value_angstrom": 0.049755824942756405
+    },
+    "d4_close_contacts": {
+      "status": "pass"
+    },
+    "d5_planar_flag": {
+      "status": "pass"
+    },
+    "d6_reference_junctions_nonzero": {
+      "status": "pass"
+    }
+  }
+}
