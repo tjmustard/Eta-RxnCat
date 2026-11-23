@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -16,7 +16,6 @@ nodes:
   - src/eta_rxncat/py.typed
   - src/eta_rxncat/conformers/**
   - src/eta_rxncat/mapping/**
-  - src/eta_rxncat/optimize/**
   - src/eta_rxncat/orchestrator/**
   - tests/unit/test_package.py
   - tests/conftest.py
@@ -63,7 +62,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
@@ -71,9 +70,10 @@ nodes:
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
+  - OPR.0.3.0.4
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -115,7 +115,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
@@ -125,7 +125,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -170,7 +170,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
@@ -179,7 +179,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -221,14 +221,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -267,14 +267,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -322,14 +322,14 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -374,8 +374,62 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: 03-thermo
+    last_slice: 04-optimizer
   review:
     reviewed_at: '2026-11-23T04:17:32+00:00'
     reviewed_by: audit:03-thermo
     summary: patched inputs, outputs
+- id: eta_rxncat_optimize
+  dimension: Module
+  status: dirty
+  associated_file: src/eta_rxncat/optimize/base.py
+  files:
+  - src/eta_rxncat/optimize/**
+  - tests/unit/optimize/**
+  description: >-
+    eta_rxncat.optimize (v0.3.0): geometry optimizers behind one interface; geomeTRIC
+    is the optional opt-geometric extra (TJ Q3 A) and is never imported by core or
+    the base install. errors.py: OptimizerError -> OptimizerUnavailableError (names
+    uv sync --extra opt-geometric), OptimizerInputError, OptimizationFailedError(steps,
+    last_energy_hartree); none is a ValueError. base.py (pure Python): Optimizer ABC
+    (identity -> OptimizerIdentity, OPTIONS of engines.options.OptionSpec resolved
+    by the ADR-0016 rule, minimize(state, engine, *, frozen_atom_indices, dihedral_constraints,
+    options) -> core OptimizationResult); DihedralConstraint (frozen pydantic: four
+    distinct 0-based atoms, value in (-180, 180]); check_constraints; constraints_text
+    (canonical freeze:/dihedral: text, sorted, ';'-joined; recorded as options["constraints"],
+    keyed opt.constraints by the runner). geometric_impl.py: GeometricOptimizer imports
+    geomeTRIC only inside functions, never calls run_optimizer or logging.config;
+    drives OptParams, Molecule, its own coordinate-system table from geometric.internal
+    (tric/cart/dlc/hdlc), parse_constraints ($freeze xyz, $set dihedral, 1-based;
+    enforce 0.1 only with frozen atoms) and Optimizer.optimizeGeometry through a bridge
+    that calls Engine.evaluate and never catches EngineError; each run in a fresh
+    temp dir with the geometric logger redirected there and numpy's global RNG seeded,
+    both restored after. Options coordsys (tric), convergence_set (GAU, seven sets),
+    maxiter (300), trust (0.1), hessian (never/first). Recorded ladder: tric, tric_tight_trust
+    (trust 0.03, hessian first), then cartesian (trust 0.05) or, for constrained runs,
+    hdlc; cart with a constraint is refused; a converged dihedral off target by >
+    0.1 deg fails. Tests in tests/unit/optimize.
+  inputs:
+  - data_type: molecular_state_and_constraints
+    source_id: eta_rxncat_core
+  - data_type: engine_energy_and_forces
+    source_id: eta_rxncat_engines
+  - data_type: optimizer_options
+    external: eta_rxncat_consumers
+  outputs:
+  - data_type: optimization_result
+    external: eta_rxncat_consumers
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_engines
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.3.0.4
+  review:
+    reviewed_at: '2026-11-23T04:42:45+00:00'
+    reviewed_by: audit:04-optimizer
+    summary: patched inputs, outputs
+  provenance:
+    last_slice: 04-optimizer

@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.optimize: the Optimizer interface and errors, Geometr
 depends_on: [OPR.0.3.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", pyproject.toml, uv.lock, ".github/workflows/ci.yml", AGENTS.md, tools/licence_gate.py, "tests/unit/tools/**", tests/unit/test_package.py, tests/conftest.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -180,17 +180,17 @@ lower-level API details before the bridge is written.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: H6 + H15 — read `geometric/optimize.py` 1157–1300, `prepare.py` (`parse_constraints`),
+- [x] Task 1: H6 + H15 — read `geometric/optimize.py` 1157–1300, `prepare.py` (`parse_constraints`),
   `params.py`, `errors.py`; in a scratch dir, run via the lower-level path: a two-step toy (H₂ on a
   fake engine); UFF on `C=C(/C=C/OC)OC` (seed 42) with `$set dihedral 1 2 3 4 0.0` on `tric` and on
   `hdlc`; UFF water with `$freeze xyz 1` on `tric` and `hdlc`; record the exact calls, the maxiter
   exception, the final dihedrals and whether `hdlc` accepts each constraint kind. Stop if the
   `tric` dihedral result differs from resolve's (|φ| ≤ 0.1°).
-- [ ] Task 2: errors, base, options + tests (`tests/unit/optimize/test_base.py`).
-- [ ] Task 3: `geometric_impl.py`, bridge, sandbox + tests.
-- [ ] Task 4: ladder + fake-engine tests.
-- [ ] Task 5: pyproject, lock (check R14 diff with `git diff uv.lock`), licence gate, CI, AGENTS.md.
-- [ ] Task 6: ledger (new node, scaffold glob move); required checks; licence gate all five
+- [x] Task 2: errors, base, options + tests (`tests/unit/optimize/test_base.py`).
+- [x] Task 3: `geometric_impl.py`, bridge, sandbox + tests.
+- [x] Task 4: ladder + fake-engine tests.
+- [x] Task 5: pyproject, lock (check R14 diff with `git diff uv.lock`), licence gate, CI, AGENTS.md.
+- [x] Task 6: ledger (new node, scaffold glob move); required checks; licence gate all five
   profiles; commit.
 
 ## 4. The Negative Space (Constraints)

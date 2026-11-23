@@ -731,7 +731,6 @@ name = "eta-rxncat"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [
-    { name = "geometric" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or extra == 'extra-10-eta-rxncat-mlip-uma'" },
     { name = "numpy", version = "2.5.5", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version >= '3.12' and extra != 'extra-10-eta-rxncat-mlip-uma') or (extra == 'extra-10-eta-rxncat-mlip-mace' and extra == 'extra-10-eta-rxncat-mlip-uma')" },
     { name = "pydantic" },
@@ -756,9 +755,13 @@ mlip-uma = [
     { name = "fairchem-core" },
     { name = "torch" },
 ]
+opt-geometric = [
+    { name = "geometric" },
+]
 
 [package.dev-dependencies]
 dev = [
+    { name = "geometric" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -770,7 +773,7 @@ dev = [
 requires-dist = [
     { name = "cupy-cuda12x", marker = "extra == 'gpu'" },
     { name = "fairchem-core", marker = "extra == 'mlip-uma'", specifier = ">=2.22" },
-    { name = "geometric" },
+    { name = "geometric", marker = "extra == 'opt-geometric'", specifier = "==1.1.1" },
     { name = "gpu4pyscf-cuda12x", marker = "extra == 'gpu'", specifier = ">=1.8.0" },
     { name = "mace-torch", marker = "extra == 'mlip-mace'" },
     { name = "numpy" },
@@ -783,10 +786,11 @@ requires-dist = [
     { name = "torch", marker = "extra == 'mlip-mace'", specifier = ">=2.7.0", index = "https://download.pytorch.org/whl/cu129" },
     { name = "torch", marker = "extra == 'mlip-uma'", specifier = ">=2.7.0", index = "https://download.pytorch.org/whl/cu129" },
 ]
-provides-extras = ["gpu", "mlip-mace", "mlip-uma"]
+provides-extras = ["gpu", "mlip-mace", "mlip-uma", "opt-geometric"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "geometric", specifier = "==1.1.1" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-cov" },

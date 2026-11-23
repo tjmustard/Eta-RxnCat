@@ -378,13 +378,56 @@ def repo_gate_table() -> dict[str, Any]:
 
 
 def test_repo_config_loads() -> None:
-    """The committed config pins geometric 1.1.1 in every profile and has no pip-licenses table."""
+    """The geometric 1.1.1 exemption covers opt-geometric and the gpu profiles, not base."""
     geometric = [e for e in repo_gate_table()["exempt"] if e["package"] == "geometric"]
-    assert len(geometric) == 1
-    assert geometric[0]["version"] == "1.1.1"
-    assert geometric[0]["profiles"] == ["base", "gpu", "mlip-mace", "mlip-uma"]
-    assert geometric[0]["decision"].startswith("R41")
+    assert [e["profiles"] for e in geometric] == [
+        ["opt-geometric"],
+        ["gpu", "mlip-mace", "mlip-uma"],
+    ]
+    assert all(e["version"] == "1.1.1" for e in geometric)
+    assert all(e["decision"].startswith("R41") for e in geometric)
+    assert geometric[0]["pulled-in-by"] == "opt-geometric"
+    assert "gpu4pyscf-cuda12x" in geometric[1]["pulled-in-by"]
+    assert "--extra gpu" in geometric[1]["pulled-in-by"]
+    assert not [e for e in repo_gate_table()["exempt"] if "base" in e["profiles"]]
     assert "pip-licenses" not in tomllib.loads((REPO / "pyproject.toml").read_text())["tool"]
+
+
+def test_profiles_include_opt_geometric() -> None:
+    """The gate knows the opt-geometric profile (TJ v0.3.0 Q3 A) and accepts it on the CLI."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("licence_gate", GATE)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.PROFILES == ("base", "opt-geometric", "gpu", "mlip-mace", "mlip-uma")
+    help_text = subprocess.run(
+        [sys.executable, "-I", str(GATE), "--help"], capture_output=True, text=True, check=True
+    ).stdout
+    assert "opt-geometric" in help_text
+
+
+def test_opt_geometric_exemption_goes_stale_without_geometric(tmp_path: Path) -> None:
+    """The repo's opt-geometric exemption fails as stale in an env without geometric 1.1.1."""
+    dist(tmp_path / "site", "ok", expression="MIT")
+    entry = next(
+        e
+        for e in repo_gate_table()["exempt"]
+        if e["package"] == "geometric" and e["profiles"] == ["opt-geometric"]
+    )
+    result = gate(tmp_path, "opt-geometric", [entry])
+    assert result.returncode == 1
+    assert fails(result)[0].startswith("FAIL geometric:1.1.1 [stale exemption]")
+
+
+def test_geometric_fails_in_base(tmp_path: Path) -> None:
+    """With the repo's exemptions, geometric 1.1.1 (UNKNOWN metadata) fails in base."""
+    dist(tmp_path / "site", "geometric", "1.1.1", license_field="UNKNOWN")
+    exempt = [e for e in repo_gate_table()["exempt"] if e["package"] == "geometric"]
+    assert gate(tmp_path, "base", exempt).returncode == 1
+    entry = next(e for e in exempt if e["profiles"] == ["opt-geometric"])
+    assert gate(tmp_path, "opt-geometric", [entry]).returncode == 0
 
 
 NVIDIA_DECISION = "TJ v0.1.0 Q1 A (NVIDIA CUDA wheels exempt); R1 v0.2.0"

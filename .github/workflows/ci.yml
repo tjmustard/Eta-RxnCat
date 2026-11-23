@@ -34,6 +34,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - profile: opt-geometric
+            command: UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra opt-geometric && .venv-runtime/bin/python -I tools/licence_gate.py --profile opt-geometric
           - profile: gpu
             command: UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu && .venv-runtime/bin/python -I tools/licence_gate.py --profile gpu
           - profile: mlip-mace

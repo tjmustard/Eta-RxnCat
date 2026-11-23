@@ -314,10 +314,11 @@ These rules apply to everything outside the HACF managed block above.
   field, with no substring matching (R45, ADR-0013). Unrecognised or empty metadata fails. No
   exceptions are added by agents; a failing package is reported to the person.
 - Licence gate (runtime environment only), one command per profile. CI runs `base` in the
-  `checks` job and the other three in the `licence-extras` matrix job:
+  `checks` job and the other four in the `licence-extras` matrix job:
 
   ```sh
   UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/bin/python -I tools/licence_gate.py --profile base
+  UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra opt-geometric && .venv-runtime/bin/python -I tools/licence_gate.py --profile opt-geometric
   UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu && .venv-runtime/bin/python -I tools/licence_gate.py --profile gpu
   UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-mace && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-mace
   UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev --extra gpu --extra mlip-uma && .venv-runtime/bin/python -I tools/licence_gate.py --profile mlip-uma
@@ -325,9 +326,12 @@ These rules apply to everything outside the HACF managed block above.
 
   Exemptions are pinned to an exact package version and profile. Each records its licence, the
   package that pulls it in, its reason and its decision, and a stale exemption fails.
-  - `base` has one: `geometric` 1.1.1 (ADR-0011, R41). Its licence is BSD 3-clause Non-AI
-    (clause 4 restricts use in AI-training datasets) and its metadata reads UNKNOWN; any other
-    version still fails.
+  - `base` has none: geomeTRIC is not in the base install (TJ v0.3.0 Q3 A).
+  - `opt-geometric` has one: `geometric` 1.1.1, pulled in by the `opt-geometric` extra
+    (ADR-0011, R41, TJ v0.3.0 Q3 A). Its licence is BSD 3-clause Non-AI (clause 4 restricts use
+    in AI-training datasets) and its metadata reads UNKNOWN; any other version still fails.
+    `gpu`, `mlip-mace` and `mlip-uma` keep the same exemption because `gpu4pyscf-cuda12x` (the
+    `--extra gpu` their CI commands sync) depends on `geometric`.
   - `gpu` adds the NVIDIA rule: `nvidia-*` CUDA wheels with a proprietary licence (TJ Q1 A).
   - `mlip-mace` and `mlip-uma` add their version-pinned lists. TJ's rule (R48, ADR-0014, 14:49Z):
     copyleft and off-list licences are allowed only as downloaded, unmodified, transitive
@@ -360,7 +364,8 @@ UV_PROJECT_ENVIRONMENT=.venv-runtime uv sync --locked --no-dev && .venv-runtime/
 ## Engine tests
 
 - Acceptance runs use the gitignored envs `.venv-accept-gpu` (`--extra gpu`), `.venv-accept-mace`
-  (`--extra gpu --extra mlip-mace`) and `.venv-accept-uma` (`--extra gpu --extra mlip-uma`). Only
+  (`--extra gpu --extra mlip-mace`), `.venv-accept-uma` (`--extra gpu --extra mlip-uma --extra
+  opt-geometric`) and `.venv-accept-opt` (`--extra opt-geometric`). Only
   the build seat creates or syncs them; the audit seat runs them with `uv run --no-sync`. `.venv`
   stays the base dev env for the required checks.
 - `ETA_RXNCAT_ACCEPTANCE=1` turns every skipped test into a failure (`tests/conftest.py`), so an

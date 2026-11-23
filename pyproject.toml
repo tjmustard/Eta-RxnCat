@@ -17,7 +17,6 @@ dependencies = [
     "pydantic>=2",
     "pyyaml",
     "rdkit",
-    "geometric",
     "pyscf",
 ]
 
@@ -25,6 +24,7 @@ dependencies = [
 gpu = ["torch>=2.7.0", "gpu4pyscf-cuda12x>=1.8.0", "cupy-cuda12x"]
 mlip-mace = ["torch>=2.7.0", "mace-torch"]
 mlip-uma = ["torch>=2.7.0", "fairchem-core>=2.22"]
+opt-geometric = ["geometric==1.1.1"]
 
 [project.scripts]
 eta-rxncat = "eta_rxncat.cli:main"
@@ -36,6 +36,7 @@ dev = [
     "ruff",
     "mypy",
     "types-PyYAML",
+    "geometric==1.1.1",
 ]
 
 [tool.uv]
@@ -137,11 +138,20 @@ decision = "TJ Q1 A (qitem-20261122075815-4c32a48f2e42363c)"
 [[tool.eta-rxncat.licence-gate.exempt]]
 package = "geometric"
 version = "1.1.1"
-profiles = ["base", "gpu", "mlip-mace", "mlip-uma"]
+profiles = ["opt-geometric"]
 licence = "metadata UNKNOWN; LICENSE file BSD 3-clause Non-AI"
-pulled-in-by = "eta-rxncat (direct dependency), gpu4pyscf-cuda12x"
+pulled-in-by = "opt-geometric"
 reason = "BSD 3-clause Non-AI (clause 4 restricts AI-training datasets); metadata UNKNOWN"
-decision = "R41 / ADR-0011 (TJ B, 12:49Z)"
+decision = "R41 / ADR-0011 (TJ B, 12:49Z); TJ v0.3.0 Q3 A (opt-geometric extra)"
+
+[[tool.eta-rxncat.licence-gate.exempt]]
+package = "geometric"
+version = "1.1.1"
+profiles = ["gpu", "mlip-mace", "mlip-uma"]
+licence = "metadata UNKNOWN; LICENSE file BSD 3-clause Non-AI"
+pulled-in-by = "gpu4pyscf-cuda12x (the gpu extra; CI syncs these profiles with --extra gpu)"
+reason = "BSD 3-clause Non-AI (clause 4 restricts AI-training datasets); metadata UNKNOWN"
+decision = "R41 / ADR-0011 (TJ B, 12:49Z); TJ v0.3.0 Q3 A"
 
 [[tool.eta-rxncat.licence-gate.exempt]]
 package = "ase"

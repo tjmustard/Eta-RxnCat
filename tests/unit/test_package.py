@@ -117,6 +117,77 @@ def test_engines_import_loads_no_heavy_modules() -> None:
     assert result.stdout.strip() == "[]"
 
 
+V030_PACKAGES = (
+    "eta_rxncat.core",
+    "eta_rxncat.thermo",
+    "eta_rxncat.conformers",
+    "eta_rxncat.optimize",
+)
+V030_HEAVY = ("geometric", "torch", "pyscf", "fairchem")
+
+
+@pytest.mark.parametrize("package", V030_PACKAGES)
+def test_v030_packages_load_no_optimizer_or_engine_library(package: str) -> None:
+    """Importing a v0.3.0 package loads no geomeTRIC, torch, PySCF or fairchem (TJ Q3 A)."""
+    code = (
+        f"import {package}, sys; "
+        f"print(sorted(m for m in sys.modules if m.split('.')[0] in {V030_HEAVY!r}))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, text=True, check=True
+    )
+    assert result.stdout.strip() == "[]"
+
+
+GEOMETRIC_HOME = SRC / "optimize" / "geometric_impl.py"
+
+
+def geometric_imports_outside_functions(root: Path, allowed: Path) -> list[str]:
+    """Return ``path:line`` for each ``geometric`` import not inside a function of ``allowed``."""
+    hits = []
+    for path in sorted(root.rglob("*.py")):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        inside: set[int] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+                inside |= {id(child) for child in ast.walk(node) if child is not node}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                names = [node.module]
+            else:
+                continue
+            if not any(name.split(".")[0] == "geometric" for name in names):
+                continue
+            if path != allowed or id(node) not in inside:
+                hits.append(f"{path}:{node.lineno}")
+    return hits
+
+
+def test_geometric_imported_only_inside_geometric_impl_functions() -> None:
+    """The geometric package is imported only inside functions of optimize/geometric_impl.py."""
+    assert geometric_imports_outside_functions(SRC, GEOMETRIC_HOME) == []
+
+
+@pytest.mark.parametrize(
+    ("relative", "source", "hit"),
+    [
+        ("optimize/geometric_impl.py", "import geometric\n", True),
+        ("optimize/geometric_impl.py", "def f():\n    import geometric.params\n", False),
+        ("optimize/other.py", "def f():\n    from geometric import optimize\n", True),
+        ("core/x.py", "import geometricx\n", False),
+    ],
+)
+def test_geometric_rule_scanner(tmp_path: Path, relative: str, source: str, hit: bool) -> None:
+    """The AST rule flags module-level imports and any import outside geometric_impl.py."""
+    path = tmp_path / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source, encoding="utf-8")
+    allowed = tmp_path / "optimize" / "geometric_impl.py"
+    assert bool(geometric_imports_outside_functions(tmp_path, allowed)) is hit
+
+
 def test_import_ban_scans_engines_directory() -> None:
     """The AST import ban walks src/eta_rxncat/engines/ (every engine module is checked)."""
     engines_dir = SRC / "engines"
@@ -202,7 +273,13 @@ def test_no_direct_copyleft_dependencies() -> None:
         if requirement_name(req) in FORBIDDEN_DIRECT_DEPENDENCIES
     ]
     assert offenders == []
-    assert set(declared) == {"dependencies", "extra gpu", "extra mlip-mace", "extra mlip-uma"}
+    assert set(declared) == {
+        "dependencies",
+        "extra gpu",
+        "extra mlip-mace",
+        "extra mlip-uma",
+        "extra opt-geometric",
+    }
 
 
 @pytest.mark.parametrize(

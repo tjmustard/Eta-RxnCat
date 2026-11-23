@@ -2,7 +2,7 @@
 
 Run with the interpreter of the environment to audit::
 
-    <env>/bin/python -I tools/licence_gate.py --profile {base,gpu,mlip-mace,mlip-uma}
+    <env>/bin/python -I tools/licence_gate.py --profile {base,opt-geometric,gpu,mlip-mace,mlip-uma}
 
 Each installed distribution (except the project itself and ``pip``) gets one verdict from the
 first licence source present:
@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any
 
 DEFAULT_CONFIG = Path(__file__).resolve().parent.parent / "pyproject.toml"
-PROFILES = ("base", "gpu", "mlip-mace", "mlip-uma")
+PROFILES = ("base", "opt-geometric", "gpu", "mlip-mace", "mlip-uma")
 SKIPPED = frozenset({"eta-rxncat", "pip"})
 _TOKEN = re.compile(r"\s*(\(|\)|[A-Za-z0-9.+:-]+)")
 
