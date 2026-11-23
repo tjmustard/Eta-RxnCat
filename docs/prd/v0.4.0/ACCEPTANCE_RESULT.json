@@ -1,0 +1,376 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and xtb",
+        "tests/e2e/test_m1_relax.py",
+        "tests/e2e/test_accept_v040.py"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-07-accept/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-07-accept/cand (scratch)",
+        "ETA_RXNCAT_XTB": "~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-opt"
+      },
+      "exit_code": 0,
+      "wall_s": 4.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_m1_relax.py",
+        "tests/e2e/test_accept_v040.py"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v040-07-accept/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v040-07-accept/cand (scratch)",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "wall_s": 34.0
+    }
+  ],
+  "commit_sha": "17af9781d539dd7af012f87654e2a1e05be4cdf1",
+  "default_suite": {
+    "cleanroom_vectors": {
+      "command": "uv run pytest tests/unit/mapping",
+      "deselected": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 65,
+      "skipped": 0
+    },
+    "command": "uv run pytest",
+    "deselected": 121,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 1419,
+    "skipped": 0
+  },
+  "devices": {
+    "uma": "cuda",
+    "xtb": "cpu"
+  },
+  "engines": {
+    "uma": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "xtb": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    }
+  },
+  "evidence": {
+    "candidates_phase3_set": "tests/candidate_outputs/v0.4.0/m1_graft.json, m1_relaxed.xtb.json and m1_relaxed.uma.json at 035e289 (produced at C1 b872079)",
+    "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+    "verdict_run": "slice 08, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)"
+  },
+  "fixture_sha256": {},
+  "fixtures": {
+    "m1": {
+      "graft": {
+        "failed_checks": [],
+        "forming_core_rmsd": {
+          "bound_angstrom": 0.1,
+          "status": "pass",
+          "value_angstrom": 0.049755824942756405
+        },
+        "map_confirmation": "pending_confirmation",
+        "regression_graft": {
+          "status": "pending_promotion"
+        },
+        "reported": {
+          "active_rmsd_angstrom": 0.0421952760920801,
+          "alignment_rmsd_angstrom": 0.1157252395959073,
+          "close_contacts": [
+            {
+              "distance_angstrom": 1.9598014954003413,
+              "i": 0,
+              "j": 15
+            },
+            {
+              "distance_angstrom": 1.1217660736980426,
+              "i": 0,
+              "j": 17
+            },
+            {
+              "distance_angstrom": 1.961062580811064,
+              "i": 4,
+              "j": 16
+            },
+            {
+              "distance_angstrom": 1.125078588920126,
+              "i": 4,
+              "j": 20
+            }
+          ],
+          "full_rmsd_angstrom": 0.7794040003081257,
+          "junctions": [
+            {
+              "appended_atom": 15,
+              "neighbour_a": 3,
+              "neighbour_b": 9,
+              "sign": 0,
+              "signed_volume_angstrom3": -0.0005549771355909949,
+              "template_atom": 2
+            },
+            {
+              "appended_atom": 16,
+              "neighbour_a": 2,
+              "neighbour_b": 10,
+              "sign": 0,
+              "signed_volume_angstrom3": -0.0005549771355898292,
+              "template_atom": 3
+            }
+          ],
+          "n_isomorphisms": 32,
+          "planar_pair_set_bool": true
+        },
+        "test_outcome": "passed",
+        "tier_d": {
+          "d2_map_equals_yaml": {
+            "status": "pass"
+          },
+          "d3_forming_core_rmsd": {
+            "bound_angstrom": 0.1,
+            "status": "pass",
+            "value_angstrom": 0.049755824942756405
+          },
+          "d4_close_contacts": {
+            "status": "pass"
+          },
+          "d5_planar_flag": {
+            "status": "pass"
+          },
+          "d6_reference_junctions_nonzero": {
+            "status": "pass"
+          }
+        }
+      },
+      "uma": {
+        "core_max_displacement_angstrom": 3.547938489632982e-08,
+        "failed_checks": [],
+        "metrics": {
+          "device": "cuda",
+          "n_engine_calls": 18,
+          "n_steps": 17,
+          "recovery_steps": [
+            "tric"
+          ],
+          "wall_time_s": 16.780218026950024
+        },
+        "regression_relaxed": {
+          "status": "pending_promotion"
+        },
+        "relaxed_gates": {
+          "g1_core_frozen": {
+            "bound_angstrom": 1e-06,
+            "core_max_displacement_angstrom": 3.547938489632982e-08,
+            "status": "pass"
+          },
+          "g2_connectivity_equals_ts1b_n": {
+            "extra_bonds_ts1b_n_indices": [],
+            "missing_bonds_ts1b_n_indices": [],
+            "status": "pass"
+          },
+          "g3_junction_signs_equal_ts1b_n": {
+            "relaxed": [
+              {
+                "appended_atom": 15,
+                "neighbour_a": 3,
+                "neighbour_b": 9,
+                "sign": 1,
+                "signed_volume_angstrom3": 0.5258790486323743,
+                "template_atom": 2
+              },
+              {
+                "appended_atom": 16,
+                "neighbour_a": 2,
+                "neighbour_b": 10,
+                "sign": -1,
+                "signed_volume_angstrom3": -0.5363009017369746,
+                "template_atom": 3
+              }
+            ],
+            "status": "pass",
+            "ts1b_n": [
+              {
+                "appended_atom": 15,
+                "neighbour_a": 3,
+                "neighbour_b": 9,
+                "sign": 1,
+                "signed_volume_angstrom3": 0.8505201091042602,
+                "template_atom": 2
+              },
+              {
+                "appended_atom": 16,
+                "neighbour_a": 2,
+                "neighbour_b": 10,
+                "sign": -1,
+                "signed_volume_angstrom3": -0.8505201091042602,
+                "template_atom": 3
+              }
+            ]
+          },
+          "status": "pass"
+        },
+        "reported": {
+          "active_rmsd_angstrom": 0.0415975053960063,
+          "appended_heavy_rmsd_angstrom": 0.010544627128779066,
+          "forming_core_rmsd_angstrom": 0.04975581834185936,
+          "full_rmsd_angstrom": 0.5523838250672034
+        },
+        "test_outcome": "passed"
+      },
+      "xtb": {
+        "core_max_displacement_angstrom": 4.190659296613141e-08,
+        "failed_checks": [],
+        "metrics": {
+          "device": "cpu",
+          "n_engine_calls": 18,
+          "n_steps": 17,
+          "recovery_steps": [
+            "tric"
+          ],
+          "wall_time_s": 3.8532017190009356
+        },
+        "regression_relaxed": {
+          "status": "pending_promotion"
+        },
+        "relaxed_gates": {
+          "g1_core_frozen": {
+            "bound_angstrom": 1e-06,
+            "core_max_displacement_angstrom": 4.190659296613141e-08,
+            "status": "pass"
+          },
+          "g2_connectivity_equals_ts1b_n": {
+            "extra_bonds_ts1b_n_indices": [],
+            "missing_bonds_ts1b_n_indices": [],
+            "status": "pass"
+          },
+          "g3_junction_signs_equal_ts1b_n": {
+            "relaxed": [
+              {
+                "appended_atom": 15,
+                "neighbour_a": 3,
+                "neighbour_b": 9,
+                "sign": 1,
+                "signed_volume_angstrom3": 0.5288629701405482,
+                "template_atom": 2
+              },
+              {
+                "appended_atom": 16,
+                "neighbour_a": 2,
+                "neighbour_b": 10,
+                "sign": -1,
+                "signed_volume_angstrom3": -0.5300032692521883,
+                "template_atom": 3
+              }
+            ],
+            "status": "pass",
+            "ts1b_n": [
+              {
+                "appended_atom": 15,
+                "neighbour_a": 3,
+                "neighbour_b": 9,
+                "sign": 1,
+                "signed_volume_angstrom3": 0.8505201091042602,
+                "template_atom": 2
+              },
+              {
+                "appended_atom": 16,
+                "neighbour_a": 2,
+                "neighbour_b": 10,
+                "sign": -1,
+                "signed_volume_angstrom3": -0.8505201091042602,
+                "template_atom": 3
+              }
+            ]
+          },
+          "status": "pass"
+        },
+        "reported": {
+          "active_rmsd_angstrom": 0.04438025349399048,
+          "appended_heavy_rmsd_angstrom": 0.017818884375386514,
+          "forming_core_rmsd_angstrom": 0.04975581506489682,
+          "full_rmsd_angstrom": 0.5511682295892257
+        },
+        "test_outcome": "passed"
+      }
+    }
+  },
+  "hardware": {
+    "flags": [],
+    "gpu": {
+      "compute_capability": "12.0",
+      "free_vram_bytes": 6204686336,
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "total_vram_bytes": 8073248768,
+      "total_vram_gib": 7.52
+    },
+    "gpu4pyscf": {
+      "installed": true,
+      "version": "1.9.2"
+    },
+    "notes": [],
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "python_version": "3.12.16",
+    "report_schema": 1,
+    "torch": {
+      "cuda_available": true,
+      "cuda_version": "12.9",
+      "installed": true,
+      "version": "2.13.0+cu129"
+    },
+    "vram_budget_bytes": 6979321856,
+    "vram_budget_gib": 6.5
+  },
+  "known_limits": [
+    "the pure M1 graft keeps four close contacts (two C…H at 1.12 Å, two C…C at 1.96 Å); they are recorded, not refused, and the pre-relaxation is gated on TS1b_n's connectivity (TJ P1 A)",
+    "on M1 the pure-graft junction signs are undetermined (planar pair set); the handedness check is decided on the relaxed structures (TJ R2 A)",
+    "the pre-relaxed structure is a TS guess, not a minimum; it is never ground-state checked",
+    "the M1 YAML is provisional until the YAML/JSON graph format is defined (TJ Q-E3)",
+    "GraftSpec is self-contained; from v0.8.0 the graph loader builds it from TemplateGeometry.mapping, the single source (mission R11)",
+    "R-group/ligand enumeration and the Rh(I) (5+2) complexes are v1.x (TJ Q2 (b))"
+  ],
+  "logs": {
+    "~/.hacf/eta-rxncat-hacf/v040-07-accept-uma.log": {
+      "exit_code": 0,
+      "summary": "2 passed, 2 deselected, 16 warnings in 31.03s"
+    },
+    "~/.hacf/eta-rxncat-hacf/v040-07-accept-xtb.log": {
+      "exit_code": 0,
+      "summary": "2 passed, 2 deselected in 4.17s"
+    }
+  },
+  "record_schema": 1,
+  "run_at_utc": "2026-11-23T21:23:57+00:00",
+  "verdict": "pending",
+  "verdict_reasons": [
+    "m1.graft: regression_graft pending_promotion",
+    "m1.graft: map_confirmation pending_confirmation",
+    "m1.xtb: regression_relaxed pending_promotion",
+    "m1.uma: regression_relaxed pending_promotion"
+  ]
+}

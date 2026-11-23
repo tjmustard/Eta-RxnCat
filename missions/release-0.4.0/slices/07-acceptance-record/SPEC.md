@@ -10,7 +10,7 @@ intent: "Add the M1 regression and map-confirmation checks, run M1 on both recip
 depends_on: [OPR.0.4.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.4.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, spec/compiled/architecture.yml]
@@ -178,8 +178,8 @@ measures.
 
 - [x] Task 1: codegraph index → `index: ok`; record Start; read the v0.3.0 acceptance code.
 - [x] Task 2: helpers, driver, merge, schema test; required checks; commit C1 (code).
-- [ ] Task 3: host check → xtb acceptance → host check → UMA acceptance, at C1, with scratch candidate and out dirs, under `timeout 3600` each; merge into the record.
-- [ ] Task 4: README and derivation tests; commit C2 (record + README + tests); updater; remove scratch.
+- [x] Task 3: host check → xtb acceptance → host check → UMA acceptance, at C1, with scratch candidate and out dirs, under `timeout 3600` each; merge into the record.
+- [x] Task 4: README and derivation tests; commit C2 (record + README + tests); updater; remove scratch.
 
 ## 4. The Negative Space (Constraints)
 

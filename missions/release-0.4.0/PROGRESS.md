@@ -19,6 +19,6 @@
 | OPR.0.4.0.4 | 04-graft | audited | OPR.0.4.0.3 | 2026-11-23T20:33:00+00:00 audited |
 | OPR.0.4.0.5 | 05-constrained-relax | audited | OPR.0.4.0.4 | 2026-11-23T20:51:26+00:00 audited |
 | OPR.0.4.0.6 | 06-m1-fixture | audited | OPR.0.4.0.5 | 2026-11-23T21:14:24+00:00 audited |
-| OPR.0.4.0.7 | 07-acceptance-record | executing | OPR.0.4.0.6 | 2026-11-23T21:23:10+00:00 executing |
+| OPR.0.4.0.7 | 07-acceptance-record | executed | OPR.0.4.0.6 | 2026-11-23T21:27:51+00:00 executed |
 | OPR.0.4.0.8 | 08-acceptance-verdict | compiled | OPR.0.4.0.7 | 2026-11-23T19:01:23+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->

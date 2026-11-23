@@ -1,11 +1,14 @@
 """The v0.4.0 acceptance record: merge, schema check and verdict rule (slice 07; R56)."""
 
 import copy
+import json
+from pathlib import Path
 from typing import Any
 
 import pytest
 from acceptance_record_v040 import (
     KNOWN_LIMITS,
+    VERDICTS,
     check,
     merge_runs,
     pytest_counts,
@@ -206,3 +209,28 @@ def test_pytest_counts(line: str, expected: dict[str, int]) -> None:
     """The default_suite counts come from pytest's own summary line."""
     counts = pytest_counts("some output\n" + line + "\n")
     assert {k: counts[k] for k in expected} == expected
+
+
+# --- the committed record ------------------------------------------------------------------
+
+RECORD = Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.4.0" / "ACCEPTANCE_RESULT.json"
+
+
+def test_committed_record_parses_and_is_pre_promotion() -> None:
+    """The committed record is valid; gates pass; regressions and the map are pending (R22)."""
+    record = json.loads(RECORD.read_text(encoding="utf-8"))
+    assert record["record_schema"] == 1
+    assert check(record) == []
+    m1 = record["fixtures"]["m1"]
+    assert sorted(m1) == ["graft", "uma", "xtb"]
+    assert m1["graft"]["forming_core_rmsd"]["status"] == "pass"
+    assert m1["graft"]["regression_graft"]["status"] in VERDICTS["regression"]
+    assert m1["graft"]["map_confirmation"] in VERDICTS["map_confirmation"]
+    for recipe in ("xtb", "uma"):
+        assert m1[recipe]["test_outcome"] == "passed"
+        assert m1[recipe]["relaxed_gates"]["status"] == "pass"
+        assert m1[recipe]["regression_relaxed"]["status"] in VERDICTS["regression"]
+    assert record["verdict"] in VERDICTS["record"]
+    assert record["known_limits"] == list(KNOWN_LIMITS)
+    assert record["default_suite"]["exit_code"] == 0
+    assert record["default_suite"]["cleanroom_vectors"]["failed"] == 0

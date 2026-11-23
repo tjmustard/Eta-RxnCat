@@ -140,6 +140,15 @@ Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 - UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside it and is
   reported, not gated.
 
+### Conserved-core mapper (v0.4.0, pre-release)
+
+- The v0.4.0 acceptance record
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.4.0/ACCEPTANCE_RESULT.json)) shows the
+  conserved-core mapper: quaternion alignment, ordered graft surgery with explicit charge/spin,
+  core-frozen pre-relaxation; M1 regression pending TJ promotion.
+- TJ's Fixture M1 grafts within the 0.10 Å forming-core bound and pre-relaxes on the xtb (GFN2)
+  and UMA recipes with TS1b_n's connectivity and junction handedness.
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
@@ -282,7 +291,8 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
+- **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`); M1
+  regression pending TJ promotion.
 - **v0.5.0**: transition-state optimisation and an active-core frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.

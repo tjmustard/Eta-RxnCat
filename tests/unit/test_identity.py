@@ -739,3 +739,116 @@ def test_v030_claims_refused_for_failed_or_missing_fragment(change: Any, reason:
     assert reason in merged["verdict_reasons"]
     problems = check_v030_claims(readme(), merged)
     assert any("verdict is fail" in p for p in problems), problems
+
+
+# v0.4.0 claims derived from the pre-release acceptance record (slice 07) -----------------------
+
+V040_RECORD = REPO / "docs" / "prd" / "v0.4.0" / "ACCEPTANCE_RESULT.json"
+
+
+def _v040_m1(record: dict[str, Any]) -> dict[str, Any]:
+    return dict(record["fixtures"]["m1"])
+
+
+def _v040_gates_pass(record: dict[str, Any]) -> bool:
+    """Graft forming core within 0.10 A; g1-g3 passed on xtb and UMA; every test passed."""
+    m1 = _v040_m1(record)
+    graft = m1["graft"]
+    return (
+        set(m1) == {"graft", "xtb", "uma"}
+        and graft["test_outcome"] == "passed"
+        and graft["forming_core_rmsd"]["status"] == "pass"
+        and graft["forming_core_rmsd"]["bound_angstrom"] == 0.10
+        and all(
+            m1[r]["test_outcome"] == "passed"
+            and m1[r]["relaxed_gates"]["status"] == "pass"
+            and m1[r]["relaxed_gates"]["g2_connectivity_equals_ts1b_n"]["status"] == "pass"
+            and m1[r]["relaxed_gates"]["g3_junction_signs_equal_ts1b_n"]["status"] == "pass"
+            for r in ("xtb", "uma")
+        )
+    )
+
+
+def _v040_pending_promotion(record: dict[str, Any]) -> bool:
+    """Built and gated, with the M1 regression (and the map) still pending TJ's promotion."""
+    m1 = _v040_m1(record)
+    return (
+        _v040_gates_pass(record)
+        and record["verdict"] == "pending"
+        and m1["graft"]["regression_graft"]["status"] == "pending_promotion"
+        and m1["graft"]["map_confirmation"] == "pending_confirmation"
+        and all(
+            m1[r]["regression_relaxed"]["status"] == "pending_promotion" for r in ("xtb", "uma")
+        )
+    )
+
+
+V040_CLAIMS = (
+    (
+        "conserved-core mapper: quaternion alignment, ordered graft surgery with explicit "
+        "charge/spin, core-frozen pre-relaxation; M1 regression pending TJ promotion.",
+        _v040_pending_promotion,
+    ),
+    (
+        "TJ's Fixture M1 grafts within the 0.10 Å forming-core bound and pre-relaxes on the xtb "
+        "(GFN2) and UMA recipes with TS1b_n's connectivity and junction handedness.",
+        _v040_gates_pass,
+    ),
+    (
+        "**v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`); M1 "
+        "regression pending TJ promotion.",
+        _v040_pending_promotion,
+    ),
+)
+
+
+def check_v040_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
+    """Each v0.4.0 README claim is present and true of the record; none without a record.
+
+    A ``fail`` verdict refuses every claim (R56); the version is not bumped here (slice 08).
+    """
+    text = " ".join(readme_text.split())
+    present = [phrase for phrase, _ in V040_CLAIMS if phrase in text]
+    if record is None:
+        return [f"README claims {p[:40]!r}… but there is no v0.4.0 record" for p in present]
+    if record.get("verdict") == "fail":
+        return [f"README claims {p[:40]!r}… but the record's verdict is fail" for p in present] or [
+            "the v0.4.0 record's verdict is fail"
+        ]
+    problems = []
+    for phrase, holds in V040_CLAIMS:
+        if phrase not in text:
+            problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
+        elif not _holds(holds, record):
+            problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
+    if "](docs/prd/v0.4.0/ACCEPTANCE_RESULT.json)" not in text:
+        problems.append(
+            "record present, but no Markdown link to docs/prd/v0.4.0/ACCEPTANCE_RESULT.json"
+        )
+    return problems
+
+
+def test_readme_v040_claims_match_record() -> None:
+    """Every README v0.4.0 claim is derived from (and true of) the v0.4.0 record."""
+    record = json.loads(V040_RECORD.read_text(encoding="utf-8")) if V040_RECORD.is_file() else None
+    assert check_v040_claims(readme(), record) == []
+    assert project_version() == "0.3.0"
+
+
+def test_v040_claim_check_catches_drift() -> None:
+    """A failed gate, a settled promotion, a fail verdict or a missing record is caught."""
+    record = json.loads(V040_RECORD.read_text(encoding="utf-8"))
+    gate = json.loads(json.dumps(record))
+    gate["fixtures"]["m1"]["uma"]["relaxed_gates"]["g2_connectivity_equals_ts1b_n"]["status"] = (
+        "fail"
+    )
+    assert any("not what the record shows" in p for p in check_v040_claims(readme(), gate))
+    promoted = json.loads(json.dumps(record))
+    promoted["fixtures"]["m1"]["xtb"]["regression_relaxed"]["status"] = "pass"
+    assert any("not what the record shows" in p for p in check_v040_claims(readme(), promoted))
+    failed = json.loads(json.dumps(record))
+    failed["verdict"] = "fail"
+    problems = check_v040_claims(readme(), failed)
+    assert problems and all("verdict is fail" in p for p in problems)
+    assert check_v040_claims(readme(), None) != []
+    assert check_v040_claims("no claims here", None) == []
