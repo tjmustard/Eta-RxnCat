@@ -153,7 +153,7 @@ def test_budget_of_one_byte_runs_on_cpu(
     assert result.device == "cpu"
     assert result.device_reason == "vram_estimate_over_budget"
     assert result.recovery_steps[0] == "vram_estimate>budget->cpu"
-    assert result.recovery_steps[-1] == "stability:stable"
+    assert result.recovery_steps[-1].startswith("stability:stable ")
 
 
 @pytest.mark.parametrize(
@@ -253,31 +253,30 @@ def test_rotation_count(occ: Any, rotations: int) -> None:
 def test_small_rotation_space_uses_cpu_copy_without_calling_gpu_stability(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Below 3 rotations the GPU object's stability() is never called; a CPU copy's is."""
+    """Below 3 rotations the GPU object is never analysed; a CPU copy is (R43, via R54's call)."""
     import numpy
 
     monkeypatch.setattr(engine_module, "gpu_modules", fake_gpu)
     eng = PySCFEngine.from_stage(stage(), device="cuda")
     calls: list[str] = []
+    cpu_copy = SimpleNamespace(name="cpu", mo_coeff=None)
+    mf = SimpleNamespace(name="gpu", mo_occ=numpy.asarray([2.0, 0.0]), to_cpu=lambda: cpu_copy)
 
-    def gpu_stability(**kwargs: Any) -> Any:
-        calls.append("gpu")
-        raise AssertionError("nvar >= nroots")
+    def lowest(obj: Any, tol: float = 1e-6) -> tuple[float, Any]:
+        calls.append(obj.name)
+        if obj.name == "gpu":
+            raise AssertionError("nvar >= nroots")
+        return 0.25, None
 
-    cpu_copy = SimpleNamespace(
-        stability=lambda **kw: calls.append("cpu") or (None, None, True, None)
-    )
-    mf = SimpleNamespace(
-        mo_occ=numpy.asarray([2.0, 0.0]), stability=gpu_stability, to_cpu=lambda: cpu_copy
-    )
+    monkeypatch.setattr(engine_module, "lowest_internal", lowest)
     steps: list[str] = ["diis"]
     eng._on_gpu = True
     try:
-        eng._stability(mf, steps)
+        eng._stability(mf, steps, eng.stage)
     finally:
         eng._on_gpu = False
     assert calls == ["cpu"]
-    assert steps == ["diis", GPU_STABILITY_CPU_COPY_STEP, "stability:stable"]
+    assert steps == ["diis", GPU_STABILITY_CPU_COPY_STEP, "stability:stable lambda_min=+2.50e-01"]
 
 
 def test_cuda_without_gpu_extra(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -422,7 +421,7 @@ def converged_mf(eng: PySCFEngine, state: MolecularState, on_gpu: bool) -> Any:
     try:
         mol = eng._build_mol(state, str(st.basis), str(st.options["ecp"]))
         mf, steps = eng._ladder(state, mol, st)
-        return eng._stability(mf, steps), st, mol
+        return eng._stability(mf, steps, st), st, mol
     finally:
         eng._on_gpu = False
 
@@ -443,7 +442,8 @@ def test_gpu_cpu_energy_agreement(
     assert on_gpu.device == "cuda" and on_gpu.device_reason == f"gpu4pyscf {gpu.version}"
     assert on_cpu.device == "cpu"
     assert "gpu_oom->cpu" not in on_gpu.recovery_steps
-    assert on_gpu.recovery_steps[-1] == on_cpu.recovery_steps[-1] == "stability:stable"
+    assert on_gpu.recovery_steps[-1].startswith("stability:stable ")
+    assert on_cpu.recovery_steps[-1].startswith("stability:stable ")
     assert abs(on_gpu.energy_hartree - on_cpu.energy_hartree) <= 1e-6
 
 
@@ -593,7 +593,11 @@ def test_gpu_tiny_system_stability(gpu: SimpleNamespace, method: str) -> None:
     on_gpu = PySCFEngine.from_stage(stage(method), device="cuda").evaluate(h2)
     on_cpu = PySCFEngine.from_stage(stage(method), device="cpu").evaluate(h2)
     assert on_gpu.device == "cuda"
-    assert on_gpu.recovery_steps == ["diis", GPU_STABILITY_CPU_COPY_STEP, "stability:stable"]
+    assert [s.split(" lambda_min=")[0] for s in on_gpu.recovery_steps] == [
+        "diis",
+        GPU_STABILITY_CPU_COPY_STEP,
+        "stability:stable",
+    ]
     assert GPU_STABILITY_CPU_COPY_STEP not in on_cpu.recovery_steps
     print(f"H2 {method}: E_gpu {on_gpu.energy_hartree!r} E_cpu {on_cpu.energy_hartree!r}")
     assert abs(on_gpu.energy_hartree - on_cpu.energy_hartree) <= 1e-6
@@ -606,4 +610,4 @@ def test_gpu_water_has_no_cpu_copy(
     """Water has enough rotations: its GPU stability analysis runs on the GPU (no cpu_copy)."""
     result = PySCFEngine.from_stage(stage(), device="cuda").evaluate(test_set["water"])
     assert result.device == "cuda"
-    assert result.recovery_steps == ["diis", "stability:stable"]
+    assert [s.split(" ")[0] for s in result.recovery_steps] == ["diis", "stability:stable"]

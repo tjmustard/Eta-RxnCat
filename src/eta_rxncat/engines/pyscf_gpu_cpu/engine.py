@@ -39,6 +39,7 @@ from eta_rxncat.engines.pyscf_gpu_cpu.gpu import (
     to_host,
 )
 from eta_rxncat.engines.pyscf_gpu_cpu.solvents import DIELECTRICS
+from eta_rxncat.engines.pyscf_gpu_cpu.stability import lowest_internal
 from eta_rxncat.utils.hw_probe import vram_budget_bytes
 
 AUTO = "auto"
@@ -143,7 +144,8 @@ class PySCFEngine(Engine):
     """
 
     tag = "pyscf_gpu_cpu"
-    ENGINE_IMPL: ClassVar[int] = 1
+    ENGINE_IMPL: ClassVar[int] = 2
+    """2 (R54): the stability verdict is the engine's ``stability_tol`` rule, not PySCF's -1e-5."""
     OPTIONS: ClassVar[dict[str, OptionSpec]] = {
         "density_fit": OptionSpec(bool, True),
         "auxbasis": OptionSpec(str, "def2-universal-jkfit"),
@@ -154,6 +156,8 @@ class PySCFEngine(Engine):
         "pcm_method": OptionSpec(str, "C-PCM", frozenset({"C-PCM", "IEF-PCM"})),
         "ladder_small_basis": OptionSpec(str, AUTO),
         "stability": OptionSpec(str, "internal", frozenset({"internal"})),
+        "stability_tol": OptionSpec(float, 1e-3),
+        "stability_noise_eh": OptionSpec(float, 1e-6),
         "fd_step_bohr": OptionSpec(float, 0.005),
         "hessian_mode": OptionSpec(str, "auto", frozenset({"auto", "fd_gradients", "analytic"})),
     }
@@ -206,7 +210,7 @@ class PySCFEngine(Engine):
         self.max_memory_mb = max_memory_mb
         self.ladder_max_cycle = ladder_max_cycle
         options = self.stage.options
-        for key in ("conv_tol", "fd_step_bohr"):
+        for key in ("conv_tol", "fd_step_bohr", "stability_tol", "stability_noise_eh"):
             value = options[key]
             if not isinstance(value, float) or not value > 0:
                 raise EngineInputError(f"pyscf_gpu_cpu: option {key!r} must be > 0, not {value!r}")
@@ -467,35 +471,50 @@ class PySCFEngine(Engine):
             total += n_occ * (len(spin) - n_occ)
         return total
 
-    def _stability(self, mf: Any, steps: list[str]) -> Any:
-        """Internal stability analysis, following an instability up to 2 times (R9)."""
+    def _stability(self, mf: Any, steps: list[str], stage: StageConfig) -> Any:
+        """Internal stability analysis with the noise-robust verdict (R9, R54).
+
+        lambda_min is the lowest eigenvalue of the internal-stability Hessian (``stability.py``,
+        PySCF's own operator and Davidson at tol 1e-6). The state is unstable iff
+        ``lambda_min < -stability_tol``. A follow that lowers the energy by less than
+        ``stability_noise_eh`` ends the analysis as stable and does not count against the
+        budget; at most ``MAX_STABILITY_FOLLOWS`` progressive follows, then
+        ``ScfConvergenceError``. Every verdict records lambda_min.
+        """
+        threshold = float(stage.options["stability_tol"])
+        noise = float(stage.options["stability_noise_eh"])
         follows = 0
         small = self._on_gpu and self._rotation_count(mf) < GPU_STABILITY_MIN_ROTATIONS
         if small:
-            # R43: GPU4PySCF 1.9.2's Davidson asserts nvar >= nroots (3). Checked BEFORE calling
-            # stability: analyse a CPU copy of the converged mean field (same mol/xc/grids/DF)
-            # and, if unstable, follow on the GPU from the CPU copy's orbitals (max 2 follows).
+            # R43: GPU4PySCF 1.9.2's Davidson asserts nvar >= nroots (3). Checked BEFORE the
+            # analysis: analyse a CPU copy of the converged mean field (same mol/xc/grids/DF) and,
+            # if unstable, follow on the GPU from the CPU copy's orbitals.
             steps.append(GPU_STABILITY_CPU_COPY_STEP)
         while True:
             analyser = mf.to_cpu() if small else mf
-            mo, _, stable, _ = analyser.stability(internal=True, external=False, return_status=True)
-            if stable:
-                steps.append("stability:stable")
+            lam, mo = lowest_internal(analyser)
+            if not lam < -threshold:
+                steps.append(f"stability:stable lambda_min={lam:+.2e}")
                 return mf
             if follows == MAX_STABILITY_FOLLOWS:
                 raise ScfConvergenceError(
                     f"pyscf_gpu_cpu: wavefunction still internally unstable after "
-                    f"{MAX_STABILITY_FOLLOWS} follows",
+                    f"{MAX_STABILITY_FOLLOWS} follows (lambda_min={lam:+.2e})",
                     steps=tuple(steps),
                 )
-            follows += 1
-            steps.append("stability:followed")
+            steps.append(f"stability:followed lambda_min={lam:+.2e}")
+            before = float(mf.e_tot)
             dm = mf.make_rdm1(mo, mf.mo_occ)
             if not self._kernel(mf, dm):
                 raise ScfConvergenceError(
                     "pyscf_gpu_cpu: SCF did not converge after following an instability",
                     steps=tuple(steps),
                 )
+            delta = float(mf.e_tot) - before
+            if not delta < -noise:
+                steps.append(f"stability:followed_no_progress dE={delta:.1e}")
+                return mf
+            follows += 1
 
     # ------------------------------------------------------------------ evaluate
 
@@ -600,7 +619,7 @@ class PySCFEngine(Engine):
         assert isinstance(ecp, str) and stage.basis
         mol = self._build_mol(state, stage.basis, ecp)
         mf, steps = self._ladder(state, mol, stage)
-        mf = self._stability(mf, steps)
+        mf = self._stability(mf, steps, stage)
         device: Device = "cuda" if self._on_gpu else "cpu"
         result = RawResult(energy_hartree=float(mf.e_tot), device=device, recovery_steps=steps)
         if forces or hessian:

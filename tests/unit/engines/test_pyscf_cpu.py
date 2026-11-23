@@ -18,6 +18,7 @@ from eta_rxncat.engines import (
     library_version,
 )
 from eta_rxncat.engines.pyscf_gpu_cpu import DIELECTRICS, HESSIAN_SUPPORT, hessian_method_for
+from eta_rxncat.engines.pyscf_gpu_cpu import engine as engine_module
 from eta_rxncat.engines.pyscf_gpu_cpu.engine import ANALYTIC_REFUSED
 from eta_rxncat.store import build_stage_key
 
@@ -129,7 +130,7 @@ def test_reference_hf_sto3g_water(ps: SimpleNamespace, test_set: dict[str, Molec
     assert max(abs(hess[i][j] - ref[i, j]) for i in range(9) for j in range(9)) <= 1e-8
     assert all(hess[i][j] == hess[j][i] for i in range(9) for j in range(9))
     assert result.device == "cpu" and result.device_reason is None
-    assert result.recovery_steps == ["diis", "stability:stable"]
+    assert verdicts(result.recovery_steps) == ["diis", "stability:stable"]
     assert result.engine.name == "pyscf_gpu_cpu" and result.engine.version == library_version(
         "pyscf"
     )
@@ -151,9 +152,11 @@ def test_resolved_options() -> None:
         "pcm_method": "C-PCM",
         "ladder_small_basis": "sto-3g",
         "stability": "internal",
+        "stability_tol": 1e-3,
+        "stability_noise_eh": 1e-6,
         "fd_step_bohr": 0.005,
         "hessian_mode": "auto",
-        ENGINE_IMPL_KEY: 1,
+        ENGINE_IMPL_KEY: 2,
     }
     assert engine(basis="def2-svp").stage.options["ladder_small_basis"] == "minao"
     assert engine(basis="DEF2-TZVP").stage.options["ladder_small_basis"] == "minao"
@@ -217,9 +220,18 @@ def test_implicit_and_explicit_defaults_key_equal(test_set: dict[str, MolecularS
     ],
 )
 def test_bad_stage_or_runtime(
-    kwargs: dict[str, Any], runtime: dict[str, Any], error: type[Exception], match: str
+    monkeypatch: pytest.MonkeyPatch,
+    kwargs: dict[str, Any],
+    runtime: dict[str, Any],
+    error: type[Exception],
+    match: str,
 ) -> None:
-    """Disallowed or mistyped options, unknown xc, cuda (slice 07) and bad runtime arguments."""
+    """Disallowed or mistyped options, unknown xc, cuda (slice 07) and bad runtime arguments.
+
+    The GPU lookup is faked to "no GPU stack", so the cuda case refuses on every host, GPU hosts
+    included (slice 11); the real-GPU path is covered by ``test_pyscf_gpu.py``.
+    """
+    monkeypatch.setattr(engine_module, "gpu_modules", lambda: None)
     data: dict[str, Any] = {"method": "hf", "basis": "sto-3g"}
     data.update(kwargs)
     method, basis = data.pop("method"), data.pop("basis")
@@ -315,7 +327,11 @@ def test_ladder_recovers_from_diis_failure(
     water = test_set["water"]
     result = engine(runtime={"ladder_max_cycle": 1}).evaluate(water, forces=False)
     steps = result.recovery_steps
-    assert steps[0] == "diis" and steps[1] == "level_shift" and steps[-1] == "stability:stable"
+    assert (
+        steps[0] == "diis"
+        and steps[1] == "level_shift"
+        and steps[-1].startswith("stability:stable ")
+    )
     assert set(steps[:-1]) <= {"diis", "level_shift", "soscf", "small_basis_projection"}
     assert abs(result.energy_hartree - plain_mf(ps, water, "hf", "sto-3g").e_tot) <= 1e-8
 
@@ -349,7 +365,7 @@ def test_each_rung_recovers(
 
     monkeypatch.setattr(PySCFEngine, "_kernel", kernel)
     result = engine().evaluate(water, forces=False)
-    assert result.recovery_steps == [*expected, "stability:stable"]
+    assert verdicts(result.recovery_steps) == [*expected, "stability:stable"]
     assert abs(result.energy_hartree - plain_mf(ps, water, "hf", "sto-3g").e_tot) <= 1e-8
 
 
@@ -369,68 +385,81 @@ def test_every_rung_failing_raises(
     assert info.value.steps == ("diis", "level_shift", "soscf", "small_basis_projection")
 
 
-def fake_stability(monkeypatch: pytest.MonkeyPatch, verdicts: list[bool]) -> dict[str, int]:
-    """Make the converged mean field's stability() report ``verdicts`` in turn (last repeats)."""
-    real = PySCFEngine._ladder
-    seen = {"calls": 0}
+def fake_stability(
+    monkeypatch: pytest.MonkeyPatch, lambdas: list[float], drop_eh: float = 1e-3
+) -> dict[str, int]:
+    """Inject lambda_min values in turn (last repeats); each follow lowers E by ``drop_eh`` (R54).
 
-    def ladder(self: PySCFEngine, state: MolecularState, mol: Any, stage: StageConfig) -> Any:
-        mf, steps = real(self, state, mol, stage)
+    The follow's SCF really runs (from the same orbitals); its energy is then lowered by
+    ``drop_eh`` per follow so far, so a follow is "progressive" when ``drop_eh`` exceeds the
+    noise floor (``stability_noise_eh``).
+    """
+    seen = {"calls": 0, "follows": 0}
+    real_kernel = PySCFEngine._kernel
 
-        def stability(**kwargs: Any) -> tuple[Any, None, bool, None]:
-            index = min(seen["calls"], len(verdicts) - 1)
-            seen["calls"] += 1
-            return mf.mo_coeff, None, verdicts[index], None
+    def lowest(mf: Any, tol: float = 1e-6) -> tuple[float, Any]:
+        index = min(seen["calls"], len(lambdas) - 1)
+        seen["calls"] += 1
+        return lambdas[index], mf.mo_coeff
 
-        mf.stability = stability
-        return mf, steps
+    def kernel(self: PySCFEngine, mf: Any, dm0: Any = None) -> bool:
+        ok = real_kernel(self, mf, dm0)
+        if dm0 is not None and seen["calls"]:  # a stability follow
+            seen["follows"] += 1
+            mf.e_tot = float(mf.e_tot) - drop_eh * seen["follows"]
+        return ok
 
-    monkeypatch.setattr(PySCFEngine, "_ladder", ladder)
+    monkeypatch.setattr(engine_module, "lowest_internal", lowest)
+    monkeypatch.setattr(PySCFEngine, "_kernel", kernel)
     return seen
+
+
+def verdicts(steps: Any) -> list[str]:
+    """Recovery steps with the R54 ``lambda_min=`` / ``dE=`` values stripped."""
+    return [step.split(" ")[0] for step in steps]
 
 
 def test_stability_follow_is_recorded(
     test_set: dict[str, MolecularState], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Unstable once, then stable -> 'stability:followed' then 'stability:stable'."""
-    seen = fake_stability(monkeypatch, [False, True])
+    """Unstable once, then stable -> 'followed' then 'stable', each with lambda_min."""
+    seen = fake_stability(monkeypatch, [-1e-2, 1e-4])
     result = engine().evaluate(test_set["water"], forces=False)
-    assert result.recovery_steps == ["diis", "stability:followed", "stability:stable"]
+    assert result.recovery_steps == [
+        "diis",
+        "stability:followed lambda_min=-1.00e-02",
+        "stability:stable lambda_min=+1.00e-04",
+    ]
     assert seen["calls"] == 2
 
 
 def test_always_unstable_raises(
     test_set: dict[str, MolecularState], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Always unstable -> ScfConvergenceError after exactly 2 follows."""
-    seen = fake_stability(monkeypatch, [False])
+    """Always unstable with progressive follows -> ScfConvergenceError after exactly 2 follows."""
+    seen = fake_stability(monkeypatch, [-1e-2])
     with pytest.raises(ScfConvergenceError, match="unstable") as info:
         engine().evaluate(test_set["water"], forces=False)
-    assert info.value.steps == ("diis", "stability:followed", "stability:followed")
+    assert verdicts(info.value.steps) == ["diis", "stability:followed", "stability:followed"]
     assert seen["calls"] == 3
 
 
-def test_stability_called_with_internal_only(
+def test_stability_uses_the_internal_lambda_min(
     test_set: dict[str, MolecularState], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """The analysis is internal=True, external=False, return_status=True."""
-    real = PySCFEngine._ladder
-    kwargs_seen: list[dict[str, Any]] = []
+    """One lowest_internal call on the converged mean field; its value is recorded."""
+    real = engine_module.lowest_internal
+    seen: list[float] = []
 
-    def ladder(self: PySCFEngine, state: MolecularState, mol: Any, stage: StageConfig) -> Any:
-        mf, steps = real(self, state, mol, stage)
-        original = mf.stability
+    def spy(mf: Any, tol: float = 1e-6) -> tuple[float, Any]:
+        lam, mo = real(mf)
+        seen.append(lam)
+        return lam, mo
 
-        def spy(**kwargs: Any) -> Any:
-            kwargs_seen.append(kwargs)
-            return original(**kwargs)
-
-        mf.stability = spy
-        return mf, steps
-
-    monkeypatch.setattr(PySCFEngine, "_ladder", ladder)
-    engine().evaluate(test_set["water"], forces=False)
-    assert kwargs_seen == [{"internal": True, "external": False, "return_status": True}]
+    monkeypatch.setattr(engine_module, "lowest_internal", spy)
+    result = engine().evaluate(test_set["water"], forces=False)
+    assert len(seen) == 1 and seen[0] > 0
+    assert result.recovery_steps[-1] == f"stability:stable lambda_min={seen[0]:+.2e}"
 
 
 # ---------------------------------------------------------------- solvation
@@ -631,7 +660,7 @@ def test_slow_b3lyp_energy_matches_pyscf(
     result = engine(method="b3lyp", basis="def2-svp").evaluate(s, forces=False)
     ecp = "def2-svp" if case == "pd_anion" else None
     assert abs(result.energy_hartree - plain_mf(ps, s, "b3lyp", "def2-svp", ecp=ecp).e_tot) <= 1e-8
-    assert result.recovery_steps[-1] == "stability:stable"
+    assert result.recovery_steps[-1].startswith("stability:stable ")
 
 
 @pytest.mark.slow
@@ -734,7 +763,7 @@ def test_slow_hbr_analytic_ks_hessian_canary(ps: SimpleNamespace) -> None:
     rs = eng.resolved_stage_for(hbr)
     mol = eng._build_mol(hbr, "def2-svp", str(rs.options["ecp"]))
     mf, steps = eng._ladder(hbr, mol, rs)
-    mf = eng._stability(mf, steps)
+    mf = eng._stability(mf, steps, rs)
     analytic, _ = eng._analytic_hessian(mf, 2)
     result = eng.evaluate(hbr, hessian=True)
     fd = result.hessian_hartree_per_bohr2

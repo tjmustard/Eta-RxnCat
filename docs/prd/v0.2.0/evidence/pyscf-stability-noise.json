@@ -1,0 +1,466 @@
+{
+  "record_schema": 1,
+  "purpose": "R54 (slice 11 Mini-req 1b(f)): the pyscf_gpu_cpu internal-stability verdict is robust to threaded-CPU noise and still detects a real instability",
+  "generated_at_utc": "2026-11-23T00:26:17Z",
+  "commit_base": "b15b5fb6bca48aa079823111bafe02dbb15c2c8c",
+  "generated_by": "seat commands ~/.hacf/eta-rxncat-hacf/evidence/v020-slice11-raw/{oh_one.py, oh_noise_run.sh, pdcl2_stability.py} in .venv-accept-gpu (uncommitted working tree with the R54 engine code)",
+  "versions": {
+    "pyscf": "2.15.1",
+    "gpu4pyscf": "1.9.2"
+  },
+  "rule": {
+    "stability_tol": 0.001,
+    "stability_noise_eh": 1e-06,
+    "davidson_tol": 1e-06,
+    "engine_impl": 2,
+    "verdict": "unstable iff lambda_min < -stability_tol; a follow lowering E by < stability_noise_eh ends as stable; at most 2 progressive follows, then ScfConvergenceError"
+  },
+  "hydroxyl_noise": {
+    "system": "hydroxyl radical (tests/unit/engines/data/hydroxyl.xyz), q 0, m 2, B3LYP/def2-SVP UKS, DF, CPU",
+    "processes": {
+      "omp_1": 3,
+      "omp_8": 30
+    },
+    "failures": 0,
+    "energy_omp1_hartree": -75.6673330145578,
+    "omp1_bit_identical": true,
+    "max_abs_e_omp8_minus_omp1_hartree": 3.5983492807645234e-07,
+    "omp8_energy_spread_hartree": 3.284364851197097e-07,
+    "lambda_min_range": [
+      -7.14e-05,
+      2.6e-05
+    ],
+    "follows": 0,
+    "runs": [
+      {
+        "omp": "1",
+        "pid": 1060569,
+        "wall_s": 0.9,
+        "ok": true,
+        "energy_hartree": -75.6673330145578,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-7.14e-05"
+        ]
+      },
+      {
+        "omp": "1",
+        "pid": 1061462,
+        "wall_s": 1.0,
+        "ok": true,
+        "energy_hartree": -75.6673330145578,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-7.14e-05"
+        ]
+      },
+      {
+        "omp": "1",
+        "pid": 1062005,
+        "wall_s": 1.0,
+        "ok": true,
+        "energy_hartree": -75.6673330145578,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-7.14e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1062653,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733315271914,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+9.79e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1062894,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733330573955,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+2.71e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1063293,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733326932084,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.22e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1063699,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733336319523,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.55e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1064022,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733335553549,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.06e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1064254,
+        "wall_s": 0.7,
+        "ok": true,
+        "energy_hartree": -75.66733305533116,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-3.12e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1064675,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733332589777,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.57e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1064868,
+        "wall_s": 0.8,
+        "ok": true,
+        "energy_hartree": -75.66733312870349,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+2.27e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1065695,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733320959543,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.93e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1066009,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733304595624,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-3.67e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1066514,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733314719879,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+8.22e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1066746,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733318310794,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.65e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1067125,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733334697925,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+6.46e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1067430,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733327465137,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.07e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1067919,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733327726713,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+9.94e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1068152,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.6673330779816,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-1.92e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1068658,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733307517254,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=-2.06e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1068998,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.6673332956634,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+4.84e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1069340,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733317511196,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.51e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1069641,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.6673333365822,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+3.19e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1069990,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733317395284,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.48e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1070394,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.6673331508115,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+9.26e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1070805,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.6673332224451,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.94e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1071178,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733321814901,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.95e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1071553,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733330599091,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+2.67e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1071898,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.66733326495854,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.33e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1072232,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733324980338,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.66e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1072620,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733337439273,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+2.60e-05"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1072869,
+        "wall_s": 0.6,
+        "ok": true,
+        "energy_hartree": -75.66733329167396,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+5.87e-06"
+        ]
+      },
+      {
+        "omp": "8",
+        "pid": 1073271,
+        "wall_s": 0.5,
+        "ok": true,
+        "energy_hartree": -75.667333182081,
+        "recovery_steps": [
+          "diis",
+          "stability:stable lambda_min=+1.63e-05"
+        ]
+      }
+    ]
+  },
+  "pdcl2_real_instability": {
+    "note": "R30's exact PdCl2 geometry is not recorded in the repo; this is linear PdCl2 with Pd-Cl 2.20 A, singlet, init_guess huckel (the high state). Resolve measured lambda_min -6.5e-2 on its geometry",
+    "cpu": {
+      "system": "linear PdCl2, Pd-Cl 2.2 A, singlet, init_guess huckel",
+      "energy_hartree": -1048.0579101048863,
+      "recovery_steps": [
+        "diis",
+        "stability:followed lambda_min=-6.10e-02",
+        "stability:stable lambda_min=+4.68e-05"
+      ],
+      "device": "cpu",
+      "error": null,
+      "lambdas": [
+        -0.06099068072860428,
+        4.684522905352319e-05
+      ],
+      "follows": [
+        {
+          "e_before": -1048.0485338986575,
+          "e_after": -1048.0579101048863,
+          "dE": -0.00937620622880786
+        }
+      ],
+      "options": {
+        "ecp": "def2-svp",
+        "stability_tol": 0.001,
+        "stability_noise_eh": 1e-06,
+        "engine_impl": 2,
+        "init_guess": "huckel"
+      }
+    },
+    "cuda": {
+      "system": "linear PdCl2, Pd-Cl 2.2 A, singlet, init_guess huckel",
+      "energy_hartree": -1048.0579099207578,
+      "recovery_steps": [
+        "diis",
+        "stability:followed lambda_min=-6.10e-02",
+        "stability:stable lambda_min=+4.04e-05"
+      ],
+      "device": "cuda",
+      "error": null,
+      "lambdas": [
+        -0.06099353786045961,
+        4.0447627844991316e-05
+      ],
+      "follows": [
+        {
+          "e_before": -1048.0485338197684,
+          "e_after": -1048.0579099207578,
+          "dE": -0.009376100989356928
+        }
+      ],
+      "options": {
+        "ecp": "def2-svp",
+        "stability_tol": 0.001,
+        "stability_noise_eh": 1e-06,
+        "engine_impl": 2,
+        "init_guess": "huckel"
+      }
+    }
+  },
+  "verdict": {
+    "hydroxyl_0_failures_over_30_omp8": true,
+    "hydroxyl_within_1e-6_of_omp1": true,
+    "pdcl2_detected_and_followed": true
+  }
+}

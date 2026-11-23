@@ -33,7 +33,7 @@ def stage(**kwargs: Any) -> StageConfig:
 
 
 def plain_pyscf(state: MolecularState) -> float:
-    """Plain PySCF as the engine documents it (DF, grid 3, conv 1e-10, R9 stability follow)."""
+    """Plain PySCF as the engine documents it (DF, grid 3, conv 1e-10); no stability follow."""
     from pyscf import dft, gto
 
     heavy = any(s in ("Pd",) for s in state.symbols)
@@ -54,12 +54,6 @@ def plain_pyscf(state: MolecularState) -> float:
     mf.max_cycle = 100
     mf.kernel()
     assert mf.converged
-    for _ in range(2):  # R9: follow an internal instability (at most 2 follows), as documented
-        mo, _, stable, _ = mf.stability(internal=True, external=False, return_status=True)
-        if stable:
-            break
-        mf.kernel(mf.make_rdm1(mo, mf.mo_occ))
-        assert mf.converged
     return float(mf.e_tot)
 
 
@@ -80,7 +74,7 @@ def test_pyscf_cpu(cases: dict[str, Any], out_dir: Path, case: str) -> None:
     evaluated(
         out_dir, "pyscf_gpu_cpu", f"{case}.cpu", lambda: result, diff, reference="plain PySCF (CPU)"
     )
-    assert result.device == "cpu" and result.recovery_steps[-1] == "stability:stable"
+    assert result.device == "cpu" and result.recovery_steps[-1].startswith("stability:stable ")
     assert diff <= PLAIN_PARITY[case]
 
 
@@ -104,7 +98,7 @@ def test_pyscf_cuda(cases: dict[str, Any], out_dir: Path, case: str) -> None:
     )
     assert result.device == "cuda"
     assert not any(step.endswith("->cpu") for step in result.recovery_steps)
-    assert result.recovery_steps[-1] == "stability:stable"
+    assert result.recovery_steps[-1].startswith("stability:stable ")
     assert diff <= 1e-6
 
 
