@@ -2,4 +2,5 @@
 openrig:
   id_prefix: OPR
 code_graph:
-  backend: none
+  install_method: uv-tool
+  backend: codebase-memory-mcp

@@ -4,10 +4,10 @@
       "gitignore": "6c820ccc0429896bbb79d2eca27a8300c3bbde10e5bcc49c7855fb708026927b"
     },
     "AGENTS.md": {
-      "hacf": "8a68aa71094af683518381f578d189c95290d466fe0d4501ca759805c81e1b95"
+      "hacf": "f6e5ba7938c233b0e8f19b421e7bda0bc51d80c565a30d87fe7e1a50b6e453a2"
     },
     "CLAUDE.md": {
-      "hacf": "b94fb82d5f2aa4678a60dd5d4cbbb74f575c2547139564c1be93fecfdcf78806"
+      "hacf": "d03561436dd6de3bd64da16d704134d8bc229540648530eae815c4231defebe0"
     }
   },
   "files": {
@@ -29,7 +29,7 @@
     },
     ".agents/config/orchestration.yml": {
       "owner": "hacf",
-      "sha256": "1d4a50489170514831436373b51fca83571c49054c681ea35ff14abba54aba2c"
+      "sha256": "07056cf4cc6d139765a73a9f0e1230b3e2729da58f47f0fc5176395a47d25fe4"
     },
     ".agents/config/upstream.yml": {
       "owner": "hacf",
@@ -37,15 +37,15 @@
     },
     ".agents/install-templates/AGENTS.md": {
       "owner": "hacf",
-      "sha256": "8a68aa71094af683518381f578d189c95290d466fe0d4501ca759805c81e1b95"
+      "sha256": "f6e5ba7938c233b0e8f19b421e7bda0bc51d80c565a30d87fe7e1a50b6e453a2"
     },
     ".agents/install-templates/CLAUDE.md": {
       "owner": "hacf",
-      "sha256": "b94fb82d5f2aa4678a60dd5d4cbbb74f575c2547139564c1be93fecfdcf78806"
+      "sha256": "d03561436dd6de3bd64da16d704134d8bc229540648530eae815c4231defebe0"
     },
     ".agents/install-templates/GEMINI.md": {
       "owner": "hacf",
-      "sha256": "98410d53b8237bb3a02d10178af080c1a2dd0a9924823625be539a2f298f5c8f"
+      "sha256": "ba5a71cd244718497d40bb24abd837351e27e56eb3c644f29ad02936788b6b6c"
     },
     ".agents/install-templates/claude-settings.fragment.json": {
       "owner": "hacf",
@@ -197,7 +197,7 @@
     },
     ".agents/scripts/hyper_engine.py": {
       "owner": "hacf",
-      "sha256": "2dcf80002dcadcf58a84e0e8919cf2ec57c22e705611722375b335abc790d208"
+      "sha256": "e5810caaa20f30d6b2525bb076b0f2732b893085eb5e96f964cdbf9093814f09"
     },
     ".agents/scripts/hyper_executors.py": {
       "owner": "hacf",
@@ -221,7 +221,7 @@
     },
     ".agents/scripts/hyper_ledger.py": {
       "owner": "hacf",
-      "sha256": "443559a4b3ea91b1bf620d964f63c8f27de3e9d88adf61fe0b68a34af57d67d9"
+      "sha256": "844f47442fd418003dd4eb065e63ca14e18564c0d1786580c11769fff626984e"
     },
     ".agents/scripts/hyper_lore.py": {
       "owner": "hacf",
@@ -229,11 +229,11 @@
     },
     ".agents/scripts/hyper_migrate.py": {
       "owner": "hacf",
-      "sha256": "7a2dc0ae37d155b7e4bb2839aa2850005d7edcbc38eeb4df58c368201b6cb794"
+      "sha256": "66540038912233333679e296c5debbf2403f75951686c86a5a99c5f332f6252e"
     },
     ".agents/scripts/hyper_openrig.py": {
       "owner": "hacf",
-      "sha256": "7986bbc3e937a8e55ada5b3b6d9e7cc7fdbb7c041d3516fae40d11e24edca7e5"
+      "sha256": "36a5d97ff469128465798c73157fd3c4b8e93f91380e173e013b2ef489581c7a"
     },
     ".agents/scripts/hyper_orchestrator.py": {
       "owner": "hacf",
@@ -249,11 +249,11 @@
     },
     ".agents/scripts/hyper_scope.py": {
       "owner": "hacf",
-      "sha256": "9d4e76a180acb7a8c14a68584a972cdee56e88502e29ad2dad20c585e8dc64ad"
+      "sha256": "724e56b2bd02b5407be800d1d69f79b05d409ae61f2edc629dbf72ee787e7ab5"
     },
     ".agents/scripts/hyper_spec.py": {
       "owner": "hacf",
-      "sha256": "766e66f638f56767b3cc243eed43cd84c70683db0cc57687cedaf79e6c689893"
+      "sha256": "cf046b6920b8265740fb1500ecc8a32e8a9de519b53464fab7c62a4b5eaa189c"
     },
     ".agents/scripts/hyper_update_core.py": {
       "owner": "hacf",
@@ -289,7 +289,7 @@
     },
     ".agents/scripts/pre-commit": {
       "owner": "hacf",
-      "sha256": "848840aac42197fd7f900a2a2b1a1c82826640f615532859899a4a2d0b9fce0f"
+      "sha256": "95b4cff29a1957dab13eba03750e4d5d08f9539f8436a2156b9bf9e1876237cc"
     },
     ".agents/scripts/pre-push": {
       "owner": "hacf",
@@ -485,7 +485,7 @@
     },
     ".agents/skills/hyper-resolve/SKILL.md": {
       "owner": "hacf",
-      "sha256": "0d2e88ac91676d21754ab8eecf8cbaa06de2e9d3841e2ecbc3b4d8fc7bd80575"
+      "sha256": "d02f3f31d5377fb4643ce3ac79e8f297292654c571cfcfa2c790c1357bb15285"
     },
     ".agents/skills/hyper-session-update/SKILL.md": {
       "owner": "hacf",
@@ -493,7 +493,7 @@
     },
     ".agents/skills/hyper-sop/SKILL.md": {
       "owner": "hacf",
-      "sha256": "a825cb945bee3f64298b7109410b494b73ef54126b9075f5896306f7c10489a4"
+      "sha256": "597ab81463c80fec1163bba997b201ca8f2b8d2d13d515bef410fd66e945a701"
     },
     ".agents/skills/hyper-status/SKILL.md": {
       "owner": "hacf",
@@ -509,7 +509,7 @@
     },
     ".agents/skills/hyper-troubleshooting/SKILL.md": {
       "owner": "hacf",
-      "sha256": "5c81ff47d1acb645c572408508ae2b582638953c5cf22f481d6369e1a057b094"
+      "sha256": "7713039607a3dd0f622bef8eb4c4477f21308670cbb2ff4006518882ccc30ca8"
     },
     ".agents/skills/hyper-tutorial-audit/SKILL.md": {
       "owner": "hacf",
@@ -681,7 +681,7 @@
     },
     "HACF-uninstall.sh": {
       "owner": "hacf",
-      "sha256": "47d9701eef987f6953152dbb577f4ab829a35bd9635ac5c2ee304f18313c52d7"
+      "sha256": "bd5565df4e817dea84f065ac24e844b1d8d5247dbf13a4573ca41194adec63f6"
     }
   },
   "hooks": {
@@ -698,7 +698,7 @@
       },
       "pre-commit": {
         "path": ".git/hooks/pre-commit",
-        "sha256": "848840aac42197fd7f900a2a2b1a1c82826640f615532859899a4a2d0b9fce0f"
+        "sha256": "95b4cff29a1957dab13eba03750e4d5d08f9539f8436a2156b9bf9e1876237cc"
       },
       "pre-push": {
         "path": ".git/hooks/pre-push",
@@ -710,9 +710,17 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-22T07:30:56+00:00",
-  "installed_commit": "e4da6ef5b726af57c08b08c7bd1988831d6a6282",
-  "mcp_entries": {},
+  "installed_at": "2026-11-23T03:05:03+00:00",
+  "installed_commit": "b01d41b90c8a44e67cfaff67ade843a68e2d8a06",
+  "mcp_entries": {
+    ".mcp.json": {
+      "codebase-memory-mcp": {
+        "args": [],
+        "command": "codebase-memory-mcp",
+        "type": "stdio"
+      }
+    }
+  },
   "settings_rules": {
     "allow": [
       "Bash(gh *)",
@@ -748,8 +756,8 @@
     ]
   },
   "source": {
-    "commit": "e4da6ef5b726af57c08b08c7bd1988831d6a6282",
+    "commit": "b01d41b90c8a44e67cfaff67ade843a68e2d8a06",
     "kind": "local"
   },
-  "version": "0.6.0"
+  "version": "0.6.1"
 }
