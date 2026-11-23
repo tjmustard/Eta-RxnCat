@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: X1-X4 per SPEC; UFF core drift 2.563e-08 A <= 1e-6 (R26); no dihedrals; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
