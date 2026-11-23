@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -64,8 +64,8 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,15 +119,15 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +271,12 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -326,12 +326,12 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -378,12 +378,12 @@ nodes:
   provenance:
     last_slice: 08-e2e5-tiers
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -430,14 +430,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: reviewed; nothing patched
   provenance:
     last_slice: 08-e2e5-tiers
 - id: eta_rxncat_conformers
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -463,7 +463,8 @@ nodes:
     E/Z ignored, R37), conformer_chiral (mirror image farther than the dedup RMSD),
     assign_degeneracy (2 iff both), drop_mirror_partners (lower G stays). ensemble.py:
     build_ensemble via thermo.boltzmann with degeneracies. geometry.py: dihedral_deg
-    for class labels. Tests in tests/unit/conformers.
+    for class labels. Tests in tests/unit/conformers (incl. test_e2e5_smiles_derivation:
+    TJ T1/T2 XYZ re-derive to the input SMILES).
   inputs:
   - data_type: smiles_charge_multiplicity_and_seed_states
     external: eta_rxncat_consumers
@@ -488,14 +489,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
+    summary: patched description
   provenance:
     last_slice: 08-e2e5-tiers
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -522,10 +523,11 @@ nodes:
     row keyed with opt.constraints, no frequency/thermo/ensemble; frozen atoms plus
     dihedrals refused. reaction.py: ReactionSpec (atoms and charge conserved from
     SMILES), reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON
-    schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 E2E on the xtb
-    and uma recipes (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind
-    derived regression (R54), assert_no_duplicate_records, TJ reference transcription
-    (R46); writes tests/candidate_outputs/v0.3.0 (never read back).
+    schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 and TJ T1/T2 (e2e5:
+    XYZ seeds, planar point, ALPB(dioxane), UMA window) E2E on the xtb and uma recipes
+    (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind derived regression
+    (R54), assert_no_duplicate_records, TJ reference transcription (R46); writes tests/candidate_outputs/v0.3.0
+    (never read back).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -562,8 +564,8 @@ nodes:
   - OPR.0.3.0.11
   - OPR.0.3.0.8
   review:
-    reviewed_at: '2026-11-23T08:41:58+00:00'
-    reviewed_by: audit:11-push-rededup
+    reviewed_at: '2026-11-23T09:23:47+00:00'
+    reviewed_by: audit:08-e2e5-tiers
     summary: patched description
   provenance:
     last_slice: 08-e2e5-tiers

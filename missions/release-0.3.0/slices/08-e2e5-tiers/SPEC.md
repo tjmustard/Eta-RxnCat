@@ -2,7 +2,7 @@
 id: OPR.0.3.0.8
 slice: 08-e2e5-tiers
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Land TJ's four XYZ verbatim with provenance, re-derive the T1/T2 SMILES
 depends_on: [OPR.0.3.0.11]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", tests/unit/conformers/test_e2e5_smiles_derivation.py, "tests/candidate_outputs/v0.3.0/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

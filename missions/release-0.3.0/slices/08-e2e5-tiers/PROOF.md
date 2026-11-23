@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: TJ XYZ verified byte-identical; T1/T2 E2E re-run by audit on both recipes (UMA T2 dG_r(1 M) -32.005 inside window); all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
