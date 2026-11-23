@@ -15,13 +15,14 @@
         "-s"
       ],
       "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
         "ETA_RXNCAT_ACCEPTANCE_OUT": "<scratch>/out",
         "ETA_RXNCAT_CANDIDATE_DIR": "<scratch>/cand",
         "ETA_RXNCAT_XTB": "~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-opt"
       },
       "exit_code": 0,
-      "wall_s": 558
+      "wall_s": 661
     },
     {
       "argv": [
@@ -38,15 +39,16 @@
         "-s"
       ],
       "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
         "ETA_RXNCAT_ACCEPTANCE_OUT": "<scratch>/out",
         "ETA_RXNCAT_CANDIDATE_DIR": "<scratch>/cand",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "wall_s": 532
+      "wall_s": 330
     }
   ],
-  "commit_sha": "4403afa7d2d8a6b019c707ad7e2d6af2ff286140",
+  "commit_sha": "0a482044ef9d367093f713edf1a3eca2af81cff2",
   "devices": {
     "uma": "cuda",
     "xtb": "cpu"
@@ -73,6 +75,18 @@
     "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
     "verdict_run": "slice 10, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion (R22)"
   },
+  "fixture_sha256": {
+    "e2e5_smiles.json": "5b889dfb022b5b22a755f114785799c78c255b51d78906afde9538d4dca926b5",
+    "e2e5_t1.uma.json": "2687fb17dfd0927192a8c86320c7438d780129784baf0cfb5f7522c80afe4b6a",
+    "e2e5_t1.xtb.json": "972d7b6ee3ff4462ec4a0cda1b25cf85a1fe6cce75f049b92a2bc42fae2bb7b9",
+    "e2e5_t2.uma.json": "74d689f65f628fc421a7a847b8a6886409e1ac4320e554f69a99d0db58375126",
+    "e2e5_t2.xtb.json": "4598ff660c7b75a682f952d004b1e3a90ae5b3d7930debc36127feaac16b4fa1",
+    "hf1_butane.uma.json": "503aeb55398316f76ef4628115880cdeda69ed1d6098ca61a0af10c32e60d1bc",
+    "hf1_butane.xtb.json": "fac01ca2cf37bc5775660e92ea978e65c2a820222abd49ab35d62fcc7cba7769",
+    "hf2_diels_alder.uma.json": "21e5b38dbf8dac7f4051a7dea167422f381429dc911284d9c6f6d40ac17c8b44",
+    "hf2_diels_alder.xtb.json": "b239073e0edca11f10f07b8ef1b86275be2303f19f3761ba44836a5e929375d9",
+    "reference_values.json": "de0479e7d19111daf54762ac67cdb90bf2db948e544166ecbbfadf11c7ed310f"
+  },
   "fixtures": {
     "e2e5_t1": {
       "uma": {
@@ -86,20 +100,22 @@
           "s-trans": 3
         },
         "device": "cuda",
+        "failed_checks": [],
         "failures": {},
-        "optimizer_steps_total": 1689,
+        "optimizer_steps_total": 1688,
         "ordering_strans_below_scis": true,
         "planar_point": {
-          "dE_planar_scis_strans_kcal_mol": 2.620978421542202,
-          "phi_deg": 0.008082060970748326
+          "dE_planar_scis_strans_kcal_mol": 2.620974847608207,
+          "phi_deg": 0.008010991429883749
         },
         "recovery_steps": {
           "tric": 79
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
-        "smiles_confirmation": "pending_confirmation",
+        "smiles_confirmation": "confirmed",
         "species": {
           "dimethoxybutadiene": {
             "n_kept": 6,
@@ -110,17 +126,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.4553837040439248
+            "wall_time_s": 0.4625379799399525
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 9,
-            "wall_time_s": 9.839092279900797
+            "wall_time_s": 8.07225963822566
           },
           "geometry_opt": {
             "cache_hits": 0,
-            "engine_calls": 1768,
-            "wall_time_s": 123.65822329989169
+            "engine_calls": 1767,
+            "wall_time_s": 88.2765102784615
           },
           "single_point": {
             "cache_hits": 0,
@@ -128,7 +144,18 @@
             "wall_time_s": 0.0
           }
         },
-        "test_outcome": "passed"
+        "test_outcome": "passed",
+        "tier_gates": {
+          "both_classes_kept": {
+            "status": "pass"
+          },
+          "ordering_strans_below_scis": {
+            "status": "pass"
+          },
+          "planar_phi_within_0p1_deg": {
+            "status": "pass"
+          }
+        }
       },
       "xtb": {
         "accuracy": {
@@ -141,6 +168,7 @@
           "s-trans": 2
         },
         "device": "cpu",
+        "failed_checks": [],
         "failures": {},
         "optimizer_steps_total": 1889,
         "ordering_strans_below_scis": true,
@@ -152,9 +180,10 @@
           "tric": 79
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
-        "smiles_confirmation": "pending_confirmation",
+        "smiles_confirmation": "confirmed",
         "species": {
           "dimethoxybutadiene": {
             "n_kept": 5,
@@ -165,17 +194,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.5352689869469032
+            "wall_time_s": 0.5455424309475347
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 5,
-            "wall_time_s": 8.588691620971076
+            "wall_time_s": 8.575450270087458
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 1968,
-            "wall_time_s": 194.40195474703796
+            "wall_time_s": 204.44238655921072
           },
           "single_point": {
             "cache_hits": 0,
@@ -183,7 +212,18 @@
             "wall_time_s": 0.0
           }
         },
-        "test_outcome": "passed"
+        "test_outcome": "passed",
+        "tier_gates": {
+          "both_classes_kept": {
+            "status": "pass"
+          },
+          "ordering_strans_below_scis": {
+            "status": "pass"
+          },
+          "planar_phi_within_0p1_deg": {
+            "status": "pass"
+          }
+        }
       }
     },
     "e2e5_t2": {
@@ -193,8 +233,9 @@
           "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
           "verdict": "reported"
         },
-        "dG_r_1M_kcal_mol": -32.00477389395835,
+        "dG_r_1M_kcal_mol": -32.005368643801944,
         "device": "cuda",
+        "failed_checks": [],
         "failures": {},
         "incremental_solvation": {
           "plain_rerun": {
@@ -207,9 +248,10 @@
           "tric": 7
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
-        "smiles_confirmation": "pending_confirmation",
+        "smiles_confirmation": "confirmed",
         "species": {
           "P1a_n": {
             "n_kept": 1,
@@ -243,17 +285,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.04615988489240408
+            "wall_time_s": 0.04311392188537866
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 3,
-            "wall_time_s": 2.1459655908402056
+            "wall_time_s": 1.7410114000085741
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 58,
-            "wall_time_s": 8.85257947887294
+            "wall_time_s": 5.630743809044361
           },
           "single_point": {
             "cache_hits": 0,
@@ -262,6 +304,17 @@
           }
         },
         "test_outcome": "passed",
+        "tier_gates": {
+          "dG_r_1M_negative": {
+            "status": "pass"
+          },
+          "p1a_n_sigma1_g1": {
+            "status": "pass"
+          },
+          "window_dG_r_1M": {
+            "status": "pass"
+          }
+        },
         "window": {
           "bounds_kcal_mol": [
             -42.0,
@@ -279,6 +332,7 @@
         },
         "dG_r_1M_kcal_mol": -52.35785495937119,
         "device": "cpu",
+        "failed_checks": [],
         "failures": {},
         "incremental_solvation": {
           "alpb_dioxane": {
@@ -317,9 +371,10 @@
           "tric": 7
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
-        "smiles_confirmation": "pending_confirmation",
+        "smiles_confirmation": "confirmed",
         "species": {
           "P1a_n": {
             "n_kept": 1,
@@ -353,17 +408,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.06473767396528274
+            "wall_time_s": 0.06138976803049445
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 3,
-            "wall_time_s": 3.278649538056925
+            "wall_time_s": 3.2147079430287704
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 61,
-            "wall_time_s": 5.852666079765186
+            "wall_time_s": 6.148263714159839
           },
           "single_point": {
             "cache_hits": 0,
@@ -372,6 +427,17 @@
           }
         },
         "test_outcome": "passed",
+        "tier_gates": {
+          "dG_r_1M_negative": {
+            "status": "pass"
+          },
+          "p1a_n_sigma1_g1": {
+            "status": "pass"
+          },
+          "window_dG_r_1M": {
+            "status": "reported"
+          }
+        },
         "window": {
           "bounds_kcal_mol": [
             -42.0,
@@ -387,77 +453,78 @@
         "accuracy": {
           "deltas": [
             {
-              "delta": -0.026511566659874752,
+              "delta": -0.026508799736904898,
               "gated": false,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": 0.5828180228231663,
+              "observed": 0.5828207897461362,
               "quantity": "hf1.dE_gauche_anti",
               "reference_1m": 0.6093295894830411
             },
             {
-              "delta": -0.009307979830364133,
+              "delta": -0.009288375075091282,
               "gated": false,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": 0.6485432883647402,
+              "observed": 0.648562893120013,
               "quantity": "hf1.dH_gauche_anti",
               "reference_1m": 0.6578512681951043
             },
             {
               "bound": 0.5,
-              "delta": 0.008980547739732336,
+              "delta": 0.00911758773208371,
               "gated": true,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": 0.6942502544308666,
+              "observed": 0.694387294423218,
               "quantity": "hf1.dG_gauche_anti",
               "reference_1m": 0.6852697066911343,
               "within_bound": true
             },
             {
-              "delta": -0.35866884143732136,
+              "delta": -0.36413221674020946,
               "gated": false,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": 38.25797053959975,
+              "observed": 38.25250716429686,
               "quantity": "hf1.gauche_population",
               "reference_1m": 38.61663938103707
             },
             {
-              "delta": -0.23834935533640222,
+              "delta": -0.23834658841343237,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": 0.5828180228231663,
+              "observed": 0.5828207897461362,
               "quantity": "hf1.dE_gauche_anti",
               "reference_1m": 0.8211673781595685
             },
             {
-              "delta": -0.22114576850689172,
+              "delta": -0.22112616375161886,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": 0.6485432883647402,
+              "observed": 0.648562893120013,
               "quantity": "hf1.dH_gauche_anti",
               "reference_1m": 0.8696890568716319
             },
             {
-              "delta": -0.20285724093679514,
+              "delta": -0.20272020094444376,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": 0.6942502544308666,
+              "observed": 0.694387294423218,
               "quantity": "hf1.dG_gauche_anti",
               "reference_1m": 0.8971074953676618
             },
             {
-              "delta": 7.702758855514155,
+              "delta": 7.697295480211267,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": 38.25797053959975,
+              "observed": 38.25250716429686,
               "quantity": "hf1.gauche_population",
               "reference_1m": 30.55521168408559
             }
           ],
           "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
           "status_against_tj_values": "pass",
-          "verdict": "pending_reference"
+          "verdict": "pass"
         },
         "device": "cuda",
+        "failed_checks": [],
         "failures": {},
         "optimizer_steps_total": 1371,
         "recovery_steps": {
@@ -465,7 +532,8 @@
           "tric": 84
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
         "species": {
           "n_butane": {
@@ -477,17 +545,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 2.0804995950311422
+            "wall_time_s": 2.0789153228979558
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 5,
-            "wall_time_s": 4.098702675080858
+            "wall_time_s": 3.2911345550091937
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 1455,
-            "wall_time_s": 82.15975366299972
+            "wall_time_s": 39.217244061408564
           },
           "single_point": {
             "cache_hits": 0,
@@ -567,16 +635,18 @@
           ],
           "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
           "status_against_tj_values": "reported",
-          "verdict": "pending_reference"
+          "verdict": "reported"
         },
         "device": "cpu",
+        "failed_checks": [],
         "failures": {},
         "optimizer_steps_total": 1409,
         "recovery_steps": {
           "tric": 82
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
         "species": {
           "n_butane": {
@@ -588,17 +658,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 2.320296201040037
+            "wall_time_s": 2.3257057620212436
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 3,
-            "wall_time_s": 4.191476886044256
+            "wall_time_s": 4.306703270878643
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 1491,
-            "wall_time_s": 139.54267990787048
+            "wall_time_s": 230.788858005777
           },
           "single_point": {
             "cache_hits": 0,
@@ -614,62 +684,63 @@
         "accuracy": {
           "deltas": [
             {
-              "delta": 0.0233204231934252,
+              "delta": 0.023324804156281687,
               "gated": false,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": -47.03176008986631,
+              "observed": -47.031755708903454,
               "quantity": "hf2.dE_r",
               "reference_1m": -47.055080513059735
             },
             {
-              "delta": 0.02084216634056446,
+              "delta": 0.020604072165099296,
               "gated": false,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": -42.69116330927358,
+              "observed": -42.69140140344904,
               "quantity": "hf2.dH_r",
               "reference_1m": -42.71200547561414
             },
             {
               "bound": 2.0,
-              "delta": 0.05641886633809179,
+              "delta": 0.05616253993605369,
               "gated": true,
               "level": "wb97mv_def2tzvpd//b3lyp_631gss",
-              "observed": -30.86577640344985,
+              "observed": -30.866032729851888,
               "quantity": "hf2.dG_r",
               "reference_1m": -30.92219526978794,
               "within_bound": true
             },
             {
-              "delta": -4.377231828651759,
+              "delta": -4.377227447688902,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": -47.03176008986631,
+              "observed": -47.031755708903454,
               "quantity": "hf2.dE_r",
               "reference_1m": -42.65452826121455
             },
             {
-              "delta": -4.37971008550462,
+              "delta": -4.379948179680085,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": -42.69116330927358,
+              "observed": -42.69140140344904,
               "quantity": "hf2.dH_r",
               "reference_1m": -38.31145322376896
             },
             {
-              "delta": -4.344133385507089,
+              "delta": -4.344389711909127,
               "gated": false,
               "level": "b3lyp_631gss",
-              "observed": -30.86577640344985,
+              "observed": -30.866032729851888,
               "quantity": "hf2.dG_r",
               "reference_1m": -26.52164301794276
             }
           ],
           "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
           "status_against_tj_values": "pass",
-          "verdict": "pending_reference"
+          "verdict": "pass"
         },
-        "dG_r_ensemble_minus_lowest_kcal_mol": -0.39578581949819736,
+        "dG_r_ensemble_minus_lowest_kcal_mol": -0.3957839174248079,
         "device": "cuda",
+        "failed_checks": [],
         "failures": {},
         "incremental_solvation": {
           "alpb_toluene": "n/a (UMA has no implicit solvation; dG_solv n/a)",
@@ -686,7 +757,8 @@
           "tric": 100
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
         "species": {
           "butadiene": {
@@ -721,17 +793,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.22928116109687835
+            "wall_time_s": 0.2260303981602192
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 11,
-            "wall_time_s": 7.54118748975452
+            "wall_time_s": 7.263322346145287
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 1408,
-            "wall_time_s": 45.27165978716221
+            "wall_time_s": 39.945547255221754
           },
           "single_point": {
             "cache_hits": 0,
@@ -795,10 +867,11 @@
           ],
           "gating_level": "wb97mv_def2tzvpd//b3lyp_631gss",
           "status_against_tj_values": "reported",
-          "verdict": "pending_reference"
+          "verdict": "reported"
         },
         "dG_r_ensemble_minus_lowest_kcal_mol": -0.3657274111860147,
         "device": "cpu",
+        "failed_checks": [],
         "failures": {},
         "incremental_solvation": {
           "alpb_toluene": {
@@ -825,7 +898,8 @@
           "tric": 98
         },
         "regression": {
-          "status": "pending_promotion"
+          "failures": [],
+          "status": "pass"
         },
         "species": {
           "butadiene": {
@@ -860,17 +934,17 @@
           "conformer_search": {
             "cache_hits": 0,
             "engine_calls": 0,
-            "wall_time_s": 0.25040423090104014
+            "wall_time_s": 0.2544925300171599
           },
           "frequency": {
             "cache_hits": 0,
             "engine_calls": 9,
-            "wall_time_s": 10.82637249713298
+            "wall_time_s": 10.99756563513074
           },
           "geometry_opt": {
             "cache_hits": 0,
             "engine_calls": 1489,
-            "wall_time_s": 149.71950416720938
+            "wall_time_s": 154.70526411628816
           },
           "single_point": {
             "cache_hits": 0,
@@ -886,7 +960,7 @@
     "flags": [],
     "gpu": {
       "compute_capability": "12.0",
-      "free_vram_bytes": 6219825152,
+      "free_vram_bytes": 6256656384,
       "name": "NVIDIA GeForce RTX 5060 Ti",
       "total_vram_bytes": 8073248768,
       "total_vram_gib": 7.52
@@ -911,20 +985,22 @@
   "known_limits": [
     "accuracy compares per-conformer quantities; our G is Grimme quasi-RRHO (ω₀ 100 cm⁻¹), the reference pure RRHO (≤ 0.01 kcal/mol on these Δ values per its README); the ensemble ΔG_r differs from the per-conformer ΔG_r by `dG_r_ensemble_minus_lowest` (reported).",
     "a non-deterministic engine failure stays cached as a completed failure row until `invalidate`; it is not retried under the same key (R50)",
-    "GFN2 (xtb recipe) T2 ΔG_r(1 M) = -52.36 kcal/mol lies outside TJ's window (-42.0, -20.0); reported, not gated (TJ Q-E5 \"C\"); UMA gives -32.00, inside and gated. TJ's escalation rule, verbatim: \"Q5. C, if it turns out MACE, UMA, or OMol25 are needed then they should become standard.\" The default recipe stays GFN2 until TJ decides.",
+    "GFN2 (xtb recipe) T2 ΔG_r(1 M) = -52.36 kcal/mol lies outside TJ's window (-42.0, -20.0); reported, not gated (TJ Q-E5 \"C\"); UMA gives -32.01, inside and gated. TJ's escalation rule, verbatim: \"Q5. C, if it turns out MACE, UMA, or OMol25 are needed then they should become standard.\" The default recipe stays GFN2 until TJ decides.",
     "GFN2 (xtb recipe) hf1_butane vs TJ's ωB97M-V reference values (deltas, kcal/mol or percent; reported, xtb is never gated): hf1.dE_gauche_anti -0.01, hf1.dH_gauche_anti -0.03, hf1.dG_gauche_anti -0.03, hf1.gauche_population +1.22",
     "GFN2 (xtb recipe) hf2_diels_alder vs TJ's ωB97M-V reference values (deltas, kcal/mol or percent; reported, xtb is never gated): hf2.dE_r -20.39, hf2.dH_r -19.82, hf2.dG_r -19.75"
   ],
   "logs": {
     "accept-uma.log (scratch, not committed)": {
       "exit_code": 0,
-      "summary": "5 passed, 56 deselected, 16 warnings in 528.27s; 0 skipped; started 10:22:34Z"
+      "summary": "5 passed, 72 deselected, 16 warnings in 326.55s (0:05:26); 0 skipped; started 14:58:27Z"
     },
     "accept-xtb.log (scratch, not committed)": {
       "exit_code": 0,
-      "summary": "6 passed, 55 deselected in 556.58s; 0 skipped; started 10:10:04Z"
+      "summary": "6 passed, 71 deselected in 660.54s; 0 skipped; started 14:45:16Z"
     }
   },
   "record_schema": 1,
-  "run_at_utc": "2026-11-23T10:31:18+00:00"
+  "run_at_utc": "2026-11-23T15:03:50+00:00",
+  "verdict": "pass",
+  "verdict_reasons": []
 }

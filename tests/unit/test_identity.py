@@ -458,9 +458,15 @@ def test_readme_gpu_claim_matches_record_and_no_pip_licenses() -> None:
     version = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))["project"][
         "version"
     ]
-    record_path = REPO / "docs" / "prd" / f"v{version}" / "GPU_SMOKE_RESULT.json"
+    # the GPU claim follows the newest GPU record at or below this version (v0.3.0 adds none)
+    released = PLAN_VERSIONS[: PLAN_VERSIONS.index(version) + 1]
+    recorded = [
+        v for v in released if (REPO / "docs" / "prd" / f"v{v}" / "GPU_SMOKE_RESULT.json").is_file()
+    ]
+    gpu_version = recorded[-1] if recorded else version
+    record_path = REPO / "docs" / "prd" / f"v{gpu_version}" / "GPU_SMOKE_RESULT.json"
     record = json.loads(record_path.read_text(encoding="utf-8")) if record_path.is_file() else None
-    assert check_gpu_claim(text, record, version) == []
+    assert check_gpu_claim(text, record, gpu_version) == []
     assert "pip-licenses" not in text
     assert "tools/licence_gate.py" in text
 
@@ -538,32 +544,49 @@ V030_RECORD = REPO / "docs" / "prd" / "v0.3.0" / "ACCEPTANCE_RESULT.json"
 V030_FIXTURES = {"hf1_butane", "hf2_diels_alder", "e2e5_t1", "e2e5_t2"}
 
 
-def _v030_ran_everywhere(record: dict[str, Any]) -> bool:
-    """HF1, HF2, T1 and T2 each ran and passed on both recipes."""
-    fixtures = record.get("fixtures", {})
-    return set(fixtures) == V030_FIXTURES and all(
-        set(entries) == {"xtb", "uma"}
-        and all(e.get("test_outcome") == "passed" for e in entries.values())
-        for entries in fixtures.values()
+def _v030_entries(record: dict[str, Any]) -> list[tuple[str, str, dict[str, Any]]]:
+    return [(n, r, e) for n, by in record["fixtures"].items() for r, e in by.items()]
+
+
+def _v030_passed_everywhere(record: dict[str, Any]) -> bool:
+    """Verdict pass; HF1, HF2, T1 and T2 each passed on both recipes and matched the fixtures."""
+    fixtures = record["fixtures"]
+    return (
+        record["verdict"] == "pass"
+        and set(fixtures) == V030_FIXTURES
+        and all(set(by) == {"xtb", "uma"} for by in fixtures.values())
+        and all(
+            e["test_outcome"] == "passed" and e["regression"]["status"] == "pass"
+            for _, _, e in _v030_entries(record)
+        )
     )
 
 
-def _v030_pending(record: dict[str, Any]) -> bool:
-    """Regression, HF accuracy and T1/T2 SMILES all wait on TJ's promotion."""
-    entries = [(n, e) for n, by in record.get("fixtures", {}).items() for e in by.values()]
-    return bool(entries) and all(
-        e["regression"]["status"] == "pending_promotion"
-        and (n.startswith("e2e5") or e["accuracy"]["verdict"] == "pending_reference")
-        and (not n.startswith("e2e5") or e["smiles_confirmation"] == "pending_confirmation")
-        for n, e in entries
+def _v030_uma_accuracy(record: dict[str, Any]) -> bool:
+    """HF1 and HF2: UMA accuracy gated and passed at TJ's gating level; xtb reported."""
+    level = "wb97mv_def2tzvpd//b3lyp_631gss"
+    return all(
+        record["fixtures"][n]["uma"]["accuracy"]["verdict"] == "pass"
+        and record["fixtures"][n]["xtb"]["accuracy"]["verdict"] == "reported"
+        and all(
+            record["fixtures"][n][r]["accuracy"]["gating_level"] == level for r in ("xtb", "uma")
+        )
+        for n in ("hf1_butane", "hf2_diels_alder")
+    )
+
+
+def _v030_smiles_confirmed(record: dict[str, Any]) -> bool:
+    """T1 and T2 SMILES confirmed on both recipes (R58: the promotion)."""
+    return all(
+        e["smiles_confirmation"] == "confirmed"
+        for n, _, e in _v030_entries(record)
+        if n.startswith("e2e5")
     )
 
 
 def _v030_window(record: dict[str, Any]) -> bool:
     """UMA's T2 dG_r(1 M) inside TJ's window (gated); GFN2's outside (reported, not gated)."""
-    t2 = record.get("fixtures", {}).get("e2e5_t2", {})
-    if set(t2) != {"xtb", "uma"}:
-        return False
+    t2 = record["fixtures"]["e2e5_t2"]
     uma, xtb = t2["uma"]["window"], t2["xtb"]["window"]
     return (
         uma["inside"] is True
@@ -576,15 +599,20 @@ def _v030_window(record: dict[str, Any]) -> bool:
 
 V030_CLAIMS = (
     (
-        "shows conformer ensembles, quasi-RRHO 1 M thermochemistry and the cached single-species "
-        "stage runner running end to end on Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with "
-        "both the xtb (GFN2) and UMA recipes.",
-        _v030_ran_everywhere,
+        "passed: conformer ensembles, quasi-RRHO 1 M thermochemistry and the cached single-species "
+        "stage runner ran end to end on Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with both "
+        "the xtb (GFN2) and UMA recipes, and every result matched the fixtures TJ promoted.",
+        _v030_passed_everywhere,
     ),
     (
-        "Regression, reference accuracy and SMILES confirmation are pending TJ's promotion of the "
-        "candidate outputs.",
-        _v030_pending,
+        "With UMA, the n-butane gauche–anti ΔG and the Diels–Alder ΔG_r agree with TJ's "
+        "ωB97M-V/def2-TZVPD//B3LYP/6-31G** reference values within the gated bounds; GFN2's "
+        "deviations are reported, not gated.",
+        _v030_uma_accuracy,
+    ),
+    (
+        "TJ confirmed the derived SMILES of the four Tier 1 and 2 species.",
+        _v030_smiles_confirmed,
     ),
     (
         "UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside "
@@ -603,25 +631,27 @@ def _holds(holds: Any, record: dict[str, Any]) -> bool:
 
 
 def check_v030_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
-    """Each v0.3.0 README claim is present and true of the record; none without a record."""
+    """Each v0.3.0 README claim is present and true of the record; none without a passing record.
+
+    R56: the claims need the record's top-level ``verdict`` present and ``"pass"``; a record
+    without the key (slice 09's pre-promotion record) or with ``fail`` refuses every claim.
+    """
     text = " ".join(readme_text.split())
+    present = [phrase for phrase, _ in V030_CLAIMS if phrase in text]
+    if record is None:
+        return [f"README claims {p[:40]!r}… but there is no v0.3.0 record" for p in present]
+    if record.get("verdict") != "pass":
+        state = "has no verdict" if "verdict" not in record else "verdict is fail"
+        return [f"README claims {p[:40]!r}… but the record {state}" for p in present] or [
+            f"the v0.3.0 record {state}"
+        ]
     problems = []
-    # R56: a merged record carries a top-level verdict; the README makes v0.3.0 claims only on a
-    # pass (a record without the key predates R56: slice 09's pre-promotion record).
-    if record is not None and record.get("verdict", "pass") != "pass":
-        for phrase, _ in V030_CLAIMS:
-            if phrase in text:
-                problems.append(f"README claims {phrase[:40]!r}… but the record's verdict is fail")
     for phrase, holds in V030_CLAIMS:
-        if record is None:
-            if phrase in text:
-                problems.append(f"README claims {phrase[:40]!r}… but there is no v0.3.0 record")
-            continue
         if phrase not in text:
             problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
         elif not _holds(holds, record):
             problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
-    if record is not None and "](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)" not in text:
+    if "](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)" not in text:
         problems.append(
             "record present, but no Markdown link to docs/prd/v0.3.0/ACCEPTANCE_RESULT.json"
         )
@@ -640,11 +670,20 @@ def test_v030_claim_check_catches_drift() -> None:
     flipped = json.loads(json.dumps(record))
     flipped["fixtures"]["e2e5_t2"]["uma"]["window"]["inside"] = False
     assert any("not what the record shows" in p for p in check_v030_claims(readme(), flipped))
-    promoted = json.loads(json.dumps(record))
-    promoted["fixtures"]["hf1_butane"]["uma"]["regression"]["status"] = "pass"
-    assert any("not what the record shows" in p for p in check_v030_claims(readme(), promoted))
+    unconfirmed = json.loads(json.dumps(record))
+    unconfirmed["fixtures"]["e2e5_t1"]["xtb"]["smiles_confirmation"] = "pending_confirmation"
+    assert any("not what the record shows" in p for p in check_v030_claims(readme(), unconfirmed))
     assert check_v030_claims(readme(), None) != []
     assert check_v030_claims("no claims here", None) == []
+
+
+def test_v030_claims_refused_without_verdict() -> None:
+    """R56 / slice 10 req 4: a record with no ``verdict`` key refuses every final claim."""
+    record = json.loads(V030_RECORD.read_text(encoding="utf-8"))
+    record.pop("verdict", None)
+    problems = check_v030_claims(readme(), record)
+    assert problems and all("has no verdict" in p for p in problems)
+    assert len(problems) == len(V030_CLAIMS)
 
 
 def _merged_with(entry_change: Any) -> dict[str, Any]:

@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.2.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.3.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.2.0)](#-features-v020)
+- [✨ Features (v0.3.0)](#-features-v030)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -44,7 +44,7 @@ that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` adds the engi
 energies, forces and Hessians on it. Everything beyond it is listed under [Roadmap](#-roadmap) and
 is not built yet.
 
-## ✨ Features (v0.2.0)
+## ✨ Features (v0.3.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -106,14 +106,17 @@ is not built yet.
   sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the whole process, so keep the `mlip-mace` and
   `mlip-uma` environments separate (they are mutually exclusive extras anyway).
 
-### In acceptance: v0.3.0
+### Conformers, optimisation and ensembles (v0.3.0)
 
 - The v0.3.0 acceptance record
-  ([ACCEPTANCE_RESULT.json](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)) shows conformer ensembles,
-  quasi-RRHO 1 M thermochemistry and the cached single-species stage runner running end to end on
-  Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with both the xtb (GFN2) and UMA recipes.
-- Regression, reference accuracy and SMILES confirmation are pending TJ's promotion of the
-  candidate outputs.
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.3.0/ACCEPTANCE_RESULT.json)) passed: conformer
+  ensembles, quasi-RRHO 1 M thermochemistry and the cached single-species stage runner ran end to
+  end on Human Fixtures 1 and 2 and TJ's Tiers 1 and 2, with both the xtb (GFN2) and UMA recipes,
+  and every result matched the fixtures TJ promoted.
+- With UMA, the n-butane gauche–anti ΔG and the Diels–Alder ΔG_r agree with TJ's
+  ωB97M-V/def2-TZVPD//B3LYP/6-31G** reference values within the gated bounds; GFN2's deviations
+  are reported, not gated.
+- TJ confirmed the derived SMILES of the four Tier 1 and 2 species.
 - UMA's Tier 2 ΔG_r(1 M) lies inside TJ's −42 to −20 kcal/mol window; GFN2's lies outside it and is
   reported, not gated.
 
@@ -250,13 +253,12 @@ behind the `gpu` marker and are skipped by default. Contributor and agent rules 
   store, the hardware probe and the command line.
 - **v0.2.0**: potentials and engines (RDKit force fields, PySCF / GPU4PySCF, xtb as a subprocess,
   MACE, UMA and eSEN).
+- **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles.
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles (in
-  acceptance; the release waits on TJ's review of the candidate outputs).
 - **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
 - **v0.5.0**: transition-state optimisation and an active-core frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.

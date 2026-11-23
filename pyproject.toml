@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eta-rxncat"
-version = "0.2.0"
+version = "0.3.0"
 description = "Permissively licensed computational catalysis and reaction-mechanism workflow library."
 readme = "README.md"
 license = "MIT"
