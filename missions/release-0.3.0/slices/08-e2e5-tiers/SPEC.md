@@ -70,6 +70,10 @@ Context the builder needs:
 - **No duplicate records (mission R53):** the runner re-dedups pushed conformers (slice 11). Call
   `tests/e2e/derived.py: assert_no_duplicate_records` for every T1/T2 species (the diene, Cp,
   cyclopropene, P1a_n) and report per species n_kept and the count of `duplicate_after_push`.
+- **Derived regression (mission R54):** slice 11's `regression.compare` walks the whole `derived`
+  block and fails on a numeric float with no unit on its path. Every numeric T1/T2 derived value
+  needs a unit-suffixed key or parent: `_kcal_mol`, `_hartree` (e.g. the planar point's E, Q5 1e-5
+  Eh) or `_percent`. Counts are ints, labels strings (both exact).
 
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
@@ -176,7 +180,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R53 (replan 4); R50–R52 (replan 3); R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
+- Mission §5 R53, R54 (replan 4); R50–R52 (replan 3); R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
   Q-E2…Q-E5, R1.
 
 ## Intent visual

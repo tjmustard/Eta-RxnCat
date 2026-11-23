@@ -25,8 +25,9 @@ hacf_legacy_order: null
 ## Intent
 
 Make the species runner drop a conformer that the imaginary-mode push moved onto another kept
-conformer (mission R53, superseding R52(1)), prove it with a unit test, and regenerate the Human
-Fixture candidates so the Phase 3 set never contains the double-counted UMA cyclohexene.
+conformer (mission R53, superseding R52(1)), prove it with a unit test, make the regression
+helper check every nested derived value (R54), and regenerate the Human Fixture candidates so the
+Phase 3 set never contains the double-counted UMA cyclohexene.
 
 Context the builder needs:
 - The finding (slice 07 builder, row `qitem-20261123072034-b092d8bb`; numbers from that handoff, the
@@ -113,11 +114,26 @@ measures and reports.
    directory (expected byte-identical). They supersede the files of `32ee699`. Report per
    fixture/recipe/species: n_kept, and the count of `duplicate_after_push`.
 
+6. Regression over the whole `derived` block (mission R54), in `tests/e2e/regression.py`: walk
+   `old["derived"]` and `new["derived"]` recursively (dicts by key, lists by index, same length).
+   A key present on one side only → failure. A leaf's kind comes from the nearest key on its path
+   with a unit suffix: `_kcal_mol` → |Δ| ≤ 0.05 kcal/mol (the Q5 G/ΔG/ΔG_r bound, also the bound
+   the flat check applied before); `_hartree` → |Δ| ≤ 1e-5 Eh; `_percent` → |Δ| ≤ 2.0 (the Q5
+   weight bound ±0.02 expressed in percent; this fixes the flat check, which compared
+   `gauche_population_percent` at 0.05). Non-bool ints (counts, `delta_n`, σ) and bools and
+   strings → exact. A numeric float leaf with no unit suffix on its path → failure
+   `unclassified derived value <path>` (loud, never skipped). No new tolerance. Tests in
+   `tests/e2e/test_e2e_helpers.py` (default suite): a nested `_kcal_mol` change of 0.06 fails and
+   0.04 passes (HF2 `ensemble.dG_1M_kcal_mol` and `incremental_solvation.alpb_toluene.dG_solv_kcal_mol.cyclohexene`);
+   a `_hartree` leaf 2e-5 fails, 5e-6 passes; `_percent` 2.5 fails, 1.5 passes; a changed count,
+   bool or string fails; a key missing on either side fails; a float without a unit fails.
+
 ## 3. Implementation Plan (Task List)
 
 - [ ] Task 1: `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
 - [ ] Task 2: runner change (req 1) + unit tests (req 2).
-- [ ] Task 3: `assert_no_duplicate_records` (req 3) wired into the HF1/HF2 tests.
+- [ ] Task 3: `assert_no_duplicate_records` (req 3) wired into the HF1/HF2 tests; the recursive
+  derived regression (req 6) and its tests.
 - [ ] Task 4: C1 on a clean tree; run HF1 and HF2 on both recipes at C1 (writes candidates with
   `commit_sha = C1`); the cyclohexene characterization (req 4); the transcription entry point.
 - [ ] Task 5: H13 check as slice 07 (`git add -n tests/candidate_outputs/v0.3.0/` succeeds;
@@ -139,6 +155,7 @@ empty) → E2E at C1 writes candidates → C2 candidates only. Verify with `git 
 ## Proof contract
 
 - [ ] Unit tests (req 2) pass in the default suite; slice 06's orchestrator tests pass unchanged.
+- [ ] Req 6 tests pass in the default suite (each pass/fail case named in the output).
 - [ ] `UV_PROJECT_ENVIRONMENT=.venv-accept-opt uv run --no-sync pytest -m "e2e and not mlip_uma"
   tests/e2e -k "hf1 or hf2"` and `UV_PROJECT_ENVIRONMENT=.venv-accept-uma uv run --no-sync pytest
   -m "e2e and mlip_uma" tests/e2e -k "hf1 or hf2"` exit 0 at C1 with 0 skips.
@@ -151,7 +168,7 @@ empty) → E2E at C1 writes candidates → C2 candidates only. Verify with `git 
 
 ## Source material
 
-- Mission §5 R3, R23, R50, R52, R53; ADR-0025 (PROPOSED); slice 06 and 07 specs (context only).
+- Mission §5 R3, R23, R50, R52, R53, R54; ADR-0025 (PROPOSED); slice 06 and 07 specs (context only).
 
 ## Intent visual
 
