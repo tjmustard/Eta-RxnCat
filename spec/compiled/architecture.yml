@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -27,7 +27,7 @@ nodes:
   - tests/unit/test_media.py
   - tests/unit/test_test_policy.py
   description: >-
-    uv-managed MIT package eta-rxncat 0.2.0 (hatchling, src layout, Python >=3.11,<3.14,
+    uv-managed MIT package eta-rxncat 0.3.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf.
     Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
     mlip-uma (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev;
@@ -64,8 +64,8 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,15 +119,15 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +271,12 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -326,12 +326,12 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -378,12 +378,12 @@ nodes:
   provenance:
     last_slice: 10-acceptance-verdict
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -430,14 +430,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
   provenance:
     last_slice: 10-acceptance-verdict
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -489,14 +489,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: reviewed; nothing patched
   provenance:
     last_slice: 10-acceptance-verdict
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -527,7 +527,7 @@ nodes:
     XYZ seeds, planar point, ALPB(dioxane), UMA window) E2E on the xtb and uma recipes
     (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind derived regression
     (R54), assert_no_duplicate_records, TJ reference transcription (R46); writes tests/candidate_outputs/v0.3.0
-    (never read back); acceptance driver and record merge.
+    (never read back); acceptance driver, gated_outcome, merge + verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -567,8 +567,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-23T11:20:11+00:00'
-    reviewed_by: audit:09-acceptance-record
+    reviewed_at: '2026-11-23T17:19:20+00:00'
+    reviewed_by: audit:10-acceptance-verdict
     summary: patched description
   provenance:
     last_slice: 10-acceptance-verdict
