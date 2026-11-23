@@ -1,4 +1,4 @@
-"""Core data contracts, the ReactionGraph loader, PotentialResult and the v0.3.0 records."""
+"""Core data contracts, graph loader, PotentialResult, v0.3.0 records and v0.4.0 graft models."""
 
 from eta_rxncat.core.elements import ATOMIC_NUMBERS, ELEMENT_SYMBOLS
 from eta_rxncat.core.ensemble_models import ConformerEnsemble, ConformerRecord
@@ -12,6 +12,13 @@ from eta_rxncat.core.graph import (
     TemplateGeometry,
 )
 from eta_rxncat.core.io import GraphValidationError, dump_reaction_graph_json, load_reaction_graph
+from eta_rxncat.core.mapping_models import (
+    CloseContact,
+    GraftResult,
+    GraftSpec,
+    JunctionVolume,
+    NonNegativeFiniteFloat,
+)
 from eta_rxncat.core.models import (
     AtomMappingSpec,
     EngineIdentity,
@@ -31,16 +38,21 @@ __all__ = [
     "ATOMIC_NUMBERS",
     "ELEMENT_SYMBOLS",
     "AtomMappingSpec",
+    "CloseContact",
     "Component",
     "ConformerEnsemble",
     "ConformerRecord",
     "Device",
     "EngineIdentity",
     "EngineTag",
+    "GraftResult",
+    "GraftSpec",
     "GraphValidationError",
     "HessianMethod",
+    "JunctionVolume",
     "MolecularState",
     "NodeKind",
+    "NonNegativeFiniteFloat",
     "OptimizationResult",
     "OptimizerIdentity",
     "PotentialResult",

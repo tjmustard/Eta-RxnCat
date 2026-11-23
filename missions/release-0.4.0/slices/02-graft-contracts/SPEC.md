@@ -10,7 +10,7 @@ intent: "Add frozen strict core contracts GraftSpec, GraftResult, CloseContact a
 depends_on: [OPR.0.4.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: [src/eta_rxncat/core/mapping_models.py, src/eta_rxncat/core/__init__.py, "tests/unit/core/**", tests/unit/test_package.py, spec/compiled/architecture.yml]
@@ -197,10 +197,10 @@ Export all of these from `eta_rxncat.core`. `mapping_models.py` imports no numpy
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `core/models.py`, `core/optimization_models.py`, `core/__init__.py`.
-- [ ] Task 2: write the models and exports.
-- [ ] Task 3: write the tests; run the required checks.
-- [ ] Task 4: commit; run the updater. Core already owns `src/eta_rxncat/core/**` and `tests/unit/core/**`; no glob change.
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `core/models.py`, `core/optimization_models.py`, `core/__init__.py`.
+- [x] Task 2: write the models and exports.
+- [x] Task 3: write the tests; run the required checks.
+- [x] Task 4: commit; run the updater. Core already owns `src/eta_rxncat/core/**` and `tests/unit/core/**`; no glob change.
 
 ## 4. The Negative Space (Constraints)
 
