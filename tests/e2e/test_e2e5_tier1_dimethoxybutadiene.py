@@ -9,6 +9,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import (
+    accuracy_block,
+    failures_by_species,
+    smiles_confirmation,
+    species_counts,
+    stage_metrics,
+    write_fragment,
+)
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
 from derived import (
@@ -146,5 +154,22 @@ def test_e2e5_tier1_dimethoxybutadiene(
         f"{derived['population_strans_percent']:.1f}% s-cis-side "
         f"{derived['population_scis_side_percent']:.1f}%; checks "
         f"{payload['checks']['regression']['status']}/{payload['checks']['accuracy']['status']}"
+    )
+    write_fragment(
+        fixture.name,
+        recipe_name,
+        {
+            "device": DEVICES[recipe_name],
+            "species": species_counts(payload["species"]),
+            **stage_metrics([result, planar]),
+            "regression": payload["checks"]["regression"],
+            "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
+            "smiles_confirmation": smiles_confirmation(),
+            "class_counts": derived["class_counts"],
+            "ordering_strans_below_scis": ordering,
+            "planar_point": {"phi_deg": phi, "dE_planar_scis_strans_kcal_mol": de_planar},
+            "failures": failures_by_species(failures),
+            "test_outcome": "passed",
+        },
     )
     assert_checks_pass(payload["checks"])

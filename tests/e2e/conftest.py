@@ -5,6 +5,7 @@ deselects all of them. A missing binary or model skips with the reason, which fa
 run (``ETA_RXNCAT_ACCEPTANCE=1``).
 """
 
+import os
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
@@ -37,9 +38,20 @@ def recipes() -> Callable[[str], Recipe]:
 
 @pytest.fixture
 def candidate_dir() -> Path:
-    """The candidate directory (write only; nothing reads a candidate back)."""
-    CANDIDATES.mkdir(parents=True, exist_ok=True)
-    return CANDIDATES
+    """The candidate directory (write only; nothing reads a candidate back).
+
+    ``ETA_RXNCAT_CANDIDATE_DIR`` redirects it (slice 09: the acceptance-record run writes into
+    scratch and never touches the committed candidates); the default is the repository path.
+    """
+    override = os.environ.get("ETA_RXNCAT_CANDIDATE_DIR")
+    path = Path(override) if override else CANDIDATES
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    """Run the acceptance driver (test_accept_v030.py) after every fixture test it aggregates."""
+    items.sort(key=lambda item: item.path.name == "test_accept_v030.py")
 
 
 @pytest.fixture(scope="session")

@@ -9,6 +9,15 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import (
+    accuracy_block,
+    failures_by_species,
+    smiles_confirmation,
+    species_counts,
+    species_stage_cache,
+    stage_metrics,
+    write_fragment,
+)
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
 from derived import (
@@ -95,6 +104,7 @@ def test_e2e5_tier2_cp_cyclopropene(
                 for s in fixture.species
             }
         upstream = sum(r.metrics.stages[k].engine_calls for r in solv.values() for k in UPSTREAM)
+        cache_runs = list(solv.values())
         alpb_calls = sum(r.metrics.stages["single_point"].engine_calls for r in solv.values())
         cache = {
             kind: {
@@ -141,6 +151,7 @@ def test_e2e5_tier2_cp_cyclopropene(
         calls = sum(r.metrics.engine_calls for r in again.values())
         assert calls == 0
         incremental = {"plain_rerun": {"expected_calls": 0, "observed_calls": calls}}
+        cache_runs = list(again.values())
 
     failures = []
     species = {}
@@ -186,5 +197,30 @@ def test_e2e5_tier2_cp_cyclopropene(
         f"dG_r(1 M) {dg:.3f} kcal/mol; window ({low}, {high}) inside {inside} "
         f"gated {recipe_name == 'uma'} deviation {deviation:.3f}; P1a_n sigma "
         f"{p1.thermo.rotational_symmetry_number} g {p1.degeneracy}; incremental {incremental}"
+    )
+    write_fragment(
+        fixture.name,
+        recipe_name,
+        {
+            "device": DEVICES[recipe_name],
+            "species": species_counts(payload["species"]),
+            **stage_metrics(gas.values()),
+            "regression": payload["checks"]["regression"],
+            "accuracy": accuracy_block(payload["checks"], None, {}, recipe_name),
+            "smiles_confirmation": smiles_confirmation(),
+            "dG_r_1M_kcal_mol": dg,
+            "window": {
+                "bounds_kcal_mol": [low, high],
+                "inside": inside,
+                "gated": recipe_name == "uma",
+            },
+            "incremental_solvation": incremental,
+            "species_stage_cache": {
+                "rerun": "alpb_dioxane" if recipe_name == "xtb" else "plain",
+                **species_stage_cache(cache_runs),
+            },
+            "failures": failures_by_species(failures),
+            "test_outcome": "passed",
+        },
     )
     assert_checks_pass(payload["checks"])

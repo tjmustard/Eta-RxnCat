@@ -10,6 +10,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import (
+    accuracy_block,
+    failures_by_species,
+    species_counts,
+    species_stage_cache,
+    stage_metrics,
+    write_fragment,
+)
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
 from derived import (
@@ -118,6 +126,7 @@ def test_hf2_diels_alder(
     # incremental: xtb ALPB(toluene) per kept record of every species (R13, R27)
     incremental: dict[str, object] = {}
     n_kept = {k: len(v.records) for k, v in ensembles.items()}
+    cache_runs: list[SpeciesResult] = []
     if recipe_name == "xtb":
         solv: dict[str, SpeciesResult] = {}
         with ArtifactStore(store_path) as store:
@@ -126,6 +135,7 @@ def test_hf2_diels_alder(
                     spec, recipe, store, single_points=[SinglePoint(ALPB)]
                 )
         alpb_calls = sum(r.metrics.stages["single_point"].engine_calls for r in solv.values())
+        cache_runs = list(solv.values())
         assert sum(upstream_calls(r) for r in solv.values()) == 0
         assert alpb_calls == sum(n_kept.values())
         solvated = {
@@ -163,6 +173,8 @@ def test_hf2_diels_alder(
             single_points=[SinglePoint(PCM, only_lowest=True, engine_runtime={"device": "cpu"})],
         )
     assert pcm.metrics.stages["single_point"].engine_calls == 1
+    if not cache_runs:
+        cache_runs = [pcm]
     assert upstream_calls(pcm) == 0
     incremental["pcm_toluene_ethylene_lowest"] = {
         "expected_calls": 1,
@@ -211,5 +223,24 @@ def test_hf2_diels_alder(
         f"butadiene classes {classes}; failures {failures}; "
         f"incremental {incremental}; checks {payload['checks']['regression']['status']}/"
         f"{payload['checks']['accuracy']['status']}"
+    )
+    write_fragment(
+        fixture.name,
+        recipe_name,
+        {
+            "device": DEVICES[recipe_name],
+            "species": species_counts(payload["species"]),
+            **stage_metrics(gas.values()),
+            "regression": payload["checks"]["regression"],
+            "accuracy": accuracy_block(payload["checks"], observed, sigmas, recipe_name),
+            "dG_r_ensemble_minus_lowest_kcal_mol": derived["dG_r_ensemble_minus_lowest_kcal_mol"],
+            "incremental_solvation": incremental,
+            "species_stage_cache": {
+                "rerun": "alpb_toluene" if recipe_name == "xtb" else "pcm_ethylene_only",
+                **species_stage_cache(cache_runs),
+            },
+            "failures": failures_by_species(failures),
+            "test_outcome": "passed",
+        },
     )
     assert_checks_pass(payload["checks"])

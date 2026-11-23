@@ -4,6 +4,13 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import (
+    accuracy_block,
+    failures_by_species,
+    species_counts,
+    stage_metrics,
+    write_fragment,
+)
 from candidates import candidate, environment, species_payload
 from checks import assert_checks_pass, checks, write
 from derived import (
@@ -80,5 +87,20 @@ def test_hf1_butane(
         f"failures {failures}; engine calls {result.metrics.engine_calls}; "
         f"checks {payload['checks']['regression']['status']}/"
         f"{payload['checks']['accuracy']['status']}"
+    )
+    write_fragment(
+        fixture.name,
+        recipe_name,
+        {
+            "device": DEVICES[recipe_name],
+            "species": species_counts(payload["species"]),
+            **stage_metrics([result]),
+            "regression": payload["checks"]["regression"],
+            "accuracy": accuracy_block(payload["checks"], observed, sigmas, recipe_name),
+            "failures": failures_by_species(failures),
+            "test_outcome": "passed"
+            if payload["checks"]["accuracy"]["status"] != "fail"
+            else "failed",
+        },
     )
     assert_checks_pass(payload["checks"])

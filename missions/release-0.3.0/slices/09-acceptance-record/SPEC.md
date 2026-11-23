@@ -10,7 +10,7 @@ intent: "Run HF1, HF2, T1 and T2 on both recipes in the named acceptance envs an
 depends_on: [OPR.0.3.0.12]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.3.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -122,7 +122,7 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: env var, driver, merge helper, schema test.
+- [x] Task 1: env var, driver, merge helper, schema test.
 - [ ] Task 2: run both recipes (`ETA_RXNCAT_CANDIDATE_DIR` and `ETA_RXNCAT_ACCEPTANCE_OUT` in
   scratch under TMPDIR) at the code commit; merge into the record; README; derivation tests.
 - [ ] Task 3: commit (record + README + tests); ledger updater; required checks; remove scratch.
