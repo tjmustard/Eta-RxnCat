@@ -91,7 +91,9 @@ Context the builder needs:
    `tools/` or a test helper merges the two recipe files into `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json`
    (`record_schema: 1`): per `fixtures.<fixture>.<recipe>` — per-stage `wall_time_s`,
    `engine_calls`, `cache_hits`; `n_pool`, `n_kept`; `optimizer_steps_total`, `recovery_steps`;
-   `device`; `regression` with deltas; `accuracy`; `smiles_confirmation` (T1/T2); 
+   `device`; `regression` with deltas; `accuracy` = {`verdict` (`pass`|`fail`|`reported`|
+   `pending_reference`), `gating_level: "wb97mv_def2tzvpd//b3lyp_631gss"`, `deltas` per level per
+   quantity (both levels, R43)}; `smiles_confirmation` (T1/T2); 
    `incremental_solvation` (observed vs expected calls); `species_stage_cache` (HF2, T2); plus
    `commit_sha`, `run_at_utc`, `hardware`, `commands`, `logs`, `known_limits`, `evidence`.
 3. A record-schema test (default suite): the committed record parses, has every fixture × recipe,
@@ -127,7 +129,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R4, R11, R22, R26, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
+- Mission §5 R4, R11, R22, R26, R43, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
   `tests/unit/test_identity.py`.
 
 ## Intent visual

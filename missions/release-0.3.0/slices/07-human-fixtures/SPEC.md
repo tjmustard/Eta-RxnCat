@@ -86,12 +86,22 @@ Context the builder needs:
    seed 42) and `tests/e2e/data/hf2_diels_alder.yaml` (butadiene `C=CC=C`, ethylene `C=C`,
    cyclohexene `C1CC=CCC1`, all 0/1; reaction butadiene + ethylene → cyclohexene). A loader in
    `tests/e2e/fixtures.py` validates them.
-2. `tests/e2e/data/reference_values.example.json` + loader `tests/e2e/reference_values.py`:
-   entries `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`, `hf1.dG_gauche_anti`,
-   `hf1.gauche_population`, `hf2.dG_r`, `hf2.dH_r`}, `value`, `unit` (`kcal/mol`|`percent`),
-   `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`), `temperature_k`, `source`, `level_of_theory`;
-   conversion to 1 M (and 1 bar ↔ 1 atm by RT ln 1.01325); `gauche_population` always `reported`.
-   Unit-tested in the default suite.
+2. `tests/e2e/data/reference_values.example.json` + loader `tests/e2e/reference_values.py`
+   (R43: TJ set the reference level — "ωB97M-V/def2-TZVPD//B3LYP/6-31G**: ωB97M-V/def2-TZVPD single
+   points on B3LYP/6-31G** geometries, with B3LYP/6-31G** RRHO thermal corrections. BOTH tables
+   (B3LYP/6-31G** and ωB97M-V) are reported, and ONLY the ωB97M-V table gates." The advisor
+   computes the values; no seat computes or writes `tests/fixtures/v0.3.0/reference_values.json`).
+   Format `schema: 1`, `entries`, each: `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`,
+   `hf1.dG_gauche_anti`, `hf1.gauche_population`, `hf2.dG_r`, `hf2.dH_r`}; `level` ∈
+   {`wb97mv_def2tzvpd//b3lyp_631gss`, `b3lyp_631gss`}; `method` (text); `value`; `unit`
+   (`kcal/mol`|`percent`); `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`); `temperature_k`;
+   `provenance` (text: who computed it, program/version, input/output references); `gate: bool`.
+   Loader rules: `gate: true` allowed only on `wb97mv_def2tzvpd//b3lyp_631gss` (else reject); one
+   entry per (quantity, level) (else reject); conversion to 1 M (and 1 bar ↔ 1 atm by RT ln
+   1.01325); `hf1.gauche_population` is always `reported`, even with `gate: true`. The example file
+   holds one entry per level per quantity with placeholder numbers, every entry marked
+   `"provenance": "EXAMPLE — not a reference"`; the loader refuses any entry with that provenance
+   when it loads `tests/fixtures/v0.3.0/reference_values.json` (tested). Unit-tested in the default suite.
 3. `tests/e2e/conftest.py`: markers `e2e` (new, registered in `pyproject.toml` markers and deselected
    by default addopts) plus `xtb` or `mlip_uma` + `slow`; a `recipes` fixture; a fresh store per test
    under `tmp_path`; the candidate directory `tests/candidate_outputs/v0.3.0/` (write only).
@@ -101,8 +111,10 @@ Context the builder needs:
 5. `tests/e2e/test_hf1_butane.py` (per recipe): run, assert one anti record (σ 2, g 1) and one gauche
    record (σ 2, g 2), lowest record 0 imaginary modes; write `hf1_butane.<recipe>.json` (§5
    candidate schema plus the derived block); then regression if `tests/fixtures/v0.3.0/hf1_butane.<recipe>.json`
-   exists, else record `pending_promotion`; accuracy if `reference_values.json` exists (UMA gated
-   0.5 kcal/mol on the quantity of the same kind; xtb `reported`), else `pending_reference`.
+   exists, else record `pending_promotion`; accuracy if `reference_values.json` exists — UMA gated
+   0.5 kcal/mol against the `gate: true` entry of the same kind; deltas against **every** entry of
+   both levels reported for both recipes; xtb never gated — else `pending_reference`. A quantity
+   with no gating entry is `reported`.
 6. `tests/e2e/test_hf2_diels_alder.py` (per recipe): three species, `ReactionSpec`; ΔE_r, ΔH_r,
    ΔG_r at 1 atm and 1 M with the conversion term; butadiene holds ≥ 1 s-trans and ≥ 1 s-cis-side
    record (atoms 0-1-2-3, |φ| ≤ 90°), cyclohexene g = 2. Incremental rerun into the same store:
@@ -113,7 +125,8 @@ Context the builder needs:
      ethylene's lowest record, CPU device → exactly 1 call, 0 upstream; mechanism only (no ΔG_solv).
    - UMA ΔG_solv is `n/a`.
    - upstream rows keep their keys and `created_at_utc`.
-   Writes `hf2_diels_alder.<recipe>.json`; regression/accuracy as HF1 (UMA ΔG_r(1 M) within 2.0).
+   Writes `hf2_diels_alder.<recipe>.json`; regression/accuracy as HF1 (UMA ΔG_r(1 M) within 2.0 of
+   the `gate: true` entry; both levels reported).
 7. Regression helper (`tests/e2e/regression.py`, unit-tested on synthetic payloads): match records
    by class and RMSD ≤ 0.125 Å with H over automorphisms (proper rotation); unmatched → fail; σ and g
    exact; |ΔE| ≤ 1e-5 Eh; G/ΔG ≤ 0.05 kcal/mol; weights ±0.02; same device required.
@@ -165,7 +178,7 @@ with `commit_sha = C1`; (3) commit C2 containing only `tests/candidate_outputs/v
 
 ## Source material
 
-- Mission §5 R6, R10, R13, R18, R20, R23, R27, "Human fixture inputs", "Test tiers and tolerances",
+- Mission §5 R6, R10, R13, R18, R20, R23, R27, R43, "Human fixture inputs", "Test tiers and tolerances",
   "Contracts" (candidate output, reference values); TJ Q1, Q2, Q5, R1, R2.
 
 ## Intent visual

@@ -113,6 +113,14 @@ Context the builder needs:
      append `imag_mode_push` to `recovery_steps`, new frequency row; still imaginary → drop
      `not_a_minimum`.
    - Degeneracy, mirror-partner drop, `build_ensemble`.
+   - `run_constrained_point(spec, recipe, store, start_state, *, frozen_atom_indices=(),
+     dihedral_constraints=()) -> ConstrainedPoint(state, energy_hartree, optimization, cache_hit)`
+     (R42; used by slice 08 for T1's planar s-cis point): one `geometry_opt` row keyed on
+     `start_state` with the usual engine and `opt.` options **plus `opt.constraints`** = the
+     optimizer's `constraints_text(...)` (present only when constrained, so unconstrained keys are
+     unchanged); payload as other `geometry_opt` rows. No frequency, no thermo, no G, never an
+     ensemble record (a constrained geometry is stationary only within the constraint). Counted and
+     metered like any stage (`engine_calls`, `cache_hits` under `geometry_opt`).
    - Drop rule: drop a conformer (with reason) on `OptimizationFailedError`, `ScfConvergenceError`
      or `NotAMinimumError` after the push; `EngineUnavailableError`, `EngineInputError`,
      `EngineRuntimeError`, `OptimizerInputError` propagate. All dropped → `EnsembleEmptyError`.
@@ -158,6 +166,9 @@ Context the builder needs:
   `not_a_minimum`; all dropped → `EnsembleEmptyError` carrying each reason.
 - [ ] `EngineInputError` from the fake engine propagates out of `run_species`.
 - [ ] `energy_source="single_point"` with an SP on a different geometry → `ThermoInputError`.
+- [ ] `run_constrained_point` on butane (`rdkit_ff`/uff) with `DihedralConstraint((0, 1, 2, 3),
+  0.0)`: |φ| ≤ 0.1°; its key differs from the unconstrained `geometry_opt` key of the same start;
+  a rerun is a cache hit with 0 engine calls; no frequency row is created for it.
 - [ ] `ReactionSpec` rejects a non-conserving reaction; Δn = −1 gives ΔG(1 M) − ΔG(1 atm) =
   −1.8943 kcal/mol ± 1e-4 at 298.15 K.
 - [ ] `write_report` output re-parses to equal floats exactly and is byte-identical across two
@@ -166,7 +177,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R7, R15, R18, R35, "Contracts" (stage keys, `ReactionSpec`, candidate output);
+- Mission §5 R7, R15, R18, R35, R42, "Contracts" (stage keys, `ReactionSpec`, candidate output);
   ADR-0001, ADR-0002, ADR-0016; `src/eta_rxncat/store/`.
 
 ## Intent visual

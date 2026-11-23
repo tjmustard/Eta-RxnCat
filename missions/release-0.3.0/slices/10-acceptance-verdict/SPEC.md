@@ -39,9 +39,12 @@ Context the builder needs:
   before this one; do not edit inputs here.
 - Q5 "A" bounds (both recipes, fresh store, same device): class of the lowest record exact; σ and g
   of every matched record exact; |ΔE| ≤ 1e-5 Eh; G/ΔG/ΔG_r ≤ 0.05 kcal/mol; weights ±0.02; records
-  matched by class and RMSD ≤ 0.125 Å with H (unmatched → fail). Accuracy: UMA HF1 within 0.5 of
-  TJ's same-kind value, HF2 ΔG_r(1 M) within 2.0; xtb `reported`; a quantity TJ omitted `reported`;
-  `hf1.gauche_population` always `reported`.
+  matched by class and RMSD ≤ 0.125 Å with H (unmatched → fail); T1's planar point E within 1e-5
+  Eh. Accuracy (R43, TJ's reference level ωB97M-V/def2-TZVPD//B3LYP/6-31G**): UMA HF1 within 0.5
+  of the `gate: true` same-kind value, HF2 ΔG_r(1 M) within 2.0 of it; deltas against both tables
+  (ωB97M-V and B3LYP/6-31G**) reported for both recipes; xtb `reported`; a quantity with no gating
+  entry `reported`; `hf1.gauche_population` always `reported`. The reference file is the
+  advisor's values placed by TJ; it is read, never edited.
 - R26: any gated check that fails, fails this slice; the result goes to the lead (who raises it to
   TJ). `known_limits` holds only reported deviations and the Q-E5 escalation proposal.
 - Fixtures under `tests/fixtures/` are TJ's and may be read; candidates may not.
@@ -91,7 +94,8 @@ Context the builder needs:
    with zero skips, zero `pending_*`.
 3. `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json` rewritten from this run: every regression `pass`,
    accuracy `pass` (UMA) or `reported` (xtb), `smiles_confirmation: confirmed`, T1/T2 tier gates
-   `pass`, metrics per stage, devices, the fixture sha256s it compared against.
+   `pass`, metrics per stage, devices, the fixture sha256s it compared against, and `accuracy`
+   per fixture with `gating_level` and both levels' deltas.
 4. Version 0.3.0 (where v0.2.0 set its version) and README v0.3.0 claims derived from the record;
    derivation tests updated.
 
@@ -118,7 +122,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R10, R18, R22, R26, "Test tiers and tolerances"; TJ Q5, Q-E5.
+- Mission §5 R10, R18, R22, R26, R42, R43, "Test tiers and tolerances"; TJ Q5, Q-E5.
 
 ## Intent visual
 

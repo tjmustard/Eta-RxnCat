@@ -68,9 +68,14 @@ search can be copy left. Because they can be replaced with a new engine later. B
 remains." (14:59Z) "It's fine that the engine MACE pulls in ASE just not the core."
 
 Open with TJ (not decided here): the reference values (`qitem-20261123015428-cc83f02a1853ab80`,
-needed before slice 10); confirmation of the four derived SMILES (at Phase 3 promotion); F32, which
-s-cis TJ's T1 2.2 kcal/mol means (`qitem-20261123032327-833f8c98768fa58f`, unanswered at compile:
-default C, "class comparison, geometry unspecified", reported only).
+needed before slice 10; TJ asked the advisor to compute them, R43); confirmation of the four
+derived SMILES (at Phase 3 promotion). F32 is answered (R42): TJ "A the planar geometry"
+(`qitem-20261123032327-833f8c98768fa58f`).
+
+Replan 1 (2026-11-23, R42–R45): TJ's F32 answer (planar s-cis), TJ's reference level for the UMA
+accuracy gate (ωB97M-V/def2-TZVPD//B3LYP/6-31G**), and two geomeTRIC API corrections found while
+verifying the dihedral constraint. Slices 01 (executed), 02 and 03 are unchanged; see "Seed
+deviations".
 
 ## 1. Introduction & Goals
 
@@ -130,7 +135,8 @@ What keeps it from 10, and the questions that would make it 10:
 2. **UMA on T2's window and on T1's s-cis-side survival is unmeasured** (needs the uma env and the
    pipeline). Both are stop-and-report host facts (H14, and the T2 UMA run in slice 08): a miss is a
    finding to the lead, never a widened bound. No spec text changes on either outcome.
-3. **F32** (open; default C applied). Changing the answer changes one data field, not code.
+3. **F32** answered by TJ (R42): the planar s-cis point is a dihedral-constrained optimization,
+   verified on geomeTRIC 1.1.1 by resolve (H15); reported only.
 
 ## 3. Scope
 
@@ -184,7 +190,7 @@ What keeps it from 10, and the questions that would make it 10:
 | US-012 | As TJ, I want HF2 (Diels–Alder, 1 M) on both recipes with an incremental-solvation stage. | ΔE_r, ΔH_r, ΔG_r at 1 atm and 1 M; xtb: ALPB(toluene, `alpb_state: gsolv`) single point per kept record, ΔG_solv per species and the solvated ΔG_r(1 M); both recipes: one PySCF PCM(toluene, C-PCM) single point on ethylene's lowest record as a mechanism check (1 call, 0 upstream, no ΔG_solv); UMA ΔG_solv `n/a`. Slice 07. | P0 |
 | US-013 | As TJ, I want an acceptance record with benchmark metrics. | `docs/prd/v0.3.0/ACCEPTANCE_RESULT.json` per fixture and recipe: per-stage wall time, engine calls, cache hits; conformer counts; optimizer and recovery steps; regression/accuracy verdicts (`pending_*` allowed in slice 09); device; commit; environment. README claims derived from it (tested). Slices 09, 10. | P0 |
 | US-014 | As the licence owner, I want the gate to follow geomeTRIC's new place. | `--profile base` passes with no geomeTRIC exemption; new `--profile opt-geometric` passes with the pinned exemption; `gpu`, `mlip-mace`, `mlip-uma` keep it (pulled in by `gpu4pyscf-cuda12x` because CI syncs those profiles with `--extra gpu`); a stale exemption still fails; CI gains the profile. Slice 04. | P0 |
-| US-015 | As TJ, I want Tier 1 (1,3-dimethoxybutadiene) on both recipes. | `e2e5_t1.<recipe>.json`. Gated on both: ≥ 2 kept records; lowest record 0 imaginary modes; weights sum to 1 within 1e-12; G_BA ≤ G_lowest; ≥ 1 kept s-trans and ≥ 1 kept s-cis-side record; lowest s-trans G below lowest s-cis-side G. Reported: ΔE(s-cis-side − s-trans) vs 2.2 kcal/mol, labelled per F32. Slice 08. | P0 |
+| US-015 | As TJ, I want Tier 1 (1,3-dimethoxybutadiene) on both recipes. | `e2e5_t1.<recipe>.json`. Gated on both: ≥ 2 kept records; lowest record 0 imaginary modes; weights sum to 1 within 1e-12; G_BA ≤ G_lowest; ≥ 1 kept s-trans and ≥ 1 kept s-cis-side record; lowest s-trans G below lowest s-cis-side G. Reported (R42): ΔE_planar = E(planar s-cis, diene dihedral constrained to 0°) − E(lowest s-trans record) vs the literature 2.2 kcal/mol, and ΔE/ΔG(s-cis-side − s-trans) per conformer. Slice 08. | P0 |
 | US-016 | As TJ, I want Tier 2 (Cp + cyclopropene → endo P1a_n) on both recipes with an incremental ALPB(dioxane) stage. | `e2e5_t2.<recipe>.json`. Gated on both: atoms and charge conserved; ΔG_rxn(1 M) < 0; every species' lowest record 0 imaginary modes; P1a_n σ = 1, g = 1. UMA only: −42 < ΔG_rxn(1 M) < −20. xtb: rerun with ALPB(dioxane, gsolv) → 0 upstream calls, upstream stages served for 3 of 3 species, solvation stage missing for 3 of 3 with exactly Σ n_kept calls, every species has a finite ΔG_solv, solvated ΔG_rxn(1 M) ≠ gas ΔG_rxn(1 M). UMA: plain rerun → 0 calls. Slice 08. | P0 |
 | US-017 | As TJ, I want the SMILES derived from my XYZ shown to me before they count. | A tier-D test re-derives each SMILES from TJ's XYZ and asserts molecule equality with the input (both canonicalised by the running RDKit); derived SMILES go to `e2e5_smiles.json`; once TJ's promoted `tests/fixtures/v0.3.0/e2e5_smiles.json` exists, input equals it as molecules; under `ETA_RXNCAT_ACCEPTANCE=1` an absent confirmation fails (`pending_confirmation`). Slices 08, 10. | P0 |
 
@@ -229,7 +235,7 @@ owed for one. Part A/B are red-team rev 1 (F1–F20); Part D is the rev-2 delta 
 | R29 | F29 ledger double-maps; H13 placement | low | resolved | Inputs under `tests/e2e/data/**` (species runner). The species-runner node owns `tests/candidate_outputs/v0.3.0/**` (path mapping only; no seat reads them). H13 runs in slice 07, the first slice that commits candidates. |
 | R30 | F30 SMILES compared as strings | low | resolved | Compare molecules: `Chem.MolToSmiles(Chem.MolFromSmiles(s))` of both sides with the running RDKit must be equal. Slices 08, 10. |
 | R31 | F31 running TJ's builder is unnecessary | low | resolved | Extract the `XYZ_FILES` literal from `~/.hacf/eta-rxncat-hacf/incoming/e2e-5tier-20261123/Eta-RxnCat_5-Tier_E2E_Bundle_Zip_Builder.py` with `ast.parse` + `ast.literal_eval` (no execution), write the four files UTF-8, check each full sha256 against the prefixes below, and record that the builder's sha256 matches TJ's `MANIFEST.sha256` in the same directory. Slice 08. |
-| R32 | F32 T1 dihedral atoms unnamed; which s-cis the 2.2 kcal/mol means | low | resolved (atoms) / TJ open (meaning) | Dihedral = SMILES atoms 0-1-2-3 of `C=C(/C=C/OC)OC` (H added after, so the indices hold). Meaning: TJ row `833f8c98…` unanswered at compile → option C: `literature.label: "class comparison, geometry unspecified"`, reported only. The label is a field in `tests/e2e/data/e2e5/t1_dimethoxybutadiene.yaml`, read by the test, so a TJ answer changes data, not code. |
+| R32 | F32 T1 dihedral atoms unnamed; which s-cis the 2.2 kcal/mol means | low | resolved (atoms) / TJ open (meaning) | Dihedral = SMILES atoms 0-1-2-3 of `C=C(/C=C/OC)OC` (H added after, so the indices hold). Meaning: superseded by R42 (TJ "A the planar geometry"). The label stays a data field (`literature.label` in `tests/e2e/data/e2e5/t1_dimethoxybutadiene.yaml`), now `"planar s-cis (diene dihedral constrained to 0°)"`. |
 | R33 | Part B §1: G5 holds only in base (geomeTRIC transitive in gpu/mlip) | — | resolved | Stated in G5; no test asserts `OptimizerUnavailableError` outside base. |
 | R34 | Part B §4: US-005 "5/2 RT" ambiguous | — | resolved | Means E_trans + E_rot for a linear molecule. |
 | R35 | Part B §5.1: D7 single-point geometry not validated | — | resolved | `energy_source: "single_point"` requires the SP's input geometry hash (store `geometry_payload`) to equal the frequency stage's; else `ThermoInputError`. Slice 06. |
@@ -239,6 +245,27 @@ owed for one. Part A/B are red-team rev 1 (F1–F20); Part D is the rev-2 delta 
 | R39 | Part B §5.7: UMA device nondeterminism | — | resolved | `device` recorded per run; regression only compares runs on the same device; the record states it. |
 | R40 | Part B §7/§8: named envs and commands; tier-D time command | — | resolved | §8 names them. |
 | R41 | Lead: code graph | — | resolved | Every slice starts with `python3 .agents/scripts/hyper_codegraph.py index`, which must print `index: ok`; the audit treats `code_graph.status != ok` as a finding. The graph only widens the blast radius. |
+| R42 | Replan 1: TJ's F32 answer, verbatim "A the planar geometry" (operator 03:48Z, row `qitem-20261123032327-833f8c98768fa58f`) | — | resolved (TJ A) | TJ's T1 2.2 kcal/mol (Liu 2013 SI p. S6) is s-trans → **planar** s-cis. Quantity `dE_planar_scis_strans` = E(planar s-cis point) − E(lowest s-trans kept record), electronic energies on the recipe engine, kcal/mol; **reported only, both recipes**, beside the literature 2.2 (label `"planar s-cis (diene dihedral constrained to 0°)"`). The planar point: start from the lowest-G kept s-cis-side record (its methoxy rotamers already relaxed), optimize with the diene dihedral SMILES atoms 0-1-2-3 of `C=C(/C=C/OC)OC` **set to 0.0°** (geomeTRIC `$set dihedral 1 2 3 4 0.0`, 1-based), converged when \|φ\| ≤ 0.1°. It is a stationary point only within the constraint, so it gets **no Hessian, no frequencies, no thermo, no G**, and it is not an ensemble record. Regression: its E within 1e-5 Eh of the promoted value (Q5 "A" ΔE bound). Ownership: the constraint API belongs to the `Optimizer` interface (slice 04, the earliest unfinished slice that must own it); the cached constrained-point stage belongs to the runner (slice 06); the T1 computation and report to slice 08. No core contract changes (the constraint is recorded in `OptimizationResult.options["constraints"]`, an existing `dict[str, ScalarValue]`), so slices 02 and 03 are untouched. |
+| R43 | Replan 1: TJ's reference level for the UMA accuracy gate (lead addendum 03:49Z, TJ via the advisor, relayed by the operator 03:48Z) | — | resolved (TJ) | Quoted: "the reference level for the v0.3.0 UMA accuracy gate (Q5 A: butane gauche−anti within 0.5 kcal/mol, Diels–Alder ΔG within 2.0) is now ωB97M-V/def2-TZVPD//B3LYP/6-31G**: ωB97M-V/def2-TZVPD single points on B3LYP/6-31G** geometries, with B3LYP/6-31G** RRHO thermal corrections. BOTH tables (B3LYP/6-31G** and ωB97M-V) are reported, and ONLY the ωB97M-V table gates." `reference_values.json` holds both levels per quantity, each entry with `level`, `method`, `standard_state`, `temperature_k`, `provenance` and `gate` (true only for the ωB97M-V level; the loader rejects `gate: true` on any other level and duplicate (quantity, level) pairs). Accuracy: UMA is gated against the `gate: true` entries with the unchanged bounds; every entry of both levels is reported as a delta for both recipes. The advisor computes the values (row `cc83f02a…`); no seat computes them. Slices 07 (format, example, loader, accuracy helper), 09 (record per level), 10 (verdict). |
+| R44 | Replan 1: R2's API names were wrong | — | resolved | `CoordSysDict` is a local inside `geometric.optimize.run_optimizer` (`optimize.py:1259`), not a module export (import fails, resolve measured). `GeometricOptimizer` builds its own table from `geometric.internal`: `tric` → (`DelocalizedInternalCoordinates`, connect False, addcart False), `cart` → (`CartesianCoordinates`, False, False), `dlc` → (`DelocalizedInternalCoordinates`, True, False), `hdlc` → (`DelocalizedInternalCoordinates`, False, True), copied from that line range. `parse_constraints` comes from `geometric.prepare`. Slice 04. |
+| R45 | Replan 1: Cartesian coordinates refuse constraints | — | resolved | geomeTRIC 1.1.1 raises `RuntimeError("Do not use constraints with Cartesian coordinates")` when any constraint is given with `cart` (resolve measured). The compiled ladder's step 3 (`cartesian`) would therefore crash for every constrained run, including `frozen_atom_indices`. For a run with any constraint (frozen atoms or dihedrals), ladder step 3 is `hdlc` (trust 0.05) instead, recorded by the name `hdlc`; unconstrained runs keep `cartesian`. Whether `hdlc` accepts both constraint kinds is H15; if it does not, the constrained ladder is the first two steps only, and exhausting them raises `OptimizationFailedError`. The `RuntimeError` is never caught generically. Slice 04. |
+
+### Seed deviations
+
+Changes to slice specs after their first compile (replan mode; finished slices are never edited).
+
+| Replan | Slice | Change | Rows |
+|---|---|---|---|
+| 1 | 01-starter | none (executed; context only) | — |
+| 1 | 02-core-contracts | none | — |
+| 1 | 03-thermo | none | — |
+| 1 | 04-optimizer | `dihedral_constraints` on `Optimizer.minimize`; `DihedralConstraint`; own coordinate-system table (no `CoordSysDict` import); constrained ladder step 3 `hdlc`; H15; `opt.constraints` in `OptimizationResult.options` | R42, R44, R45 |
+| 1 | 05-conformers | none | — |
+| 1 | 06-species-runner | `run_constrained_point` (cached `geometry_opt` row keyed with `opt.constraints`; no frequency/thermo) | R42 |
+| 1 | 07-human-fixtures | reference-values format with both levels, `gate`, `provenance`; accuracy helper gates on `gate: true` and reports both tables | R43 |
+| 1 | 08-e2e5-tiers | F32 block → TJ A; T1 computes and reports `dE_planar_scis_strans`; label data field; regression of the planar E | R42 |
+| 1 | 09-acceptance-record | `accuracy` recorded per level with the gating level named | R43 |
+| 1 | 10-acceptance-verdict | precondition and accuracy verdict against the `gate: true` entries; both tables in the record | R43 |
 
 ### Host facts and stop-and-report steps
 
@@ -252,7 +279,7 @@ slice and is reported with the output; it is never worked around.
 | H3 | RDKit `pruneRmsThresh` 0.5 merges butane g⁺/g⁻ (the threshold, not reflection) | verified | 05 |
 | H4 | ETKDGv3, fixed seed, `numThreads=1`: bit-reproducible, both passes | verified (red team pass 1; resolve pass 2 dihedrals) | 05 |
 | H5 | Low-frequency/G noise across distinct converged geometries (R10) | to measure | 07 |
-| H6 | geomeTRIC 1.1.1 lower-level API: `OptParams` kwargs, `CoordSysDict`, `Optimizer`, convergence sets exactly `GAU`, `NWCHEM_LOOSE`, `GAU_LOOSE`, `TURBOMOLE`, `INTERFRAG_TIGHT`, `GAU_TIGHT`, `GAU_VERYTIGHT`; failure types `GeomOptNotConvergedError`, `GeomOptStructureError`; what maxiter raises; `$freeze` via `parse_constraints`; `hessian` values | partly verified | 04 |
+| H6 | geomeTRIC 1.1.1 lower-level API: `OptParams` kwargs, the coordinate-system table (R44), `Optimizer`, convergence sets exactly `GAU`, `NWCHEM_LOOSE`, `GAU_LOOSE`, `TURBOMOLE`, `INTERFRAG_TIGHT`, `GAU_TIGHT`, `GAU_VERYTIGHT`; failure types `GeomOptNotConvergedError`, `GeomOptStructureError`; what maxiter raises; `$freeze` via `parse_constraints`; `hessian` values | partly verified | 04 |
 | H7 | xtb 6.8.0 deterministic energies | verified (red team) | — |
 | H8 | `pbe0` (libxc, PySCF 2.15.1) and `def2-svp` accepted; `--alpb toluene` | toluene verified; rest to run | 07 |
 | H9 | RDKit masses Z 1–118 | verified (red team) | 03 |
@@ -261,6 +288,7 @@ slice and is reported with the output; it is never worked around.
 | H12 | GFN2 lowest s-trans T1 below lowest s-cis-side | **verified by resolve** (+1.69 kcal/mol ΔE, xtb CLI); re-measure independently | 05 |
 | H13 | pathspec exclusion hides candidates; `git add`/`commit` allowed (R23) | to verify | 07 |
 | H14 | The s-cis-side class survives optimization on UMA for butadiene and T1 (a pass-2 embedding optimized by `GeometricOptimizer` on `uma_direct`) | to measure | 05 (uma env) |
+| H15 | geomeTRIC 1.1.1 dihedral constraint via the lower-level API: `parse_constraints(M, "$set\ndihedral 1 2 3 4 0.0\n")` then `DelocalizedInternalCoordinates(M, build=True, connect=False, addcart=False, constraints=Cons, cvals=CVals[0])` and `Optimizer(...).optimizeGeometry()` | **TRIC verified by resolve** (UFF, T1 SMILES, seed 42: φ → −0.0068° in 47 steps); `cart` refuses constraints (R45); `hdlc` with `$set dihedral` and with `$freeze xyz` to verify | 04 |
 
 ### Blast radius
 
@@ -355,7 +383,11 @@ multiplicity; every `thermo.config.temperature_k == temperature_k`.
 
 **`Optimizer` interface (optimize/base.py):** `identity` property; `OPTIONS: ClassVar[Mapping[str,
 OptionSpec]]` (reuse `engines.options.OptionSpec`, ADR-0016 resolution); `minimize(state, engine,
-*, frozen_atom_indices=(), options=None) -> OptimizationResult`. Errors: `OptimizerError` →
+*, frozen_atom_indices=(), dihedral_constraints=(), options=None) -> OptimizationResult`, where
+`DihedralConstraint(atoms: tuple[int, int, int, int], value_deg: float)` (frozen, in
+`optimize/base.py`, not core; four distinct in-range 0-based indices, finite value in (−180, 180];
+geomeTRIC `$set dihedral` with 1-based indices; converged only when every constrained dihedral is
+within 0.1° of its value, else `OptimizationFailedError`). Errors: `OptimizerError` →
 `OptimizerUnavailableError` (names `uv sync --extra opt-geometric`), `OptimizerInputError`
 (unknown/mistyped option, frozen indices out of range, empty/mismatched state),
 `OptimizationFailedError` (`steps: tuple[str, ...]`, `last_energy_hartree`). `EngineError` raised
@@ -378,7 +410,9 @@ dropped; each reason). No function returns its input as a fallback.
 `conformer_search`: recipe engine tag/method; `options` = resolved conformer options ∪ `{smiles:
 canonical isomeric, rdkit_version, seed_geometries_sha256}`; geometry = pass-1 embedding 0.
 `geometry_opt`: resolved engine options ∪ resolved optimizer options prefixed `opt.` ∪ `opt.name`,
-`opt.version`; the engine is built from the stage without the `opt.` keys. `frequency`,
+`opt.version`, plus `opt.constraints` only when the run is constrained (canonical text
+`dihedral:i,j,k,l:<value %.6f>` per constraint, sorted, joined by `;`; frozen atoms as
+`freeze:<sorted indices>`); the engine is built from the stage without the `opt.` keys. `frequency`,
 `single_point`: the engine stage, geometry = the optimized state. Byte-identical across runs
 (tested).
 
@@ -404,13 +438,18 @@ metrics live in the acceptance record.
 `incremental_solvation` (observed vs expected calls); `species_stage_cache` (T2, HF2). `pending_*`
 are allowed in slice 09; slice 10 runs with `ETA_RXNCAT_ACCEPTANCE=1`, where they fail.
 
-**Reference values (`tests/fixtures/v0.3.0/reference_values.json`, TJ only):** the team writes the
-format and `tests/e2e/data/reference_values.example.json`. Entries: `quantity` ∈
-{`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`, `hf1.dG_gauche_anti` (per conformer), 
-`hf1.gauche_population` (reported only), `hf2.dG_r`, `hf2.dH_r`}, `value`, `unit` (`kcal/mol`|
-`percent`), `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`), `temperature_k`, `source`,
-`level_of_theory`. The loader converts to 1 M (1 bar ↔ 1 atm by RT ln 1.01325). A quantity TJ
-omits is `reported`.
+**Reference values (`tests/fixtures/v0.3.0/reference_values.json`; values computed by the advisor
+at TJ's request, R43, placed in `tests/fixtures/` by TJ; no seat computes or writes them):** the
+team writes the format and `tests/e2e/data/reference_values.example.json`. `schema: 1`, `entries`:
+each has `quantity` ∈ {`hf1.dE_gauche_anti`, `hf1.dH_gauche_anti`, `hf1.dG_gauche_anti` (per
+conformer), `hf1.gauche_population` (reported only), `hf2.dG_r`, `hf2.dH_r`}; `level` ∈
+{`wb97mv_def2tzvpd//b3lyp_631gss`, `b3lyp_631gss`}; `method` (free text, e.g. "ωB97M-V/def2-TZVPD
+single points on B3LYP/6-31G** geometries, B3LYP/6-31G** RRHO thermal corrections"); `value`;
+`unit` (`kcal/mol`|`percent`); `standard_state` (`1 atm`|`1 bar`|`1 M`|`n/a`); `temperature_k`;
+`provenance` (who computed it, program and version, input/output references); `gate: bool`.
+Loader rules: `gate: true` only on the `wb97mv_def2tzvpd//b3lyp_631gss` level, else rejected; one
+entry per (quantity, level); values converted to 1 M (1 bar ↔ 1 atm by RT ln 1.01325). A quantity
+with no `gate: true` entry is `reported`.
 
 ### Algorithms (normative where a test depends on them)
 
@@ -470,8 +509,11 @@ omits is `reported`.
   exact (HF1 torsion class; T1 diene class; other species by RMSD ≤ 0.125 Å with H); σ and g of
   every matched record exact; \|ΔE\| ≤ 1e-5 Eh; G, ΔG, ΔG_r ≤ 0.05 kcal/mol; weights ±0.02 absolute;
   record matching per R18.
-- **Accuracy (Q5 "A"):** UMA: HF1 Δ(gauche − anti) within 0.5 kcal/mol of TJ's value of the same
-  kind; HF2 ΔG_r(1 M) within 2.0 kcal/mol. xtb: `reported`. Omitted quantity: `reported`.
+- **Accuracy (Q5 "A", reference level per R43):** UMA: HF1 Δ(gauche − anti) within 0.5 kcal/mol
+  of the `gate: true` (ωB97M-V/def2-TZVPD//B3LYP/6-31G**) value of the same kind; HF2 ΔG_r(1 M)
+  within 2.0 kcal/mol of it. Both tables (ωB97M-V and B3LYP/6-31G**) are reported as deltas for both
+  recipes; only the ωB97M-V entries gate. xtb: `reported`. A quantity with no gating entry:
+  `reported`.
 - **T1/T2 tier gating (Q-E5 "C"):**
 
 | Check | xtb (GFN2) | UMA |
@@ -481,7 +523,8 @@ omits is `reported`.
 | Sign: T2 ΔG_rxn(1 M) < 0 | gated (GFN2 ≈ −52) | gated |
 | Ordering: T1 lowest s-trans G < lowest s-cis-side G | gated (R25: H12 verified by resolve) | gated |
 | Window: −42 < T2 ΔG_rxn(1 M) < −20 | reported (expected ≈ −52) | gated |
-| T1 ΔE(s-cis-side − s-trans) vs 2.2 | reported | reported (label per R32) |
+| T1 ΔE_planar (planar s-cis − lowest s-trans, R42) vs 2.2 | reported | reported |
+| T1 ΔE/ΔG(s-cis-side − s-trans) per conformer | reported | reported |
 
 - **Escalation (R26):** a gated failure fails acceptance. `known_limits` lists reported deviations
   and, when GFN2 cannot carry a tier TJ needs, the proposal that MACE/UMA/OMol25 become standard,
@@ -502,7 +545,7 @@ omits is `reported`.
 
 | Tier | XYZ (TJ) | sha256 prefix | Derived SMILES (H10) | Expected |
 |---|---|---|---|---|
-| T1 | `2_dimethoxybutadiene.xyz` (C6H10O2, 18, 0, 1) | `12afa0690b7b3eac` | `C=C(/C=C/OC)OC` | s-trans and s-cis-side classes, methoxy rotamers; ≥ 2 kept |
+| T1 | `2_dimethoxybutadiene.xyz` (C6H10O2, 18, 0, 1) | `12afa0690b7b3eac` | `C=C(/C=C/OC)OC` | s-trans and s-cis-side classes, methoxy rotamers; ≥ 2 kept; plus one planar s-cis constrained point (R42) |
 | T2 | `1_cyclopentadiene.xyz` (C5H6, 11, 0, 1) | `db8390fcc9fc9212` | `C1=CCC=C1` | one conformer; σ 2 |
 | T2 | `5_cyclopropene.xyz` (C3H4, 7, 0, 1) | `e61f12a6a2a1ea3f` | `C1=CC1` | one conformer; σ 2 |
 | T2 | `P1a_n.xyz` (C8H10, 18, 0, 1) | `c7b9792c062bdff4` | `C1=C[C@H]2C[C@@H]1[C@H]1C[C@H]12` | one conformer; σ 1; g 1 |

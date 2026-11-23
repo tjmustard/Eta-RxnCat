@@ -46,11 +46,15 @@ Context the builder needs:
   10.1021/ja408437u; M06-2X/6-31G(d), 1 atm): T2 ΔE −51.42, ΔG −32.28 kcal/mol (−34.17 at 1 M); T1
   s-trans/s-cis ΔE 2.2 kcal/mol (SI p. S6). GFN2 overbinds T2 (ΔE −69.19 measured; ΔG ≈ −52 at 1 M):
   reported, not gated, on xtb.
-- F32: TJ's row `qitem-20261123032327-833f8c98768fa58f` (which s-cis the 2.2 means) was unanswered at
-  compile, so the label is `"class comparison, geometry unspecified"` (option C). It is a data field
-  `literature.label` in `t1_dimethoxybutadiene.yaml`, read by the test, never a code constant. If the
-  lead relays a TJ answer before this slice starts, use it: A `"planar s-cis (φ≈0°)"`, B `"relaxed
-  s-cis/gauche minimum (lowest s-cis-side record)"`.
+- F32 answered (R42): TJ, verbatim, "A the planar geometry" (row
+  `qitem-20261123032327-833f8c98768fa58f`). The 2.2 kcal/mol is s-trans → **planar** s-cis. The
+  literature comparison is `dE_planar_scis_strans` = E(planar s-cis point) − E(lowest s-trans kept
+  record), electronic energies on the recipe engine, kcal/mol, **reported only on both recipes**.
+  The planar point comes from `run_constrained_point` (slice 06) started at the lowest-G kept
+  s-cis-side record with `DihedralConstraint((0, 1, 2, 3), 0.0)` (SMILES atoms 0-1-2-3 of
+  `C=C(/C=C/OC)OC`); it has no Hessian, frequencies, thermo or G and is not an ensemble record.
+  The label stays a data field, `literature.label: "planar s-cis (diene dihedral constrained to
+  0°)"` in `t1_dimethoxybutadiene.yaml`, read by the test (never a code constant).
 - H12 was settled before this slice (resolve's xtb CLI measurement, re-measured in slice 05): the T1
   ordering check is **gated on both recipes**. It is not re-decided here.
 - The commit order and pathspec rule of slice 07 (R23) apply unchanged.
@@ -97,7 +101,9 @@ Context the builder needs:
    page from the header, level of theory, transcriber "TJ", full sha256; the builder's sha256 and its
    MANIFEST match. The SI PDFs and the builder are not committed.
 2. `tests/e2e/data/e2e5/t1_dimethoxybutadiene.yaml` (SMILES, 0, 1, `n_embed` 40, seed 42, XYZ seed,
-   `literature: {dE_scis_strans_kcal_mol: 2.2, source, label}`) and `t2_cp_cyclopropene.yaml` (three
+   `literature: {quantity: dE_planar_scis_strans, value_kcal_mol: 2.2, source, label: "planar
+   s-cis (diene dihedral constrained to 0°)"}`, and `planar_point: {dihedral_atoms: [0, 1, 2, 3],
+   value_deg: 0.0}`) and `t2_cp_cyclopropene.yaml` (three
    species, `n_embed` 10 each, each XYZ as a seed, reaction Cp + cyclopropene → P1a_n, window
    `[-42, -20]`, literature ΔE/ΔG). DV-19 already records the departure from TJ's YAML.
 3. `tests/unit/conformers/test_e2e5_smiles_derivation.py` (tier D, default suite): for each XYZ,
@@ -110,9 +116,13 @@ Context the builder needs:
 5. `tests/e2e/test_e2e5_tier1_dimethoxybutadiene.py` (per recipe): diene class per record from atoms
    0-1-2-3 (`s-trans` |φ| > 90°, else `s-cis-side`). Gated: ≥ 2 kept; lowest record 0 imaginary;
    weights sum to 1 within 1e-12; G_BA ≤ G_lowest; ≥ 1 kept s-trans and ≥ 1 kept s-cis-side;
-   lowest s-trans G < lowest s-cis-side G. Reported: ΔE and ΔG(s-cis-side − s-trans) per conformer,
-   class populations, the literature value with `label`, `reperceived_smiles` per record. Writes
-   `e2e5_t1.<recipe>.json`; regression vs promoted as slice 07 (class = diene class).
+   lowest s-trans G < lowest s-cis-side G. Planar point (R42): read `planar_point` from the YAML,
+   run `run_constrained_point` from the lowest-G kept s-cis-side record; gated only that it
+   converged with |φ(0-1-2-3)| ≤ 0.1° (a mechanism check, both recipes); reported
+   `dE_planar_scis_strans` beside the literature value and `label`, plus the planar point's E and
+   xyz. Also reported: ΔE and ΔG(s-cis-side − s-trans) per conformer, class populations,
+   `reperceived_smiles` per record. Writes `e2e5_t1.<recipe>.json`; regression vs promoted as slice
+   07 (class = diene class) plus the planar point's E within 1e-5 Eh.
 6. `tests/e2e/test_e2e5_tier2_cp_cyclopropene.py` (per recipe): gated on both — atoms and charge
    conserved; ΔG_rxn(1 M) < 0; every species' lowest record 0 imaginary; P1a_n σ = 1, g = 1; UMA only
    −42 < ΔG_rxn(1 M) < −20 (xtb: value and deviation reported). xtb incremental rerun into the same
@@ -154,7 +164,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R21, R23–R32, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
+- Mission §5 R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
   Q-E2…Q-E5, R1.
 
 ## Intent visual
