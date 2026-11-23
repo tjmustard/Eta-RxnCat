@@ -2,7 +2,7 @@
 id: OPR.0.3.0.9
 slice: 09-acceptance-record
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Run HF1, HF2, T1 and T2 on both recipes in the named acceptance envs an
 depends_on: [OPR.0.3.0.12]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.3.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]

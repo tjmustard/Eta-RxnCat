@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -47,7 +47,7 @@ nodes:
     plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
     WebP media (test_media.py), LICENSE (MIT); test_identity.py enforces the author
     form Thomas J. L. Mustard Ph.D. and derives the README badge, Features heading,
-    roadmap and GPU claim from the pyproject version and its GPU_SMOKE_RESULT.json.
+    roadmap and GPU claim from GPU_SMOKE_RESULT.json; v0.3.0 claims from its ACCEPTANCE_RESULT.json.
     docs/prd/v<version>/ hold the verbatim starters (excluded from every gate), each
     version's DISCREPANCIES.md and acceptance record (v0.2.0 also evidence/, calibration/);
     docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
@@ -64,9 +64,9 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,15 +119,15 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +174,14 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +225,12 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -271,12 +271,12 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -326,12 +326,12 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -378,12 +378,12 @@ nodes:
   provenance:
     last_slice: 09-acceptance-record
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -430,14 +430,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
   provenance:
     last_slice: 09-acceptance-record
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -489,14 +489,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
     summary: reviewed; nothing patched
   provenance:
     last_slice: 09-acceptance-record
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -527,7 +527,7 @@ nodes:
     XYZ seeds, planar point, ALPB(dioxane), UMA window) E2E on the xtb and uma recipes
     (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind derived regression
     (R54), assert_no_duplicate_records, TJ reference transcription (R46); writes tests/candidate_outputs/v0.3.0
-    (never read back).
+    (never read back); acceptance driver and record merge.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -566,8 +566,8 @@ nodes:
   - OPR.0.3.0.12
   - OPR.0.3.0.9
   review:
-    reviewed_at: '2026-11-23T09:56:10+00:00'
-    reviewed_by: audit:12-t1-order-free
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T11:20:11+00:00'
+    reviewed_by: audit:09-acceptance-record
+    summary: patched description
   provenance:
     last_slice: 09-acceptance-record

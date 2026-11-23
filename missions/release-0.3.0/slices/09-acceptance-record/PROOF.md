@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: acceptance re-run by audit on both recipes reproduces the committed record field for field (pending_* as R22 expects); README claims derived and tested; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
