@@ -88,7 +88,7 @@ is not built yet.
   computes something else.
 - **Six engines**:
   - `rdkit_ff`: RDKit UFF and MMFF94, neutral singlets only;
-  - `pyscf_gpu_cpu`: PySCF density-fitted RKS/UKS/RHF/UHF on the CPU, or GPU4PySCF on CUDA. It
+  - `pyscf_gpu_cpu`: PySCF RKS/UKS/RHF/UHF (density-fitted by default) on the CPU, or GPU4PySCF on CUDA. It
     applies the def2 ECP rule, ddCOSMO and C-PCM/IEF-PCM solvation, an SCF escalation ladder and a
     mandatory internal stability analysis. The stability threshold is keyed and robust to
     threaded-CPU noise. On CUDA, a stage over the VRAM budget, or one that hits a listed
@@ -128,6 +128,13 @@ uv sync --extra gpu --extra mlip-uma      # adds UMA (fairchem-core)
 
 `mlip-mace` and `mlip-uma` are **mutually exclusive**: they need incompatible `e3nn` versions, so
 one environment holds one MLIP at a time, and `uv` refuses to install both.
+
+> **Note:** some engines need files that `uv` does not install, and no engine downloads them
+> itself. `xtb_subprocess` needs the xtb 6.8.0 binary (its `binary` argument, `ETA_RXNCAT_XTB`
+> or `PATH`). `mace` needs the MACE-MP-0 medium model file (`model_path`), and its SHA-256 must
+> match the pin. `uma_direct` and `esen_omol25` need fairchem's weights, which are gated on
+> Hugging Face (fairchem's cache or `checkpoint_path`). Versions, sources and digests are in
+> [`docs/licence-inventory.md`](docs/licence-inventory.md).
 
 ## 🚀 Usage
 
@@ -264,13 +271,17 @@ The Eta-RxnCat core is released under the MIT licence (see `LICENSE`).
 
 - **MIT core.** The code in this repository, and every package the core install depends on, is
   MIT, BSD or an equivalent permissive licence. Every core dependency must resolve to an SPDX id on
-  the allow-list in `pyproject.toml` (`MIT`, `BSD`, `Apache-2.0`, `ISC`, `PSF`, `Zlib`, `CC0-1.0`
-  and close variants), with one version-pinned exception, `geometric` 1.1.1 (BSD 3-clause Non-AI).
+  the allow-list in `pyproject.toml` (`MIT`, `BSD`, `Apache-2.0`, `ISC`, `PSF`, `Zlib`, `CC0-1.0`,
+  `BSL-1.0` and close variants), with one version-pinned exception, `geometric` 1.1.1 (BSD 3-clause Non-AI).
 - **Copyleft only in optional engine extras.** The optional engine extras (`gpu`, `mlip-mace`,
   `mlip-uma`) may pull in NVIDIA CUDA wheels and copyleft or off-list packages, such as `ase`. You
   download these yourself when you install an extra. Each one is a version-pinned, per-extra
   exemption. Engines like these can be replaced by a new engine later, but the core stays
   permissive.
+- **External programs and model weights** are downloaded by the user and never shipped: the xtb
+  binary (LGPL-3.0, run only as a separate process), the MACE-MP-0 weights (MIT), and the UMA and
+  OMol25 eSEN weights (FAIR Chemistry License v1, gated). Each is listed in
+  `docs/licence-inventory.md` with the decision that allows it.
 - **Nothing copyleft in the repository.** Eta-RxnCat never vendors, copies or imports copyleft
   code. Tests enforce this.
 

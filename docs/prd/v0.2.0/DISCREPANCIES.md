@@ -55,8 +55,8 @@ Cosmetic differences (formatting, comments, docstring wording) are not rows.
 
 | ID | Area | Starter item (path:line) | Rewrite (path:line or —) | Disposition | Reason | Status |
 |---|---|---|---|---|---|---|
-| D-001 | version | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/pyproject.toml:7` `version = "0.2.0"` | — | pending | Starter bumps 0.1.0 → 0.2.0 (only `pyproject.toml` diff vs the v0.1.0 starter) | open |
-| D-002 | version | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/src/eta_rxncat/__init__.py:3` `__version__ = "0.2.0"` | — | pending | Only `__init__.py` diff vs the v0.1.0 starter | open |
+| D-001 | version | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/pyproject.toml:7` `version = "0.2.0"` | `pyproject.toml:7` `version = "0.2.0"` | same | Starter bumps 0.1.0 → 0.2.0 (only `pyproject.toml` diff vs the v0.1.0 starter); the rewrite's bump landed in slice 11 (`9e0aac6`) | open |
+| D-002 | version | `docs/prd/v0.2.0/Eta-RxnCat-v0.2.0/src/eta_rxncat/__init__.py:3` `__version__ = "0.2.0"` | `src/eta_rxncat/__init__.py:3` `__version__ = "0.2.0"` | same | Only `__init__.py` diff vs the v0.1.0 starter; the rewrite's bump landed in slice 11 (`9e0aac6`) | open |
 
 ## Engines: public names
 
