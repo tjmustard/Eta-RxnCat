@@ -235,3 +235,109 @@ def product_payload(state: MolecularState) -> dict[str, Any]:
         "charge": state.charge,
         "multiplicity": state.spin_multiplicity,
     }
+
+
+# --- Acceptance: regression against promoted fixtures and map confirmation (slice 07) --------
+
+PROMOTED_V040 = REPO / "tests" / "fixtures" / "v0.4.0"
+GRAFT_COORD_TOL_ANGSTROM = 1e-10
+"""TJ "Q6. A": graft regression, coordinate RMSD with no superposition."""
+RELAXED_E_TOL_HARTREE = 1e-5
+RELAXED_HEAVY_RMSD_TOL_ANGSTROM = 0.01
+"""TJ "Q6. A": relaxed regression, |dE| and heavy-atom RMSD after Horn superposition (R20(d))."""
+
+
+def _load(path: Path) -> dict[str, Any] | None:
+    import json
+
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+
+
+def _plain_rmsd(a: Any, b: Any) -> float:
+    diff = np.asarray(a, dtype=np.float64) - np.asarray(b, dtype=np.float64)
+    return float(np.sqrt((diff * diff).sum(axis=1).mean()))
+
+
+def regression_graft(
+    graft_payload: dict[str, Any], promoted_dir: Path = PROMOTED_V040
+) -> dict[str, Any]:
+    """Compare the graft with the promoted ``m1_graft.json``; ``pending_promotion`` if absent.
+
+    Coordinates with no superposition (RMSD <= 1e-10 Angstrom, symbols equal); ``index_map``,
+    ``graft_to_ts1b_n_map``, close-contact pairs and junction signs exact.
+    """
+    old = _load(promoted_dir / "m1_graft.json")
+    if old is None:
+        return {"status": "pending_promotion"}
+    new_product, old_product = graft_payload["product"], old["product"]
+    problems = []
+    if new_product["symbols"] != old_product["symbols"]:
+        problems.append("symbols")
+        rmsd = None
+    else:
+        rmsd = _plain_rmsd(new_product["coordinates_angstrom"], old_product["coordinates_angstrom"])
+        if rmsd > GRAFT_COORD_TOL_ANGSTROM:
+            problems.append("coordinates")
+    for key in ("index_map", "graft_to_ts1b_n_map"):
+        if graft_payload[key] != old[key]:
+            problems.append(key)
+    pairs = [[c["i"], c["j"]] for c in graft_payload["close_contacts"]]
+    if pairs != [[c["i"], c["j"]] for c in old["close_contacts"]]:
+        problems.append("close_contacts")
+    signs = [
+        [j["template_atom"], j["appended_atom"], j["sign"]] for j in graft_payload["junctions"]
+    ]
+    if signs != [[j["template_atom"], j["appended_atom"], j["sign"]] for j in old["junctions"]]:
+        problems.append("junction_signs")
+    return {
+        "status": "fail" if problems else "pass",
+        "coordinate_rmsd_angstrom": rmsd,
+        "bound_angstrom": GRAFT_COORD_TOL_ANGSTROM,
+        "mismatches": problems,
+    }
+
+
+def regression_relaxed(
+    relaxed_payload: dict[str, Any], recipe: str, promoted_dir: Path = PROMOTED_V040
+) -> dict[str, Any]:
+    """Compare a relaxed graft with the promoted ``m1_relaxed.<recipe>.json``.
+
+    |dE| <= 1e-5 Eh and heavy-atom RMSD <= 0.01 Angstrom after Horn superposition over the heavy
+    atoms; ``pending_promotion`` if the fixture is absent.
+    """
+    old = _load(promoted_dir / f"m1_relaxed.{recipe}.json")
+    if old is None:
+        return {"status": "pending_promotion"}
+    new_product, old_product = relaxed_payload["relaxed_product"], old["relaxed_product"]
+    if new_product["symbols"] != old_product["symbols"]:
+        return {"status": "fail", "mismatches": ["symbols"]}
+    heavy = [k for k, s in enumerate(new_product["symbols"]) if s != "H"]
+    new_xyz = np.asarray(new_product["coordinates_angstrom"], dtype=np.float64)[heavy]
+    old_xyz = np.asarray(old_product["coordinates_angstrom"], dtype=np.float64)[heavy]
+    rmsd = superpose(new_xyz, old_xyz).rmsd_angstrom
+    delta_e = abs(relaxed_payload["final_energy_hartree"] - old["final_energy_hartree"])
+    problems = []
+    if delta_e > RELAXED_E_TOL_HARTREE:
+        problems.append("energy")
+    if rmsd > RELAXED_HEAVY_RMSD_TOL_ANGSTROM:
+        problems.append("heavy_atom_rmsd")
+    return {
+        "status": "fail" if problems else "pass",
+        "abs_delta_energy_hartree": delta_e,
+        "energy_bound_hartree": RELAXED_E_TOL_HARTREE,
+        "heavy_atom_rmsd_angstrom": rmsd,
+        "heavy_atom_rmsd_bound_angstrom": RELAXED_HEAVY_RMSD_TOL_ANGSTROM,
+        "mismatches": problems,
+    }
+
+
+def map_confirmation(yaml_map: list[int], promoted_dir: Path = PROMOTED_V040) -> str:
+    """TJ's promotion of ``m1_graft.json`` confirms the map (TJ P2 "A", R2, R25).
+
+    ``confirmed`` if the promoted file's ``graft_to_ts1b_n_map`` equals the YAML's, ``fail`` if it
+    differs, ``pending_confirmation`` if nothing is promoted. No status field is read.
+    """
+    old = _load(promoted_dir / "m1_graft.json")
+    if old is None:
+        return "pending_confirmation"
+    return "confirmed" if old["graft_to_ts1b_n_map"] == list(yaml_map) else "fail"

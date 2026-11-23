@@ -17,21 +17,26 @@ from importlib import metadata
 from typing import Any
 
 import pytest
+from acceptance import write_fragment
 from candidates import environment
 from checks import assert_checks_pass, gated_outcome, outcome_fields, write
 from e2e_env import DEVICES, RECIPE_PARAMS
 from m1 import (
     FORMING_CORE_BOUND_ANGSTROM,
     M1,
+    PROMOTED_V040,
     AtomMap,
     appended_heavy_rmsd_angstrom,
     candidate_dir,
     derive_map,
     heavy_map_rmsds,
     load_m1,
+    map_confirmation,
     mapped_bonds,
     product_payload,
     reference_junction_signs,
+    regression_graft,
+    regression_relaxed,
     rmsds_to_reference,
     spec_payload,
 )
@@ -143,7 +148,37 @@ def test_m1_relax(recipe_name: str, recipes: Callable[[str], Recipe], commit_sha
     if recipe_name == "xtb":
         graft_payload = graft_candidate(m1, result, atom_map, commit_sha)
         write(out / "m1_graft.json", graft_payload)
-        assert graft_payload["test_outcome"] == "passed", graft_payload["failed_checks"]
+        graft_checks = {
+            **graft_payload["tier_gates"],
+            "regression_graft": regression_graft(graft_payload),
+            "map_confirmation": {"status": map_confirmation(m1.config["graft_to_ts1b_n_map"])},
+        }
+        write_fragment(
+            "m1",
+            "graft",
+            {
+                "forming_core_rmsd": graft_payload["tier_gates"]["d3_forming_core_rmsd"],
+                "tier_d": graft_payload["tier_gates"],
+                "regression_graft": graft_checks["regression_graft"],
+                "map_confirmation": graft_checks["map_confirmation"]["status"],
+                "reported": {
+                    key: graft_payload[key]
+                    for key in (
+                        "alignment_rmsd_angstrom",
+                        "active_rmsd_angstrom",
+                        "full_rmsd_angstrom",
+                        "planar_pair_set_bool",
+                        "n_isomorphisms",
+                    )
+                }
+                | {
+                    "close_contacts": graft_payload["close_contacts"],
+                    "junctions": graft_payload["junctions"],
+                },
+                **outcome_fields({"tier_gates": graft_checks}),
+            },
+        )
+        assert_checks_pass({"tier_gates": graft_checks})
 
     engine = build_engine(recipe.engine_stage, recipe.engine_runtime)
     core = result.constrained_core_product_indices
@@ -215,12 +250,35 @@ def test_m1_relax(recipe_name: str, recipes: Callable[[str], Recipe], commit_sha
             },
         }
     payload["tier_gates"] = gates
-    payload |= outcome_fields({"tier_gates": gates})
+    if relaxed is not None:
+        regression = regression_relaxed(payload, recipe_name)
+    elif (PROMOTED_V040 / f"m1_relaxed.{recipe_name}.json").is_file():
+        regression = {"status": "fail", "mismatches": ["no relaxed structure (g1 failed)"]}
+    else:
+        regression = {"status": "pending_promotion"}
+    checks = {"tier_gates": {**gates, "regression_relaxed": {"status": regression["status"]}}}
+    payload["regression_relaxed"] = regression
+    payload |= outcome_fields(checks)
     write(out / f"m1_relaxed.{recipe_name}.json", payload)
+    write_fragment(
+        "m1",
+        recipe_name,
+        {
+            "relaxed_gates": {
+                "status": _status(all(g["status"] == "pass" for g in gates.values())),
+                **gates,
+            },
+            "regression_relaxed": regression,
+            "reported": payload.get("reported", {}),
+            "metrics": {**payload["metrics"], "device": DEVICES[recipe_name]},
+            "core_max_displacement_angstrom": displacement,
+            **outcome_fields(checks),
+        },
+    )
     print(
-        f"M1 {recipe_name}: outcome {gated_outcome({'tier_gates': gates})}; "
+        f"M1 {recipe_name}: outcome {gated_outcome(checks)}; "
         f"core max displacement {displacement:.3e} A; wall {wall_time_s:.1f} s; "
         f"gates { {k: v['status'] for k, v in gates.items()} }; "
         f"reported {payload.get('reported')}; metrics {payload['metrics']}"
     )
-    assert_checks_pass({"tier_gates": gates})
+    assert_checks_pass(checks)

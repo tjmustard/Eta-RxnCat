@@ -585,6 +585,9 @@ nodes:
   - tests/e2e/data/e2e5/m1_*.yaml
   - tests/e2e/m1.py
   - tests/candidate_outputs/v0.4.0/**
+  - tests/e2e/test_accept_v040.py
+  - tests/e2e/acceptance_record_v040.py
+  - tests/e2e/test_acceptance_record_v040.py
   description: >-
     Clean-room conserved-core mapper (v0.4.0; from approved nMAP behaviour specs only,
     TJ Q1). (1) align.py: Horn unit-quaternion superposition of ordered point pairs

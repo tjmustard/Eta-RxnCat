@@ -50,8 +50,8 @@ def candidate_dir() -> Path:
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
-    """Run the acceptance driver (test_accept_v030.py) after every fixture test it aggregates."""
-    items.sort(key=lambda item: item.path.name == "test_accept_v030.py")
+    """Run the acceptance drivers (test_accept_v*.py) after every fixture test they aggregate."""
+    items.sort(key=lambda item: item.path.name.startswith("test_accept_v"))
 
 
 @pytest.fixture(scope="session")
