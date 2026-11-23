@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: species runner Mini-req 1-4 met; caching, counting, push, R35, R42 tests; 1151 tests; all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

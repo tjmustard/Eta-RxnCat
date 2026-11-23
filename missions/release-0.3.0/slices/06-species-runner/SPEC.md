@@ -2,7 +2,7 @@
 id: OPR.0.3.0.6
 slice: 06-species-runner
 mission: release-0.3.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-23 against scaffold (hyper_scope slice create)"
 created: "2026-11-23"
@@ -10,7 +10,7 @@ intent: "Create eta_rxncat.orchestrator: the single-species stage runner with st
 depends_on: [OPR.0.3.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
