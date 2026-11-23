@@ -1,0 +1,22 @@
+# Fixture M1 (v0.4.0): graft cyclobutene onto TS1a_n, compared with TS1b_n.
+# Provisional, team-drafted format (TJ Q-E3); TJ "Q4. A" with TJ "R1 B" (optional fragment_delete).
+# Indices are 0-based. Structures: Liu, Paton, Kim, Liang, Houk, JACS 2013, 135, 15642 (SOURCES.md).
+template: xyz/TS1a_n.xyz
+fragment: xyz/6_cyclobutene.xyz
+reference: xyz/TS1b_n.xyz
+template_charge: 0
+template_multiplicity: 1
+fragment_charge: 0
+fragment_multiplicity: 1
+keep: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]
+delete: [7, 16, 17]
+alignment_pairs: [[2, 0], [3, 3], [10, 4], [11, 9]]  # [template, fragment]
+fragment_delete: []
+active_atom_indices: [0, 1, 2, 3, 4, 5]
+# Index fix 1 (TJ Q-E4 "A"): [1, 2, 3, 5] in place of the 5-tier spec's [0, 2, 3, 4].
+constrained_core: [1, 2, 3, 5]
+product_charge: 0
+product_multiplicity: 1
+# Product index -> TS1b_n index, derived by map_rule (tests/e2e/m1.py re-derives and checks it).
+graft_to_ts1b_n_map: [0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 7, 8, 17, 18, 19, 20]
+map_rule: "mission R2: lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates"

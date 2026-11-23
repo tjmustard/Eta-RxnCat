@@ -10,7 +10,7 @@ intent: "Land TJ's three M1 structures with provenance and the provisional M1 YA
 depends_on: [OPR.0.4.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["tests/e2e/data/e2e5/**", tests/e2e/m1.py, "tests/e2e/test_m1_*.py", "tests/candidate_outputs/v0.4.0/**", spec/compiled/architecture.yml]
@@ -230,9 +230,9 @@ must show (H-M3, H-M5, H-M6) is gated or stop-and-report, not left to judgment.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/{conftest,e2e_env,fixtures,candidates,acceptance}.py`.
-- [ ] Task 2: extract the XYZ in scratch (`ast` only), verify the sha256, copy them; SOURCES rows; YAML; `m1.py`.
-- [ ] Task 3: tier-D tests; the E2E test; required checks; ledger ensure-node; commit C1 (clean tree).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/{conftest,e2e_env,fixtures,candidates,acceptance}.py`.
+- [x] Task 2: extract the XYZ in scratch (`ast` only), verify the sha256, copy them; SOURCES rows; YAML; `m1.py`.
+- [x] Task 3: tier-D tests; the E2E test; required checks; ledger ensure-node; commit C1 (clean tree).
 - [ ] Task 4: host check → xtb E2E under `timeout 3600` → host check → UMA E2E under `timeout 3600`, both at C1 into the repo candidate dir; commit C2 with only the candidates.
 - [ ] Task 5: updater; remove scratch.
 
