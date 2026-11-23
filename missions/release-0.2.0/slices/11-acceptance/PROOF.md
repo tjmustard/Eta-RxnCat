@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: fresh clone 97086ef: oracle all 0 (pytest 748); audit re-ran commands 2-5: GPU 20, plain 747 + 1 by-design skip, acceptance 17/4/8 with 0 skips; 29 engine entries within bounds
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

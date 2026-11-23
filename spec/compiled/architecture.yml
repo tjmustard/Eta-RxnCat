@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -30,31 +30,30 @@ nodes:
   - tests/unit/test_media.py
   - tests/unit/test_test_policy.py
   description: >-
-    uv-managed MIT package skeleton (hatchling, src layout, Python >=3.11,<3.14, committed
-    uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, geometric, pyscf.
-    Extras (floors only): gpu = torch>=2.7.0, gpu4pyscf-cuda12x>=1.8.0, cupy-cuda12x;
-    mlip-mace = torch, mace-torch; mlip-uma = torch, fairchem-core>=2.22; [tool.uv]
-    conflicts keeps the MLIP extras exclusive; torch only from the explicit pytorch-cu129
-    index (torch 2.13.0+cu129, re-proved in docs/prd/v0.2.0/evidence/). [project.scripts]
-    eta-rxncat = eta_rxncat.cli:main. __init__ exposes __version__ and imports no
-    backend; conformers, mapping, optimize, orchestrator are placeholders (engines
-    is its own node). Gates: ruff, strict mypy over src and tools, pytest. Test policy
-    (ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance, all deselected
-    by addopts; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 for the
+    uv-managed MIT package eta-rxncat 0.2.0 (hatchling, src layout, Python >=3.11,<3.14,
+    committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, geometric,
+    pyscf. Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
+    mlip-uma (fairchem-core>=2.22); [tool.uv] conflicts keeps the MLIP extras exclusive;
+    torch only from the explicit pytorch-cu129 index (torch 2.13.0+cu129). [project.scripts]
+    eta-rxncat = eta_rxncat.cli:main. __init__ imports no backend; conformers, mapping,
+    optimize, orchestrator are placeholders. Gates: ruff, strict mypy, pytest. Test
+    policy (ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance deselected
+    by default; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 for the
     session and, under ETA_RXNCAT_ACCEPTANCE=1, fails every setup/call/collection
     skip and every xfail (R32); an AST rule bans module-level skips in engine and
-    acceptance tests; acceptance envs .venv-accept-{gpu,mace,uma} are gitignored.
-    Licence gate tools/licence_gate.py (--profile base|gpu|mlip-mace|mlip-uma) judges
-    each installed distribution exactly against [tool.eta-rxncat.licence-gate] (allowed
-    includes BSL-1.0) with version-pinned per-profile exemptions; stale ones fail;
-    an unnamed dist-info or two dist-infos with one PEP 503 name fail. tests/unit/test_package.py
-    bans copyleft and sella/tblite/psi4 imports and checks the engines import loads
-    no heavy library. CI: checks plus licence-extras matrix. Public face: README.md,
-    CHANGELOG.md (scribe-owned), size-named WebP media (tests/unit/test_media.py),
-    LICENSE (MIT); author form Thomas J. L. Mustard Ph.D. enforced by tests/unit/test_identity.py.
-    docs/prd/v0.1.0/ and docs/prd/v0.2.0/ hold the verbatim starters (ruff-gated by
-    .ruff.toml) and each version's DISCREPANCIES.md; docs/prd/PLAN_DISCREPANCIES.md
-    the plan-copy register.
+    acceptance tests; acceptance envs .venv-accept-* gitignored. Licence gate tools/licence_gate.py
+    (--profile base|gpu|mlip-mace|mlip-uma) judges each installed distribution exactly
+    against [tool.eta-rxncat.licence-gate] (allowed includes BSL-1.0) with version-pinned
+    per-profile exemptions; stale ones fail; unnamed or duplicate dist-infos fail.
+    test_package.py bans copyleft imports and heavy imports at engines import. CI:
+    checks plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
+    WebP media (test_media.py), LICENSE (MIT); tests/unit/test_identity.py enforces
+    the author form Thomas J. L. Mustard Ph.D., and derives the README badge, Features
+    heading, Built/Planned roadmap and GPU claim from the pyproject version and its
+    GPU_SMOKE_RESULT.json (R50). docs/prd/v0.1.0/ and v0.2.0/ hold the verbatim starters
+    (ruff-gated), each version's DISCREPANCIES.md and GPU_SMOKE_RESULT.json acceptance
+    record (v0.2.0: record_schema 2, every engine on this host), plus v0.2.0 evidence/
+    and calibration/; docs/prd/PLAN_DISCREPANCIES.md: plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -68,14 +67,14 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,14 +121,14 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -176,14 +175,14 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -227,12 +226,12 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -273,41 +272,41 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
-    eta_rxncat.engines (v0.2.0): engine interfaces and engines; pure Python at import,
-    libraries lazy; no ase in src. Shared: base.py Engine ABC (tag, ENGINE_IMPL, OPTIONS;
-    from_stage; evaluate returns a validated PotentialResult); errors.py (Unavailable,
-    Input, ScfConvergence, Runtime); units.py CODATA 2018; options.py resolved stage
-    (keyed defaults, R6); identity.py sha256 model ids; fd.py fd_hessian. rdkit_ff.py:
+    eta_rxncat.engines (v0.2.0): engines, pure Python at import, no ase in src. Shared:
+    base.py Engine ABC (from_stage, evaluate -> PotentialResult), errors.py, units.py
+    (CODATA 2018), options.py resolved stage (R6), identity.py, fd.py. rdkit_ff.py:
     UFF/MMFF94, neutral closed-shell only (R35), perception round-trip, fresh force
     field per geometry. pyscf_gpu_cpu/: DF R/U KS/HF; keyed DF, auxbasis, ecp auto
     per state (R36), grids, conv_tol, guess, PCM method, small basis, hessian_mode;
-    ladder diis -> level_shift -> soscf -> small-basis projection, then internal stability;
-    ddCOSMO/PCM; HF analytic, KS FD Hessian on CPU (R41). Unkeyed device: GPU4PySCF
-    on the same stage, ddCOSMO on cpu, calibrated VRAM estimate vs the ADR-0008 budget,
-    one cpu re-run on the four CUDA OOMs, record-gated GPU KS analytic Hessian, CPU-copy
-    stability below 3 rotations (R43), device_reason on every CPU choice. xtb_subprocess.py:
-    external xtb 6.8.0 (docs/licence-inventory.md), list argv, no shell, temp dir,
-    always --grad, keyed ALPB state; Hessian = FD of gradients (R45). mace.py: MACE-MP-0
-    medium from a sha256-pinned model_path checked before torch.load, float64, neutral
-    closed-shell only. _fairchem_bridge.py + uma_direct.py (uma-s-1p2p1) + esen_omol25.py
-    (esen-sm-conserving-all-omol; direct-force and allscaip names refused): offline
-    get_predict_unit path (cached HF files, local_files_only, pinned revision, or
-    checkpoint_path), keyed task omol and inference_settings high-precision (R47),
-    derived keyed atom_refs_sha256 / form_elem_refs_sha256 (R40), direct-force models
-    refused after load, AtomicData built directly with charge and spin multiplicity,
-    float32 recorded in recovery_steps, identity <method>@sha256:<hex>, FD Hessian.
-    Tests in tests/unit/engines.
+    ladder diis -> level_shift -> soscf -> small-basis projection, then internal stability
+    on lambda_min from PySCF's replayed operator (stability.py, pinned 2.15.1/1.9.2):
+    unstable iff lambda_min < -stability_tol (1e-3), follows lowering E < stability_noise_eh
+    (1e-6) end as stable (R54, ENGINE_IMPL 2); ddCOSMO/PCM; HF analytic, KS FD Hessian
+    on CPU (R41). Unkeyed device: GPU4PySCF on the same stage, ddCOSMO on cpu, calibrated
+    VRAM estimate vs the ADR-0008 budget, one cpu re-run on the four CUDA OOMs, GPU
+    KS analytic Hessian only for classes (RKS|UKS, solvation, ECP, grid) recorded
+    <= 1e-4 in pyscf-gpu-support.json (R44/R51; UKS IEF-PCM -> FD), CPU-copy stability
+    below 3 rotations (R43), device_reason on every CPU choice. xtb_subprocess.py:
+    external xtb 6.8.0, list argv, no shell, always --grad, keyed ALPB state; Hessian
+    = FD of gradients (R45). mace.py: MACE-MP-0 medium from a sha256-pinned model_path
+    checked before torch.load, float64, neutral closed-shell only. _fairchem_bridge.py
+    + uma_direct.py (uma-s-1p2p1) + esen_omol25.py (esen-sm-conserving-all-omol; direct-force
+    and allscaip names refused): offline get_predict_unit path (cached files or checkpoint_path),
+    keyed task omol and inference_settings high-precision (R47), derived keyed atom_refs_sha256
+    / form_elem_refs_sha256 (R40), direct-force models refused, AtomicData with charge
+    and spin, identity <method>@sha256:<hex>, FD Hessian. Tests in tests/unit/engines;
+    acceptance in tests/acceptance.
   inputs: []
   outputs: []
   edges:
@@ -328,6 +327,6 @@ nodes:
   provenance:
     last_slice: 11-acceptance
   review:
-    reviewed_at: '2026-11-22T23:27:05+00:00'
-    reviewed_by: audit:OPR.0.2.0.10
+    reviewed_at: '2026-11-23T00:51:58+00:00'
+    reviewed_by: audit:OPR.0.2.0.11
     summary: patched description

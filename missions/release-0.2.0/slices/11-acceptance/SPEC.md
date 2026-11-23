@@ -2,7 +2,7 @@
 id: OPR.0.2.0.11
 slice: 11-acceptance
 mission: release-0.2.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-22 against scaffold (hyper_scope slice create)"
 created: "2026-11-22"
@@ -10,7 +10,7 @@ intent: "Run every engine's acceptance on this host in the three named envs with
 depends_on: [OPR.0.2.0.5, OPR.0.2.0.7, OPR.0.2.0.8, OPR.0.2.0.9, OPR.0.2.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["tests/acceptance/**", docs/prd/v0.2.0/GPU_SMOKE_RESULT.json, docs/prd/v0.2.0/evidence/pyscf-gpu-support.json, "src/eta_rxncat/engines/pyscf_gpu_cpu/**", tests/unit/engines/test_gpu_hessian_record.py, tests/unit/engines/test_pyscf_gpu.py, tests/unit/engines/test_pyscf_cpu.py, tests/unit/engines/test_pyscf_stability.py, docs/prd/v0.2.0/evidence/pyscf-stability-noise.json, docs/prd/v0.2.0/DISCREPANCIES.md, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, tests/unit/test_package.py, tests/unit/test_identity.py, README.md, spec/compiled/architecture.yml]
