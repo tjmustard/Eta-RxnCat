@@ -1,0 +1,28 @@
+# Human Fixture 2 (team-drafted, provisional per TJ Q-E3): butadiene + ethylene -> cyclohexene, 1 M.
+schema: 1
+fixture: hf2_diels_alder
+species:
+  - species_id: butadiene
+    smiles: C=CC=C
+    charge: 0
+    spin_multiplicity: 1
+    conformer_options:
+      n_embed: 50
+      seed: 42
+  - species_id: ethylene
+    smiles: C=C
+    charge: 0
+    spin_multiplicity: 1
+    conformer_options:
+      n_embed: 50
+      seed: 42
+  - species_id: cyclohexene
+    smiles: C1CC=CCC1
+    charge: 0
+    spin_multiplicity: 1
+    conformer_options:
+      n_embed: 50
+      seed: 42
+reaction:
+  reactants: [[butadiene, 1], [ethylene, 1]]
+  products: [[cyclohexene, 1]]

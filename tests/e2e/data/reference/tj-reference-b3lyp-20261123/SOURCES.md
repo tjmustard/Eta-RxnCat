@@ -1,0 +1,103 @@
+# Sources: TJ's reference values (v0.3.0 Human Fixtures 1 and 2)
+
+- **Approval (TJ, verbatim, 2026-11-23, relayed by the kernel operator):** "Send as my reference".
+  It approves the values, not a seat writing `tests/fixtures/` (mission R46). The values enter the
+  repository only as the candidate `tests/candidate_outputs/v0.3.0/reference_values.json`, which TJ
+  promotes at the Phase 3 gate.
+- **Who computed them:** the advisor's helper, at TJ's request: PySCF 2.15.1, geomeTRIC 1.1.1
+  (`results.json` `versions`). Levels: B3LYP/6-31G** optimization, analytic frequencies and RRHO
+  thermal corrections; gating reference ωB97M-V/def2-TZVPD single points on the B3LYP geometries
+  with the B3LYP RRHO corrections (TJ's reference level, mission R43).
+- **Origin:** `~/.hacf/eta-rxncat-hacf/incoming/tj-reference-b3lyp-20261123/` (outside the
+  repository).
+- **Committed here, byte-identical:** `results.json` and `README.md`. The scripts, XYZ files and
+  logs are not committed; every file of the source directory is listed below with its sha256.
+- **Transcription:** `tests/e2e/reference_values.py` `transcribe_tj_results` (a fixed key table, no
+  arithmetic); checked in the default suite by `tests/e2e/test_e2e_helpers.py`.
+
+## sha256 of every file in the source directory
+
+Command: `sha256sum *` in the source directory, 2026-11-23.
+
+```text
+58b930e616ed721a9674956e495e71db96f4af0489793a68e0939ba569b7ba2d  analyze.py
+cc7efe0ee728c03c0bd536c7cb4b860be22ba51cc303713542e55231b2fcad61  butadiene_gauche.d3.json
+32ddd1f7b2d954bb5ba165b399ce84129cc3c9f767fde1958fa8a45c7a796773  butadiene_gauche.freq.log
+b136e8ced819cc667646ced2d73ee9a2dc2b1f17000631d1be2d7baae0c394cb  butadiene_gauche.freq.txt
+66344e9669cff195686811b70d7004bbf983b4b9f4c81e9d6ee5fd4043ec1da7  butadiene_gauche.opt.json
+4328d4eba942c7ee9a75503dafa93622b5116a53948f74ccb6834c459e6c950d  butadiene_gauche.opt.log
+064925044717cf8bc97aa78eaefb72c6d8c3f9ef23e2d7575949bc35326595b8  butadiene_gauche.opt.stderr
+3a31b684cc9622f3a98c464a80bf0f882deccec0c99bb9b53634aa282327ba2f  butadiene_gauche.opt.stdout
+034af31ca81d997f3025ffc0419f6aac2e51464f6b8432dbc1896cb0ddd8328e  butadiene_gauche.sp.json
+0a209ca3a8ef2855a64bdea3e098c75fde4b1486b802de931895c4dac88d9775  butadiene_gauche.sp.log
+828aaa236587aeabf4a9b978fa9d7b4ce89129f82c48d3896e70877516229d9b  butadiene_gauche.sp.stderr
+51e7c7bcf212c34e0b337e9ec8551ce32bad40bbfa37476ccb3f08bb9d43d8ee  butadiene_gauche.sp.stdout
+92f265bcf00a199f812e223d731053d8148660e93fc4c07310493330ebd91529  butadiene_gauche.xyz
+474a4c9c4687ceefe1b17f93e000f524b675aea1bd558f5d69ee412280a6d398  butadiene_strans.d3.json
+398e56f534f4016415f7d77dbdf515b2c5bb6f2e963d0997511db931831edd52  butadiene_strans.freq.log
+fb7c15ae393bdce57479269ca944a8e34d38b8103c34600502656e3e7f6305c4  butadiene_strans.freq.txt
+ddd036ae7f6a19e88b83ddc0057359899494db14e0e4cb0f37fb93ae52c24d63  butadiene_strans.opt.json
+983c526c770bdf19e1e02a794a0bb321761b49e2e7c5cae717644d5d9cee28f4  butadiene_strans.opt.log
+b7b61e97af124533e4dfb524847b3ab4971a5e2c047d4ae3424b1d76553c028b  butadiene_strans.opt.stderr
+6d37a9db49343ddbd34f2728956704f99e382acc938ae36fb4b1f193b4e7c2fd  butadiene_strans.opt.stdout
+a5b8e7887839e6972cf16040a4eaa7f027975158f65c66fe4aae1418ecf1c191  butadiene_strans.sp.json
+eeb4472551499eb9b12101c1764f3d927ad7fca6adbc46a9a37150d82cf91ed9  butadiene_strans.sp.log
+76a02209c4349f012b8ab222257922d0ff009af7f27698b5153963db59531019  butadiene_strans.sp.stderr
+46cfcde41aca5d5f8470b852ce3c0364b617e4c51a1308908e8f9777eeb11774  butadiene_strans.sp.stdout
+e14b28b48c47db7b141cb3e46a072521ac99b6dd9aec4ece42afbc01520921c9  butadiene_strans.xyz
+2a7f09d10e7652d2f60ea83b96b72dbcb7afd9e905c43beeb129b7e862bf5c33  butane_anti.d3.json
+2c97bb2f6c500f9c27c52a3c09ffc9487bae7581992567b3fafe96df752bb470  butane_anti.freq.log
+d6e006f0947095bb13c9df3caabe12c28678821a94a8345b8d983c822dc5e8b6  butane_anti.freq.txt
+2e436624910d1ed071362ccf3d4df25d052abd796f6b7578db1ac912c1ab8e16  butane_anti.opt.json
+2995effebeb05552ce858f4988e7064b84ddec60cca2b7db5161eede5bbec637  butane_anti.opt.log
+cd00797836bcba7898b7e10889825e0f819a0a86eedf72904c4e27dbb538547b  butane_anti.opt.stderr
+e5fe74134c5f7779e5c9b19c2a4d2e9a41bc4b7ebfab7d9653bbbc31af572360  butane_anti.opt.stdout
+1b57d8077c6c3e05d1a857940ce1a422e9bf267d04c726eed69a7f20e2325f83  butane_anti.sp.json
+7bc7d8888008df0fe45a3971eebbea4a7b5cb0064c27574ea83e2bd5b73fad0b  butane_anti.sp.log
+d61c37fe0f828fcfb815ab7e8ca73e6763fa7c1137de4b53779414cfafb6f736  butane_anti.sp.stderr
+d3dca5a977846b74c20dedc6609a398ace87fe4487c5438a71687252265530b8  butane_anti.sp.stdout
+07a932337aaae18deedcebce97ff84e95d2ffbd81b164b470e4e4bc44b7b614a  butane_anti.xyz
+5d752a934fde9e29c59e8fe1a85f7150fcda1109f2a3928de93a331df6818ad5  butane_gauche.d3.json
+89ee2db6a33c226721e3327aca94fe285b4c366a0d6cb16da06c081bf2718f0b  butane_gauche.freq.log
+5b8a649ee29329e3a19b3914d6b8c3bec131dc15d279d510a142aef3cf1f255f  butane_gauche.freq.txt
+04f231792630775e1fc65484263a7dc1d076f78075a70056a1c0036d81f0edb8  butane_gauche.opt.json
+501ee4d864f904be9dd51922d8cc59713d2960e6afd6766068c962057b23f045  butane_gauche.opt.log
+66ee2d5587b5e7e4f92fc669432bd523fd08de0e59aae09e8ef93f28932efe29  butane_gauche.opt.stderr
+edc8957c6d28a6bba49e64ff7dd5d3995f5c1e19f0c9f8a9203ed16c9978d1df  butane_gauche.opt.stdout
+c27511d9f5789996dbca59521b64ab0e811107fc43081eb3390624e77a15fdaf  butane_gauche.sp.json
+19d44bf0981e67f507d81285b4ed8fac26649a67f31e359859a2afe000ccd6c0  butane_gauche.sp.log
+c2d14b3a956b271facfdd50c58d4f2efbeb33575ebc5646411b11b48841d86bb  butane_gauche.sp.stderr
+362624771309de589f091da252eff186691d275c6909c03e9fa5a5d90ca297b8  butane_gauche.sp.stdout
+20f89176991f3659e1a83183dce472c12b371e8e70f534a4a1fd38632063474a  butane_gauche.xyz
+e96c2d6cb0274c3ce198e06836e2cb3b9e4f026871cc96dcdaec72517680937f  calc.py
+8bfc8f564d4fdf9573df7be86a99bded81eef9d649a7bbc4e1d44b1a74671624  cyclohexene.d3.json
+d3524002698072231d1b4fa72253763fc278720a6d6595428f4d5b46c4bc9d14  cyclohexene.freq.log
+d1b9b275d9d32b661ae0d5211c0257e6b4341616e77f7402904ecaa97845a5c6  cyclohexene.freq.txt
+1cccc4c3dce5d764743980db958f1aaf848a6bf27a408fe84b415340623debd1  cyclohexene.opt.json
+59e9dce923f49bc735579e2f833ab20efc1417f53b2aa341f515f0e925c587ea  cyclohexene.opt.log
+c75c4bae64d1f9bba1645ee96c2be4f488a06253334a8580e9169ad1859687fd  cyclohexene.opt.stderr
+6d683ba00a7fc79ca21932fc9f454b21e6905d79dc8d02a91a8c8b2c8348ecb3  cyclohexene.opt.stdout
+a2e96118c83308dab13936917576ad229d86a5a8fa335e5a24ae205133041ed4  cyclohexene.sp.json
+63565812a7651d47778d34bc2b89c013c52d8ad15d8b921a5f7eb971c9dddca1  cyclohexene.sp.log
+a3a8610293b383b5da65bd04895909cd53547e81344721e72d89f716bbf7c3cc  cyclohexene.sp.stderr
+9a999494b68002249df37246863c814e031160666cb561dd72e5eef7e0875869  cyclohexene.sp.stdout
+762f143f91637da7c724d0613f37488dc44175dc99daa68f3aa718cd0512803c  cyclohexene.xyz
+81fdce958806527a49cfc2fb22fccdc7cf70bcd5bba11c17818e7b36fa6b044b  d3.py
+000962d6240a885cb5864dad50ad362ab3903303d56379ce9ee16ff516d2ee1d  ethylene.d3.json
+2c38f3f8ffbc910c1066e88344ab750b3efa65ad391cf437fd7e1dffbc1f6076  ethylene.freq.log
+a7e20565373fb71832bfeec1735211c7fd51bd67b54d2fe3e7f75825a1095440  ethylene.freq.txt
+330f7b5b79b17e44b0351ca940f7a76deff7cc169b827fbd24248eca9bf486d5  ethylene.opt.json
+03e2d9c19fe26ec4b6d735ea4d9a6b25b0b4893e257c0275fd66a72c40c8f4eb  ethylene.opt.log
+798fa607eb59e0b63c737ad102a349bdeeb7066a81985c311dd3388f65bae6b8  ethylene.opt.stderr
+0e5de0227669b205c671520aad9a593771359bb6f3040b2e6259025ea7093e91  ethylene.opt.stdout
+5f4b4d979be8cc6ee87b9c0453675480b86cb61129f558ff3b0f5fd0f95588d1  ethylene.sp.json
+618b24d7d9631e69c7edaeed25ff759781d5e0684880746e09f3d3c28a15eb46  ethylene.sp.log
+5d6f6789645cb5a3d4e437bdbc8f41c9de890771a225dd701eb9ac3809ea0669  ethylene.sp.stderr
+807fcf25525dd0ead0883c7377e5d415567df5e43b95420734114078548808a0  ethylene.sp.stdout
+4f17dc8c1bf090bba3497ac7f0d272a9c1614967b6ff2df88bb6200ed2d19631  ethylene.xyz
+3933153bd3c750daf717b2ee5b35d0584fb539cc93e9fcc42c48503b751186be  README.md
+40fe7c7f5ac697815b4e78e403ae1ec71731f7a82d925856b21597a59c97a35e  results.json
+9dcc3724518a209685c6fab24249ed2dfc3a174052720fd104ace50b39bddec3  run_all.log
+5222e77b3fdf6a9ec97c0019c3968891c3a473fd7432c37cb28c2556a58bde6d  run_all.sh
+15852f98028b2a144c3c6842844bcb74a197498d65dd8e5192a5cde5bc8c5064  TJ-REFERENCE-VALUES.md
+```

@@ -1,0 +1,186 @@
+{
+  "entries": [
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dE_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.6
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dH_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.65
+    },
+    {
+      "gate": true,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dG_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.7
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.gauche_population",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "percent",
+      "value": 38.0
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dE_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -47.0
+    },
+    {
+      "gate": false,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dH_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -42.0
+    },
+    {
+      "gate": true,
+      "level": "wb97mv_def2tzvpd//b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dG_r",
+      "standard_state": "1 M",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -31.0
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dE_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.6
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dH_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.65
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.dG_gauche_anti",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": 0.7
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf1.gauche_population",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "percent",
+      "value": 38.0
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dE_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -47.0
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dH_r",
+      "standard_state": "n/a",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -42.0
+    },
+    {
+      "gate": false,
+      "level": "b3lyp_631gss",
+      "method": "placeholder method text",
+      "provenance": "EXAMPLE — not a reference",
+      "quantity": "hf2.dG_r",
+      "standard_state": "1 M",
+      "temperature_k": 298.15,
+      "unit": "kcal/mol",
+      "value": -31.0
+    }
+  ],
+  "reference_species": {
+    "butadiene_strans": {
+      "conformer": "butadiene_strans",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "butane_anti": {
+      "conformer": "butane_anti",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "butane_gauche": {
+      "conformer": "butane_gauche",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "cyclohexene": {
+      "conformer": "cyclohexene",
+      "sigma": 2,
+      "thermo_model": "RRHO"
+    },
+    "ethylene": {
+      "conformer": "ethylene",
+      "sigma": 4,
+      "thermo_model": "RRHO"
+    }
+  },
+  "schema": 1
+}

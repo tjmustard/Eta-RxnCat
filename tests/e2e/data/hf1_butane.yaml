@@ -1,0 +1,11 @@
+# Human Fixture 1 (team-drafted, provisional per TJ Q-E3): n-butane conformers on both recipes.
+schema: 1
+fixture: hf1_butane
+species:
+  - species_id: n_butane
+    smiles: CCCC
+    charge: 0
+    spin_multiplicity: 1
+    conformer_options:
+      n_embed: 50
+      seed: 42

@@ -11,7 +11,7 @@ pytest_plugins = ["pytester"]
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFTEST = (ROOT / "tests" / "conftest.py").read_text(encoding="utf-8")
-MARKERS = ("gpu", "xtb", "mlip_mace", "mlip_uma", "slow", "acceptance")
+MARKERS = ("gpu", "xtb", "mlip_mace", "mlip_uma", "slow", "acceptance", "e2e")
 
 SKIPPING_TEST = """
 import pytest
@@ -89,7 +89,7 @@ def test_hub_offline_inside_test() -> None:
 
 
 def test_markers_and_default_deselection() -> None:
-    """All six markers are declared, and the default addopts deselects every one of them."""
+    """All seven markers are declared, and the default addopts deselects every one of them."""
     config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     ini = config["tool"]["pytest"]["ini_options"]
     declared = {entry.split(":", 1)[0] for entry in ini["markers"]}

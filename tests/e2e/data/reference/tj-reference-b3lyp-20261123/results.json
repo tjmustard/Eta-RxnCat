@@ -1,0 +1,349 @@
+{
+ "title": "TJ reference values for eta-rxncat v0.3.0 fixtures",
+ "temperature_K": 298.15,
+ "pressure_Pa": 101325.0,
+ "energy_unit": "kcal/mol",
+ "hartree_to_kcal_mol": 627.509474,
+ "R_kcal_mol_K": 0.001987204259,
+ "thermochemistry": "ideal gas, rigid rotor, harmonic oscillator (RRHO), unscaled B3LYP/6-31G** harmonic frequencies, pyscf.hessian.thermo; electronic multiplicity 1; rotational symmetry numbers enforced as listed",
+ "versions": {
+  "pyscf": "2.15.1",
+  "geometric": "1.1.1",
+  "numpy": "2.3.5"
+ },
+ "symmetry_numbers_used": {
+  "butane_anti": 2,
+  "butane_gauche": 2,
+  "butadiene_strans": 2,
+  "butadiene_gauche": 2,
+  "ethylene": 4,
+  "cyclohexene": 2
+ },
+ "symmetry_numbers_pyscf_autodetect_tol_1e-5_bohr": {
+  "butane_anti": 1,
+  "butane_gauche": 1,
+  "butadiene_strans": 1,
+  "butadiene_gauche": 1,
+  "ethylene": 2,
+  "cyclohexene": 1
+ },
+ "point_groups_detected_by_tolerance_bohr": {
+  "butane_anti": {
+   "1e-05": "Ci",
+   "0.0001": "C2h",
+   "0.001": "C2h",
+   "0.01": "C2h"
+  },
+  "butane_gauche": {
+   "1e-05": "C1",
+   "0.0001": "C1",
+   "0.001": "C2",
+   "0.01": "C2"
+  },
+  "butadiene_strans": {
+   "1e-05": "Cs",
+   "0.0001": "C2h",
+   "0.001": "C2h",
+   "0.01": "C2h"
+  },
+  "butadiene_gauche": {
+   "1e-05": "C1",
+   "0.0001": "C2",
+   "0.001": "C2",
+   "0.01": "C2"
+  },
+  "ethylene": {
+   "1e-05": "C2h",
+   "0.0001": "D2h",
+   "0.001": "D2h",
+   "0.01": "D2h"
+  },
+  "cyclohexene": {
+   "1e-05": "C1",
+   "0.0001": "C1",
+   "0.001": "C2",
+   "0.01": "C2"
+  }
+ },
+ "n_imaginary_frequencies": {
+  "butane_anti": 0,
+  "butane_gauche": 0,
+  "butadiene_strans": 0,
+  "butadiene_gauche": 0,
+  "ethylene": 0,
+  "cyclohexene": 0
+ },
+ "lowest_frequency_cm-1": {
+  "butane_anti": 121.21908695414996,
+  "butane_gauche": 116.39534447206157,
+  "butadiene_strans": 176.97131575706345,
+  "butadiene_gauche": 156.5592146667749,
+  "ethylene": 830.2746949761639,
+  "cyclohexene": 166.44510687563726
+ },
+ "dihedrals_deg": {
+  "butane_anti": -179.9999981873473,
+  "butane_gauche": 65.34007512238615,
+  "butadiene_strans": 179.99999823536064,
+  "butadiene_gauche": 30.250364087882044
+ },
+ "max_abs_gradient_at_final_geometry_Eh_per_bohr": {
+  "butane_anti": 2.6147807030696413e-06,
+  "butane_gauche": 4.20983623700133e-06,
+  "butadiene_strans": 8.408764555767334e-07,
+  "butadiene_gauche": 7.777379424922515e-07,
+  "ethylene": 3.669167913944449e-07,
+  "cyclohexene": 1.0374279932889863e-06
+ },
+ "species_Eh": {
+  "butane_anti": {
+   "B3LYP_6-31Gss_E_elec": -158.46897110172262,
+   "ZPE": 0.1322979673610871,
+   "H_corr_298": 0.13901574347158885,
+   "G_corr_298_1atm": 0.10494092081336248,
+   "S_298_1atm_cal_mol_K": 71.7164985507877,
+   "wB97M-V_def2-TZVPD_E_elec": -158.4003767339285,
+   "wB97M-V_VV10_component": 0.13157189249091833,
+   "D3BJ_dispersion": -0.014546055878245109
+  },
+  "butane_gauche": {
+   "B3LYP_6-31Gss_E_elec": -158.4676624882081,
+   "ZPE": 0.1324349762717145,
+   "H_corr_298": 0.1390930676885489,
+   "G_corr_298_1atm": 0.10506193909333206,
+   "S_298_1atm_cal_mol_K": 71.62453665745828,
+   "wB97M-V_def2-TZVPD_E_elec": -158.39940570541862,
+   "wB97M-V_VV10_component": 0.13127055978232166,
+   "D3BJ_dispersion": -0.015004988875391572
+  },
+  "butadiene_strans": {
+   "B3LYP_6-31Gss_E_elec": -155.99814687109773,
+   "ZPE": 0.08529397299386905,
+   "H_corr_298": 0.09088803191173156,
+   "G_corr_298_1atm": 0.05949799375667908,
+   "S_298_1atm_cal_mol_K": 66.06589411882308,
+   "wB97M-V_def2-TZVPD_E_elec": -155.96227359839742,
+   "wB97M-V_VV10_component": 0.11820385600664349,
+   "D3BJ_dispersion": -0.010792826859852687
+  },
+  "butadiene_gauche": {
+   "B3LYP_6-31Gss_E_elec": -155.99252240878928,
+   "ZPE": 0.08515443516381986,
+   "H_corr_298": 0.09080319021148853,
+   "G_corr_298_1atm": 0.05910697662847042,
+   "S_298_1atm_cal_mol_K": 66.71029452723137,
+   "wB97M-V_def2-TZVPD_E_elec": -155.95789198071864,
+   "wB97M-V_VV10_component": 0.11802025819547403,
+   "D3BJ_dispersion": -0.011141033023039341
+  },
+  "ethylene": {
+   "B3LYP_6-31Gss_E_elec": -78.59198476906013,
+   "ZPE": 0.0511064346389317,
+   "H_corr_298": 0.05509402869871849,
+   "G_corr_298_1atm": 0.030230049764142564,
+   "S_298_1atm_cal_mol_K": 52.33064679788051,
+   "wB97M-V_def2-TZVPD_E_elec": -78.56627833776449,
+   "wB97M-V_VV10_component": 0.06487785491899735,
+   "D3BJ_dispersion": -0.003940319685390363
+  },
+  "cyclohexene": {
+   "B3LYP_6-31Gss_E_elec": -234.65810595772365,
+   "ZPE": 0.1464488096585387,
+   "H_corr_298": 0.15290319123459994,
+   "G_corr_298_1atm": 0.11845623717530884,
+   "S_298_1atm_cal_mol_K": 72.49971498459377,
+   "wB97M-V_def2-TZVPD_E_elec": -234.60353898012335,
+   "wB97M-V_VV10_component": 0.17359901171452624,
+   "D3BJ_dispersion": -0.023358821606966146
+  }
+ },
+ "wall_time_s": {
+  "butane_anti": {
+   "b3lyp_opt_freq": 272.2454788684845,
+   "wb97mv_sp": 192.5469090938568
+  },
+  "butane_gauche": {
+   "b3lyp_opt_freq": 377.50718665122986,
+   "wb97mv_sp": 218.70857119560242
+  },
+  "butadiene_strans": {
+   "b3lyp_opt_freq": 355.5343029499054,
+   "wb97mv_sp": 222.3485209941864
+  },
+  "butadiene_gauche": {
+   "b3lyp_opt_freq": 242.2472836971283,
+   "wb97mv_sp": 279.07574129104614
+  },
+  "ethylene": {
+   "b3lyp_opt_freq": 52.51124048233032,
+   "wb97mv_sp": 28.20536780357361
+  },
+  "cyclohexene": {
+   "b3lyp_opt_freq": 1202.6559686660767,
+   "wb97mv_sp": 679.9309287071228
+  }
+ },
+ "B3LYP/6-31G** (RRHO)": {
+  "label": "B3LYP/6-31G** (6-31G(d,p)), opt + analytic freq, RRHO, no dispersion",
+  "basis_d_functions": "spherical 5D (PySCF default cart=False); Gaussian default for 6-31G** is 6D",
+  "b3lyp_flavour": "PySCF>=2.3 b3lyp = VWN-RPA (Gaussian-like)",
+  "hessian_note": "PySCF CPHF Krylov solver warned and fell back to per-root solve for every species; frequencies physically sensible",
+  "grid": "PySCF grids.level=5 (180120 points for ethylene)",
+  "scf_conv_tol": 1e-10,
+  "opt_convergence": {
+   "convergence_set": "GAU_TIGHT",
+   "convergence_energy": 1e-08
+  },
+  "butane_gauche_minus_anti_kcal_mol": {
+   "dE": 0.8211673781595685,
+   "dE_ZPE": 0.9071417676006819,
+   "dH_298": 0.8696890568716319,
+   "dG_298": 0.8971074953676618
+  },
+  "butane_gauche_population_percent_298K": {
+   "from_dG": 30.55521168408559,
+   "from_dE": 33.340503777241146,
+   "formula": "p_g = 2 exp(-d/RT) / (1 + 2 exp(-d/RT)), both gauche enantiomers counted (degeneracy 2)"
+  },
+  "butadiene_gauche_minus_strans_kcal_mol": {
+   "dE": 3.52940338470622,
+   "dE_ZPE": 3.4418420743675053,
+   "dH_298": 3.476164414013449,
+   "dG_298": 3.284036432259014
+  },
+  "diels_alder_kcal_mol": {
+   "reaction": "s-trans-1,3-butadiene + ethylene -> cyclohexene (half-chair)",
+   "dE_r": -42.65452826121455,
+   "dE_ZPE_r": -36.34906079148959,
+   "dH_r_298": -38.31145322376896,
+   "dG_r_298_1atm": -24.627314572117154,
+   "dG_r_298_1M": -26.52164301794276,
+   "standard_state_conversion": {
+    "delta_n_gas": -1,
+    "V_molar_1atm_L_per_mol": 24.46540369658722,
+    "RT_kcal_mol": 0.59248494982085,
+    "RT_ln_Vm_kcal_mol": 1.8943284458256078,
+    "formula": "dG(1M) = dG(1atm) + dn*RT*ln(Vm/1 L) = dG(1atm) - RT ln(24.4654)",
+    "arithmetic": "-24.6273 - 1.8943 = -26.5216"
+   },
+   "note": "dH_r and dE_r are standard-state independent for ideal gases"
+  }
+ },
+ "B3LYP/6-31G** (quasi-RRHO entropy, side result)": {
+  "label": "as above but Grimme quasi-RRHO vibrational entropy, w0=100 cm-1 (enthalpy unchanged)",
+  "butane_gauche_minus_anti_kcal_mol": {
+   "dE": 0.8211673781595685,
+   "dE_ZPE": 0.9071417676006819,
+   "dH_298": 0.8696890568716319,
+   "dG_298": 0.9062403061624454
+  },
+  "butane_gauche_population_percent_298K": {
+   "from_dG": 30.229116973067132,
+   "from_dE": 33.340503777241146,
+   "formula": "p_g = 2 exp(-d/RT) / (1 + 2 exp(-d/RT)), both gauche enantiomers counted (degeneracy 2)"
+  },
+  "butadiene_gauche_minus_strans_kcal_mol": {
+   "dE": 3.52940338470622,
+   "dE_ZPE": 3.4418420743675053,
+   "dH_298": 3.476164414013449,
+   "dG_298": 3.28959534733265
+  },
+  "diels_alder_kcal_mol": {
+   "reaction": "s-trans-1,3-butadiene + ethylene -> cyclohexene (half-chair)",
+   "dE_r": -42.65452826121455,
+   "dE_ZPE_r": -36.34906079148959,
+   "dH_r_298": -38.31145322376896,
+   "dG_r_298_1atm": -24.626070379406514,
+   "dG_r_298_1M": -26.52039882523212,
+   "standard_state_conversion": {
+    "delta_n_gas": -1,
+    "V_molar_1atm_L_per_mol": 24.46540369658722,
+    "RT_kcal_mol": 0.59248494982085,
+    "RT_ln_Vm_kcal_mol": 1.8943284458256078,
+    "formula": "dG(1M) = dG(1atm) + dn*RT*ln(Vm/1 L) = dG(1atm) - RT ln(24.4654)",
+    "arithmetic": "-24.6261 - 1.8943 = -26.5204"
+   },
+   "note": "dH_r and dE_r are standard-state independent for ideal gases"
+  }
+ },
+ "GATING REFERENCE": {
+  "label": "ωB97M-V/def2-TZVPD//B3LYP/6-31G** with B3LYP/6-31G** RRHO thermal corrections",
+  "sp_method": "RKS wB97M-V (pyscf xc=wb97m_v, VV10 nonlocal via functional definition)",
+  "sp_basis": "def2-TZVPD (PySCF built-in def2-tzvpd.dat)",
+  "sp_grid_level": 5,
+  "sp_nlcgrid_level": 3,
+  "vv10_on": true,
+  "butane_gauche_minus_anti_kcal_mol": {
+   "dE": 0.6093295894830411,
+   "dE_ZPE": 0.6953039789241543,
+   "dH_298": 0.6578512681951043,
+   "dG_298": 0.6852697066911343
+  },
+  "butane_gauche_population_percent_298K": {
+   "from_dG": 38.61663938103707,
+   "from_dE": 41.69556697115084,
+   "formula": "p_g = 2 exp(-d/RT) / (1 + 2 exp(-d/RT)), both gauche enantiomers counted (degeneracy 2)"
+  },
+  "butadiene_gauche_minus_strans_kcal_mol": {
+   "dE": 2.749506604876774,
+   "dE_ZPE": 2.6619452945380586,
+   "dH_298": 2.696267634184003,
+   "dG_298": 2.504139652429567
+  },
+  "diels_alder_kcal_mol": {
+   "reaction": "s-trans-1,3-butadiene + ethylene -> cyclohexene (half-chair)",
+   "dE_r": -47.055080513059735,
+   "dE_ZPE_r": -40.749613043334776,
+   "dH_r_298": -42.71200547561414,
+   "dG_r_298_1atm": -29.027866823962334,
+   "dG_r_298_1M": -30.92219526978794,
+   "standard_state_conversion": {
+    "delta_n_gas": -1,
+    "V_molar_1atm_L_per_mol": 24.46540369658722,
+    "RT_kcal_mol": 0.59248494982085,
+    "RT_ln_Vm_kcal_mol": 1.8943284458256078,
+    "formula": "dG(1M) = dG(1atm) + dn*RT*ln(Vm/1 L) = dG(1atm) - RT ln(24.4654)",
+    "arithmetic": "-29.0279 - 1.8943 = -30.9222"
+   },
+   "note": "dH_r and dE_r are standard-state independent for ideal gases"
+  }
+ },
+ "B3LYP-D3(BJ)/6-31G**//B3LYP/6-31G** (side result)": {
+  "label": "B3LYP/6-31G** energies + D3(BJ) dispersion (single point at B3LYP geometries), B3LYP RRHO thermal corrections",
+  "dispersion_source": "pyscf-dispersion 1.7.0 (simple-dftd3)",
+  "butane_gauche_minus_anti_kcal_mol": {
+   "dE": 0.5331825745090324,
+   "dE_ZPE": 0.6191569639501456,
+   "dH_298": 0.5817042532210956,
+   "dG_298": 0.6091226917171256
+  },
+  "butane_gauche_population_percent_298K": {
+   "from_dG": 41.70405647927802,
+   "from_dE": 44.84928955227092,
+   "formula": "p_g = 2 exp(-d/RT) / (1 + 2 exp(-d/RT)), both gauche enantiomers counted (degeneracy 2)"
+  },
+  "butadiene_gauche_minus_strans_kcal_mol": {
+   "dE": 3.3109007183868475,
+   "dE_ZPE": 3.223339408048133,
+   "dH_298": 3.2576617476940766,
+   "dG_298": 3.0655337659396413
+  },
+  "diels_alder_kcal_mol": {
+   "reaction": "s-trans-1,3-butadiene + ethylene -> cyclohexene (half-chair)",
+   "dE_r": -48.06722108209981,
+   "dE_ZPE_r": -41.761753612374854,
+   "dH_r_298": -43.72414604465422,
+   "dG_r_298_1atm": -30.040007393002412,
+   "dG_r_298_1M": -31.93433583882802,
+   "standard_state_conversion": {
+    "delta_n_gas": -1,
+    "V_molar_1atm_L_per_mol": 24.46540369658722,
+    "RT_kcal_mol": 0.59248494982085,
+    "RT_ln_Vm_kcal_mol": 1.8943284458256078,
+    "formula": "dG(1M) = dG(1atm) + dn*RT*ln(Vm/1 L) = dG(1atm) - RT ln(24.4654)",
+    "arithmetic": "-30.0400 - 1.8943 = -31.9343"
+   },
+   "note": "dH_r and dE_r are standard-state independent for ideal gases"
+  }
+ }
+}

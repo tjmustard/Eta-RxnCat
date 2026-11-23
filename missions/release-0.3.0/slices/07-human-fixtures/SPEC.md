@@ -10,7 +10,7 @@ intent: "Run Human Fixtures 1 (n-butane) and 2 (butadiene + ethylene to cyclohex
 depends_on: [OPR.0.3.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.3.0/**", pyproject.toml, docs/prd/v0.3.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -195,16 +195,16 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: H8 — in `.venv-accept-uma`: `pyscf.dft.libxc.parse_xc("pbe0")` succeeds and
+- [x] Task 1: H8 — in `.venv-accept-uma`: `pyscf.dft.libxc.parse_xc("pbe0")` succeeds and
   `pyscf.gto.M(atom="H 0 0 0; H 0 0 0.74", basis="def2-svp")` builds; `xtb … --alpb toluene` exit 0.
   Record.
-- [ ] Task 2: H5 (R10) — cache disabled (fresh store per run): butane gauche re-optimized from 3
+- [x] Task 2: H5 (R10) — cache disabled (fresh store per run): butane gauche re-optimized from 3
   distinct pass-1 embeddings that converge to it, and from 3 displacements of 0.01 Å, on each recipe
   (UMA on cuda); record the spread of the lowest 3 frequencies and of G. Spread of G > 0.0167
   kcal/mol → stop and report to the lead.
-- [ ] Task 3: inputs, loaders, derived and regression helpers, the reference provenance copy and
+- [x] Task 3: inputs, loaders, derived and regression helpers, the reference provenance copy and
   `transcribe_tj_results` (req 2a) + unit tests.
-- [ ] Task 4: E2E tests; run both recipes in their envs.
+- [x] Task 4: E2E tests; run both recipes in their envs.
 - [ ] Task 5: H13 — after C1 (below): `git add -n tests/candidate_outputs/v0.3.0/` succeeds and
   `git diff --stat <C1>..<C2> -- . ':(exclude)tests/candidate_outputs'` prints nothing; a denial
   or leak stops and reports.
