@@ -4,7 +4,7 @@
       "gitignore": "6c820ccc0429896bbb79d2eca27a8300c3bbde10e5bcc49c7855fb708026927b"
     },
     "AGENTS.md": {
-      "hacf": "f6e5ba7938c233b0e8f19b421e7bda0bc51d80c565a30d87fe7e1a50b6e453a2"
+      "hacf": "10e2e740c740a099082d1ca0537a9b133d1e62520e40ca89a5440162458a5081"
     },
     "CLAUDE.md": {
       "hacf": "d03561436dd6de3bd64da16d704134d8bc229540648530eae815c4231defebe0"
@@ -27,9 +27,17 @@
       "owner": "hacf",
       "sha256": "e0f3130e6b5d0079a08a13413937ea5560ae7e3a16c65b04d35880cb00544539"
     },
+    ".agents/config/openrig_contract.yml": {
+      "owner": "hacf",
+      "sha256": "228ed51e45889befa3a3c9f8bd4951008a7112f6dadc70ca3cc083cc75b2e4e6"
+    },
+    ".agents/config/openrig_probe_expect.json": {
+      "owner": "hacf",
+      "sha256": "4255daa2ce489861de363520175d31dfcd0e1d39121a29ef91086f5397f25bc5"
+    },
     ".agents/config/orchestration.yml": {
       "owner": "hacf",
-      "sha256": "07056cf4cc6d139765a73a9f0e1230b3e2729da58f47f0fc5176395a47d25fe4"
+      "sha256": "c8db1dd6b218e30a83c6c2575d835d722f0befb9b97c6df07f47bef391db99e0"
     },
     ".agents/config/upstream.yml": {
       "owner": "hacf",
@@ -37,7 +45,7 @@
     },
     ".agents/install-templates/AGENTS.md": {
       "owner": "hacf",
-      "sha256": "f6e5ba7938c233b0e8f19b421e7bda0bc51d80c565a30d87fe7e1a50b6e453a2"
+      "sha256": "10e2e740c740a099082d1ca0537a9b133d1e62520e40ca89a5440162458a5081"
     },
     ".agents/install-templates/CLAUDE.md": {
       "owner": "hacf",
@@ -197,7 +205,7 @@
     },
     ".agents/scripts/hyper_engine.py": {
       "owner": "hacf",
-      "sha256": "e5810caaa20f30d6b2525bb076b0f2732b893085eb5e96f964cdbf9093814f09"
+      "sha256": "df45ca3d243cd146d908c8d60de5758d6d6072d660ca9cc207629e16d13be174"
     },
     ".agents/scripts/hyper_executors.py": {
       "owner": "hacf",
@@ -229,11 +237,11 @@
     },
     ".agents/scripts/hyper_migrate.py": {
       "owner": "hacf",
-      "sha256": "66540038912233333679e296c5debbf2403f75951686c86a5a99c5f332f6252e"
+      "sha256": "5e3c69d18afed4955c24eadf6b17c1c380995afd352d4f324f20fef70e459e2e"
     },
     ".agents/scripts/hyper_openrig.py": {
       "owner": "hacf",
-      "sha256": "36a5d97ff469128465798c73157fd3c4b8e93f91380e173e013b2ef489581c7a"
+      "sha256": "bd4c012595a14f968b0f9e685f19eec4c66912559db62cfef1e8f93d97c9e4f2"
     },
     ".agents/scripts/hyper_orchestrator.py": {
       "owner": "hacf",
@@ -253,7 +261,7 @@
     },
     ".agents/scripts/hyper_spec.py": {
       "owner": "hacf",
-      "sha256": "cf046b6920b8265740fb1500ecc8a32e8a9de519b53464fab7c62a4b5eaa189c"
+      "sha256": "3438383d97acd795550af943b8c2a5031f15757c404ffe247ad3eb1b1e39825d"
     },
     ".agents/scripts/hyper_update_core.py": {
       "owner": "hacf",
@@ -710,8 +718,8 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-23T03:05:03+00:00",
-  "installed_commit": "b01d41b90c8a44e67cfaff67ade843a68e2d8a06",
+  "installed_at": "2026-11-23T17:41:17+00:00",
+  "installed_commit": "5028b9f61b1c860d487c156ee3c67058b67a3a5b",
   "mcp_entries": {
     ".mcp.json": {
       "codebase-memory-mcp": {
@@ -756,8 +764,8 @@
     ]
   },
   "source": {
-    "commit": "b01d41b90c8a44e67cfaff67ade843a68e2d8a06",
+    "commit": "5028b9f61b1c860d487c156ee3c67058b67a3a5b",
     "kind": "local"
   },
-  "version": "0.6.1"
+  "version": "0.6.2"
 }
