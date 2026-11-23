@@ -59,6 +59,14 @@ Context the builder needs:
   ordering check is **gated on both recipes**. It is not re-decided here.
 - The commit order and pathspec rule of slice 07 (R23) apply unchanged.
 
+- **Reader rule (mission R50, binding):** drop-path failures are cached as COMPLETED rows with
+  payload `{failed_reason, message}`. Any code here that reads a stage payload from the store or a
+  runner result checks `failed_reason` first; such a payload is a failure — count and report it
+  (species, stage, reason), never use it as a result.
+- **Standard state (mission R51):** every T2 ΔG_rxn (gas and the ALPB(dioxane) solvated value)
+  goes through slice 07's `tests/e2e/derived.py: checked_reaction_free_energy`; never call
+  `reaction_free_energy` directly.
+
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
   slice; record `Start` (HEAD when you begin) in your handoff.
@@ -164,7 +172,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
+- Mission §5 R50–R52 (replan 3); R21, R23–R32, R42, "Human fixture inputs", "Test tiers and tolerances" (tier table); TJ
   Q-E2…Q-E5, R1.
 
 ## Intent visual

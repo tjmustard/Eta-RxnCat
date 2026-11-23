@@ -54,6 +54,14 @@ Context the builder needs:
   acceptance driver's candidate output at a scratch directory (`ETA_RXNCAT_CANDIDATE_DIR`, default
   the repo path) so the record run never touches the committed files.
 
+- **Reader rule (mission R50, binding):** drop-path failures are cached as COMPLETED rows with
+  payload `{failed_reason, message}`. Any code here that reads a stage payload from the store or a
+  runner result checks `failed_reason` first; such a payload is a failure — count and report it
+  (species, stage, reason), never use it as a result.
+- R50: the record counts failures per fixture, species and stage (`failures`: reason → count) and
+  `known_limits` carries: "a non-deterministic engine failure stays cached as a completed failure row
+  until `invalidate`; it is not retried under the same key (R50)".
+
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
   slice; record `Start` (HEAD when you begin) in your handoff.
@@ -137,7 +145,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R4, R11, R22, R26, R43, R46–R48, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
+- Mission §5 R50–R52 (replan 3); R4, R11, R22, R26, R43, R46–R48, "Contracts" (acceptance record); `docs/prd/v0.2.0/GPU_SMOKE_RESULT.json`;
   `tests/unit/test_identity.py`.
 
 ## Intent visual

@@ -53,6 +53,12 @@ Context the builder needs:
   TJ). `known_limits` holds only reported deviations and the Q-E5 escalation proposal.
 - Fixtures under `tests/fixtures/` are TJ's and may be read; candidates may not.
 
+- **Reader rule (mission R50, binding):** drop-path failures are cached as COMPLETED rows with
+  payload `{failed_reason, message}`. Any code here that reads a stage payload from the store or a
+  runner result checks `failed_reason` first; such a payload is a failure — count and report it
+  (species, stage, reason), never use it as a result.
+- R50: keep slice 09's `failures` counts and its R50 `known_limits` line in the rewritten record.
+
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
   slice; record `Start` (HEAD when you begin) in your handoff.
@@ -126,7 +132,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §5 R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
+- Mission §5 R50–R52 (replan 3); R10, R18, R22, R26, R42, R43, R46–R48, "Test tiers and tolerances"; TJ Q5, Q-E5.
 
 ## Intent visual
 

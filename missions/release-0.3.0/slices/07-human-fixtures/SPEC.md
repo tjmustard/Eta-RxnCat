@@ -54,6 +54,16 @@ Context the builder needs:
   "C-PCM"}`; `toluene` is in `engines/pyscf_gpu_cpu/solvents.py` (2.3741).
 - R23 commit order and the pathspec rule are binding for this slice (below).
 
+- **Reader rule (mission R50, binding):** drop-path failures are cached as COMPLETED rows with
+  payload `{failed_reason, message}`. Any code here that reads a stage payload from the store or a
+  runner result checks `failed_reason` first; such a payload is a failure — count and report it
+  (species, stage, reason), never use it as a result.
+- **Standard state (mission R51):** add `checked_reaction_free_energy(spec, ensembles, config)` to
+  `tests/e2e/derived.py`: every record of every ensemble must have `thermo.config == config` (whole
+  model), else `ValueError` naming the species; then it calls `reaction_free_energy`. Every HF2 ΔG_r
+  (gas and solvated) goes through it. Unit tests: an ensemble at `standard_state_mol_l=2.0` and one
+  at another pressure are both refused.
+
 **Seat rules for every v0.3.0 slice (self-contained; the mission SPEC is `missions/release-0.3.0/SPEC.md`):**
 - Branch `feature/eta-rxncat-v0.3.0`, cut re-entrantly from Base `7993284`. One code commit per
   slice; record `Start` (HEAD when you begin) in your handoff.
@@ -233,7 +243,7 @@ with `commit_sha = C1`, and write the candidate `reference_values.json` with the
 
 ## Source material
 
-- Mission §5 R6, R10, R13, R18, R20, R23, R27, R43, R46–R49, "Human fixture inputs", "Test tiers and tolerances",
+- Mission §5 R50–R52 (replan 3); R6, R10, R13, R18, R20, R23, R27, R43, R46–R49, "Human fixture inputs", "Test tiers and tolerances",
   "Contracts" (candidate output, reference values); TJ Q1, Q2, Q5, R1, R2.
 
 ## Intent visual
