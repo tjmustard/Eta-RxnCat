@@ -12,6 +12,13 @@ from eta_rxncat.mapping.errors import (
     GraftInputError,
     MappingError,
 )
+from eta_rxncat.mapping.graft import graft
+from eta_rxncat.mapping.report import (
+    core_rmsd_angstrom,
+    covalent_radius_angstrom,
+    junction_volumes,
+    perceive_bonds,
+)
 
 __all__ = [
     "AlignmentError",
@@ -20,6 +27,11 @@ __all__ = [
     "GraftInputError",
     "MappingError",
     "Superposition",
+    "core_rmsd_angstrom",
+    "covalent_radius_angstrom",
+    "graft",
+    "junction_volumes",
     "pair_set_shape",
+    "perceive_bonds",
     "superpose",
 ]

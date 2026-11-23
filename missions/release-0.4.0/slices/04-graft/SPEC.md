@@ -10,7 +10,7 @@ intent: "Implement ordered graft surgery (paired fragment atoms dropped, optiona
 depends_on: [OPR.0.4.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_mapping
 parent: null
 hacf_touches: ["src/eta_rxncat/mapping/**", "tests/unit/mapping/**", tests/unit/test_package.py, spec/compiled/architecture.yml]
@@ -255,10 +255,10 @@ values, not this slice.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read slice 02/03 code.
-- [ ] Task 2: `report.py`, then `graft.py`; export `graft` and the report helpers from `eta_rxncat.mapping`.
-- [ ] Task 3: `tests/unit/mapping/test_graft.py`, `tests/unit/mapping/test_report.py`; required checks.
-- [ ] Task 4: commit; updater (node `eta_rxncat_mapping`; no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read slice 02/03 code.
+- [x] Task 2: `report.py`, then `graft.py`; export `graft` and the report helpers from `eta_rxncat.mapping`.
+- [x] Task 3: `tests/unit/mapping/test_graft.py`, `tests/unit/mapping/test_report.py`; required checks.
+- [x] Task 4: commit; updater (node `eta_rxncat_mapping`; no glob change).
 
 ## 4. The Negative Space (Constraints)
 

@@ -290,7 +290,13 @@ def test_direct_dependency_check_catches(requirement: str) -> None:
     assert requirement_name(requirement) in FORBIDDEN_DIRECT_DEPENDENCIES
 
 
-MAPPING_MODULES = ("eta_rxncat.mapping", "eta_rxncat.mapping.align", "eta_rxncat.mapping.errors")
+MAPPING_MODULES = (
+    "eta_rxncat.mapping",
+    "eta_rxncat.mapping.align",
+    "eta_rxncat.mapping.errors",
+    "eta_rxncat.mapping.graft",
+    "eta_rxncat.mapping.report",
+)
 MAPPING_HEAVY = ("geometric", "torch", "pyscf", "fairchem", "rdkit")
 
 
