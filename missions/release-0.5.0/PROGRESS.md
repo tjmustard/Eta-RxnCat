@@ -24,7 +24,7 @@
 | OPR.0.5.0.9 | 09-e2e-tetrazine | audited | OPR.0.5.0.8 | 2026-11-24T14:25:48+00:00 audited |
 | OPR.0.5.0.10 | 10-e2e-cyclobutenone | audited | OPR.0.5.0.8 | 2026-11-24T14:35:49+00:00 audited |
 | OPR.0.5.0.11 | 11-geometric-crosscheck | audited | OPR.0.5.0.9, OPR.0.5.0.10 | 2026-11-24T18:18:18+00:00 audited |
-| OPR.0.5.0.12 | 12-acceptance-record | executing | OPR.0.5.0.11 | 2026-11-24T21:01:04+00:00 executing |
+| OPR.0.5.0.12 | 12-acceptance-record | audited | OPR.0.5.0.11 | 2026-11-24T22:10:03+00:00 audited |
 | OPR.0.5.0.13 | 13-acceptance-verdict | compiled | OPR.0.5.0.12 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.14 | 14-bofill-guard | audited | OPR.0.5.0.3 | 2026-11-24T05:55:11+00:00 audited |
 | OPR.0.5.0.15 | 15-pyscf-cartesian-basis | audited | OPR.0.5.0.1 | 2026-11-24T09:04:58+00:00 audited |

@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -44,13 +44,12 @@ nodes:
     dist-infos fail. test_package.py bans copyleft imports, heavy imports at engines/optimize
     import, and geometric outside functions of optimize/geometric_impl.py. CI: checks
     plus licence-extras matrix. Public face: README.md, CHANGELOG.md (scribe-owned),
-    WebP media (test_media.py), LICENSE (MIT); test_identity.py enforces the author
-    form Thomas J. L. Mustard Ph.D. and derives the README badge, Features heading,
-    roadmap and GPU claim from GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their
-    ACCEPTANCE_RESULT.json. docs/prd/v<version>/ hold the verbatim starters (excluded
-    from every gate), each version's DISCREPANCIES.md and acceptance record (v0.2.0
-    also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy
-    register.
+    WebP media, LICENSE (MIT); test_identity.py enforces the author form Thomas J.
+    L. Mustard Ph.D. and derives the README badge, Features heading, roadmap and GPU
+    claim from GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
+    v0.5.0 pre-release (pending TJ) from its record. docs/prd/v<version>/: verbatim
+    starters (excluded from gates), DISCREPANCIES.md, acceptance record (v0.2.0 also
+    evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -64,9 +63,9 @@ nodes:
   provenance:
     last_slice: 12-acceptance-record
   review:
-    reviewed_at: '2026-11-24T04:14:02+00:00'
-    reviewed_by: audit:01-starter
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-24T22:09:38+00:00'
+    reviewed_by: audit:12-acceptance-record
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -510,7 +509,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -523,26 +522,26 @@ nodes:
     C). counting.py: CountingEngine counts calls per stage kind. species.py: SpeciesSpec,
     Recipe, SinglePoint; ENGINE_CLASSES registry; run_species caches every stage in
     the ArtifactStore under build_stage_key: conformer_search (0 engine calls; keyed
-    on embedding, options, SMILES, rdkit version, seed), geometry_opt per pre-dedup
-    survivor (engine + optimizer options, opt.name/version), dedup and energy window,
-    frequency per kept (energy + full Hessian; thermo recomputed), one imaginary-mode
-    push then not_a_minimum, re-dedup by G (R53), degeneracy, mirror-partner drop,
-    build_ensemble, incremental single points (R35). Opt/SCF failures cached, dropped;
-    other errors propagate. Per-kind metrics. run_constrained_point (R42): one keyed
-    geometry_opt row, frozen atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec,
-    TSRecipe, store) -> TSRunResult: ts_opt (key = engine options + resolved opt.
-    TS options, identity, sorted opt.forming_bonds), frequency (species key and payload),
-    validate_transition_state, ts_thermochemistry, TransitionStateRecord (degeneracy
-    1); failures cached (ts_search_failed:<reason>, scf_convergence), ts_validation_failed
-    keeps the validation; connectivity reported only; never the minimum path (N3).
-    barrier.py (v0.5.0): activation_free_energy(BarrierSpec, ensembles, TS) -> dE/dH/dG
-    dagger at 1 M and 1 atm (delta_n shift); conservation from reactant SMILES vs
-    TS atoms; configs checked; degeneracy 1. reaction.py: ReactionSpec, reaction_free_energy
-    at 1 M and 1 atm. report.py: deterministic JSON schema 1. Tests: tests/unit/orchestrator;
+    on embedding, SMILES, rdkit, seed), geometry_opt per pre-dedup survivor (engine
+    + optimizer options, opt.name/version), dedup and energy window, frequency per
+    kept (energy + full Hessian; thermo recomputed), one imaginary-mode push then
+    not_a_minimum, re-dedup by G (R53), degeneracy, mirror-partner drop, build_ensemble,
+    incremental single points (R35). Opt/SCF failures cached; other errors propagate.
+    Per-kind metrics. run_constrained_point (R42): one keyed geometry_opt row, frozen
+    atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe,
+    store) -> TSRunResult: ts_opt (key = engine options + resolved opt. TS options,
+    identity, sorted opt.forming_bonds), frequency (species key and payload), validate_transition_state,
+    ts_thermochemistry, TransitionStateRecord (degeneracy 1); failures cached (ts_search_failed:<reason>,
+    scf_convergence), ts_validation_failed keeps the validation; connectivity reported
+    only; never the minimum path (N3). barrier.py (v0.5.0): activation_free_energy(BarrierSpec,
+    ensembles, TS) -> dE/dH/dG dagger (1 M, 1 atm; delta_n); conservation from reactant
+    SMILES vs TS atoms; configs checked; degeneracy 1. reaction.py: ReactionSpec,
+    reaction_free_energy (1 M, 1 atm). report.py: JSON schema 1. Tests: tests/unit/orchestrator;
     tests/e2e HF1/HF2, T1/T2 on xtb and uma (e2e), T3 fixtures (tier D, R9 PySCF gpu),
     T3 E2E: Diels-Alder, tetrazine, Paton N4 (TS4a CF3 grafts+pre-relax; GFN2 TS4a
-    report-only; t3.py gates R32), geomeTRIC TS cross-check (CLI subprocess; eta_geometric_shim
-    sole ase importer; reported), R54, R46, candidates never read back, verdict.
+    report-only; t3.py gates R32), geomeTRIC TS cross-check (CLI subprocess; shim
+    sole ase importer; reported), R54, R46, candidates never read back; v050 record
+    (R32 report-only TS4a; repro, proposed bounds), verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -595,8 +594,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T18:17:45+00:00'
-    reviewed_by: audit:11-geometric-crosscheck
+    reviewed_at: '2026-11-24T22:09:38+00:00'
+    reviewed_by: audit:12-acceptance-record
     summary: patched description
   provenance:
     last_slice: 12-acceptance-record

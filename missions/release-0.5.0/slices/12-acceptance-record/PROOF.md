@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Auditor reran all 18 acceptance commands (exit 0, 0 skips) and merged: gated states equal the committed record; 1775 passed; UMA ddG repro 0.074 vs builder 0.035 (for TJ)
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
