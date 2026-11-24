@@ -2,7 +2,7 @@
 id: OPR.0.5.0.10
 slice: 10-e2e-cyclobutenone
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Run the Paton N4 cyclopentadiene + cyclobutenone TS search and barrier 
 depends_on: [OPR.0.5.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.5.0/**", spec/compiled/architecture.yml]
@@ -134,8 +134,8 @@ Context the builder needs:
 - [x] Task 1: codegraph index → `index: ok`; record Start; read slice 08's test and helpers.
 - [x] Task 2: the test (reuse `tests/e2e/t3.py`).
 - [x] Task 3: required checks; C1.
-- [ ] Task 4: host check; xtb then UMA (separate calls); second runs.
-- [ ] Task 5: C2; updater.
+- [x] Task 4: host check; xtb then UMA (separate calls); second runs.
+- [x] Task 5: C2; updater.
 
 ## 4. The Negative Space (Constraints)
 

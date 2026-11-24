@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: E2E rerun at C1 code: xtb 1/1 identity core pass, UMA 1/1 dG 26.61 in [15.6, 29.6]; 0 skipped; 1734 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

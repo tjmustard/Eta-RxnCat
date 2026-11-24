@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -541,9 +541,9 @@ nodes:
     reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON schema 1.
     Tests: tests/unit/orchestrator; tests/e2e HF1/HF2, T1/T2 on xtb and uma (e2e),
     T3 TS fixtures (load_ts_fixture; tier D, R9 PySCF gpu), T3 TS E2E: Diels-Alder,
-    tetrazine (TS4a CF3 grafts + pre-relax; GFN2 TS4a report-only, R32) (t3.py gates
-    Q-TJ3/R32; v0.5.0 candidates), R54, R46 regressions, candidates never read back,
-    acceptance verdict.
+    tetrazine, Paton N4 (TS4a CF3 grafts + pre-relax; GFN2 TS4a report-only, R32)
+    (t3.py gates Q-TJ3/R32; candidates), R54, R46 regressions, candidates never read
+    back, acceptance verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -596,8 +596,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T14:25:28+00:00'
-    reviewed_by: audit:09-e2e-tetrazine
+    reviewed_at: '2026-11-24T14:35:48+00:00'
+    reviewed_by: audit:10-e2e-cyclobutenone
     summary: patched description
   provenance:
     last_slice: 10-e2e-cyclobutenone
