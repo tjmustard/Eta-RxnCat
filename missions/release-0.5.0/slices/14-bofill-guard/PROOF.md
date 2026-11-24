@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: r=0/s=0 ZeroDivisionError reproduced at Start, guarded; recovery path tested; 1606 passed; gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -2,7 +2,7 @@
 id: OPR.0.5.0.14
 slice: 14-bofill-guard
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Make bofill_update return the Hessian unchanged when the residual or th
 depends_on: [OPR.0.5.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: [src/eta_rxncat/optimize/prfo.py, "tests/unit/optimize/**", spec/compiled/architecture.yml]
