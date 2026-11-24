@@ -10,7 +10,7 @@ intent: "Implement the clean-room Cartesian P-RFO saddle search (TransitionState
 depends_on: [OPR.0.5.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", spec/compiled/architecture.yml]
@@ -225,11 +225,11 @@ surfaces' parameters produce the stated start conditions is checked by the tests
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the interfaces named above.
-- [ ] Task 2: `ts_base.py`, `TSSearchFailedError`.
-- [ ] Task 3: `prfo.py` (projector, mode choice, step, trust, Bofill, convergence, failures).
-- [ ] Task 4: model surfaces and the tests above; required checks.
-- [ ] Task 5: commit; updater for node `eta_rxncat_optimize` (no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the interfaces named above.
+- [x] Task 2: `ts_base.py`, `TSSearchFailedError`.
+- [x] Task 3: `prfo.py` (projector, mode choice, step, trust, Bofill, convergence, failures).
+- [x] Task 4: model surfaces and the tests above; required checks.
+- [x] Task 5: commit; updater for node `eta_rxncat_optimize` (no glob change).
 
 ## 4. The Negative Space (Constraints)
 

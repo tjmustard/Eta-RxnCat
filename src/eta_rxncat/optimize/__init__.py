@@ -1,7 +1,8 @@
-"""Geometry optimizers behind one interface (v0.3.0).
+"""Geometry optimizers behind one interface (v0.3.0) and the P-RFO TS search (v0.5.0).
 
-Pure Python: importing this package loads no optimizer library. ``GeometricOptimizer`` imports
-geomeTRIC (the ``opt-geometric`` extra) inside its own methods.
+Importing this package loads no optimizer library. ``GeometricOptimizer`` imports geomeTRIC (the
+``opt-geometric`` extra) inside its own methods. ``PRFOOptimizer`` is eta's own numpy code (base
+install); ``TransitionStateOptimizer`` is pure Python.
 """
 
 from eta_rxncat.optimize.base import (
@@ -15,8 +16,11 @@ from eta_rxncat.optimize.errors import (
     OptimizerError,
     OptimizerInputError,
     OptimizerUnavailableError,
+    TSSearchFailedError,
 )
 from eta_rxncat.optimize.geometric_impl import GeometricOptimizer
+from eta_rxncat.optimize.prfo import PRFOOptimizer
+from eta_rxncat.optimize.ts_base import TransitionStateOptimizer
 
 __all__ = [
     "DihedralConstraint",
@@ -26,6 +30,9 @@ __all__ = [
     "OptimizerError",
     "OptimizerInputError",
     "OptimizerUnavailableError",
+    "PRFOOptimizer",
+    "TSSearchFailedError",
+    "TransitionStateOptimizer",
     "check_constraints",
     "constraints_text",
 ]

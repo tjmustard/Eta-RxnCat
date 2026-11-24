@@ -4,6 +4,8 @@ None of these subclasses ``ValueError``: a check inside a pydantic validator tha
 them propagates unchanged instead of being folded into a ``ValidationError``.
 """
 
+from typing import Literal
+
 
 class OptimizerError(Exception):
     """Base of every optimizer error."""
@@ -32,3 +34,35 @@ class OptimizationFailedError(OptimizerError):
         self.steps = steps
         self.last_energy_hartree = last_energy_hartree
         super().__init__(f"{message} (steps {list(steps)}, last energy {last_energy_hartree})")
+
+
+TSSearchFailureReason = Literal[
+    "max_steps", "too_many_rejections", "mode_lost", "no_reaction_mode", "wall_time_exceeded"
+]
+"""Why a transition-state search failed (v0.5.0, mission §5 "P-RFO")."""
+
+
+class TSSearchFailedError(OptimizationFailedError):
+    """A transition-state search stopped without converging.
+
+    Attributes:
+        reason: Why it stopped.
+        steps: The search's step labels, in order.
+        last_energy_hartree: The last energy seen (Eh), if any evaluation completed.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        reason: TSSearchFailureReason,
+        steps: tuple[str, ...],
+        last_energy_hartree: float | None,
+    ) -> None:
+        """Record the reason, steps and last energy, and name the reason in the message."""
+        self.reason: TSSearchFailureReason = reason
+        super().__init__(
+            f"TS search failed ({reason}): {message}",
+            steps=steps,
+            last_energy_hartree=last_energy_hartree,
+        )
