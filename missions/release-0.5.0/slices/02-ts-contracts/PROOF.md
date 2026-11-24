@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: ts_models per SPEC, additive Literals only, 1515 passed, all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

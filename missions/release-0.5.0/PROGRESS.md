@@ -14,7 +14,7 @@
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
 | OPR.0.5.0.1 | 01-starter | audited |  | 2026-11-24T04:14:24+00:00 audited |
-| OPR.0.5.0.2 | 02-ts-contracts | executed | OPR.0.5.0.1 | 2026-11-24T04:23:59+00:00 executed |
+| OPR.0.5.0.2 | 02-ts-contracts | audited | OPR.0.5.0.1 | 2026-11-24T04:34:50+00:00 audited |
 | OPR.0.5.0.3 | 03-prfo | compiled | OPR.0.5.0.2 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.4 | 04-ts-validator | compiled | OPR.0.5.0.2 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.5 | 05-ts-runner | compiled | OPR.0.5.0.3, OPR.0.5.0.4 | 2026-11-24T03:49:12+00:00 compiled |
