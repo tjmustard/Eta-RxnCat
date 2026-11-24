@@ -1,0 +1,949 @@
+{
+  "barrier": {
+    "dE_dagger_kcal_mol": -3.9651088476393648,
+    "dG_dagger_1M_kcal_mol": 7.498265973485924,
+    "dG_dagger_1atm_kcal_mol": 9.392594418980202,
+    "dH_dagger_kcal_mol": -3.0126759929789193,
+    "delta_n": -1
+  },
+  "case": "ts3a",
+  "checks": {
+    "tier_gates": {
+      "active_core": {
+        "status": "pass"
+      },
+      "barrier_conservation": {
+        "status": "pass"
+      },
+      "energy_source_consistent": {
+        "status": "pass"
+      },
+      "forming_in_phase": {
+        "status": "pass"
+      },
+      "forming_overlap": {
+        "status": "pass",
+        "value": 0.6889659464304034
+      },
+      "identity": {
+        "status": "reported"
+      },
+      "mode_count": {
+        "status": "pass"
+      },
+      "search_converged": {
+        "status": "pass"
+      },
+      "second_run_equal_payload": {
+        "status": "pass"
+      },
+      "second_run_reactants_all_hits": {
+        "status": "pass"
+      },
+      "second_run_ts_all_hits": {
+        "status": "pass"
+      },
+      "window_dG_dagger_1M": {
+        "status": "reported",
+        "value_kcal_mol": 7.498265973485924
+      }
+    }
+  },
+  "commit_sha": "0dcd3fc3b5ee068583eef5ff9d51dc9c1f000f6c",
+  "environment": {
+    "device": "cpu",
+    "engine": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    },
+    "versions": {
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2"
+    }
+  },
+  "failed_checks": [],
+  "fixture": "e2e5_t3_ts3a_unmapped",
+  "ordering_ts4a_below_ts3a": {
+    "dG_dagger_1M_ts3a_kcal_mol": 7.498265973485924,
+    "dG_dagger_1M_ts4a_kcal_mol": null,
+    "status": "reported"
+  },
+  "reactants": {
+    "cyclopropene": {
+      "dropped": [],
+      "ensemble_gibbs_hartree": -8.312830158120875,
+      "lowest_gibbs_hartree": -8.312830158120875,
+      "n_kept": 1
+    },
+    "tetrazine_3": {
+      "dropped": [
+        {
+          "reason": "duplicate_after_push",
+          "source_id": 0
+        }
+      ],
+      "ensemble_gibbs_hartree": -23.177142802993867,
+      "lowest_gibbs_hartree": -23.177142802993867,
+      "n_kept": 1
+    }
+  },
+  "recipe": "xtb",
+  "reported": {
+    "connectivity_equal_bool": true,
+    "dG_dagger_1atm_kcal_mol": 9.392594418980202,
+    "delta_dG_dagger_1M_vs_literature_kcal_mol": -9.484734026514076,
+    "energy_source": {
+      "bound_kcal_mol": 0.01,
+      "delta_hartree": 0.0,
+      "delta_kcal_mol": 0.0,
+      "frequency_run_energy_hartree": -31.60598715389,
+      "gradient_run_energy_hartree": -31.60598715389,
+      "within_bound_bool": true
+    },
+    "failed_reason": null,
+    "gated_on": "convergence, mode count",
+    "hessian_method": "finite_difference",
+    "literature_dG_dagger_1M_kcal_mol": 16.983,
+    "literature_dG_dagger_1atm_kcal_mol": 18.877,
+    "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+    "rmsd_to_literature_ts": {
+      "active_rmsd_angstrom": 0.11562019904351875,
+      "forming_core_rmsd_angstrom": 0.1346305610185026,
+      "full_rmsd_angstrom": 0.12072961366608569
+    },
+    "search_counts": {
+      "n_gradient_calls": 32,
+      "n_hessian_calls": 8,
+      "n_hessian_refreshes": 7,
+      "n_rejected_steps": 3,
+      "n_steps": 24
+    },
+    "validation_numbers": {
+      "active_core_ke_fraction": 0.8344350026809133,
+      "forming_bonds_in_phase_bool": true,
+      "forming_distances_angstrom": {
+        "0-6": 2.511260766161637,
+        "3-7": 2.551123885065805
+      },
+      "forming_stretch_overlap": 0.6889659464304034,
+      "imaginary_frequency_cm1": -106.87928640280818
+    }
+  },
+  "schema": 1,
+  "second_run_cache": {
+    "reactants": {
+      "cyclopropene": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 1,
+          "rows_created": 0
+        }
+      },
+      "tetrazine_3": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 3,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 7,
+          "rows_created": 0
+        }
+      }
+    },
+    "ts": {
+      "frequency": {
+        "cache_hits": 1,
+        "engine_calls": 0,
+        "rows_created": 0
+      },
+      "ts_opt": {
+        "cache_hits": 1,
+        "engine_calls": 0,
+        "rows_created": 0
+      }
+    }
+  },
+  "test_outcome": "passed",
+  "thermo_config": {
+    "entropy_model": "grimme_qrrho",
+    "pressure_atm": 1.0,
+    "qrrho_alpha": 4.0,
+    "qrrho_cutoff_cm1": 100.0,
+    "qrrho_rotor_moment_kg_m2": 1e-44,
+    "standard_state_mol_l": 1.0,
+    "temperature_k": 298.15
+  },
+  "ts": {
+    "connectivity_equal_bool": true,
+    "degeneracy": 1,
+    "failed_reason": null,
+    "keys": {
+      "frequency": "574904254262a587b5b048f0d436411af41513b4b5a39aa49c3547426cae90fc",
+      "ts_opt": "f581fe40b15d557332a6d063c06623391d136312bcb891a84553e58f7a44f987"
+    },
+    "metrics": {
+      "frequency": {
+        "cache_hits": 0,
+        "engine_calls": 1,
+        "rows_created": 1,
+        "wall_time_s": 2.1767152219545096
+      },
+      "ts_opt": {
+        "cache_hits": 0,
+        "engine_calls": 32,
+        "rows_created": 1,
+        "wall_time_s": 19.195589964976534
+      }
+    },
+    "search": {
+      "converged": true,
+      "final_energy_hartree": -31.60598715389,
+      "final_max_gradient_hartree_per_bohr": 5.7828215179117e-09,
+      "final_rigid_gradient_norm_hartree_per_bohr": 1.4393069561342691e-08,
+      "final_rms_gradient_hartree_per_bohr": 2.214454387665587e-09,
+      "final_state": {
+        "active_atom_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "charge": 0,
+        "coordinates": [
+          [
+            1.2575979822419727,
+            -0.6440499346682916,
+            0.09812001358768746
+          ],
+          [
+            0.6168522821046247,
+            -0.5617664031179049,
+            1.266198009254296
+          ],
+          [
+            -0.6730239311835226,
+            -0.579433539121663,
+            1.256962349106469
+          ],
+          [
+            -1.2920667233469776,
+            -0.675996635835636,
+            0.07907632936491062
+          ],
+          [
+            -0.645136185871306,
+            -1.2959649941658058,
+            -0.9131049416835704
+          ],
+          [
+            0.6419109801231216,
+            -1.2839554739086447,
+            -0.9023936675809652
+          ],
+          [
+            0.6434824720858874,
+            1.621165737186825,
+            -0.7952392287277613
+          ],
+          [
+            -0.6611757521240451,
+            1.6675748580697192,
+            -0.7069785747841916
+          ],
+          [
+            0.09325646646325299,
+            2.3238244463958977,
+            0.4093696841486281
+          ],
+          [
+            -2.769823324587328,
+            -0.5250797361973598,
+            0.01691240577519391
+          ],
+          [
+            2.732123445524536,
+            -0.4566149092920336,
+            0.064985422034971
+          ],
+          [
+            1.5110042353996163,
+            1.4506808280228964,
+            -1.3824513058871146
+          ],
+          [
+            -1.6138076733941529,
+            1.5607971475419244,
+            -1.1616355075325204
+          ],
+          [
+            0.13241874085668728,
+            3.407210653293917,
+            0.4604295076206334
+          ],
+          [
+            0.14435793274386424,
+            1.8461186190178664,
+            1.382140678301865
+          ],
+          [
+            3.0052351251775153,
+            0.48089760216994304,
+            0.5422007636559372
+          ],
+          [
+            3.091582479545188,
+            -0.48899880317103284,
+            -0.959492316336479
+          ],
+          [
+            3.1985461004589157,
+            -1.265843340619391,
+            0.6256062177249956
+          ],
+          [
+            -3.0847745965781086,
+            0.351729948124064,
+            0.5762302605290942
+          ],
+          [
+            -3.099327726144263,
+            -0.4681540267681353,
+            -1.016691696736001
+          ],
+          [
+            -3.227515329495475,
+            -1.3999190429571557,
+            0.47775159816392226
+          ]
+        ],
+        "metadata": {},
+        "spin_multiplicity": 1,
+        "symbols": [
+          "C",
+          "N",
+          "N",
+          "C",
+          "N",
+          "N",
+          "C",
+          "C",
+          "C",
+          "C",
+          "C",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H",
+          "H"
+        ]
+      },
+      "followed_eigenvalue_hartree_per_bohr2": -0.003959340330825802,
+      "forming_bonds": [
+        {
+          "i": 0,
+          "j": 6
+        },
+        {
+          "i": 3,
+          "j": 7
+        }
+      ],
+      "hessian_method": "finite_difference",
+      "n_gradient_calls": 32,
+      "n_hessian_calls": 8,
+      "n_hessian_refreshes": 7,
+      "n_rejected_steps": 3,
+      "n_steps": 24,
+      "optimizer": {
+        "name": "prfo",
+        "version": "src-897c4e19cb4e738a"
+      },
+      "options": {
+        "hessian_refresh_steps": 5,
+        "max_consecutive_rejections": 5,
+        "max_gradient_hartree_per_bohr": 0.00045,
+        "max_step_bohr": 0.0018,
+        "max_steps": 100,
+        "max_wall_time_s": 1800.0,
+        "min_initial_overlap": 0.6,
+        "min_mode_overlap": 0.5,
+        "ratio_floor_hartree": 1e-08,
+        "rms_gradient_hartree_per_bohr": 0.0003,
+        "rms_step_bohr": 0.0012,
+        "trust_max_bohr": 0.3,
+        "trust_min_bohr": 0.001,
+        "trust_radius_bohr": 0.1
+      }
+    },
+    "search_history": [
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60538031096,
+        "followed_eigenvalue_hartree_per_bohr2": -0.05141240798626762,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.014237842799349,
+        "mode_overlap": null,
+        "ratio": 0.9938683456022465,
+        "step": 0,
+        "trust_radius_bohr": 0.1
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.6062828972,
+        "followed_eigenvalue_hartree_per_bohr2": -0.04762954143675935,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.0078910471645467,
+        "mode_overlap": 0.999866484980218,
+        "ratio": 0.9115171212203094,
+        "step": 1,
+        "trust_radius_bohr": 0.2
+      },
+      {
+        "accepted_bool": false,
+        "energy_hartree": -31.60612806437,
+        "followed_eigenvalue_hartree_per_bohr2": -0.03665594825999138,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.003870160818086,
+        "mode_overlap": 0.9979903183505657,
+        "ratio": 5.596611725071643,
+        "step": 2,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60622726005,
+        "followed_eigenvalue_hartree_per_bohr2": -0.024758037111975023,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.0060234535615265,
+        "mode_overlap": 0.9940643975543603,
+        "ratio": 1.0257206394147207,
+        "step": 3,
+        "trust_radius_bohr": 0.075
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60612898317,
+        "followed_eigenvalue_hartree_per_bohr2": -0.022987442921428076,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.0035392355584731,
+        "mode_overlap": 0.9997397080247816,
+        "ratio": 1.1978508545137836,
+        "step": 4,
+        "trust_radius_bohr": 0.15
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60600759659,
+        "followed_eigenvalue_hartree_per_bohr2": -0.018980310949540037,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.0010226576322908,
+        "mode_overlap": 0.9963771730346634,
+        "ratio": 1.5927391587619828,
+        "step": 5,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598551782,
+        "followed_eigenvalue_hartree_per_bohr2": -0.006470704122600978,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.00018791820145104,
+        "mode_overlap": 0.9741248592050435,
+        "ratio": 1.1286198645240542,
+        "step": 6,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598470716,
+        "followed_eigenvalue_hartree_per_bohr2": -0.005258525277267085,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 3.1721739158078e-05,
+        "mode_overlap": 0.9996242173485472,
+        "ratio": 1.158472633145362,
+        "step": 7,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598468144,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0041376937347390435,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 3.1884517937864e-06,
+        "mode_overlap": 0.9995998972195448,
+        "ratio": 1.0144520178493928,
+        "step": 8,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598469075,
+        "followed_eigenvalue_hartree_per_bohr2": -0.00407274332709592,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 7.9687659525153e-06,
+        "mode_overlap": 0.9999581455295374,
+        "ratio": 1.0,
+        "step": 9,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": false,
+        "energy_hartree": -31.6059827259,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0040781222815304075,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.00089018452090837,
+        "mode_overlap": 0.9996520535189346,
+        "ratio": -1.3075514714984895,
+        "step": 10,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598478342,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0036350570041485666,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 5.2982165595947e-05,
+        "mode_overlap": 0.9986457835942398,
+        "ratio": 0.8515939841081136,
+        "step": 11,
+        "trust_radius_bohr": 0.075
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598507662,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0036346878466975265,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.00024441852371443,
+        "mode_overlap": 0.9999273150464396,
+        "ratio": 0.6179399664505327,
+        "step": 12,
+        "trust_radius_bohr": 0.15
+      },
+      {
+        "accepted_bool": false,
+        "energy_hartree": -31.60598492165,
+        "followed_eigenvalue_hartree_per_bohr2": -0.003634993275985238,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.00054165782754286,
+        "mode_overlap": 0.9999554026542659,
+        "ratio": -0.3731474032409777,
+        "step": 13,
+        "trust_radius_bohr": 0.15
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598531262,
+        "followed_eigenvalue_hartree_per_bohr2": -0.003645535071883068,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.00021517087991188,
+        "mode_overlap": 0.9999319733486532,
+        "ratio": 1.0039916724249713,
+        "step": 14,
+        "trust_radius_bohr": 0.0375
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598572127,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0036453428220276384,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.00020889460028315,
+        "mode_overlap": 0.9999938793437025,
+        "ratio": 1.049642393857314,
+        "step": 15,
+        "trust_radius_bohr": 0.075
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598625855,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0036450567419957993,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 0.00032863372196936,
+        "mode_overlap": 0.9999725535508641,
+        "ratio": 0.9237406972220865,
+        "step": 16,
+        "trust_radius_bohr": 0.15
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598681548,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0036448116409123978,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 4.1877897734113e-05,
+        "mode_overlap": 0.9998958950266467,
+        "ratio": 1.2093682109355328,
+        "step": 17,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598691516,
+        "followed_eigenvalue_hartree_per_bohr2": -0.003831602458436651,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 0.00023477176851089,
+        "mode_overlap": 0.9997540115594048,
+        "ratio": 0.2691268480409227,
+        "step": 18,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598709639,
+        "followed_eigenvalue_hartree_per_bohr2": -0.003831763705694036,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 5.832922766019e-05,
+        "mode_overlap": 0.9999479291963377,
+        "ratio": 0.4874192808355722,
+        "step": 19,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598714618,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0038327939056102905,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 1.1371473882388e-05,
+        "mode_overlap": 0.9999859744619941,
+        "ratio": 1.4288050240511028,
+        "step": 20,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598715259,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0038325849749109393,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 1.1148320557964e-05,
+        "mode_overlap": 0.9999976793425548,
+        "ratio": 0.6172519474951719,
+        "step": 21,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598715387,
+        "followed_eigenvalue_hartree_per_bohr2": -0.0038326827483592717,
+        "hessian_source": "bofill",
+        "max_gradient_hartree_per_bohr": 9.9184687074141e-07,
+        "mode_overlap": 0.9999946467311165,
+        "ratio": 1.0,
+        "step": 22,
+        "trust_radius_bohr": 0.3
+      },
+      {
+        "accepted_bool": true,
+        "energy_hartree": -31.60598715389,
+        "followed_eigenvalue_hartree_per_bohr2": -0.003959340330825802,
+        "hessian_source": "exact",
+        "max_gradient_hartree_per_bohr": 5.7828215179117e-09,
+        "mode_overlap": 0.999955894703581,
+        "ratio": 1.0,
+        "step": 23,
+        "trust_radius_bohr": 0.3
+      }
+    ],
+    "state": {
+      "active_atom_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "charge": 0,
+      "coordinates": [
+        [
+          1.2575979822419727,
+          -0.6440499346682916,
+          0.09812001358768746
+        ],
+        [
+          0.6168522821046247,
+          -0.5617664031179049,
+          1.266198009254296
+        ],
+        [
+          -0.6730239311835226,
+          -0.579433539121663,
+          1.256962349106469
+        ],
+        [
+          -1.2920667233469776,
+          -0.675996635835636,
+          0.07907632936491062
+        ],
+        [
+          -0.645136185871306,
+          -1.2959649941658058,
+          -0.9131049416835704
+        ],
+        [
+          0.6419109801231216,
+          -1.2839554739086447,
+          -0.9023936675809652
+        ],
+        [
+          0.6434824720858874,
+          1.621165737186825,
+          -0.7952392287277613
+        ],
+        [
+          -0.6611757521240451,
+          1.6675748580697192,
+          -0.7069785747841916
+        ],
+        [
+          0.09325646646325299,
+          2.3238244463958977,
+          0.4093696841486281
+        ],
+        [
+          -2.769823324587328,
+          -0.5250797361973598,
+          0.01691240577519391
+        ],
+        [
+          2.732123445524536,
+          -0.4566149092920336,
+          0.064985422034971
+        ],
+        [
+          1.5110042353996163,
+          1.4506808280228964,
+          -1.3824513058871146
+        ],
+        [
+          -1.6138076733941529,
+          1.5607971475419244,
+          -1.1616355075325204
+        ],
+        [
+          0.13241874085668728,
+          3.407210653293917,
+          0.4604295076206334
+        ],
+        [
+          0.14435793274386424,
+          1.8461186190178664,
+          1.382140678301865
+        ],
+        [
+          3.0052351251775153,
+          0.48089760216994304,
+          0.5422007636559372
+        ],
+        [
+          3.091582479545188,
+          -0.48899880317103284,
+          -0.959492316336479
+        ],
+        [
+          3.1985461004589157,
+          -1.265843340619391,
+          0.6256062177249956
+        ],
+        [
+          -3.0847745965781086,
+          0.351729948124064,
+          0.5762302605290942
+        ],
+        [
+          -3.099327726144263,
+          -0.4681540267681353,
+          -1.016691696736001
+        ],
+        [
+          -3.227515329495475,
+          -1.3999190429571557,
+          0.47775159816392226
+        ]
+      ],
+      "metadata": {},
+      "spin_multiplicity": 1,
+      "symbols": [
+        "C",
+        "N",
+        "N",
+        "C",
+        "N",
+        "N",
+        "C",
+        "C",
+        "C",
+        "C",
+        "C",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H"
+      ]
+    },
+    "thermo": {
+      "analysis": {
+        "imag_tol_cm1": 20.0,
+        "linear_tol_angstrom": 0.001,
+        "max_automorphisms": 100000,
+        "sym_tol_angstrom": 0.05
+      },
+      "config": {
+        "entropy_model": "grimme_qrrho",
+        "pressure_atm": 1.0,
+        "qrrho_alpha": 4.0,
+        "qrrho_cutoff_cm1": 100.0,
+        "qrrho_rotor_moment_kg_m2": 1e-44,
+        "standard_state_mol_l": 1.0,
+        "temperature_k": 298.15
+      },
+      "electronic_energy_hartree": -31.60598715389,
+      "energy_source": "optimization",
+      "entropy_components_hartree_per_k": {
+        "electronic": 0.0,
+        "rotational": 4.7101075469912995e-05,
+        "translational": 6.522358571355355e-05,
+        "vibrational": 4.974202403445583e-05
+      },
+      "entropy_hartree_per_k": 0.00016206668521792238,
+      "frequencies_cm1": [
+        -106.87928640280818,
+        19.97959146361245,
+        125.66834209185816,
+        130.9955998271061,
+        149.29397096663254,
+        158.3257878981293,
+        163.01330834350867,
+        224.59987213662933,
+        248.09883877614172,
+        266.93563470993377,
+        328.5746667352841,
+        344.7446494848946,
+        354.83695233381525,
+        425.0855127747794,
+        515.1234375567028,
+        654.9760929621874,
+        701.4819584008552,
+        741.7719007682119,
+        776.7874440560273,
+        780.0031261068011,
+        849.4121271111219,
+        903.512565232363,
+        920.7444392583083,
+        955.9298179621862,
+        974.937448648412,
+        995.3211406029145,
+        1002.1639199226174,
+        1011.4575738235396,
+        1018.6732543871633,
+        1055.6149737118274,
+        1062.8061119534746,
+        1087.8885626661968,
+        1143.9237472486243,
+        1205.083197832348,
+        1322.6861395269293,
+        1332.5518523377004,
+        1344.4735580885047,
+        1370.8835978930645,
+        1389.1952422233576,
+        1404.7694003191875,
+        1448.9128768252501,
+        1451.2727054099191,
+        1463.2027997225348,
+        1465.1438081936092,
+        1470.3191478287338,
+        1499.616889159033,
+        1721.5666046508352,
+        3006.2819257999163,
+        3011.0955911470924,
+        3013.8610333487277,
+        3023.260041083055,
+        3042.6252431338344,
+        3044.0805388296044,
+        3054.894467375326,
+        3055.7912909363804,
+        3235.3451969717435,
+        3258.0387949072724
+      ],
+      "gibbs_free_energy_hartree": -31.478023713679583,
+      "imaginary_frequencies_cm1": [
+        -106.87928640280818
+      ],
+      "is_linear": false,
+      "masses_source": "rdkit 2026.09.2 most-common-isotope",
+      "n_atoms": 21,
+      "rotational_symmetry_number": 1,
+      "soft_modes_cm1": [],
+      "standard_state_correction_hartree": 0.0030188045341030057,
+      "thermal_correction_enthalpy_hartree": 0.17326481787403408,
+      "thermal_correction_gibbs_hartree": 0.12796344021041353,
+      "zpe_hartree": 0.16112940678875673
+    },
+    "ts_id": "TS3a",
+    "validation": {
+      "active_atom_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "active_core_ke_fraction": 0.8344350026809133,
+      "active_core_passed_bool": true,
+      "forming_bonds_in_phase_bool": true,
+      "forming_distances_angstrom": {
+        "0-6": 2.511260766161637,
+        "3-7": 2.551123885065805
+      },
+      "forming_stretch_overlap": 0.6889659464304034,
+      "identity_passed_bool": true,
+      "imaginary_frequency_cm1": -106.87928640280818,
+      "mode_count_passed_bool": true,
+      "n_imaginary": 1,
+      "options": {
+        "cutoff_cm1": -50.0,
+        "forming_distance_max_angstrom": 2.9,
+        "forming_distance_min_angstrom": 1.9,
+        "imag_tol_cm1": 20.0,
+        "min_active_core_ke_fraction": 0.6,
+        "min_forming_stretch_overlap": 0.5
+      },
+      "passed_bool": true,
+      "reasons": []
+    }
+  },
+  "window_dG_dagger_1M_kcal_mol": [
+    10.0,
+    24.0
+  ]
+}

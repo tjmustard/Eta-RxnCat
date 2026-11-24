@@ -1,0 +1,266 @@
+{
+  "commit_sha": "d885c5e987a3c615efc1fdaf569af82bf5f6c1e8",
+  "fragment": "cross_check",
+  "geometric_version": "1.1.1",
+  "hessian_units_assumption": "geometric-optimize --help documents --hessian file+last:<path> as 'NumPy format' but states no units; the seed is eta's Cartesian Hessian in Eh/Bohr^2 (atomic units), written with numpy.savetxt (assumption, slice 11)",
+  "licence_note": "geomeTRIC 1.1.1 'BSD 3-clause Non-AI' licence: open with TJ; used only as a CLI subprocess in .venv-accept-uma, nothing vendored or imported in src/ (reported, not decided)",
+  "records": {
+    "n4.uma": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"uma\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-338/test_t3_cross_check_case_uma_n0/n4.uma/n4.uma",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 1.959890542831696e-05,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -424.05565671440365,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -424.0556566831708,
+      "heavy_atom_rmsd_angstrom": 7.333718718883125e-05,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9498745029093458,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-9": 2.142201080365547,
+          "2-10": 2.2535336100351344
+        },
+        "forming_stretch_overlap": 0.7895632202805853,
+        "imaginary_frequency_cm1": -570.1591166270854,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 22.710038519930094
+    },
+    "n4.xtb": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"xtb\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-333/test_t3_cross_check_case_xtb_n0/n4.xtb/n4.xtb",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 5.484432142414753e-06,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -28.30259758066,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -28.30259757192,
+      "heavy_atom_rmsd_angstrom": 0.00029876482504843677,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9050197009331146,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-9": 2.271099523315591,
+          "2-10": 2.4394943606966972
+        },
+        "forming_stretch_overlap": 0.7627295569477601,
+        "imaginary_frequency_cm1": -306.41887256553116,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 3.8454130679601803
+    },
+    "ts1a_n.uma": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"uma\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-334/test_t3_cross_check_case_uma_t0/ts1a_n.uma/ts1a_n.uma",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": -2.034825624792712e-05,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -310.6723359860812,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -310.6723360185082,
+      "heavy_atom_rmsd_angstrom": 1.9455281143740896e-05,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9017801813539639,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-2": 2.2935068581826017,
+          "3-5": 2.2813524640045855
+        },
+        "forming_stretch_overlap": 0.7003245444447145,
+        "imaginary_frequency_cm1": -453.23761122017964,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 26.526971315033734
+    },
+    "ts1a_n.xtb": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"xtb\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-333/test_t3_cross_check_case_xtb_t0/ts1a_n.xtb/ts1a_n.xtb",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 8.985936412083243e-06,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -22.05931044712,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -22.0593104328,
+      "heavy_atom_rmsd_angstrom": 5.989740803782529e-05,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.8870136720842691,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-2": 2.4050057609081157,
+          "3-5": 2.4050057608875828
+        },
+        "forming_stretch_overlap": 0.7548866789199375,
+        "imaginary_frequency_cm1": -290.423582043547,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 4.636027951026335
+    },
+    "ts1b_n.uma": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"uma\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-335/test_t3_cross_check_case_uma_t0/ts1b_n.uma/ts1b_n.uma",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 2.386451220258871e-05,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -350.00085011224365,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -350.00085007421313,
+      "heavy_atom_rmsd_angstrom": 0.0005753898369454126,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9421229432305942,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-2": 2.2061831917262817,
+          "3-5": 2.206834866816735
+        },
+        "forming_stretch_overlap": 0.7642536706577122,
+        "imaginary_frequency_cm1": -577.295927161441,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 34.049260335974395
+    },
+    "ts1b_n.xtb": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"xtb\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-333/test_t3_cross_check_case_xtb_t1/ts1b_n.xtb/ts1b_n.xtb",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": -1.578813744438253e-05,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -25.26211766444,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -25.2621176896,
+      "heavy_atom_rmsd_angstrom": 0.0004779459823861022,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9232406997885538,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "1-2": 2.303847251236791,
+          "3-5": 2.303814778322075
+        },
+        "forming_stretch_overlap": 0.7709967322719329,
+        "imaginary_frequency_cm1": -392.3359371241396,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 3.146488943020813
+    },
+    "ts3a.uma": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"uma\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-336/test_t3_cross_check_case_uma_t0/ts3a.uma/ts3a.uma",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 2.536335652094453e-06,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -491.5735957862115,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -491.5735957821696,
+      "heavy_atom_rmsd_angstrom": 0.0003127761455785894,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.9196793507469408,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "0-6": 2.1945069366229446,
+          "3-7": 2.2154425894929375
+        },
+        "forming_stretch_overlap": 0.7634273465130569,
+        "imaginary_frequency_cm1": -461.16145593360403,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 37.46962920704391
+    },
+    "ts3a.xtb": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"xtb\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-333/test_t3_cross_check_case_xtb_t2/ts3a.xtb/ts3a.xtb",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": -0.14651025939567436,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -31.60598715389,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -31.60622063285,
+      "heavy_atom_rmsd_angstrom": 0.12289183937010095,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.26559948256587673,
+        "forming_bonds_in_phase_bool": false,
+        "forming_distances_angstrom": {
+          "0-6": 2.830459990120987,
+          "3-7": 2.831211212403695
+        },
+        "forming_stretch_overlap": 0.0003505260234132751,
+        "imaginary_frequency_cm1": -37.295672326654234,
+        "n_imaginary": 1,
+        "passed_bool": false,
+        "reasons": [
+          "active_core_fraction_below_threshold",
+          "forming_bonds_out_of_phase",
+          "forming_overlap_below_threshold",
+          "imaginary_above_cutoff"
+        ]
+      },
+      "wall_time_s": 7.580637146020308
+    },
+    "ts4a.uma": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"uma\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-337/test_t3_cross_check_case_uma_t0/ts4a.uma/ts4a.uma",
+      "converged_bool": true,
+      "delta_e_geometric_minus_eta_kcal_mol": 1.0548696524417022e-05,
+      "eta_failed_reason": null,
+      "eta_ts_energy_hartree": -1087.2037793395257,
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -1087.2037793227153,
+      "heavy_atom_rmsd_angstrom": 4.143821212114235e-05,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.8618945580082202,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "0-6": 2.301687755646606,
+          "3-7": 2.309203456501978
+        },
+        "forming_stretch_overlap": 0.8222176942020145,
+        "imaginary_frequency_cm1": -315.18176292297653,
+        "n_imaginary": 1,
+        "passed_bool": true,
+        "reasons": []
+      },
+      "wall_time_s": 26.08071992895566
+    },
+    "ts4a.xtb": {
+      "command": "timeout 3600 /home/tjmustard/PROJECTS/eta-rxncat/.venv-accept-uma/bin/geometric-optimize start.xyz --engine ase --ase-class eta_geometric_shim.EtaCalculator --ase-kwargs {\"recipe\": \"xtb\"} --transition yes --hessian file+last:seed.txt --prefix /home/tjmustard/.cache/eta-rxncat-tmp/pytest-of-tjmustard/pytest-333/test_t3_cross_check_case_xtb_t3/ts4a.xtb/ts4a.xtb",
+      "converged_bool": true,
+      "eta_failed_reason": "ts_search_failed:max_steps",
+      "exit_code": 0,
+      "geometric_ts_energy_hartree": -56.92271393049,
+      "status": "converged",
+      "validation_at_geometric_ts": {
+        "active_core_ke_fraction": 0.8209236529372094,
+        "forming_bonds_in_phase_bool": true,
+        "forming_distances_angstrom": {
+          "0-6": 2.915921232043754,
+          "3-7": 2.9966585257596092
+        },
+        "forming_stretch_overlap": 0.19609643622494452,
+        "imaginary_frequency_cm1": -81.23834534557548,
+        "n_imaginary": 1,
+        "passed_bool": false,
+        "reasons": [
+          "forming_distance_out_of_window",
+          "forming_overlap_below_threshold"
+        ]
+      },
+      "wall_time_s": 22.65647263196297
+    }
+  },
+  "reported_only": true,
+  "schema": 1
+}
