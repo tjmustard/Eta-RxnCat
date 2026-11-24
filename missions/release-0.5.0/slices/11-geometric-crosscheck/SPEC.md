@@ -2,7 +2,7 @@
 id: OPR.0.5.0.11
 slice: 11-geometric-crosscheck
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Cross-check every Tier 3 TS against geomeTRIC's TS search run as a blac
 depends_on: [OPR.0.5.0.9, OPR.0.5.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.5.0/**", spec/compiled/architecture.yml]
@@ -157,8 +157,8 @@ mission continues without it).
 
 - [x] Task 1: codegraph index → `index: ok`; record Start; read `--help`; read slices 08–10's tests for the starts.
 - [x] Task 2: shim + its test; the cross-check test; required checks; C1.
-- [ ] Task 3: host check; run (xtb first, then UMA; separate calls; `timeout 3600` each subprocess).
-- [ ] Task 4: C2 (`t3_cross_check.json` only); updater.
+- [x] Task 3: host check; run (xtb first, then UMA; separate calls; `timeout 3600` each subprocess).
+- [x] Task 4: C2 (`t3_cross_check.json` only); updater.
 
 ## 4. The Negative Space (Constraints)
 

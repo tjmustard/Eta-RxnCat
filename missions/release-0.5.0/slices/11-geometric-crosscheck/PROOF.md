@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: E2E rerun at C1'' code: 10/10 geomeTRIC runs converged, exit 0, records reproduce (8/10 same saddle); shim 1e-12; N1 grep empty; 1734 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
