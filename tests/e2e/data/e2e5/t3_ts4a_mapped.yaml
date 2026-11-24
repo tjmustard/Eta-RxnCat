@@ -1,0 +1,62 @@
+# Tier 3 TS fixture (v0.5.0), provisional per TJ Q-E3 ("Q3. B, but these may need updating as we
+# define the YAML/JSON format."). Indices are 0-based. Sources and the derived references: SOURCES.md.
+schema: 1
+fixture: e2e5_t3_ts4a_mapped
+species:
+  - species_id: tetrazine_4
+    smiles: FC(F)(F)c1nnc(C(F)(F)F)nn1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/4_bis_cf3_tetrazine.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclopropene
+    smiles: C1=CC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/5_cyclopropene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+ts:
+  ts_id: TS4a
+  charge: 0
+  spin_multiplicity: 1
+  active_atom_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+  forming_bonds: [[0, 6], [3, 7]]
+  # Two single CF3 grafts on TS3a (mission R22); TS3a's active set [0..7] is set on the template.
+  # Liu's TS4a is the reference only, never a coordinate donor (N13).
+  start_grafts:
+    template: xyz/TS3a.xyz
+    fragment: xyz/4_bis_cf3_tetrazine.xyz
+    grafts:
+    - keep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 18, 19, 20]
+      delete: [15, 16, 17]  # the H of methyl C10
+      alignment_pairs: [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [10, 10]]  # [template, fragment]
+      fragment_delete: [6, 7, 8, 9]
+      constrained_core: [0, 3, 6, 7]
+    - keep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 18, 19, 20]
+      delete: [15, 16, 17]  # now the H of methyl C9
+      alignment_pairs: [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [9, 6]]  # [graft 1 product, fragment]
+      fragment_delete: [10, 11, 12, 13]
+      constrained_core: [0, 3, 6, 7]
+    pre_relax:
+      core: [0, 3, 6, 7]
+      maxiter: 200
+reference:
+  xyz: xyz/TS4a.xyz
+  start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 17, 18, 19, 20, 14, 15, 16, 10, 11, 12]
+  map_rule: "mission HF-10 (v0.4.0 R2 rule): lexicographically smallest element-preserving isomorphism of graft 2's source_bonds graph onto TS4a's perceived graph; no coordinates"
+barrier:
+  reactants: [[tetrazine_4, 1], [cyclopropene, 1]]
+  window_dG_dagger_1M_kcal_mol: [0.7, 14.7]
+literature:
+  structures:
+    TS4a: {E_hartree: -1086.627595, H_hartree: -1086.490471, G_hartree: -1086.545437, Gsol_hartree: -1086.883262}
+    tetrazine_4: {E_hartree: -970.056992, G_hartree: -970.031351}
+    cyclopropene: {E_hartree: -116.562552, G_hartree: -116.529371}
+  dG_dagger_1atm_kcal_mol: 9.591
+  dG_dagger_1M_kcal_mol: 7.697
+  standard_state: "Gaussian, 1 atm (as printed); 1 M = 1 atm - RT ln(cRT/p) for delta_n -1 (-1.8943 kcal/mol at 298.15 K)"
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"

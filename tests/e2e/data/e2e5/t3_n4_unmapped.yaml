@@ -1,0 +1,45 @@
+# Tier 3 TS fixture (v0.5.0), provisional per TJ Q-E3 ("Q3. B, but these may need updating as we
+# define the YAML/JSON format."). Indices are 0-based. Sources and the derived references: SOURCES.md.
+schema: 1
+fixture: e2e5_t3_n4_unmapped
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclobutenone
+    smiles: O=C1C=CC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/cyclobutenone.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+ts:
+  ts_id: TS_N4
+  charge: 0
+  spin_multiplicity: 1
+  active_atom_indices: [1, 2, 9, 10, 12, 13]
+  forming_bonds: [[1, 9], [2, 10]]
+  start_xyz: xyz/TS_N4.xyz
+reference:
+  xyz: xyz/TS_N4.xyz
+  start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+  map_rule: "identity: the start is the reference geometry"
+barrier:
+  reactants: [[cyclopentadiene, 1], [cyclobutenone, 1]]
+  window_dG_dagger_1M_kcal_mol: [15.6, 29.6]
+literature:
+  structures:
+    TS_N4: {E_thermal_hartree: -423.703397, H_hartree: -423.702453, G_hartree: -423.744120}
+    cyclopentadiene: {E_thermal_hartree: -193.906541, H_hartree: -193.905597, G_hartree: -193.937243}
+    cyclobutenone: {E_thermal_hartree: -229.814586, H_hartree: -229.813642, G_hartree: -229.845861}
+  # Paton prints E(thermal), the thermally corrected energy, not the electronic energy.
+  dG_dagger_1atm_kcal_mol: 24.463
+  dG_dagger_1M_kcal_mol: 22.569
+  standard_state: "Gaussian, 1 atm (as printed); 1 M = 1 atm - RT ln(cRT/p) for delta_n -1 (-1.8943 kcal/mol at 298.15 K)"
+  source: "Paton et al., Angew. Chem. Int. Ed. 2011, 50, 10366, DOI 10.1002/anie.201103998, SI; M06-2X/6-31G(d)"

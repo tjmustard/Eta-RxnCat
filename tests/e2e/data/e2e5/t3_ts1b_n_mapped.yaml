@@ -1,0 +1,48 @@
+# Tier 3 TS fixture (v0.5.0), provisional per TJ Q-E3 ("Q3. B, but these may need updating as we
+# define the YAML/JSON format."). Indices are 0-based. Sources and the derived references: SOURCES.md.
+schema: 1
+fixture: e2e5_t3_ts1b_n_mapped
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclobutene
+    smiles: C1=CCC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/6_cyclobutene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+ts:
+  ts_id: TS1b_n
+  charge: 0
+  spin_multiplicity: 1
+  active_atom_indices: [0, 1, 2, 3, 4, 5]
+  forming_bonds: [[1, 2], [3, 5]]
+  # The relaxed M1 graft (v0.4.0, promoted by TJ); fields symbols, coordinates_angstrom,
+  # charge, multiplicity. {recipe} is xtb or uma.
+  start_from_fixture:
+    path_template: tests/fixtures/v0.4.0/m1_relaxed.{recipe}.json
+    key: relaxed_product
+reference:
+  xyz: xyz/TS1b_n.xyz
+  start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 7, 8, 17, 18, 19, 20]
+  map_rule: "M1 graft_to_ts1b_n_map (v0.4.0 R2): lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates"
+barrier:
+  reactants: [[cyclopentadiene, 1], [cyclobutene, 1]]
+  window_dG_dagger_1M_kcal_mol: [20.0, 34.0]
+literature:
+  structures:
+    TS1b_n: {E_hartree: -349.874922, G_hartree: -349.721825}
+    cyclopentadiene: {E_hartree: -194.004692, G_hartree: -193.937241}
+    cyclobutene: {E_hartree: -155.890853, G_hartree: -155.828875}
+  dG_dagger_1atm_kcal_mol: 27.793
+  dG_dagger_1M_kcal_mol: 25.899
+  standard_state: "Gaussian, 1 atm (as printed); 1 M = 1 atm - RT ln(cRT/p) for delta_n -1 (-1.8943 kcal/mol at 298.15 K)"
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"

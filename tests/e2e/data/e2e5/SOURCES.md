@@ -30,3 +30,51 @@ header line (TS1a_n's header does not state the level of theory).
 Derived SMILES (H10; RDKit 2026.09.2 `DetermineBonds(charge=0)` + `AssignStereochemistryFrom3D`),
 for TJ's confirmation at Phase 3: T1 `C=C(/C=C/OC)OC`; Cp `C1=CCC=C1`; cyclopropene `C1=CC1`;
 P1a_n `C1=C[C@H]2C[C@@H]1[C@H]1C[C@H]12` (meso, endo).
+
+## Tier 3 (v0.5.0): transcriptions for the TS fixtures
+
+TJ A3, verbatim: "Q3. A". The team transcribes TS3a, TS4a, cyclobutenone and TS N4 from the SIs
+TJ attached, and TJ confirms them at Phase 3. The procedure is `pdftotext` per (half) page plus a
+fixed atom regex, with coordinate strings copied verbatim (mission HF-1). It was run first by
+spec-resolve and then independently in slice 07 by the execute seat; the two outputs are byte-equal
+and equal to the mission's HF-1 sha256s. Tetrazines 3 and 4 are TJ's, taken byte-identical from the
+`XYZ_FILES` literal of his builder (read with `ast.parse` + `ast.literal_eval`; never executed).
+Neither the SI PDFs nor any extracted SI text are committed.
+
+- Liu, Paton, Kim, Liang, Houk, *J. Am. Chem. Soc.* 2013, 135, 15642, DOI 10.1021/ja408437u,
+  Supporting Information (`ja408437u_SI.pdf`, sha256
+  `98f37dc41f252f4e031e750d9343c3c478d4e5651940c3d0ed54e587b476f6af`). M06-2X/6-31G(d).
+- Paton et al., *Angew. Chem. Int. Ed.* 2011, 50, 10366, DOI 10.1002/anie.201103998, Supporting
+  Information (`anie_201103998_SI_Paton2011.pdf`, sha256
+  `a38b2362232940c05f20ae921cee6a04aef58d98811c066e1de003676f043af6`). M06-2X/6-31G(d).
+  **E(thermal) is the thermally corrected energy, not the electronic energy**; Paton's SI prints no
+  electronic E, so no Paton file is checked against an electronic energy.
+
+| File | Source | SI page | Energies as printed (Eh) | sha256 | Transcriber |
+|---|---|---|---|---|---|
+| `xyz/TS3a.xyz` | Liu | S15 (17 atoms, left column, + 4, right) | E −491.366826, H −491.187576, G −491.232873 | `6bf308b6846732718499d2370f355116a849a232f476c27a026dafb5ab1ea1b4` | team (spec-resolve; slice 07 re-transcription) |
+| `xyz/TS4a.xyz` | Liu | S17 | E −1086.627595, H −1086.490471, G −1086.545437, Gsol −1086.883262 | `b00f6a874efd2b30112e34d2cb16892923f73b756e7bdbca4a2f6583b4bf008c` | team (spec-resolve; slice 07 re-transcription) |
+| `xyz/cyclobutenone.xyz` | Paton | S3 | E(thermal) −229.814586, H −229.813642, G −229.845861 | `c489e5124f42895bb0408f127aa10d51db70ccfbd72f4cf5c929c10052f4f30c` | team (spec-resolve; slice 07 re-transcription) |
+| `xyz/TS_N4.xyz` | Paton | S6 | E(thermal) −423.703397, H −423.702453, G −423.744120 | `cf7e45014bdab5971b2c993da3f2d5125ce744a8def5bda64998e047dc3dc46f` | team (spec-resolve; slice 07 re-transcription) |
+| `xyz/3_dimethyltetrazine.xyz` | Liu | S6 | E −374.809570, G −374.733585 | `e42ed53adaa7bc3a9fe542d88cafb632d4351c3e419e9b2b3b3b961744a7662d` | TJ (builder `XYZ_FILES`; slice 07 extraction) |
+| `xyz/4_bis_cf3_tetrazine.xyz` | Liu | S6 | E −970.056992, G −970.031351 | `174c23d2c794196f7d1fa5367529fe623e1529007bab76cb32b9139816e92f74` | TJ (builder `XYZ_FILES`; slice 07 extraction) |
+
+The Paton energies of cyclopentadiene, used for the N4 reference below, are as printed on Paton SI
+S2: E(thermal) −193.906541, H −193.905597, G −193.937243. Paton's Cp G equals Liu's −193.937241
+to 2e-6 Eh, so the two SIs share a level of theory and a standard state.
+
+## References (mission HF-9, R8)
+
+Each ΔG‡ below is header G arithmetic: G(TS) − G(diene) − G(dienophile), × 627.5094740631
+kcal/mol per Eh. **Standard state:** both SIs are Gaussian at 1 atm, and Paton's SI states free
+energies at 298 K with no concentration correction. The 1 M value is 1 atm − RT ln(cRT/p) with
+Δn = −1, which is 1 atm − 1.8943 kcal/mol at 298.15 K. The fixture windows are the 1 M value ± 7
+kcal/mol (TJ A4), except TS1b_n, where TJ set [20, 34].
+
+| TS | Reactants (G used, Eh) | G(TS) (Eh) | ΔG‡ 1 atm (kcal/mol) | ΔG‡ 1 M (kcal/mol) |
+|---|---|---|---|---|
+| TS1a_n | Cp −193.937241 (Liu), cyclopropene −116.529371 | −310.435319 | 19.637 | 17.742 |
+| TS1b_n | Cp −193.937241 (Liu), cyclobutene −155.828875 | −349.721825 | 27.793 | 25.899 |
+| TS3a | tetrazine 3 −374.733585, cyclopropene −116.529371 | −491.232873 | 18.877 | 16.983 |
+| TS4a | tetrazine 4 −970.031351, cyclopropene −116.529371 | −1086.545437 | 9.591 | 7.697 |
+| N4 | Cp −193.937243 (Paton), cyclobutenone −229.845861 | −423.744120 | 24.463 | 22.569 |

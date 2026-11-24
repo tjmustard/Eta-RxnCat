@@ -10,7 +10,7 @@ intent: "Land the Tier 3 inputs: six XYZ files re-transcribed byte-equal to reso
 depends_on: [OPR.0.5.0.6, OPR.0.5.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
@@ -205,13 +205,13 @@ grid reproduces Gaussian's `fine` grid within 1e-4 Eh (the controls decide; a mi
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/fixtures.py`,
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/fixtures.py`,
   `tests/e2e/m1.py` (map rule), `SOURCES.md`, the evidence README.
-- [ ] Task 2: re-transcribe in scratch; compare sha256 (stop on a difference); copy into the repo.
-- [ ] Task 3: `SOURCES.md`; five YAMLs; `load_ts_fixture`.
-- [ ] Task 4: tier-D tests; required checks.
-- [ ] Task 5: host check; R9 PySCF runs (separate calls); record.
-- [ ] Task 6: commit; updater for node `eta_rxncat_species_runner` (`tests/e2e/**` covers the files).
+- [x] Task 2: re-transcribe in scratch; compare sha256 (stop on a difference); copy into the repo.
+- [x] Task 3: `SOURCES.md`; five YAMLs; `load_ts_fixture`.
+- [x] Task 4: tier-D tests; required checks.
+- [x] Task 5: host check; R9 PySCF runs (separate calls); record.
+- [x] Task 6: commit; updater for node `eta_rxncat_species_runner` (`tests/e2e/**` covers the files).
 
 ## 4. The Negative Space (Constraints)
 

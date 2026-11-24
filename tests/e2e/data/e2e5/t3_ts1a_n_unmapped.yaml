@@ -1,0 +1,44 @@
+# Tier 3 TS fixture (v0.5.0), provisional per TJ Q-E3 ("Q3. B, but these may need updating as we
+# define the YAML/JSON format."). Indices are 0-based. Sources and the derived references: SOURCES.md.
+schema: 1
+fixture: e2e5_t3_ts1a_n_unmapped
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclopropene
+    smiles: C1=CC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/5_cyclopropene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+ts:
+  ts_id: TS1a_n
+  charge: 0
+  spin_multiplicity: 1
+  active_atom_indices: [0, 1, 2, 3, 4, 5]
+  forming_bonds: [[1, 2], [3, 5]]
+  start_xyz: xyz/TS1a_n.xyz
+reference:
+  xyz: xyz/TS1a_n.xyz
+  start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  map_rule: "identity: the start is the reference geometry"
+barrier:
+  reactants: [[cyclopentadiene, 1], [cyclopropene, 1]]
+  window_dG_dagger_1M_kcal_mol: [10.7, 24.7]
+literature:
+  structures:
+    TS1a_n: {E_hartree: -310.559154, G_hartree: -310.435319}
+    cyclopentadiene: {E_hartree: -194.004692, G_hartree: -193.937241}
+    cyclopropene: {E_hartree: -116.562552, G_hartree: -116.529371}
+  dG_dagger_1atm_kcal_mol: 19.637
+  dG_dagger_1M_kcal_mol: 17.742
+  standard_state: "Gaussian, 1 atm (as printed); 1 M = 1 atm - RT ln(cRT/p) for delta_n -1 (-1.8943 kcal/mol at 298.15 K)"
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"

@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -598,10 +598,10 @@ nodes:
     reviewed_by: audit:15-pyscf-cartesian-basis
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 06-barrier
+    last_slice: 07-tier3-inputs
 - id: eta_rxncat_mapping
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -658,4 +658,4 @@ nodes:
     reviewed_by: audit:15-pyscf-cartesian-basis
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 14-bofill-guard
+    last_slice: 07-tier3-inputs
