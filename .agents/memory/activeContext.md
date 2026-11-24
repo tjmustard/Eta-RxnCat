@@ -7,41 +7,43 @@ The "Now" of this project: what was just done, what is in progress, and any bloc
 Agents read this file first to see where to pick up, and update it after each task.
 
 ## Current Sprint Goal
-- [x] v0.4.0 Conserved-Core Structure Mapper, a clean-room rewrite of `nMap` (mission
-  `missions/release-0.4.0`, OPR.0.4.0, 8 slices), proved on TJ's Fixture M1: built, audited,
-  promoted by TJ (Phase 3) and accepted on this host on 2026-11-23.
-- **Eta is PAUSED after v0.4.0 (TJ).** Do not start v0.5.0 until TJ restarts it after the HACF
-  efficiency release.
+- [x] v0.5.0 TS P-RFO Optimizer & Active-Core Frequency Validator (mission
+  `missions/release-0.5.0`, OPR.0.5.0, 15 slices: 01–13 plus replan slices 14 and 15), proved on
+  TJ's Tier 3 (five literature TSs × GFN2 and UMA): built, audited, promoted by TJ (Phase 3,
+  `ccacac5`) and accepted on this host on 2026-11-24.
+- **Eta pauses after the v0.5.0 push (TJ)** until TJ's weekly usage reset, Sat 2026-11-28 6 PM PT
+  (2026-11-29T02:00Z). No v0.6.0 mission until TJ restarts it.
 
 ## Session State
-Updated 2026-11-23.
-- Branch `feature/eta-rxncat-v0.4.0`, cut from `baef0b3` (the v0.4.0 mission commit on `main`;
-  its parent `c3506e6` is v0.3.0 plus the HACF v0.6.2 upgrade). Version 0.4.0. The lead pushes,
-  on TJ's word only.
-- v0.1.0 to v0.3.0 are described in their `CHANGELOG.md` entries.
-- v0.4.0 adds the core contracts `GraftSpec`, `GraftResult`, `CloseContact` and
-  `JunctionVolume` (`core/mapping_models.py`), and the package `eta_rxncat.mapping`:
-  - `align`: Horn quaternion `superpose`, with a pair-set shape guard;
-  - `graft`: ordered surgery, explicit charge and multiplicity, contacts, junction signed
-    volumes and the planar flag;
-  - `relax`: `relax_constrained_core`, with the core frozen to 1e-6 Å;
-  - `report`: bond perception, core RMSD and junction volumes;
-  - `errors`: `MappingError` and its subclasses.
-  Importing it loads numpy only.
-- Clean room (TJ Q1): no seat opens, clones, fetches or searches Eta_Scripts or nMap. Behaviour
-  comes only from the operator-approved clean-room documents named in the mission SPEC.
-  The vectors are in `tests/unit/mapping/data/cleanroom_nmap/` with `PROVENANCE.md`.
-- Fixture M1: TJ's XYZ files are in `tests/e2e/data/e2e5/xyz/`, the provisional YAML is
-  `tests/e2e/data/e2e5/m1_ts1a_n_to_ts1b_n.yaml`, the tests are `tests/e2e/test_m1_*.py`, and the
-  promoted fixtures are in `tests/fixtures/v0.4.0/`. The xtb E2E needs `ETA_RXNCAT_XTB` set, or it
-  skips.
-- Acceptance: `docs/prd/v0.4.0/ACCEPTANCE_RESULT.json`, verdict `pass` (run at `2dbc3ec`, xtb
-  recipe on the CPU, UMA `uma-s-1p2p1` on CUDA), with its `known_limits`.
-- The discrepancy register `docs/prd/v0.4.0/DISCREPANCIES.md` has all 25 rows (DV-01…DV-10,
-  CR-01…CR-15) closed. PD-008 is decided.
-- HACF is v0.6.2 (`5028b9f`, installed as `c3506e6`). Seats never run the installer. It pins rig
-  {0.6.13, 0.7.16}, so on rig 0.7.21 `hyper_spec.py proof` writes proofs natively and
-  `hyper_migrate.py verify` skips `rig scope audit`. Both are expected.
+Updated 2026-11-24.
+- Branch `feature/eta-rxncat-v0.5.0`, cut from `272b1b4` (the v0.5.0 mission commit on `main`;
+  its parent `0d2a8d3` is v0.4.0 plus the HACF v0.6.3 upgrade). Version 0.5.0. The lead pushes,
+  under TJ's standing "A: yes, push when it passes".
+- v0.1.0 to v0.4.0 are described in their `CHANGELOG.md` entries.
+- v0.5.0 adds:
+  - core TS contracts in `core/ts_models.py` (`FormingBond`, `TSStep`, `TSSearchResult`,
+    `TSValidationOptions`, `TSValidation`, `TransitionStateRecord`), the `ts_opt` stage kind and
+    `prfo` as an optimizer name;
+  - `optimize/prfo.py`: `PRFOOptimizer`, a clean-room Cartesian P-RFO (Banerjee 1985, Baker 1986,
+    Bofill 1994) behind `TransitionStateOptimizer` (`optimize/ts_base.py`); failures raise
+    `TSSearchFailedError` with a named reason; the Bofill r = 0 / s = 0 guard (R29);
+  - `thermo/ts.py`: `validate_transition_state` (TJ A2 plus the R3 identity checks) and
+    `ts_thermochemistry` (sigma from the TS bond graph, Q-TJ2 A);
+  - `orchestrator/ts.py` `run_transition_state` (cached `ts_opt`, then the `frequency` stage's
+    Hessian validates) and `orchestrator/barrier.py` `activation_free_energy` (ΔG‡ at 1 M and
+    1 atm);
+  - `cartesian_basis` on `pyscf_gpu_cpu`, keyed only when true (ADR-0041).
+- Tier 3: inputs in `tests/e2e/data/e2e5/` (`SOURCES.md`, `t3_*.yaml`, XYZ files), tests
+  `tests/e2e/test_t3_*.py`, promoted fixtures in `tests/fixtures/v0.5.0/` (11 files). The xtb E2E
+  needs `ETA_RXNCAT_XTB` set, or it skips.
+- Acceptance: `docs/prd/v0.5.0/ACCEPTANCE_RESULT.json`, verdict `pass` (run at `b2046ca`, xtb
+  on the CPU, UMA `uma-s-1p2p1` on CUDA), with its `known_limits` and `reported_notes`.
+- The register `docs/prd/v0.5.0/DISCREPANCIES.md` has DV-01…DV-08 closed. DV-09a/b (the
+  version bump) stay `decided`: no audit handoff named them. PD-009 is decided.
+- HACF is v0.6.3 (`b7dcb44`, installed as `0d2a8d3`). Seats never run the installer. Upgrade to
+  v0.6.5 (pinned `a215447`) is the operator's, after the v0.5.0 push. On rig 0.7.21,
+  `hyper_spec.py proof` writes proofs natively and `hyper_migrate.py verify` skips
+  `rig scope audit`; both are expected.
 
 ## Recent Decisions
 - Licence policy (TJ, 2026-11-22 14:57Z, governs all versions): the core (`src/eta_rxncat/` and
@@ -49,6 +51,16 @@ Updated 2026-11-23.
   MLIP, conformer search) are allowed only behind the engine interface, as optional extras or
   subprocesses, because they can be replaced. `ase` coming in through the MACE extra is fine
   (14:59Z).
+- TJ v0.5.0:
+  - A1 "Q1. A": clean-room Cartesian P-RFO, no TRIC; geomeTRIC `--transition` only as a
+    black-box cross-check through its CLI.
+  - A2 "Q2.  A": one mode below −20 cm⁻¹, below −50 cm⁻¹, active-core KE fraction ≥ 0.60.
+  - Q-TJ2 A: TS sigma from the perceived bond graph, no TS degeneracy.
+  - Q-TJ3 A, amended by Q-TJ4 A (R32): UMA gates everything; GFN2 gates convergence, mode count
+    and the identity core (overlap, in phase, KE) except TS4a, which is report-only.
+  - ADR-0041 "A: key only when on" (`cartesian_basis`).
+  - Phase 3 (R33) "A: 0.75 all (Recommended)": bounds |ΔE_TS| ≤ 1e-5 Eh, heavy RMSD ≤ 0.01 Å,
+    |ΔΔG‡(1 M)| ≤ 0.75 kcal/mol on UMA, ≤ 0.01 on GFN2; transcriptions confirmed.
 - TJ v0.4.0:
   - Q1: clean room, because the original code's copyright is shared with the university, his
     advisor and his co-authors.
@@ -66,18 +78,27 @@ Updated 2026-11-23.
 - R26: the core-freeze bound is 1e-6 Å, by measurement. ADR-0032 still says 1e-8 Å and is
   queued for TJ's next `/hyper-lore-approve`.
 - Author form everywhere: "Thomas J. L. Mustard Ph.D.". `PRDs/` is read-only.
-- ADR-0001 to ADR-0032 are all PROPOSED, not approved. ADR-0028 to ADR-0032 are this cycle's
-  (the graft input, Horn alignment, contacts and the overlap floor, the stated-rule atom map, and
-  the core-frozen pre-relaxation).
+- ADR-0001 to ADR-0041 are all PROPOSED, not approved. ADR-0033 to ADR-0041 are v0.5.0's (the
+  TS optimizer interface, the initial mode, the identity gate, TS sigma, GFN2 gating, the
+  `ts_opt` stage, the geomeTRIC CLI cross-check, the pre-build window check and
+  `cartesian_basis`).
 
 ## Next Steps
-- The lead pushes v0.4.0 (`main` and the tag) under TJ's "A: yes, push when it passes", then
-  reports to TJ. Eta then waits for TJ's restart after the HACF efficiency release.
-- Open with TJ: ADR approvals (`/hyper-lore-approve`, including ADR-0032's bound); whether GFN2
-  stays the default recipe (Q-E5); a licence look at geomeTRIC's "Non-AI" clause.
-- v0.5.0, when restarted: TS optimisation (P-RFO) seeded from the mapper's guess, the active-core
-  mode filter, and TJ's Tier 3.
+- The lead pushes v0.5.0 (`main` and the tag; it carries `0d2a8d3`, the HACF v0.6.3 upgrade),
+  reports to TJ, and parks eta until TJ's reset (2026-11-29T02:00Z). The operator may then
+  upgrade HACF to v0.6.5.
+- Open with TJ: ADR approvals (`/hyper-lore-approve`, including ADR-0032's bound); geomeTRIC's
+  "BSD 3-clause Non-AI" licence; whether GFN2 stays the default recipe (Q-E5); closing DV-09a/b.
+- v0.6.0, when restarted: selectivity branching and competing TS screening (plan
+  `PRDs/Eta-RxnCat_Living_Master_Plan.md`).
 - Carried forward:
+  - **v0.5.0**: an xtb `EngineError` (exit 128) propagates out of `run_transition_state` instead
+    of a cached `failed_reason` (R32; v0.6.0+ robustness item). GFN2 TS4a has no reaction TS
+    (report-only). UMA ΔG‡ spreads up to 0.074 kcal/mol run to run on CUDA (TS3a); UMA TS4a
+    ΔG‡ 14.600 is 0.10 inside its 14.7 window edge. `cartesian_basis` matches Gaussian only for
+    d-only Pople bases at 6D; the tightest R9 margin is 3-dimethyltetrazine (−8.25e-5 Eh,
+    `grids_level=4`). The record's GFN2 `gated_on` text still reads "convergence, mode count"
+    although R32 also gates the identity core (the tier gates are right).
   - **v0.4.0**: `JunctionVolume.sign` accepts `True` and `1.0`, and `signed_volume_angstrom3`
     accepts `True` (Pydantic laxness). Clean-room vector 07 is odd-electron, so the test uses
     multiplicity 2. Pure-graft junction handedness is undetermined on planar pair sets. UMA

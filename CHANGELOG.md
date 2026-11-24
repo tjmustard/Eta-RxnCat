@@ -4,6 +4,118 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-24
+
+### Added
+- **Transition-state contracts** (`eta_rxncat.core`, `core/ts_models.py`): `FormingBond`,
+  `TSStep`, `TSSearchResult`, `TSValidationOptions`, `TSValidation` and `TransitionStateRecord`,
+  frozen and strict like the other core models, with the validator's named reasons in
+  `TS_VALIDATION_REASONS`. `OptimizerIdentity.name` now accepts `prfo` beside `geometric`, and the
+  stage kinds gain `ts_opt`. The additions are new types; existing models and keys are unchanged.
+- **P-RFO transition-state search** (`eta_rxncat.optimize`): `PRFOOptimizer` behind a new
+  `TransitionStateOptimizer` interface, in Cartesian coordinates, numpy only. It is a clean-room
+  implementation from Banerjee et al. 1985, Baker 1986 and Bofill 1994 and the mission spec; no
+  code from the v0.5.0 starter or any other optimizer was used (TJ A1).
+  - The maximised mode is the one with the largest overlap with the forming bonds, not the
+    lowest mode. Rigid translations and rotations are projected out.
+  - λ is solved by bracketed bisection/Newton to |Δλ| ≤ 1e-12; no offset is added to a step
+    denominator.
+  - Trust radius 0.10 Bohr within [0.001, 0.30], with step acceptance by the energy ratio; a
+    rejected step reverts, shrinks the trust radius and refreshes the Hessian exactly.
+  - Bofill Hessian updates between exact refreshes (every 5 accepted steps). When the secant
+    condition already holds (r = 0) or the step is zero, the update returns the symmetrised
+    Hessian before any division (R29).
+  - Convergence needs all four criteria: max |g| ≤ 4.5e-4 and RMS g ≤ 3.0e-4 Eh/Bohr, max step
+    ≤ 1.8e-3 and RMS step ≤ 1.2e-3 Bohr.
+  - A failed search raises `TSSearchFailedError` with a named reason (`max_steps` at 100 steps,
+    `too_many_rejections`, `mode_lost`).
+- **Active-core frequency validator** (`eta_rxncat.thermo.validate_transition_state`), TJ A2:
+  exactly one mode below −20 cm⁻¹, that mode below −50 cm⁻¹, and a mass-weighted active-core
+  kinetic-energy fraction ≥ 0.60, always checked. TS identity is measured on the imaginary mode:
+  forming-stretch overlap ≥ 0.50, both forming bonds in phase, and each forming distance in
+  [1.90, 2.90] Å. Perceived connectivity is recorded, never gated. Unusable inputs raise
+  `TSValidationInputError`; an unknown element has no default mass.
+- **TS thermochemistry** (`ts_thermochemistry`): the quasi-RRHO of the minimum path with the one
+  imaginary mode excluded, and the symmetry number taken from the TS's perceived bond graph
+  (`rotational_symmetry_number_from_bonds`), with no TS degeneracy (TJ Q-TJ2 A).
+- **TS runner and barrier** (`eta_rxncat.orchestrator`): `run_transition_state` runs the cached
+  `ts_opt` stage, then computes the final Hessian in the cached `frequency` stage and validates
+  with it (P-RFO returns no Hessian). `activation_free_energy` gives ΔG‡ at 1 M and at 1 atm
+  from `BarrierSpec`/`BarrierEnergies`.
+- **PySCF `cartesian_basis` option** on `pyscf_gpu_cpu` (default off). It reproduces Gaussian's
+  6D default for Pople 6-31G-family bases. It enters the resolved stage and its key only when
+  true, so every existing PySCF key is byte-identical (ADR-0041, TJ "A: key only when on").
+- **Tier 3 inputs** (`tests/e2e/data/e2e5/`): five literature transition states, TS1a_n and
+  TS1b_n (mapped), TS3a, TS4a (mapped by two grafts) from Liu et al., *J. Am. Chem. Soc.* 2013,
+  135, 15642, and N4 from Paton et al., *Angew. Chem. Int. Ed.* 2011, 50, 10366, with their
+  reactants and sha256 provenance in `SOURCES.md`. Through eta's PySCF engine (M06-2X/6-31G(d),
+  `cartesian_basis=True`, `grids_level=4`) the six files with a printed electronic energy
+  reproduce Liu's within 1e-4 Eh (largest |ΔE| 8.25e-5 Eh, 3-dimethyltetrazine). TJ confirmed
+  the transcriptions.
+- **v0.5.0 acceptance** (`docs/prd/v0.5.0/ACCEPTANCE_RESULT.json`, verdict `pass`, run
+  2026-11-24 at `b2046ca`). It ran on an NVIDIA GeForce RTX 5060 Ti, with UMA `uma-s-1p2p1`
+  (fairchem 2.26.0) on CUDA and xtb 6.8.0 on the CPU:
+  - default suite: 1794 passed, 0 skipped; all 13 acceptance commands exit 0;
+  - UMA: all five TSs pass every gate (convergence, one imaginary mode, active core, TS
+    identity, TJ's ΔG‡(1 M) window, conservation, cache reuse on a second run), and
+    ΔG‡(TS4a) < ΔG‡(TS3a). ΔG‡(1 M), kcal/mol: TS1a_n 19.58, TS1b_n 29.09, TS3a 22.20, TS4a
+    14.60, N4 26.61;
+  - GFN2: TS1a_n, TS1b_n, TS3a and N4 pass convergence, the mode count and the identity core
+    (overlap ≥ 0.50, in phase, KE ≥ 0.60). The forming-distance window, ΔG‡ and the ordering are
+    reported. TS4a is report-only (TJ Q-TJ4 A);
+  - regression against the fixtures TJ promoted, all within TJ's bounds (|ΔE_TS| ≤ 1e-5 Eh,
+    heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡(1 M)| ≤ 0.75 kcal/mol on UMA and ≤ 0.01 on GFN2): the four
+    gated GFN2 cases are exact; the largest UMA |ΔΔG‡| is 0.028 kcal/mol (TS3a);
+  - geomeTRIC `--transition` black-box cross-check, reported and not gated: all 10 case × recipe
+    runs converged; 8 pass eta's validator at geomeTRIC's TS (heavy-atom RMSD to eta's TS ≤ 6e-4
+    Å); GFN2 TS3a and GFN2 TS4a do not.
+- **Phase 3 (TJ)**: the 11 candidates promoted to `tests/fixtures/v0.5.0/` in `ccacac5`, with the
+  regression bounds above (mission R33, "A: 0.75 all (Recommended)").
+- **Records**: proposed ADR-0033 to ADR-0041 (awaiting approval), and the v0.5.0 starter
+  discrepancy register `docs/prd/v0.5.0/DISCREPANCIES.md`. PD-009 in
+  `docs/prd/PLAN_DISCREPANCIES.md` is decided.
+
+### Changed
+- **Thermochemistry**: `thermochemistry` and `ts_thermochemistry` share one body after the
+  symmetry number, which the first takes from a SMILES and the second from a bond graph.
+- **Development toolchain**: the Hypergraph Agentic Coding Framework was upgraded to v0.6.3
+  (`0d2a8d3`). The package and its dependencies did not change.
+- **README**: the v0.5.0 acceptance claims, derived from the record and enforced by tests; the
+  Roadmap lists v0.5.0 as built.
+- **Version** 0.5.0, bumped by slice 13 only on the verdict pass.
+
+### Known issues
+- **GFN2 finds no reaction TS for TS4a.** From the grafted, pre-relaxed start the search stops at
+  `max_steps` (100). At 300 steps it converges to a wrong saddle, and from Liu's TS4a xtb exits
+  with code 128 mid-search. TS4a on GFN2 is report-only (TJ Q-TJ4 A, R32).
+- **An xtb crash escapes `run_transition_state`.** An `EngineError` (such as xtb exit 128) inside
+  a TS search propagates instead of becoming a cached `failed_reason`. The acceptance test catches
+  it for GFN2 TS4a only. A v0.6.0+ robustness item, not built.
+- **UMA ΔG‡ is not bitwise reproducible on CUDA (float32).** Over three fresh-store runs the
+  largest spread was 0.035 kcal/mol in the record and 0.074 kcal/mol in the slice 12 audit's
+  runs, both on TS3a. UMA TS energies (≤ 4.4e-8 Eh) and geometries (≤ 2.4e-5 Å) reproduce far
+  more tightly. This is why TJ's UMA ΔΔG‡ bound is 0.75 kcal/mol.
+- **UMA TS4a ΔG‡(1 M) is 14.600 kcal/mol** against the window's upper edge of 14.7, about 0.10
+  kcal/mol inside.
+- **geomeTRIC cross-check:**
+  - On GFN2 TS3a geomeTRIC converges to a soft saddle that is not the reaction's (about
+    −37 cm⁻¹, forming overlap 0.0), while eta's GFN2 TS3a passes the identity core.
+  - The Hessian seed is given in Eh/Bohr²; `geometric-optimize --help` states the file format
+    but no units, so the units are an assumption.
+  - geomeTRIC 1.1.1's "BSD 3-clause Non-AI" licence is an open question with TJ. It runs only as
+    a CLI subprocess in an acceptance venv; nothing in `src/` imports it.
+- **Full-atom RMSDs to the literature TSs are inflated by H and CF3 labelling under the atom
+  map** (TS1b_n about 0.55 Å, TS4a about 1.11 Å). The forming-core RMSD on UMA is at most
+  0.037 Å.
+- **The tightest PySCF transcription margin** is 3-dimethyltetrazine at −8.25e-5 Eh against the
+  1e-4 Eh bound (`grids_level=4`). `cartesian_basis` makes every shell Cartesian, so it matches
+  Gaussian only for d-only Pople bases at 6D (R30).
+- **ADR-0001 to ADR-0041 are PROPOSED.** ADR-0032 still says 1e-8 Å for the core-freeze bound
+  (measured 1e-6 Å, R26).
+- **Carried forward, still true:** `import mace` sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the
+  whole process; a non-deterministic engine failure stays cached until `invalidate` (R50);
+  UMA results carry GPU noise; the graph YAML format is still provisional (TJ Q-E3).
+
 ## [0.4.0] - 2026-11-23
 
 ### Added

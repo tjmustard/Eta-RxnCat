@@ -25,7 +25,27 @@ relative to `docs/prd/v0.5.0/Eta-RxnCat-v0.5.0/`. R-, G- and A-numbers cite the 
 
 **Status.** `decided` means the v0.5.0 decision is fixed. The Slice column names the implementing slice
 or slices, from the mission's execution checklist. The auditor of that slice lists the row in its PASS
-handoff, and the scribe closes it at v0.5.0 docs time.
+handoff, and the scribe closes it at v0.5.0 docs time. `closed (audits NN, …)` means each listed
+slice's audit passed and named that row, or its part of it, as satisfied in its PASS handoff to the lead:
+
+| Audit | PASS handoff | Rows named |
+|---|---|---|
+| 01 | `qitem-20261124041445-e07ff9f2` | PD-009 decided; DV-01's PD-009 part; the register |
+| 02 | `qitem-20261124043505-a7bf79ce` | DV-02 contracts part |
+| 03 | `qitem-20261124051212-668b769f` | DV-01 P-RFO part, DV-02 optimizer part, DV-03, DV-04 slice-03 part, DV-07 |
+| 04 | `qitem-20261124053355-07ff2d71` | DV-05, DV-06, DV-08 slice-04 part, DV-01 A2 part |
+| 05 | `qitem-20261124061023-b227749d` | DV-04 runner part (R27), DV-08 runner part |
+| 06 | `qitem-20261124063111-5346ec92` | DV-08 barrier part ("DV-08 is now complete across slices 04 and 06") |
+| 11 | `qitem-20261124181835-7e7ce8ec` | DV-01 cross-check part |
+
+Closed at v0.5.0 docs time: DV-01 to DV-08. DV-01's last clause (the covalent-graph topology guard
+stays at v0.9.0) is a deferral, not v0.5.0 work. The audits of slices 07 to 10, 12, 13 and 14 named
+no rows.
+
+**DV-09a and DV-09b stay `decided`.** No audit handoff names them. The slice 13 audit
+(`qitem-20261124232559-2b532bba`) reports that `__version__` prints 0.5.0 after the verdict passed,
+which is the DV-09 decision, but it does not list the rows, so the scribe does not close them. The
+lead or TJ can close them on that evidence.
 
 ## Starter files (sha256, sorted by path)
 
@@ -70,14 +90,14 @@ ad17d0bd4c47e724df63ad88cd62c9a5451723cef379d4411d8105d73a56ec78  Eta-RxnCat-v0.
 
 | ID | Source | Behaviour there | v0.5.0 decision | Slice | Status |
 |---|---|---|---|---|---|
-| DV-01 / PD-009 | starter plan vs zip, PR #10 | plan: "P-RFO … >=50-60%"; zip: "TRIC P-RFO … soft-mode Hessian-refresh / damped fallback recovery … >=60% … covalent-graph topology guard" | TJ A1 "Q1. A": own clean-room P-RFO in Cartesian coordinates, no TRIC; geomeTRIC `--transition` only as a black-box cross-check. TJ A2 "Q2.  A": exactly one mode below −20 cm⁻¹, that mode below −50 cm⁻¹, active-core KE fraction ≥ 0.60. The covalent-graph topology guard stays at v0.9.0. PD-009 set to `decided` in slice 01. | 01, 03, 04, 11 | decided |
-| DV-02 | `src/eta_rxncat/optimize/ts_optimizer.py` imports | imports `MolecularState`/`VibrationalMode`/`PotentialEngine`/`compute_frequencies_from_hessian`/`_ATOMIC_MASSES_AMU` from modules eta does not have; uses `coords_array()`/`.coordinates` shapes eta does not expose | the TS contracts are new, additive types in `core/ts_models.py` on eta's own models; the optimizer uses eta's engine and state interfaces only. | 02, 03 | decided |
-| DV-03 | same, `_prfo_step` | always maximises along the lowest eigenvector; filters eigenvalues by `\|λ\| > 1e-6` instead of projecting rigid motions; fixed 25-step Newton without a convergence check; `1e-8` added to a denominator | mission §5 "P-RFO": the maximised mode follows the forming bonds (R2); rigid translations and rotations are projected out with the centroid rigid basis (R7); λ_n is solved by bracketed bisection/Newton to \|Δλ\| ≤ 1e-12 within 200 iterations, else `mode_lost`; no offset is added to a step denominator. | 03 | decided |
-| DV-04 | same, `optimize_transition_state` | a single RMS-gradient test (3e-4); no step acceptance or trust update; energy and final Hessian unvalidated; no failure path | four convergence criteria, all required (R24); trust radius and step acceptance with every number keyed (R14); P-RFO returns no Hessian, the runner computes and validates the final Hessian in the `frequency` stage (R27); a failed search raises `TSSearchFailedError` with a named reason. | 03, 05 | decided |
-| DV-05 | same, `validate_transition_state_modes` | counts modes below −40 cm⁻¹; default fraction 0.50; skips the fraction check when it is `None` | TJ A2: count below −20 cm⁻¹, cutoff −50 cm⁻¹, fraction ≥ 0.60, always checked; edge cases raise (R16). | 04 | decided |
-| DV-06 | same | default mass 12.0 for an unknown element | eta's `thermo.masses` raises on an unknown element; no default mass. | 04 | decided |
-| DV-07 | `tests/unit/test_v050_ts_prfo.py` | diagonal, geometry-independent model Hessian, so the lowest mode is the reaction mode by construction; mode following is never exercised | G1: tier-D model surfaces are non-diagonal, with unequal masses, and the reaction mode is not the lowest. | 03 | decided |
-| DV-08 | `src/eta_rxncat/optimize/ts_optimizer.py` | no TS identity check beyond counting imaginary modes; no barrier or standard-state handling | TS identity is the three measured checks of R3 (connectivity reported, never the gate); barriers at 1 M and 1 atm in mission §5 "Barrier". | 04, 06 | decided |
+| DV-01 / PD-009 | starter plan vs zip, PR #10 | plan: "P-RFO … >=50-60%"; zip: "TRIC P-RFO … soft-mode Hessian-refresh / damped fallback recovery … >=60% … covalent-graph topology guard" | TJ A1 "Q1. A": own clean-room P-RFO in Cartesian coordinates, no TRIC; geomeTRIC `--transition` only as a black-box cross-check. TJ A2 "Q2.  A": exactly one mode below −20 cm⁻¹, that mode below −50 cm⁻¹, active-core KE fraction ≥ 0.60. The covalent-graph topology guard stays at v0.9.0. PD-009 set to `decided` in slice 01. | 01, 03, 04, 11 | closed (audits 01, 03, 04, 11) |
+| DV-02 | `src/eta_rxncat/optimize/ts_optimizer.py` imports | imports `MolecularState`/`VibrationalMode`/`PotentialEngine`/`compute_frequencies_from_hessian`/`_ATOMIC_MASSES_AMU` from modules eta does not have; uses `coords_array()`/`.coordinates` shapes eta does not expose | the TS contracts are new, additive types in `core/ts_models.py` on eta's own models; the optimizer uses eta's engine and state interfaces only. | 02, 03 | closed (audits 02, 03) |
+| DV-03 | same, `_prfo_step` | always maximises along the lowest eigenvector; filters eigenvalues by `\|λ\| > 1e-6` instead of projecting rigid motions; fixed 25-step Newton without a convergence check; `1e-8` added to a denominator | mission §5 "P-RFO": the maximised mode follows the forming bonds (R2); rigid translations and rotations are projected out with the centroid rigid basis (R7); λ_n is solved by bracketed bisection/Newton to \|Δλ\| ≤ 1e-12 within 200 iterations, else `mode_lost`; no offset is added to a step denominator. | 03 | closed (audit 03) |
+| DV-04 | same, `optimize_transition_state` | a single RMS-gradient test (3e-4); no step acceptance or trust update; energy and final Hessian unvalidated; no failure path | four convergence criteria, all required (R24); trust radius and step acceptance with every number keyed (R14); P-RFO returns no Hessian, the runner computes and validates the final Hessian in the `frequency` stage (R27); a failed search raises `TSSearchFailedError` with a named reason. | 03, 05 | closed (audits 03, 05) |
+| DV-05 | same, `validate_transition_state_modes` | counts modes below −40 cm⁻¹; default fraction 0.50; skips the fraction check when it is `None` | TJ A2: count below −20 cm⁻¹, cutoff −50 cm⁻¹, fraction ≥ 0.60, always checked; edge cases raise (R16). | 04 | closed (audit 04) |
+| DV-06 | same | default mass 12.0 for an unknown element | eta's `thermo.masses` raises on an unknown element; no default mass. | 04 | closed (audit 04) |
+| DV-07 | `tests/unit/test_v050_ts_prfo.py` | diagonal, geometry-independent model Hessian, so the lowest mode is the reaction mode by construction; mode following is never exercised | G1: tier-D model surfaces are non-diagonal, with unequal masses, and the reaction mode is not the lowest. | 03 | closed (audit 03) |
+| DV-08 | `src/eta_rxncat/optimize/ts_optimizer.py` | no TS identity check beyond counting imaginary modes; no barrier or standard-state handling | TS identity is the three measured checks of R3 (connectivity reported, never the gate); barriers at 1 M and 1 atm in mission §5 "Barrier". | 04, 06 | closed (audits 04, 05, 06) |
 | DV-09a | `pyproject.toml` | `version = "0.5.0"` | eta's version stays `0.4.0` until the acceptance verdict passes; slice 13 bumps it only on pass. | 13 | decided |
 | DV-09b | `src/eta_rxncat/__init__.py` | `__version__ = "0.5.0"` | as DV-09a. | 13 | decided |
 
