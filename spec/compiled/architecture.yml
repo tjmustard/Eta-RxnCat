@@ -386,43 +386,46 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
   - tests/unit/optimize/**
   description: >-
-    eta_rxncat.optimize (v0.3.0): geometry optimizers behind one interface; geomeTRIC
-    is the optional opt-geometric extra (TJ Q3 A) and is never imported by core or
-    the base install. errors.py: OptimizerError -> OptimizerUnavailableError (names
-    uv sync --extra opt-geometric), OptimizerInputError, OptimizationFailedError(steps,
-    last_energy_hartree); none is a ValueError. base.py (pure Python): Optimizer ABC
-    (identity -> OptimizerIdentity, OPTIONS of engines.options.OptionSpec resolved
-    by the ADR-0016 rule, minimize(state, engine, *, frozen_atom_indices, dihedral_constraints,
-    options) -> core OptimizationResult); DihedralConstraint (frozen pydantic: four
-    distinct 0-based atoms, value in (-180, 180]); check_constraints; constraints_text
-    (canonical freeze:/dihedral: text, sorted, ';'-joined; recorded as options["constraints"],
-    keyed opt.constraints by the runner). geometric_impl.py: GeometricOptimizer imports
-    geomeTRIC only inside functions, never calls run_optimizer or logging.config;
-    drives OptParams, Molecule, its own coordinate-system table from geometric.internal
-    (tric/cart/dlc/hdlc), parse_constraints ($freeze xyz, $set dihedral, 1-based;
-    enforce 0.1 only with frozen atoms) and Optimizer.optimizeGeometry through a bridge
-    that calls Engine.evaluate and never catches EngineError; each run in a fresh
-    temp dir with the geometric logger redirected there and numpy's global RNG seeded,
-    both restored after. Options coordsys (tric), convergence_set (GAU, seven sets),
-    maxiter (300), trust (0.1), hessian (never/first). Recorded ladder: tric, tric_tight_trust
-    (trust 0.03, hessian first), then cartesian (trust 0.05) or, for constrained runs,
-    hdlc; cart with a constraint is refused; a converged dihedral off target by >
-    0.1 deg fails. Tests in tests/unit/optimize.
+    eta_rxncat.optimize: geometry optimizers (v0.3.0) and the clean-room P-RFO TS
+    search (v0.5.0, TJ A1). geomeTRIC is the optional opt-geometric extra (TJ Q3 A),
+    never imported by core or the base install. errors.py: OptimizerError -> OptimizerUnavailableError
+    (names uv sync --extra opt-geometric), OptimizerInputError, OptimizationFailedError(steps,
+    last_energy_hartree) -> TSSearchFailedError(reason: max_steps|too_many_rejections|mode_lost|no_reaction_mode|wall_time_exceeded);
+    none is a ValueError. base.py (pure Python): Optimizer ABC (identity, OPTIONS
+    resolved by the ADR-0016 rule, minimize(state, engine, *, frozen_atom_indices,
+    dihedral_constraints, options) -> OptimizationResult); DihedralConstraint; check_constraints;
+    constraints_text (canonical freeze:/dihedral: text, recorded as options["constraints"]).
+    geometric_impl.py: GeometricOptimizer imports geomeTRIC only inside functions;
+    OptParams, Molecule, coordsys tric/cart/dlc/hdlc, parse_constraints, optimizeGeometry
+    via a bridge to Engine.evaluate that never catches EngineError; fresh temp dir,
+    logger and numpy RNG restored. Options coordsys, convergence_set, maxiter, trust,
+    hessian; ladder tric, tric_tight_trust, then cartesian or hdlc for constrained
+    runs. ts_base.py (pure Python, R12): TransitionStateOptimizer ABC, separate from
+    Optimizer; find_saddle(state, engine, *, forming_bonds, options) -> TSSearchResult;
+    'constraints' refused, no frozen atoms or dihedrals (R21). prfo.py (numpy, base
+    install): PRFOOptimizer, identity prfo src-<sha256(prfo.py)[:16]> (R11). Unweighted
+    Cartesian Bohr, rigid motions about the centroid projected out (R7, no masses
+    or thermo); exact Hessian at step 0, every 5th accepted step and after a rejection,
+    Bofill between; initial mode = max forming-stretch overlap, then max overlap with
+    the previous mode; Baker P-RFO step, trust radius, ratio accept/reject; four convergence
+    criteria (R24); no Hessian after convergence (R27). Tests in tests/unit/optimize.
   inputs:
-  - data_type: molecular_state_and_constraints
+  - data_type: molecular_state_constraints_and_forming_bonds
     source_id: eta_rxncat_core
-  - data_type: engine_energy_and_forces
+  - data_type: engine_energy_forces_and_hessian
     source_id: eta_rxncat_engines
   - data_type: optimizer_options
     external: eta_rxncat_consumers
   outputs:
   - data_type: optimization_result
+    external: eta_rxncat_consumers
+  - data_type: ts_search_result
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -433,9 +436,9 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-24T05:11:53+00:00'
+    reviewed_by: audit:03-prfo
+    summary: patched description, inputs, outputs
   provenance:
     last_slice: 03-prfo
 - id: eta_rxncat_conformers
@@ -499,7 +502,7 @@ nodes:
     last_slice: 02-ts-contracts
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -570,14 +573,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
+    reviewed_at: '2026-11-24T05:11:53+00:00'
+    reviewed_by: audit:03-prfo
     summary: reviewed; nothing patched
   provenance:
     last_slice: 03-prfo
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -630,8 +633,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
+    reviewed_at: '2026-11-24T05:11:53+00:00'
+    reviewed_by: audit:03-prfo
     summary: reviewed; nothing patched
   provenance:
     last_slice: 03-prfo

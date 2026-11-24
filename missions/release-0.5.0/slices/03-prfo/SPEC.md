@@ -2,7 +2,7 @@
 id: OPR.0.5.0.3
 slice: 03-prfo
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Implement the clean-room Cartesian P-RFO saddle search (TransitionState
 depends_on: [OPR.0.5.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", spec/compiled/architecture.yml]

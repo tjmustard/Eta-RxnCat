@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: P-RFO per SPEC; S1/S2 within 1e-4 Bohr, one negative eig; 5 failure reasons; 1556 passed; gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
