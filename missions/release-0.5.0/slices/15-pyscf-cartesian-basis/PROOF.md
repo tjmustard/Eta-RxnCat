@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: keys byte-identical (recomputed at Start); 19 vs 18 AOs; GPU-CPU 9e-13 DF and non-DF; TS1a_n 140 AOs dE -6.25e-5; 1710 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

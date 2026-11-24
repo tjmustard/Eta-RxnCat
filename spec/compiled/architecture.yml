@@ -279,36 +279,36 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
   - tests/acceptance/**
   description: >-
-    eta_rxncat.engines (v0.2.0): engines, pure Python at import, no ase in src. Shared:
-    base.py Engine ABC (from_stage, evaluate -> PotentialResult), errors.py, units.py
-    (CODATA 2018), options.py resolved stage (R6), identity.py, fd.py. rdkit_ff.py:
-    UFF/MMFF94, neutral closed-shell only (R35), perception round-trip, fresh force
-    field per geometry. pyscf_gpu_cpu/: DF R/U KS/HF; keyed DF, auxbasis, ecp auto
-    per state (R36), grids, conv_tol, guess, PCM method, small basis, hessian_mode;
-    ladder diis -> level_shift -> soscf -> small-basis projection, then internal stability
-    on lambda_min from PySCF's replayed operator (stability.py, pinned 2.15.1/1.9.2):
+    eta_rxncat.engines (v0.2.0): pure Python at import, no ase in src. Shared: base.py
+    Engine ABC (from_stage, evaluate -> PotentialResult), errors.py, units.py (CODATA
+    2018), options.py resolved stage (R6), identity.py, fd.py. rdkit_ff.py: UFF/MMFF94,
+    neutral closed-shell only (R35), perception round-trip, fresh force field per
+    geometry. pyscf_gpu_cpu/: DF R/U KS/HF; keyed DF, auxbasis, ecp auto per state
+    (R36), grids, conv_tol, guess, PCM method, small basis, hessian_mode, cartesian_basis
+    (mol.cart, every Mole, keyed only when True, no atom guess; R30); ladder diis
+    -> level_shift -> soscf -> small-basis projection, then internal stability on
+    lambda_min from PySCF's replayed operator (stability.py, pinned 2.15.1/1.9.2):
     unstable iff lambda_min < -stability_tol (1e-3), follows lowering E < stability_noise_eh
     (1e-6) end as stable (R54, ENGINE_IMPL 2); ddCOSMO/PCM; HF analytic, KS FD Hessian
     on CPU (R41). Unkeyed device: GPU4PySCF on the same stage, ddCOSMO on cpu, calibrated
-    VRAM estimate vs the ADR-0008 budget, one cpu re-run on the four CUDA OOMs, GPU
-    KS analytic Hessian only for classes (RKS|UKS, solvation, ECP, grid) recorded
-    <= 1e-4 in pyscf-gpu-support.json (R44/R51; UKS IEF-PCM -> FD), CPU-copy stability
-    below 3 rotations (R43), device_reason on every CPU choice. xtb_subprocess.py:
-    external xtb 6.8.0, list argv, no shell, always --grad, keyed ALPB state; Hessian
-    = FD of gradients (R45). mace.py: MACE-MP-0 medium from a sha256-pinned model_path
-    checked before torch.load, float64, neutral closed-shell only. _fairchem_bridge.py
-    + uma_direct.py (uma-s-1p2p1) + esen_omol25.py (esen-sm-conserving-all-omol; direct-force
-    and allscaip names refused): offline get_predict_unit path (cached files or checkpoint_path),
-    keyed task omol and inference_settings high-precision (R47), derived keyed atom_refs_sha256
-    / form_elem_refs_sha256 (R40), direct-force models refused, AtomicData with charge
-    and spin, identity <method>@sha256:<hex>, FD Hessian. Tests in tests/unit/engines;
-    acceptance in tests/acceptance.
+    VRAM estimate vs the ADR-0008 budget, cpu re-run on the 4 CUDA OOMs, GPU KS analytic
+    Hessian only for classes (RKS|UKS, solvation, ECP, grid) recorded <= 1e-4 in pyscf-gpu-support.json
+    (R44/R51; UKS IEF-PCM -> FD), CPU-copy stability below 3 rotations (R43), device_reason
+    per CPU choice. xtb_subprocess.py: external xtb 6.8.0, list argv, no shell, always
+    --grad, keyed ALPB state; Hessian FD of gradients (R45). mace.py: MACE-MP-0 medium
+    from a sha256-pinned model_path checked before torch.load, float64, neutral closed-shell.
+    _fairchem_bridge.py + uma_direct.py (uma-s-1p2p1) + esen_omol25.py (esen-sm-conserving-all-omol;
+    direct-force and allscaip names refused): offline get_predict_unit path (cached
+    files or checkpoint_path), keyed task omol and inference_settings high-precision
+    (R47), derived keyed atom_refs_sha256 / form_elem_refs_sha256 (R40), direct-force
+    models refused, AtomicData with charge and spin, identity <method>@sha256:<hex>,
+    FD Hessian. Tests: tests/unit/engines, tests/acceptance.
   inputs: []
   outputs: []
   edges:
@@ -329,9 +329,9 @@ nodes:
   provenance:
     last_slice: 02-ts-contracts
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-24T09:04:22+00:00'
+    reviewed_by: audit:15-pyscf-cartesian-basis
+    summary: patched description
 - id: eta_rxncat_thermo
   dimension: Module
   status: clean
@@ -393,7 +393,7 @@ nodes:
     summary: patched description, inputs, outputs
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -444,14 +444,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-24T05:55:10+00:00'
-    reviewed_by: audit:14-bofill-guard
-    summary: patched description
+    reviewed_at: '2026-11-24T09:04:22+00:00'
+    reviewed_by: audit:15-pyscf-cartesian-basis
+    summary: reviewed; nothing patched
   provenance:
     last_slice: 14-bofill-guard
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -503,14 +503,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-24T05:33:37+00:00'
-    reviewed_by: audit:04-ts-validator
+    reviewed_at: '2026-11-24T09:04:22+00:00'
+    reviewed_by: audit:15-pyscf-cartesian-basis
     summary: reviewed; nothing patched
   provenance:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -594,14 +594,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T06:30:56+00:00'
-    reviewed_by: audit:06-barrier
-    summary: patched description, outputs
+    reviewed_at: '2026-11-24T09:04:22+00:00'
+    reviewed_by: audit:15-pyscf-cartesian-basis
+    summary: reviewed; nothing patched
   provenance:
     last_slice: 06-barrier
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -654,8 +654,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-24T05:55:10+00:00'
-    reviewed_by: audit:14-bofill-guard
+    reviewed_at: '2026-11-24T09:04:22+00:00'
+    reviewed_by: audit:15-pyscf-cartesian-basis
     summary: reviewed; nothing patched
   provenance:
     last_slice: 14-bofill-guard

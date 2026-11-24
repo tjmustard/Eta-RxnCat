@@ -2,7 +2,7 @@
 id: OPR.0.5.0.15
 slice: 15-pyscf-cartesian-basis
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Add a keyed cartesian_basis option to the pyscf_gpu_cpu engine (default
 depends_on: [OPR.0.5.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/pyscf_gpu_cpu/**", "tests/unit/engines/**", spec/compiled/architecture.yml]
