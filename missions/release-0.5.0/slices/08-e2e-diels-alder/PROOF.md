@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: E2E rerun xtb 2/2 and UMA 2/2 at C1 code, 0 skipped; UMA dG 19.58/29.09 in windows; 2nd-run all hits; 1727 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
