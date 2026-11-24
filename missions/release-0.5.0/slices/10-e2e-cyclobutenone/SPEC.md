@@ -10,7 +10,7 @@ intent: "Run the Paton N4 cyclopentadiene + cyclobutenone TS search and barrier 
 depends_on: [OPR.0.5.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.5.0/**", spec/compiled/architecture.yml]
@@ -131,9 +131,9 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read slice 08's test and helpers.
-- [ ] Task 2: the test (reuse `tests/e2e/t3.py`).
-- [ ] Task 3: required checks; C1.
+- [x] Task 1: codegraph index → `index: ok`; record Start; read slice 08's test and helpers.
+- [x] Task 2: the test (reuse `tests/e2e/t3.py`).
+- [x] Task 3: required checks; C1.
 - [ ] Task 4: host check; xtb then UMA (separate calls); second runs.
 - [ ] Task 5: C2; updater.
 
