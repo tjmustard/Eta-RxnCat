@@ -22,9 +22,8 @@ RECIPE_PARAMS = [
 DEVICES = {"xtb": "cpu", "uma": "cuda"}
 
 
-def recipe_for(name: str) -> Recipe:
-    """The named recipe: ``xtb`` = xtb_subprocess/gfn2, ``uma`` = uma_direct high precision."""
-    optimizer = GeometricOptimizer()
+def engine_for(name: str) -> tuple[StageConfig, dict[str, str]]:
+    """The named recipe's engine stage and runtime (no optimizer, so geomeTRIC is never loaded)."""
     if name == "xtb":
         stage = StageConfig(
             kind="geometry_opt",
@@ -32,14 +31,20 @@ def recipe_for(name: str) -> Recipe:
             method="gfn2",
             options={"alpb_state": "gsolv"},
         )
-        return Recipe("xtb", stage, optimizer)
+        return stage, {}
     stage = StageConfig(
         kind="geometry_opt",
         engine="uma_direct",
         method="uma-s-1p2p1",
         options={"inference_settings": "high-precision"},
     )
-    return Recipe("uma", stage, optimizer, engine_runtime={"device": DEVICES["uma"]})
+    return stage, {"device": DEVICES["uma"]}
+
+
+def recipe_for(name: str) -> Recipe:
+    """The named recipe: ``xtb`` = xtb_subprocess/gfn2, ``uma`` = uma_direct high precision."""
+    stage, runtime = engine_for(name)
+    return Recipe(name, stage, GeometricOptimizer(), engine_runtime=runtime)
 
 
 def acceptance() -> bool:

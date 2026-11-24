@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -600,10 +600,10 @@ nodes:
     reviewed_by: audit:10-e2e-cyclobutenone
     summary: patched description
   provenance:
-    last_slice: 10-e2e-cyclobutenone
+    last_slice: 11-geometric-crosscheck
 - id: eta_rxncat_mapping
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -660,4 +660,4 @@ nodes:
     reviewed_by: audit:07-tier3-inputs
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 07-tier3-inputs
+    last_slice: 11-geometric-crosscheck
