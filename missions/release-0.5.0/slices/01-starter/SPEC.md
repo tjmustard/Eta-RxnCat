@@ -10,7 +10,7 @@ intent: "Unpack the v0.5.0 starter byte-identical as reference with its discrepa
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["docs/prd/v0.5.0/**", docs/prd/PLAN_DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -146,12 +146,12 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; `sha256sum PRDs/Eta-RxnCat-v0.5.0.zip`
+- [x] Task 1: codegraph index → `index: ok`; record Start; `sha256sum PRDs/Eta-RxnCat-v0.5.0.zip`
   equals the value above (else stop).
-- [ ] Task 2: unzip into `docs/prd/v0.5.0/` from a scratch copy under `TMPDIR`; compare every
+- [x] Task 2: unzip into `docs/prd/v0.5.0/` from a scratch copy under `TMPDIR`; compare every
   file's sha256 with the zip listing.
-- [ ] Task 3: `.ruff.toml`; `DISCREPANCIES.md`; PD-009 cell.
-- [ ] Task 4: required checks; commit; `hypergraph_updater.py` for node `eta_rxncat_scaffold`
+- [x] Task 3: `.ruff.toml`; `DISCREPANCIES.md`; PD-009 cell.
+- [x] Task 4: required checks; commit; `hypergraph_updater.py` for node `eta_rxncat_scaffold`
   (`docs/**` already covers the files; no glob change).
 
 ## 4. The Negative Space (Constraints)

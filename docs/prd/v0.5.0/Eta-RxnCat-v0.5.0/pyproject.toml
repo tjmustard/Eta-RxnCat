@@ -1,0 +1,86 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eta-rxncat"
+version = "0.5.0"
+description = "Clean-room computational catalysis and reaction mechanism profiling platform with priority-gated reaction graphs, MLIPs, and PySCF/GPU4PySCF."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+    { name = "Thomas J. L. Mustard" }
+]
+keywords = [
+    "computational-chemistry",
+    "catalysis",
+    "dft",
+    "mlip",
+    "transition-states",
+    "reaction-networks",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = [
+    "numpy>=1.26.0,<3.0.0",
+    "scipy>=1.12.0",
+    "pydantic>=2.7.0",
+    "pyyaml>=6.0.1",
+    "rdkit>=2024.03.1",
+    "geometric>=1.0.2",
+    "pyscf>=2.6.0",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "gpu4pyscf-cuda12x>=1.8.0",
+]
+mlip = [
+    "torch>=2.7.0",
+    "mace-torch>=0.3.10",
+    "fairchem-core>=2.16.0",
+]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+    "types-PyYAML>=6.0.12",
+    "pip-licenses>=4.4.0",
+]
+
+[project.scripts]
+eta-rxncat = "eta_rxncat.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/eta_rxncat"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+markers = [
+    "gpu: tests requiring an NVIDIA CUDA GPU",
+    "e2e: end-to-end reaction graph tests using human-supplied fixtures",
+]
