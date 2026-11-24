@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: auditor rerun 13 verdict commands exit 0 0 skips; merged record verdict pass equals committed; suite 1797 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

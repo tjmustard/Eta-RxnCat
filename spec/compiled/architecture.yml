@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -26,7 +26,7 @@ nodes:
   - tests/unit/test_media.py
   - tests/unit/test_test_policy.py
   description: >-
-    uv-managed MIT package eta-rxncat 0.4.0 (hatchling, src layout, Python >=3.11,<3.14,
+    uv-managed MIT package eta-rxncat 0.5.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Runtime deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf.
     Extras: gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch),
     mlip-uma (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev;
@@ -47,7 +47,7 @@ nodes:
     WebP media, LICENSE (MIT); test_identity.py enforces the author form Thomas J.
     L. Mustard Ph.D. and derives the README badge, Features heading, roadmap and GPU
     claim from GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
-    v0.5.0 pre-release (pending TJ) from its record. docs/prd/v<version>/: verbatim
+    v0.5.0 claims only on its record verdict pass. docs/prd/v<version>/: verbatim
     starters (excluded from gates), DISCREPANCIES.md, acceptance record (v0.2.0 also
     evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
   inputs: []
@@ -63,8 +63,8 @@ nodes:
   provenance:
     last_slice: 13-acceptance-verdict
   review:
-    reviewed_at: '2026-11-24T22:09:38+00:00'
-    reviewed_by: audit:12-acceptance-record
+    reviewed_at: '2026-11-24T23:25:21+00:00'
+    reviewed_by: audit:13-acceptance-verdict
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
@@ -232,7 +232,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -273,8 +273,8 @@ nodes:
   provenance:
     last_slice: 13-acceptance-verdict
   review:
-    reviewed_at: '2026-11-24T06:09:51+00:00'
-    reviewed_by: audit:05-ts-runner
+    reviewed_at: '2026-11-24T23:25:21+00:00'
+    reviewed_by: audit:13-acceptance-verdict
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
@@ -509,7 +509,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -541,7 +541,7 @@ nodes:
     T3 E2E: Diels-Alder, tetrazine, Paton N4 (TS4a CF3 grafts+pre-relax; GFN2 TS4a
     report-only; t3.py gates R32), geomeTRIC TS cross-check (CLI subprocess; shim
     sole ase importer; reported), R54, R46, candidates never read back; v050 record
-    (R32 report-only TS4a; repro, proposed bounds), verdict.
+    (R32 report-only TS4a; repro; verdict vs TJ fixtures, R33 bounds).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -594,8 +594,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T22:09:38+00:00'
-    reviewed_by: audit:12-acceptance-record
+    reviewed_at: '2026-11-24T23:25:21+00:00'
+    reviewed_by: audit:13-acceptance-verdict
     summary: patched description
   provenance:
     last_slice: 13-acceptance-verdict
