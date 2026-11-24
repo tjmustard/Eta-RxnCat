@@ -20,6 +20,7 @@ from t3 import (
     candidate_dir,
     gates,
     reactant_summary,
+    regression_ts,
     reported_block,
     run_case,
     ts_payload,
@@ -67,6 +68,7 @@ def test_t3_diels_alder(
         "second_run_cache": cache_summary(second),
         "checks": {"tier_gates": tier},
     }
+    payload["checks"]["regression"] = regression_ts(payload, recipe_name)
     payload.update(outcome_fields(payload["checks"]))
     write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
     write_fragment(f"t3_{case}", recipe_name, payload)

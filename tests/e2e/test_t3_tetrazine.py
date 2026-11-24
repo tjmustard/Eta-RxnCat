@@ -26,6 +26,7 @@ from t3 import (
     gates,
     grafted_start,
     reactant_summary,
+    regression_ts,
     reported_block,
     reported_outcome,
     run_case,
@@ -51,6 +52,7 @@ def candidate(
     second: CaseRun,
     tier: dict[str, Any],
     extra: dict[str, Any],
+    report_only: bool = False,
 ) -> dict[str, Any]:
     """The candidate payload of one case (slice 08's form, plus ``extra``)."""
     identity = build_engine(recipe.engine_stage, recipe.engine_runtime).identity
@@ -70,6 +72,7 @@ def candidate(
         **extra,
         "checks": {"tier_gates": tier},
     }
+    payload["checks"]["regression"] = regression_ts(payload, recipe_name, report_only)
     payload.update(outcome_fields(payload["checks"]))
     return payload
 
@@ -126,7 +129,13 @@ def test_t3_tetrazine(
             "failed_checks": ["engine_error"],
             "graft_summary": graft_summary,
             "ordering_ts4a_below_ts3a": ordering,
-            "checks": {"tier_gates": {}},
+            "checks": {
+                "tier_gates": {},
+                "regression": {
+                    "status": "reported",
+                    "note": "engine error: no TS to compare (report-only pair, R32)",
+                },
+            },
             "test_outcome": "report_only",
         }
         write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
@@ -148,7 +157,16 @@ def test_t3_tetrazine(
         else:
             extra["ordering_ts4a_below_ts3a"] = ordering
         payload = candidate(
-            case, recipe_name, recipe, commit_sha, fixture, first, second, tier, extra
+            case,
+            recipe_name,
+            recipe,
+            commit_sha,
+            fixture,
+            first,
+            second,
+            tier,
+            extra,
+            report_only[case],
         )
         if report_only[case]:
             outcome, failed = reported_outcome(tier)

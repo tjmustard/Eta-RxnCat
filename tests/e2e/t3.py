@@ -432,3 +432,93 @@ def grafted_start(
         "pre_relaxed_start": start.model_dump(mode="json"),
     }
     return start, summary
+
+
+# --- Verdict: regression against TJ's promoted v0.5.0 fixtures (slice 13, mission R33) -------
+
+PROMOTED_V050 = REPO / "tests" / "fixtures" / "v0.5.0"
+REGRESSION_BOUNDS = {
+    "xtb": {
+        "abs_delta_ts_energy_hartree": 1e-5,
+        "heavy_rmsd_angstrom": 0.01,
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+    },
+    "uma": {
+        "abs_delta_ts_energy_hartree": 1e-5,
+        "heavy_rmsd_angstrom": 0.01,
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+    },
+}
+"""TJ's Phase 3 bounds (mission R33, "A: 0.75 all (Recommended)"): |ΔE_TS| <= 1e-5 Eh, heavy-atom
+RMSD <= 0.01 Å, |ΔΔG‡(1 M)| <= 0.75 kcal/mol on UMA (every case) and <= 0.01 on xtb."""
+
+
+def _ts_values(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """TS energy, ΔG‡(1 M) and TS geometry of a candidate payload (``None`` where absent)."""
+    ts = payload.get("ts") or {}
+    thermo = ts.get("thermo") or {}
+    barrier = payload.get("barrier") or {}
+    return {
+        "ts_energy_hartree": thermo.get("electronic_energy_hartree"),
+        "dG_dagger_1M_kcal_mol": barrier.get("dG_dagger_1M_kcal_mol"),
+        "state": ts.get("state"),
+    }
+
+
+def regression_ts(
+    payload: Mapping[str, Any],
+    recipe_name: str,
+    report_only: bool = False,
+    promoted_dir: Path = PROMOTED_V050,
+) -> dict[str, Any]:
+    """Compare a case with its promoted ``t3_<case>.<recipe>.json`` under TJ's R33 bounds.
+
+    |ΔE_TS| (frequency-run electronic energy), |ΔΔG‡(1 M)| and the heavy-atom RMSD after Horn
+    superposition (same atom order); ``search_history`` is never compared (N11). A value that one
+    side lacks is a mismatch. ``pending_promotion`` without the fixture; ``reported`` (never
+    gated) for the report-only pair, GFN2 TS4a (R32).
+    """
+    import json
+
+    import numpy as np
+
+    from eta_rxncat.mapping import superpose
+
+    path = promoted_dir / f"t3_{payload['case']}.{recipe_name}.json"
+    if not path.is_file():
+        return {"status": "pending_promotion"}
+    old = _ts_values(json.loads(path.read_text(encoding="utf-8")))
+    new = _ts_values(payload)
+    bounds = REGRESSION_BOUNDS[recipe_name]
+    values: dict[str, float | None] = {}
+    problems: list[str] = []
+    for key, value_key in (
+        ("abs_delta_ts_energy_hartree", "ts_energy_hartree"),
+        ("abs_delta_dG_dagger_1M_kcal_mol", "dG_dagger_1M_kcal_mol"),
+    ):
+        a, b = new[value_key], old[value_key]
+        values[key] = None if a is None or b is None else abs(float(a) - float(b))
+    a_state, b_state = new["state"], old["state"]
+    if a_state is None or b_state is None or a_state["symbols"] != b_state["symbols"]:
+        values["heavy_rmsd_angstrom"] = None
+    else:
+        heavy = [k for k, s in enumerate(a_state["symbols"]) if s != "H"]
+        pa = np.asarray(a_state["coordinates"], dtype=np.float64)[heavy]
+        pb = np.asarray(b_state["coordinates"], dtype=np.float64)[heavy]
+        values["heavy_rmsd_angstrom"] = float(superpose(pa, pb).rmsd_angstrom)
+    for key, value in values.items():
+        if value is None:
+            problems.append(f"{key}: missing")
+        elif value > bounds[key]:
+            problems.append(key)
+    if report_only:
+        status = "reported"
+    else:
+        status = "fail" if problems else "pass"
+    return {
+        "status": status,
+        "fixture": f"tests/fixtures/v0.5.0/{path.name}",
+        **values,
+        "bounds": dict(bounds),
+        "mismatches": problems,
+    }

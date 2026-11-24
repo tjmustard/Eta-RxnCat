@@ -1,4 +1,4 @@
-r"""Merge the v0.5.0 Tier 3 acceptance files into docs/prd/v0.5.0/ACCEPTANCE_RESULT.json (slice 12).
+r"""Merge the v0.5.0 Tier 3 acceptance files into docs/prd/v0.5.0/ACCEPTANCE_RESULT.json.
 
 Usage::
 
@@ -6,14 +6,16 @@ Usage::
     python3 tests/e2e/acceptance_record_v050.py add-command <commands.json> <log> <exit_code> \\
         <wall_s> <env.json> -- <argv...>
     python3 tests/e2e/acceptance_record_v050.py merge <acceptance_xtb.json> \\
-        <acceptance_uma.json> <commands.json> <default_suite.json> <out.json>
+        <acceptance_uma.json> <commands.json> <default_suite.json> <out.json> [<prior_record.json>]
 
 ``add-command`` appends one run (argv, env, exit code, wall time, the pytest summary and the max
 RSS read from its log) to ``commands.json``; ``suite`` derives the ``default_suite`` block from
-the pytest log. Neither is typed by hand. The record has no ``verdict`` (slice 13 sets it after
-TJ's Phase 3); ``record_verdict`` is the rule slice 13 applies: ``pass`` only with every gated
-check ``pass``, a clean default suite and every command at exit 0 with no skip; anything
-``fail``, ``pending_*``, ``skipped`` or ``missing`` gives ``fail`` (R56, v0.4.0 R27).
+the pytest log. Neither is typed by hand. Before TJ's Phase 3 the record has no ``verdict``
+(slice 12). Once TJ's promoted fixtures are on disk and equal R33's sha256s and blob ids
+(``promotion_evidence``), the merge writes ``verdict`` from ``record_verdict``: ``pass`` only with
+every gated check ``pass``, a clean default suite and every command at exit 0 with no skip;
+anything ``fail``, ``pending_*``, ``skipped`` or ``missing`` gives ``fail`` (R56, v0.4.0 R27). The
+verdict run carries the slice 12 reproducibility measurement over from the prior record.
 """
 
 import hashlib
@@ -25,6 +27,7 @@ from typing import Any
 
 import numpy as np
 from acceptance_record_v040 import pytest_counts
+from t3 import PROMOTED_V050, REGRESSION_BOUNDS
 
 REPO = Path(__file__).resolve().parents[2]
 CASES = ("ts1a_n", "ts1b_n", "ts3a", "ts4a", "n4")
@@ -96,6 +99,70 @@ REPORTED_NOTES = {
         "core; reported, not gated (slice 11 audit)"
     ),
 }
+PROMOTION = {
+    "source": "mission R33 (TJ's Phase 3; closes R28)",
+    "commit": "ccacac5",
+    "commit_subject": "Promote v0.5.0 Tier 3 fixtures (TJ's Phase 3 review)",
+    "tj_answer_verbatim": "A: 0.75 all (Recommended)",
+    "option_text_verbatim": (
+        "UMA barrier tolerance 0.75 kcal/mol (10x the largest variation seen). Everything else "
+        "stays at your v0.4.0 tolerances: energy 1e-5 Eh, geometry 0.01 Å, xtb barrier 0.01."
+    ),
+    "relayed_by": "operator-agent@kernel, qitem-20261124221114-efeccb6d9876cb00, 22:12Z",
+    "scope_all": "every UMA case (operator-confirmed); xtb stays 0.01",
+    "transcriptions_confirmed": (
+        "option A: the six SI files (TS3a, TS4a, 3_dimethyltetrazine, 4_bis_cf3_tetrazine, "
+        "cyclobutenone, TS_N4) and the five t3_*.yaml (TJ A3 / Q-E3)"
+    ),
+}
+"""TJ's Phase 3 answer as the lead recorded it in mission R33 (never inferred from a status)."""
+PROMOTED_FILES = {
+    "t3_cross_check.json": (
+        "c64465871b46fc31fcc63e074a907bb31a1e1a56c8486de3303b1a6d42077b8b",
+        "55d0002c4a1c672f85b4b56e12a367a1a08556a4",
+    ),
+    "t3_n4.uma.json": (
+        "965f2ff96cd6555a332b86232b22ab37c1c3f4106e29861607eab38e63918412",
+        "2784a0b42ea6aefcbbad148c2c8a0a8b85f34e7a",
+    ),
+    "t3_n4.xtb.json": (
+        "5ccb927814bdb6d5cac6542464452487858d83b711b98cfc5669d599087a1837",
+        "209e9173b061c1f3e7094cb3b3f465e8daa515ef",
+    ),
+    "t3_ts1a_n.uma.json": (
+        "00ed79b684cf016b949c426b632f72fea467090c0875527a0c12983cd339237e",
+        "daa72d93980e9140df75834f0bb4487f7e8ddca2",
+    ),
+    "t3_ts1a_n.xtb.json": (
+        "66ce057e26a6e0299c2717ba363395a4c58cdb866648f242bbbc9beaf6415691",
+        "09cdd938e5e3f6bb7fa8d1dcc6f2e0ec2898f8c7",
+    ),
+    "t3_ts1b_n.uma.json": (
+        "dfd0657cc94c12d63c6dc2140a183d4767f42c56ed9fdc8e82cc2d2c9e2d8f24",
+        "856059550f74cdf90a7c51eea65b7a72d54a23bd",
+    ),
+    "t3_ts1b_n.xtb.json": (
+        "80845cf09a1b122b22502a0072c525efcceda0bd37b18d70546e4adbf03d0add",
+        "15463d0a0404465a173b2e515ad2d6eb45068aae",
+    ),
+    "t3_ts3a.uma.json": (
+        "418a504e47eda5a8bc81a1fd6f4005024fd42a49ae888692e63e3b1f8b8e77d1",
+        "5d10a2019d69786e4908d4748ec11e86fc0fa0a6",
+    ),
+    "t3_ts3a.xtb.json": (
+        "0028815f265e2fca680cc46c4c4b41a50d82e268737612b9e23265abee11fc8c",
+        "d223ea7f9924262b4791932fd893beb94b0352fc",
+    ),
+    "t3_ts4a.uma.json": (
+        "50bd7126d6d57cba501a8611a545efba1ef90193fc37338f5466d4c40b30ab94",
+        "d34adea8ddd5c9caeb9a6540d9a3f8e594be7b7a",
+    ),
+    "t3_ts4a.xtb.json": (
+        "5697b52a2394e9097241fd50642685e5a6d39240e371cf042ebc7504e6aaab6f",
+        "d37eae2f277869712f0dac7ac7d72ab4f4ae6807",
+    ),
+}
+"""Mission R33's promoted files: (sha256, git blob id), re-verified at ``ccacac5``."""
 TOP_KEYS = (
     "record_schema",
     "commit_sha",
@@ -114,6 +181,8 @@ TOP_KEYS = (
     "reproducibility",
     "proposed_regression_bounds",
 )
+VERDICT_KEYS = ("verdict", "verdict_reasons", "regression_bounds")
+"""Required once the record states a verdict (slice 13)."""
 FIXTURE_KEYS = {"t3", "cross_check", "transcriptions", "transcription_confirmation"}
 
 
@@ -156,9 +225,8 @@ def fixture_states(fixtures: dict[str, Any]) -> dict[str, Any]:
     transcriptions = fixtures.get("transcriptions", {})
     for part in ("sha256", "r9"):
         states[f"transcriptions.{part}"] = _status(transcriptions.get(part, {"status": "missing"}))
-    states["transcription_confirmation"] = _status(
-        fixtures.get("transcription_confirmation", {"status": "missing"})
-    )
+    confirmation = _status(fixtures.get("transcription_confirmation", {"status": "missing"}))
+    states["transcription_confirmation"] = "pass" if confirmation == "confirmed" else confirmation
     return states
 
 
@@ -210,9 +278,15 @@ def record_verdict(
 def check(record: dict[str, Any]) -> list[str]:
     """Schema problems of a record (empty when valid).
 
-    A pre-promotion record has no ``verdict``; a stated verdict must equal ``record_verdict``.
+    A pre-promotion record has no ``verdict``; a stated verdict must equal ``record_verdict`` and
+    needs TJ's regression bounds and a verified ``evidence.promotion``.
     """
     problems = [f"missing {key}" for key in TOP_KEYS if key not in record]
+    if "verdict" in record or "verdict_reasons" in record:
+        problems += [f"missing {key}" for key in VERDICT_KEYS if key not in record]
+        promotion = record.get("evidence", {}).get("promotion", {})
+        if promotion.get("status") != "verified":
+            problems.append("a verdict needs evidence.promotion verified")
     if record.get("record_schema") != 1:
         problems.append("record_schema is not 1")
     fixtures = record.get("fixtures", {})
@@ -254,8 +328,14 @@ def identity_core(tier_gates: dict[str, Any]) -> dict[str, Any]:
     return {"status": "pass" if set(parts.values()) == {"pass"} else "fail", "parts": parts}
 
 
-def case_entry(fragment: dict[str, Any], case: str, recipe: str) -> dict[str, Any]:
-    """The record entry of one case x recipe from its in-process fragment."""
+def case_entry(
+    fragment: dict[str, Any], case: str, recipe: str, promoted: bool = False
+) -> dict[str, Any]:
+    """The record entry of one case x recipe from its in-process fragment.
+
+    Before the promotion the regression is ``pending_promotion``; after it, the fragment's own
+    in-process comparison with the promoted fixture (``t3.regression_ts``), ``missing`` if absent.
+    """
     if fragment.get("test_outcome") == "missing":
         return {"test_outcome": "missing"}
     gates = dict(fragment.get("checks", {}).get("tier_gates", {}))
@@ -278,12 +358,20 @@ def case_entry(fragment: dict[str, Any], case: str, recipe: str) -> dict[str, An
             entry[key] = fragment.get(key)
         if "engine_error_message" in fragment:
             entry["engine_error_message"] = fragment["engine_error_message"]
-        entry["regression"] = {"status": "reported", "note": "report-only pair (R32)"}
+        regression = fragment.get("checks", {}).get("regression") if promoted else None
+        entry["regression"] = {
+            **(regression or {}),
+            "status": "reported",
+            "note": "report-only pair (R32)",
+        }
         return entry
-    entry["regression"] = {
-        "status": "pending_promotion",
-        "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-    }
+    if promoted:
+        entry["regression"] = fragment.get("checks", {}).get("regression") or {"status": "missing"}
+    else:
+        entry["regression"] = {
+            "status": "pending_promotion",
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+        }
     if recipe == "xtb":
         entry["identity_core"] = identity_core(gates)
     return entry
@@ -340,6 +428,38 @@ def transcriptions_block(xyz_dir: Path = XYZ_DIR) -> dict[str, Any]:
             "transcribed": True,
             "rows": rows,
         },
+    }
+
+
+def git_blob_id(data: bytes) -> str:
+    """Git's blob id of ``data`` (what ``git hash-object`` and ``git ls-tree`` print)."""
+    return hashlib.sha1(b"blob %d\0" % len(data) + data, usedforsecurity=False).hexdigest()
+
+
+def promotion_evidence(promoted_dir: Path = PROMOTED_V050) -> dict[str, Any]:
+    """TJ's promotion (R33): each promoted file's sha256 and blob id against R33's list.
+
+    ``absent`` when no promoted file exists (pre-promotion); ``verified`` when all eleven equal
+    R33; anything else raises, since a fixture that is not TJ's must never feed a verdict.
+    """
+    present = sorted(p.name for p in promoted_dir.glob("*.json")) if promoted_dir.is_dir() else []
+    if not present:
+        return {"status": "absent", "directory": "tests/fixtures/v0.5.0/"}
+    files = {}
+    for name, (sha, blob) in sorted(PROMOTED_FILES.items()):
+        path = promoted_dir / name
+        data = path.read_bytes() if path.is_file() else b""
+        observed = (hashlib.sha256(data).hexdigest(), git_blob_id(data)) if data else (None, None)
+        if observed != (sha, blob):
+            raise ValueError(f"promoted {name} is not R33's: {observed} != {(sha, blob)}")
+        files[name] = {"sha256": sha, "blob_id": blob}
+    if present != sorted(PROMOTED_FILES):
+        raise ValueError(f"promoted files {present} are not R33's {sorted(PROMOTED_FILES)}")
+    return {
+        "status": "verified",
+        **PROMOTION,
+        "directory": "tests/fixtures/v0.5.0/",
+        "files": files,
     }
 
 
@@ -494,44 +614,73 @@ def merge_runs(
     commands: list[dict[str, Any]],
     default_suite: dict[str, Any],
     xyz_dir: Path = XYZ_DIR,
+    prior: dict[str, Any] | None = None,
+    promoted_dir: Path = PROMOTED_V050,
 ) -> dict[str, Any]:
-    """Build the pre-promotion record (no ``verdict``) from the two per-recipe files."""
+    """Build the record from the two per-recipe files.
+
+    Without TJ's promoted fixtures: the pre-promotion record, no ``verdict`` (slice 12). With them
+    (verified against R33): regression from the in-process comparisons, the transcriptions
+    ``confirmed`` from TJ's recorded answer, TJ's bounds and the ``verdict`` (slice 13).
+    ``prior`` is the slice 12 record, whose reproducibility measurement is carried over.
+    """
     shas = {r["commit_sha"] for r in runs.values()}
     if len(shas) != 1 or not all(r["tree_clean"] for r in runs.values()):
         raise ValueError(f"recipes ran at different or unclean commits: {shas}")
+    promotion = promotion_evidence(promoted_dir)
+    promoted = promotion["status"] == "verified"
     t3 = {
         case: {
             recipe: case_entry(
-                runs[recipe]["cases"].get(case, {"test_outcome": "missing"}), case, recipe
+                runs[recipe]["cases"].get(case, {"test_outcome": "missing"}), case, recipe, promoted
             )
             for recipe in RECIPES
         }
         for case in CASES
     }
-    reproducibility = {
-        recipe: {
-            case: reproducibility_entry(
-                case,
-                recipe,
-                runs[recipe]["cases"].get(case, {"test_outcome": "missing"}),
-                runs[recipe]["reproducibility"].get(case, {"test_outcome": "missing"}),
-            )
-            for case in CASES
+    if prior is not None:
+        reproducibility = prior["reproducibility"]
+        proposed = prior["proposed_regression_bounds"]
+    else:
+        reproducibility = _reproducibility(runs)
+        proposed = proposed_bounds(reproducibility)
+    if promoted:
+        confirmation = {
+            "status": "confirmed",
+            "source": PROMOTION["source"],
+            "answer": PROMOTION["transcriptions_confirmed"],
         }
-        for recipe in RECIPES
-    }
+    else:
+        confirmation = {
+            "status": "pending_confirmation",
+            "note": "TJ confirms the six transcriptions at Phase 3 (TJ A3)",
+        }
     fixtures = {
         "t3": t3,
         "cross_check": cross_check_block(
             runs["uma"].get("cross_check", {"test_outcome": "missing"})
         ),
         "transcriptions": transcriptions_block(xyz_dir),
-        "transcription_confirmation": {
-            "status": "pending_confirmation",
-            "note": "TJ confirms the six transcriptions at Phase 3 (TJ A3)",
-        },
+        "transcription_confirmation": confirmation,
     }
-    record = {
+    evidence: dict[str, Any] = {
+        "candidates_phase3_set": (
+            "tests/candidate_outputs/v0.5.0/ (slices 08-11), committed for TJ's Phase 3 "
+            "review; never read by this record"
+        ),
+        "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+        "candidate_values": (
+            "the acceptance run reruns slice 08-10 code in-process at this commit; its values "
+            "stand for the candidates' (no candidate file is read, slice 12 firewall)"
+        ),
+        "promotion": promotion,
+    }
+    if prior is not None:
+        evidence["reproducibility_source"] = (
+            f"slice 12 record at {prior['commit_sha']}: three fresh-store runs per case x recipe; "
+            "carried over, not rerun for the verdict"
+        )
+    record: dict[str, Any] = {
         "record_schema": 1,
         "commit_sha": shas.pop(),
         "run_at_utc": max(r["run_at_utc"] for r in runs.values()),
@@ -546,26 +695,38 @@ def merge_runs(
         "default_suite": default_suite,
         "known_limits": list(KNOWN_LIMITS),
         "reported_notes": dict(REPORTED_NOTES),
-        "evidence": {
-            "candidates_phase3_set": (
-                "tests/candidate_outputs/v0.5.0/ (slices 08-11), committed for TJ's Phase 3 "
-                "review; never read by this record"
-            ),
-            "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
-            "candidate_values": (
-                "the acceptance run reruns slice 08-10 code in-process at this commit; its values "
-                "stand for the candidates' (no candidate file is read, slice 12 firewall)"
-            ),
-            "verdict_run": "slice 13, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion",
-        },
+        "evidence": evidence,
         "fixtures": fixtures,
         "reproducibility": reproducibility,
-        "proposed_regression_bounds": proposed_bounds(reproducibility),
+        "proposed_regression_bounds": proposed,
     }
+    if promoted:
+        record["regression_bounds"] = {
+            "source": "mission R33 (TJ at Phase 3)",
+            "recipes": {r: dict(b) for r, b in sorted(REGRESSION_BOUNDS.items())},
+            "report_only": "GFN2 TS4a: compared and recorded, never gated (R32)",
+            "excluded": "search_history (N11)",
+        }
+        record.update(record_verdict(fixtures, default_suite, record["commands"]))
     problems = check(record)
     if problems:
         raise ValueError(f"record invalid: {problems}")
     return record
+
+
+def _reproducibility(runs: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    return {
+        recipe: {
+            case: reproducibility_entry(
+                case,
+                recipe,
+                runs[recipe]["cases"].get(case, {"test_outcome": "missing"}),
+                runs[recipe]["reproducibility"].get(case, {"test_outcome": "missing"}),
+            )
+            for case in CASES
+        }
+        for recipe in RECIPES
+    }
 
 
 def _dump(path: Path, data: Any) -> None:
@@ -592,12 +753,14 @@ def main(argv: list[str]) -> int:
         _dump(path, commands)
         print(f"{path}: {len(commands)} commands; last {commands[-1]['summary']!r}")
         return 0
-    if len(argv) == 6 and argv[0] == "merge":
+    if len(argv) in (6, 7) and argv[0] == "merge":
         runs = {"xtb": _load(argv[1]), "uma": _load(argv[2])}
-        record = merge_runs(runs, _load(argv[3]), _load(argv[4]))
+        prior = _load(argv[6]) if len(argv) == 7 else None
+        record = merge_runs(runs, _load(argv[3]), _load(argv[4]), prior=prior)
         _dump(Path(argv[5]), record)
         rule = record_verdict(record["fixtures"], record["default_suite"], record["commands"])
-        print(f"wrote {argv[5]}; slice 13's rule would give {rule}")
+        stated = record.get("verdict", "none (pre-promotion)")
+        print(f"wrote {argv[5]}; verdict {stated}; rule {rule}")
         return 0
     print(__doc__)
     return 2

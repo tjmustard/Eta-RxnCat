@@ -1,4 +1,4 @@
-"""The v0.5.0 acceptance record: merge, schema check, verdict rule and bounds rule (slice 12)."""
+"""The v0.5.0 acceptance record: merge, schema check, verdict and bounds rules (slices 12-13)."""
 
 import copy
 import json
@@ -10,16 +10,20 @@ from acceptance_record_v050 import (
     CASES,
     HF1_SHA256,
     KNOWN_LIMITS,
+    PROMOTED_FILES,
     RECIPES,
     REPORT_ONLY,
     TJ_BOUNDS,
     check,
     command_entry,
+    git_blob_id,
     merge_runs,
+    promotion_evidence,
     proposed_bounds,
     record_verdict,
     reproducibility_entry,
 )
+from t3 import PROMOTED_V050, REGRESSION_BOUNDS
 
 STATE = {
     "symbols": ["C", "C", "N", "O", "H"],
@@ -136,9 +140,13 @@ COMMANDS = [
 SUITE = {"command": "uv run pytest", "exit_code": 0, "passed": 10, "failed": 0, "errors": 0}
 
 
+NO_PROMOTION = Path(__file__).resolve().parent / "no_promoted_fixtures_here"
+"""A directory that does not exist: the pre-promotion state (slice 12)."""
+
+
 def merged(**cases: dict[str, Any]) -> dict[str, Any]:
-    """A merged record from synthetic fragments."""
-    return merge_runs(runs(**cases), COMMANDS, SUITE)
+    """A pre-promotion record merged from synthetic fragments."""
+    return merge_runs(runs(**cases), COMMANDS, SUITE, promoted_dir=NO_PROMOTION)
 
 
 def settled(record: dict[str, Any]) -> dict[str, Any]:
@@ -260,26 +268,29 @@ def test_stated_pass_that_disagrees_is_refused() -> None:
     record = merged()
     record.update(verdict="pass", verdict_reasons=[])
     assert any("is not the record's verdict" in p for p in check(record))
-    record.update(record_verdict(record["fixtures"], record["default_suite"], record["commands"]))
-    assert check(record) == []
+    record = merge_runs(promoted_runs(ts3a__uma=regressed("fail", "ts3a")), COMMANDS, SUITE)
+    assert record["verdict"] == "fail" and check(record) == []
+    record.update(verdict="pass", verdict_reasons=[])
+    assert any("is not the record's verdict" in p for p in check(record))
 
 
 def test_incomplete_cross_check_fails() -> None:
     """The cross-check gate: every case x recipe attempted and recorded."""
     r = runs()
     del r["uma"]["cross_check"]["records"]["n4.xtb"]
-    record = merge_runs(r, COMMANDS, SUITE)
+    record = merge_runs(r, COMMANDS, SUITE, promoted_dir=NO_PROMOTION)
     assert record["fixtures"]["cross_check"]["status"] == "fail"
     r = runs()
     del r["uma"]["cross_check"]
-    assert merge_runs(r, COMMANDS, SUITE)["fixtures"]["cross_check"]["status"] == "missing"
+    record = merge_runs(r, COMMANDS, SUITE, promoted_dir=NO_PROMOTION)
+    assert record["fixtures"]["cross_check"]["status"] == "missing"
 
 
 def test_transcription_sha_mismatch_fails(tmp_path: Path) -> None:
     """A transcription that no longer equals HF-1 fails its check."""
     for name in HF1_SHA256:
         (tmp_path / name).write_text("x\n", encoding="utf-8")
-    record = merge_runs(runs(), COMMANDS, SUITE, xyz_dir=tmp_path)
+    record = merge_runs(runs(), COMMANDS, SUITE, xyz_dir=tmp_path, promoted_dir=NO_PROMOTION)
     assert record["fixtures"]["transcriptions"]["sha256"]["status"] == "fail"
 
 
@@ -288,11 +299,11 @@ def test_merge_refuses_unclean_or_split_commits() -> None:
     r = runs()
     r["uma"]["tree_clean"] = False
     with pytest.raises(ValueError, match="unclean"):
-        merge_runs(r, COMMANDS, SUITE)
+        merge_runs(r, COMMANDS, SUITE, promoted_dir=NO_PROMOTION)
     r = runs()
     r["uma"]["commit_sha"] = "c2"
     with pytest.raises(ValueError, match="different"):
-        merge_runs(r, COMMANDS, SUITE)
+        merge_runs(r, COMMANDS, SUITE, promoted_dir=NO_PROMOTION)
 
 
 def test_reproducibility_measures_all_pairs() -> None:
@@ -363,6 +374,120 @@ def test_command_entry_reads_summary_and_rss(tmp_path: Path) -> None:
     entry = command_entry(log, 0, 13.0, {"A": "1"}, ["pytest", "-k", "x"])
     assert entry["summary"] == "1 passed, 3 deselected in 12.50s"
     assert entry["max_rss_kbytes"] == 6912345 and entry["log"] == "run.log"
+
+
+# --- the verdict run (slice 13): TJ's promotion, regression, confirmation, verdict -----------
+
+
+def regressed(status: str = "pass", case: str = "ts1a_n", recipe: str = "uma") -> dict[str, Any]:
+    """A fragment carrying the in-process regression result ``t3.regression_ts`` writes."""
+    fragment = case_fragment(case, recipe)
+    fragment["checks"]["regression"] = {
+        "status": status,
+        "abs_delta_ts_energy_hartree": 0.0,
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+        "heavy_rmsd_angstrom": 0.0,
+        "bounds": dict(REGRESSION_BOUNDS[recipe]),
+        "mismatches": [] if status == "pass" else ["abs_delta_dG_dagger_1M_kcal_mol"],
+    }
+    return fragment
+
+
+def promoted_runs(**cases: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Two acceptance files whose every gated fragment passed its regression."""
+    r = runs()
+    for recipe in RECIPES:
+        for case in CASES:
+            if (recipe, case) in REPORT_ONLY:
+                r[recipe]["cases"][case]["checks"]["regression"] = {"status": "reported"}
+            else:
+                r[recipe]["cases"][case] = regressed("pass", case, recipe)
+        for key, value in cases.items():
+            if key.endswith(f"__{recipe}"):
+                r[recipe]["cases"][key.split("__")[0]] = value
+    return r
+
+
+PRIOR = {
+    "commit_sha": "c12",
+    "reproducibility": {"uma": {"ts3a": {"status": "measured"}}},
+    "proposed_regression_bounds": {"rule": "slice 12"},
+}
+
+
+def test_promotion_evidence_verifies_r33() -> None:
+    """The committed fixtures equal R33's sha256s and blob ids; absent before the promotion."""
+    evidence = promotion_evidence(PROMOTED_V050)
+    assert evidence["status"] == "verified" and evidence["commit"] == "ccacac5"
+    assert evidence["tj_answer_verbatim"] == "A: 0.75 all (Recommended)"
+    assert sorted(evidence["files"]) == sorted(PROMOTED_FILES)
+    assert promotion_evidence(NO_PROMOTION)["status"] == "absent"
+    assert git_blob_id(b"") == "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+
+
+def test_promotion_evidence_refuses_a_changed_or_missing_file(tmp_path: Path) -> None:
+    """A fixture that is not TJ's byte for byte, or a missing one, never feeds a verdict."""
+    for name in PROMOTED_FILES:
+        (tmp_path / name).write_bytes((PROMOTED_V050 / name).read_bytes())
+    assert promotion_evidence(tmp_path)["status"] == "verified"
+    first = sorted(PROMOTED_FILES)[0]
+    (tmp_path / first).write_bytes((PROMOTED_V050 / first).read_bytes() + b" ")
+    with pytest.raises(ValueError, match="not R33's"):
+        promotion_evidence(tmp_path)
+    (tmp_path / first).unlink()
+    with pytest.raises(ValueError, match="not R33's"):
+        promotion_evidence(tmp_path)
+
+
+def test_verdict_run_passes_with_regression_and_confirmation() -> None:
+    """Promoted: regression from the fragments, transcriptions confirmed, bounds, verdict pass."""
+    record = merge_runs(promoted_runs(), COMMANDS, SUITE, prior=PRIOR)
+    assert check(record) == []
+    assert record["verdict"] == "pass" and record["verdict_reasons"] == []
+    assert record["fixtures"]["transcription_confirmation"]["status"] == "confirmed"
+    assert record["evidence"]["promotion"]["status"] == "verified"
+    assert record["regression_bounds"]["recipes"]["uma"]["abs_delta_dG_dagger_1M_kcal_mol"] == 0.75
+    assert record["regression_bounds"]["recipes"]["xtb"]["abs_delta_dG_dagger_1M_kcal_mol"] == 0.01
+    assert record["reproducibility"] == PRIOR["reproducibility"]
+    assert "c12" in record["evidence"]["reproducibility_source"]
+    for case in CASES:
+        for recipe in RECIPES:
+            want = "reported" if (recipe, case) in REPORT_ONLY else "pass"
+            assert record["fixtures"]["t3"][case][recipe]["regression"]["status"] == want
+
+
+@pytest.mark.parametrize(
+    ("fragment", "reason"),
+    [
+        (regressed("fail", "ts3a", "uma"), "t3.ts3a.uma.regression: fail"),
+        (case_fragment("ts3a", "uma"), "t3.ts3a.uma.regression: missing"),
+    ],
+)
+def test_verdict_run_regression_miss_fails(fragment: dict[str, Any], reason: str) -> None:
+    """A regression outside TJ's bounds, or none recorded, fails the verdict."""
+    record = merge_runs(promoted_runs(ts3a__uma=fragment), COMMANDS, SUITE, prior=PRIOR)
+    assert record["verdict"] == "fail" and reason in record["verdict_reasons"]
+
+
+def test_report_only_regression_miss_never_fails() -> None:
+    """R32: GFN2 TS4a's regression is compared and recorded, never gated."""
+    ts4a = case_fragment("ts4a", "xtb")
+    ts4a["checks"]["regression"] = {"status": "reported", "mismatches": ["ts_energy: missing"]}
+    record = merge_runs(promoted_runs(ts4a__xtb=ts4a), COMMANDS, SUITE, prior=PRIOR)
+    entry = record["fixtures"]["t3"]["ts4a"]["xtb"]["regression"]
+    assert entry["status"] == "reported" and entry["mismatches"] == ["ts_energy: missing"]
+    assert record["verdict"] == "pass"
+
+
+def test_verdict_needs_verified_promotion_and_bounds() -> None:
+    """``check`` refuses a stated verdict without TJ's bounds or a verified promotion."""
+    record = merge_runs(promoted_runs(), COMMANDS, SUITE, prior=PRIOR)
+    broken = copy.deepcopy(record)
+    del broken["regression_bounds"]
+    assert "missing regression_bounds" in check(broken)
+    broken = copy.deepcopy(record)
+    broken["evidence"]["promotion"]["status"] = "absent"
+    assert "a verdict needs evidence.promotion verified" in check(broken)
 
 
 # --- the committed record ------------------------------------------------------------------

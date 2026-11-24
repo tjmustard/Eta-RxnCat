@@ -22,6 +22,7 @@ from t3 import (
     candidate_dir,
     gates,
     reactant_summary,
+    regression_ts,
     reported_block,
     run_case,
     ts_payload,
@@ -66,6 +67,7 @@ def test_t3_cyclobutenone(
         "second_run_cache": cache_summary(second),
         "checks": {"tier_gates": tier},
     }
+    payload["checks"]["regression"] = regression_ts(payload, recipe_name)
     payload.update(outcome_fields(payload["checks"]))
     # Paton prints no electronic energy: no literature dE dagger may appear (mission R8, HF-9).
     assert "dE_dagger" not in json.dumps(payload["reported"])
