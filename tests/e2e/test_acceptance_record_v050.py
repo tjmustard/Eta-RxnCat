@@ -495,26 +495,22 @@ def test_verdict_needs_verified_promotion_and_bounds() -> None:
 RECORD = Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.5.0" / "ACCEPTANCE_RESULT.json"
 
 
-def test_committed_record_is_valid_pre_promotion() -> None:
-    """The committed record is valid, has no verdict, and fails only on what awaits TJ (R56)."""
+def test_committed_record_is_the_passing_verdict() -> None:
+    """The committed record is valid and passes against TJ's promotion (R56, v0.4.0 R27)."""
     record = json.loads(RECORD.read_text(encoding="utf-8"))
     assert record["record_schema"] == 1
     assert check(record) == []
-    assert "verdict" not in record and "verdict_reasons" not in record
+    assert record["verdict"] == "pass" and record["verdict_reasons"] == []
     assert record["known_limits"] == list(KNOWN_LIMITS)
-    assert record["default_suite"]["exit_code"] == 0
+    assert record["default_suite"]["exit_code"] == 0 and record["default_suite"]["failed"] == 0
     assert record["commands"] and all(c["exit_code"] == 0 for c in record["commands"])
-    rule = record_verdict(record["fixtures"], record["default_suite"], record["commands"])
-    assert rule["verdict"] == "fail"
-    assert rule["verdict_reasons"], "a pre-promotion record awaits TJ"
-    assert all(
-        r.endswith((": pending_promotion", ": pending_confirmation"))
-        for r in rule["verdict_reasons"]
-    ), rule["verdict_reasons"]
-    assert record["fixtures"]["t3"]["ts4a"]["xtb"]["report_only"] is True
-    assert {(r, c) for r in RECIPES for c in CASES} - set(REPORT_ONLY) <= {
-        (r, c)
-        for r in RECIPES
-        for c in CASES
-        if record["reproducibility"][r][c]["status"] == "measured"
-    }
+    assert record["evidence"]["promotion"]["status"] == "verified"
+    assert record["evidence"]["promotion"]["commit"] == "ccacac5"
+    assert record["fixtures"]["transcription_confirmation"]["status"] == "confirmed"
+    assert record["regression_bounds"]["recipes"] == REGRESSION_BOUNDS
+    t3 = record["fixtures"]["t3"]
+    for case in CASES:
+        for recipe in RECIPES:
+            want = "reported" if (recipe, case) in REPORT_ONLY else "pass"
+            assert t3[case][recipe]["regression"]["status"] == want
+    assert t3["ts4a"]["xtb"]["report_only"] is True

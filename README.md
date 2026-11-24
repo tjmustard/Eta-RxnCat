@@ -7,11 +7,11 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies.</strong>
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.4.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.5.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.4.0)](#-features-v040)
+- [✨ Features (v0.5.0)](#-features-v050)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -44,9 +44,10 @@ that priority-gated graph. `v0.1.0` built the foundation; `v0.2.0` added the eng
 energies, forces and Hessians on it; `v0.3.0` turns one species into a Boltzmann ensemble of
 optimised conformers with free energies, and combines species into reaction free energies;
 `v0.4.0` maps a fragment onto the conserved core of a known transition state to build a guess
-for a new one. Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
+for a new one; `v0.5.0` optimises that guess to a validated transition state and computes its
+activation free energy. Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
 
-## ✨ Features (v0.4.0)
+## ✨ Features (v0.5.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -172,21 +173,23 @@ for a new one. Everything beyond it is listed under [Roadmap](#-roadmap) and is 
   and UMA recipes with TS1b_n's connectivity and junction handedness.
 - TJ confirmed the M1 atom map by promoting the graft.
 
-### Transition-state search and validation (v0.5.0, pre-release)
+### Transition-state search and validation (v0.5.0)
 
-Not released: the version is still 0.4.0 until TJ promotes the Tier 3 regression. The pre-promotion
-acceptance record ([ACCEPTANCE_RESULT.json](docs/prd/v0.5.0/ACCEPTANCE_RESULT.json)) shows:
-
-- P-RFO transition-state search, active-core frequency validator and transition-state barriers
-  on TJ's five Tier 3 transition states; Tier 3 regression pending TJ promotion.
+- The v0.5.0 acceptance record
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.5.0/ACCEPTANCE_RESULT.json)) passed: P-RFO
+  transition-state search, an active-core frequency validator and transition-state barriers ran
+  TJ's five Tier 3 transition states with both the xtb (GFN2) and UMA recipes, and every gated
+  result matched the fixtures TJ promoted.
 - With UMA, all five transition states pass every gate: convergence, one imaginary mode, the
   active core, the TS identity and TJ's ΔG‡(1 M) window, and ΔG‡(TS4a) < ΔG‡(TS3a).
 - With GFN2, TS1a_n, TS1b_n, TS3a and N4 pass convergence, the mode count and the identity core
   (forming-bond overlap ≥ 0.50, in phase, active-core KE ≥ 0.60); GFN2 TS4a is report-only by
   TJ's decision.
+- TJ's regression bounds: |ΔE_TS| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡(1 M)| ≤ 0.75
+  kcal/mol on UMA and ≤ 0.01 kcal/mol on GFN2.
 - A geomeTRIC black-box cross-check ran on every case and recipe; it is reported, not gated.
 - The six new Tier 3 structures match their recorded sha256s and reproduce Liu's energies within
-  1e-4 Eh where Liu prints one; TJ's confirmation of the transcriptions is pending.
+  1e-4 Eh where Liu prints one; TJ confirmed the transcriptions.
 
 ## ⚡ Installation
 
@@ -326,13 +329,13 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
   MACE, UMA and eSEN).
 - **v0.3.0**: conformer generation, ground-state optimisation and Boltzmann ensembles.
 - **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
+- **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
+  frequency validator.
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
-  frequency validator; Tier 3 regression pending TJ promotion.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.

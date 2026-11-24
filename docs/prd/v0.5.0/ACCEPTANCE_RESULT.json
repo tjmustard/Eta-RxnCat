@@ -13,23 +13,20 @@
         "tests/e2e/test_t3_diels_alder.py",
         "tests/e2e/test_t3_tetrazine.py",
         "tests/e2e/test_t3_cyclobutenone.py",
-        "tests/e2e/test_t3_reproducibility.py",
-        "tests/e2e/test_accept_v050.py",
-        "-rA",
-        "-s"
+        "tests/e2e/test_accept_v050.py"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 160896,
-      "summary": "9 passed, 10 deselected in 335.80s (0:05:35)",
-      "wall_s": 336.1
+      "max_rss_kbytes": 156840,
+      "summary": "5 passed, 5 deselected in 178.19s (0:02:58)",
+      "wall_s": 178.5
     },
     {
       "argv": [
@@ -41,23 +38,21 @@
         "pytest",
         "-m",
         "e2e and xtb",
-        "tests/e2e/test_t3_cross_check.py",
-        "-rA",
-        "-s"
+        "tests/e2e/test_t3_cross_check.py"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 148252,
-      "summary": "5 passed, 6 deselected in 179.92s (0:02:59)",
-      "wall_s": 180.5
+      "max_rss_kbytes": 148060,
+      "summary": "5 passed, 6 deselected in 172.01s (0:02:52)",
+      "wall_s": 172.4
     },
     {
       "argv": [
@@ -71,23 +66,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_diels_alder.py",
         "-k",
-        "uma-ts1a_n",
-        "-rA",
-        "-s"
+        "uma-ts1a_n"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 7032352,
-      "summary": "1 passed, 3 deselected, 15 warnings in 56.34s",
-      "wall_s": 58.8
+      "max_rss_kbytes": 7025832,
+      "summary": "1 passed, 3 deselected, 15 warnings in 44.21s",
+      "wall_s": 46.5
     },
     {
       "argv": [
@@ -101,23 +94,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_diels_alder.py",
         "-k",
-        "uma-ts1b_n",
-        "-rA",
-        "-s"
+        "uma-ts1b_n"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6974432,
-      "summary": "1 passed, 3 deselected, 15 warnings in 54.93s",
-      "wall_s": 57.4
+      "max_rss_kbytes": 7033828,
+      "summary": "1 passed, 3 deselected, 15 warnings in 48.49s",
+      "wall_s": 51.0
     },
     {
       "argv": [
@@ -129,23 +120,21 @@
         "pytest",
         "-m",
         "e2e and mlip_uma",
-        "tests/e2e/test_t3_tetrazine.py",
-        "-rA",
-        "-s"
+        "tests/e2e/test_t3_tetrazine.py"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 7005844,
-      "summary": "1 passed, 1 deselected, 15 warnings in 104.01s (0:01:44)",
-      "wall_s": 106.6
+      "max_rss_kbytes": 7086024,
+      "summary": "1 passed, 1 deselected, 15 warnings in 85.58s (0:01:25)",
+      "wall_s": 88.0
     },
     {
       "argv": [
@@ -157,173 +146,21 @@
         "pytest",
         "-m",
         "e2e and mlip_uma",
-        "tests/e2e/test_t3_cyclobutenone.py",
-        "-rA",
-        "-s"
+        "tests/e2e/test_t3_cyclobutenone.py"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6997920,
-      "summary": "1 passed, 1 deselected, 15 warnings in 55.27s",
-      "wall_s": 58.0
-    },
-    {
-      "argv": [
-        "timeout",
-        "3600",
-        "uv",
-        "run",
-        "--no-sync",
-        "pytest",
-        "-m",
-        "e2e and mlip_uma",
-        "tests/e2e/test_t3_reproducibility.py",
-        "-k",
-        "uma-ts1a_n",
-        "-rA",
-        "-s"
-      ],
-      "env": {
-        "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
-        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
-        "TMPDIR": "~/.cache/eta-rxncat-tmp",
-        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
-      },
-      "exit_code": 0,
-      "max_rss_kbytes": 7014732,
-      "summary": "1 passed, 8 deselected, 15 warnings in 52.98s",
-      "wall_s": 55.5
-    },
-    {
-      "argv": [
-        "timeout",
-        "3600",
-        "uv",
-        "run",
-        "--no-sync",
-        "pytest",
-        "-m",
-        "e2e and mlip_uma",
-        "tests/e2e/test_t3_reproducibility.py",
-        "-k",
-        "uma-ts1b_n",
-        "-rA",
-        "-s"
-      ],
-      "env": {
-        "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
-        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
-        "TMPDIR": "~/.cache/eta-rxncat-tmp",
-        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
-      },
-      "exit_code": 0,
-      "max_rss_kbytes": 6994580,
-      "summary": "1 passed, 8 deselected, 15 warnings in 60.84s (0:01:00)",
-      "wall_s": 63.3
-    },
-    {
-      "argv": [
-        "timeout",
-        "3600",
-        "uv",
-        "run",
-        "--no-sync",
-        "pytest",
-        "-m",
-        "e2e and mlip_uma",
-        "tests/e2e/test_t3_reproducibility.py",
-        "-k",
-        "uma-ts3a",
-        "-rA",
-        "-s"
-      ],
-      "env": {
-        "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
-        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
-        "TMPDIR": "~/.cache/eta-rxncat-tmp",
-        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
-      },
-      "exit_code": 0,
-      "max_rss_kbytes": 6907204,
-      "summary": "1 passed, 8 deselected, 15 warnings in 77.32s (0:01:17)",
-      "wall_s": 80.2
-    },
-    {
-      "argv": [
-        "timeout",
-        "3600",
-        "uv",
-        "run",
-        "--no-sync",
-        "pytest",
-        "-m",
-        "e2e and mlip_uma",
-        "tests/e2e/test_t3_reproducibility.py",
-        "-k",
-        "uma-ts4a",
-        "-rA",
-        "-s"
-      ],
-      "env": {
-        "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
-        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
-        "TMPDIR": "~/.cache/eta-rxncat-tmp",
-        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
-      },
-      "exit_code": 0,
-      "max_rss_kbytes": 6982620,
-      "summary": "1 passed, 8 deselected, 15 warnings in 83.91s (0:01:23)",
-      "wall_s": 86.3
-    },
-    {
-      "argv": [
-        "timeout",
-        "3600",
-        "uv",
-        "run",
-        "--no-sync",
-        "pytest",
-        "-m",
-        "e2e and mlip_uma",
-        "tests/e2e/test_t3_reproducibility.py",
-        "-k",
-        "uma-n4",
-        "-rA",
-        "-s"
-      ],
-      "env": {
-        "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
-        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
-        "TMPDIR": "~/.cache/eta-rxncat-tmp",
-        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
-      },
-      "exit_code": 0,
-      "max_rss_kbytes": 7041476,
-      "summary": "1 passed, 8 deselected, 15 warnings in 59.32s",
-      "wall_s": 62.1
+      "max_rss_kbytes": 7045496,
+      "summary": "1 passed, 1 deselected, 15 warnings in 44.01s",
+      "wall_s": 46.3
     },
     {
       "argv": [
@@ -337,23 +174,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_cross_check.py",
         "-k",
-        "uma-ts1a_n",
-        "-rA",
-        "-s"
+        "uma-ts1a_n"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6909348,
-      "summary": "1 passed, 10 deselected, 15 warnings in 58.66s",
-      "wall_s": 61.4
+      "max_rss_kbytes": 6948196,
+      "summary": "1 passed, 10 deselected, 15 warnings in 48.54s",
+      "wall_s": 50.8
     },
     {
       "argv": [
@@ -367,23 +202,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_cross_check.py",
         "-k",
-        "uma-ts1b_n",
-        "-rA",
-        "-s"
+        "uma-ts1b_n"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6913624,
-      "summary": "1 passed, 10 deselected, 15 warnings in 62.86s (0:01:02)",
-      "wall_s": 65.4
+      "max_rss_kbytes": 6956584,
+      "summary": "1 passed, 10 deselected, 15 warnings in 52.02s",
+      "wall_s": 54.3
     },
     {
       "argv": [
@@ -397,23 +230,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_cross_check.py",
         "-k",
-        "uma-ts3a",
-        "-rA",
-        "-s"
+        "uma-ts3a"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6916072,
-      "summary": "1 passed, 10 deselected, 15 warnings in 62.36s (0:01:02)",
-      "wall_s": 64.8
+      "max_rss_kbytes": 6938848,
+      "summary": "1 passed, 10 deselected, 15 warnings in 53.65s",
+      "wall_s": 55.9
     },
     {
       "argv": [
@@ -427,23 +258,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_cross_check.py",
         "-k",
-        "uma-ts4a",
-        "-rA",
-        "-s"
+        "uma-ts4a"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6910604,
-      "summary": "1 passed, 10 deselected, 15 warnings in 81.32s (0:01:21)",
-      "wall_s": 83.7
+      "max_rss_kbytes": 6936292,
+      "summary": "1 passed, 10 deselected, 15 warnings in 71.32s (0:01:11)",
+      "wall_s": 73.6
     },
     {
       "argv": [
@@ -457,23 +286,21 @@
         "e2e and mlip_uma",
         "tests/e2e/test_t3_cross_check.py",
         "-k",
-        "uma-n4",
-        "-rA",
-        "-s"
+        "uma-n4"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 6937524,
-      "summary": "1 passed, 10 deselected, 15 warnings in 58.43s",
-      "wall_s": 61.0
+      "max_rss_kbytes": 6936816,
+      "summary": "1 passed, 10 deselected, 15 warnings in 49.96s",
+      "wall_s": 52.2
     },
     {
       "argv": [
@@ -485,23 +312,21 @@
         "pytest",
         "-m",
         "e2e and acceptance",
-        "tests/e2e/test_t3_cross_check.py::test_t3_cross_check_fragment",
-        "-rA",
-        "-s"
+        "tests/e2e/test_t3_cross_check.py::test_t3_cross_check_fragment"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 92616,
+      "max_rss_kbytes": 93120,
       "summary": "1 passed in 0.03s",
-      "wall_s": 0.5
+      "wall_s": 0.4
     },
     {
       "argv": [
@@ -513,33 +338,31 @@
         "pytest",
         "-m",
         "e2e and mlip_uma",
-        "tests/e2e/test_accept_v050.py",
-        "-rA",
-        "-s"
+        "tests/e2e/test_accept_v050.py"
       ],
       "env": {
         "ETA_RXNCAT_ACCEPTANCE": "1",
-        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
-        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
-        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-13/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-13/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-13/xcheck (scratch)",
         "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
         "TMPDIR": "~/.cache/eta-rxncat-tmp",
         "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
       },
       "exit_code": 0,
-      "max_rss_kbytes": 5406796,
-      "summary": "1 passed, 1 deselected, 2 warnings in 10.51s",
-      "wall_s": 11.8
+      "max_rss_kbytes": 5429548,
+      "summary": "1 passed, 1 deselected, 2 warnings in 8.80s",
+      "wall_s": 10.2
     }
   ],
-  "commit_sha": "fc1965db2b1d843af81f00e1a51ae707a3333051",
+  "commit_sha": "b2046cae7540aa3f1c3c62880a656490dfecfbe7",
   "default_suite": {
     "command": "uv run pytest",
     "deselected": 164,
     "errors": 0,
     "exit_code": 0,
     "failed": 0,
-    "passed": 1762,
+    "passed": 1794,
     "skipped": 0
   },
   "devices": {
@@ -569,8 +392,66 @@
   "evidence": {
     "candidate_values": "the acceptance run reruns slice 08-10 code in-process at this commit; its values stand for the candidates' (no candidate file is read, slice 12 firewall)",
     "candidates_phase3_set": "tests/candidate_outputs/v0.5.0/ (slices 08-11), committed for TJ's Phase 3 review; never read by this record",
+    "promotion": {
+      "commit": "ccacac5",
+      "commit_subject": "Promote v0.5.0 Tier 3 fixtures (TJ's Phase 3 review)",
+      "directory": "tests/fixtures/v0.5.0/",
+      "files": {
+        "t3_cross_check.json": {
+          "blob_id": "55d0002c4a1c672f85b4b56e12a367a1a08556a4",
+          "sha256": "c64465871b46fc31fcc63e074a907bb31a1e1a56c8486de3303b1a6d42077b8b"
+        },
+        "t3_n4.uma.json": {
+          "blob_id": "2784a0b42ea6aefcbbad148c2c8a0a8b85f34e7a",
+          "sha256": "965f2ff96cd6555a332b86232b22ab37c1c3f4106e29861607eab38e63918412"
+        },
+        "t3_n4.xtb.json": {
+          "blob_id": "209e9173b061c1f3e7094cb3b3f465e8daa515ef",
+          "sha256": "5ccb927814bdb6d5cac6542464452487858d83b711b98cfc5669d599087a1837"
+        },
+        "t3_ts1a_n.uma.json": {
+          "blob_id": "daa72d93980e9140df75834f0bb4487f7e8ddca2",
+          "sha256": "00ed79b684cf016b949c426b632f72fea467090c0875527a0c12983cd339237e"
+        },
+        "t3_ts1a_n.xtb.json": {
+          "blob_id": "09cdd938e5e3f6bb7fa8d1dcc6f2e0ec2898f8c7",
+          "sha256": "66ce057e26a6e0299c2717ba363395a4c58cdb866648f242bbbc9beaf6415691"
+        },
+        "t3_ts1b_n.uma.json": {
+          "blob_id": "856059550f74cdf90a7c51eea65b7a72d54a23bd",
+          "sha256": "dfd0657cc94c12d63c6dc2140a183d4767f42c56ed9fdc8e82cc2d2c9e2d8f24"
+        },
+        "t3_ts1b_n.xtb.json": {
+          "blob_id": "15463d0a0404465a173b2e515ad2d6eb45068aae",
+          "sha256": "80845cf09a1b122b22502a0072c525efcceda0bd37b18d70546e4adbf03d0add"
+        },
+        "t3_ts3a.uma.json": {
+          "blob_id": "5d10a2019d69786e4908d4748ec11e86fc0fa0a6",
+          "sha256": "418a504e47eda5a8bc81a1fd6f4005024fd42a49ae888692e63e3b1f8b8e77d1"
+        },
+        "t3_ts3a.xtb.json": {
+          "blob_id": "d223ea7f9924262b4791932fd893beb94b0352fc",
+          "sha256": "0028815f265e2fca680cc46c4c4b41a50d82e268737612b9e23265abee11fc8c"
+        },
+        "t3_ts4a.uma.json": {
+          "blob_id": "d34adea8ddd5c9caeb9a6540d9a3f8e594be7b7a",
+          "sha256": "50bd7126d6d57cba501a8611a545efba1ef90193fc37338f5466d4c40b30ab94"
+        },
+        "t3_ts4a.xtb.json": {
+          "blob_id": "d37eae2f277869712f0dac7ac7d72ab4f4ae6807",
+          "sha256": "5697b52a2394e9097241fd50642685e5a6d39240e371cf042ebc7504e6aaab6f"
+        }
+      },
+      "option_text_verbatim": "UMA barrier tolerance 0.75 kcal/mol (10x the largest variation seen). Everything else stays at your v0.4.0 tolerances: energy 1e-5 Eh, geometry 0.01 Å, xtb barrier 0.01.",
+      "relayed_by": "operator-agent@kernel, qitem-20261124221114-efeccb6d9876cb00, 22:12Z",
+      "scope_all": "every UMA case (operator-confirmed); xtb stays 0.01",
+      "source": "mission R33 (TJ's Phase 3; closes R28)",
+      "status": "verified",
+      "tj_answer_verbatim": "A: 0.75 all (Recommended)",
+      "transcriptions_confirmed": "option A: the six SI files (TS3a, TS4a, 3_dimethyltetrazine, 4_bis_cf3_tetrazine, cyclobutenone, TS_N4) and the five t3_*.yaml (TJ A3 / Q-E3)"
+    },
     "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
-    "verdict_run": "slice 13, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion"
+    "reproducibility_source": "slice 12 record at fc1965db2b1d843af81f00e1a51ae707a3333051: three fresh-store runs per case x recipe; carried over, not rerun for the verdict"
   },
   "fixtures": {
     "cross_check": {
@@ -581,25 +462,25 @@
       "records": {
         "n4.uma": {
           "converged_bool": true,
-          "delta_e_geometric_minus_eta_kcal_mol": 1.1874578060771239e-05,
+          "delta_e_geometric_minus_eta_kcal_mol": -2.513271569841981e-05,
           "eta_failed_reason": null,
           "exit_code": 0,
-          "heavy_atom_rmsd_angstrom": 0.00015571194255850458,
+          "heavy_atom_rmsd_angstrom": 0.00010085709783369018,
           "status": "converged",
           "validation_at_geometric_ts": {
-            "active_core_ke_fraction": 0.9498338494440609,
+            "active_core_ke_fraction": 0.9498695214916267,
             "forming_bonds_in_phase_bool": true,
             "forming_distances_angstrom": {
-              "1-9": 2.1420387213806267,
-              "2-10": 2.2538200173138634
+              "1-9": 2.1419757627179745,
+              "2-10": 2.2538099573371846
             },
-            "forming_stretch_overlap": 0.7894465587527909,
-            "imaginary_frequency_cm1": -570.1189305577683,
+            "forming_stretch_overlap": 0.789531932232091,
+            "imaginary_frequency_cm1": -570.137718943701,
             "n_imaginary": 1,
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 24.490003149025142
+          "wall_time_s": 21.08649888797663
         },
         "n4.xtb": {
           "converged_bool": true,
@@ -621,29 +502,29 @@
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 4.175265603000298
+          "wall_time_s": 4.069489896064624
         },
         "ts1a_n.uma": {
           "converged_bool": true,
-          "delta_e_geometric_minus_eta_kcal_mol": -1.2854569702906121e-05,
+          "delta_e_geometric_minus_eta_kcal_mol": -1.9541263057577713e-05,
           "eta_failed_reason": null,
           "exit_code": 0,
-          "heavy_atom_rmsd_angstrom": 1.950862416372251e-05,
+          "heavy_atom_rmsd_angstrom": 1.9501549146869506e-05,
           "status": "converged",
           "validation_at_geometric_ts": {
-            "active_core_ke_fraction": 0.9017775987536243,
+            "active_core_ke_fraction": 0.9017710957097962,
             "forming_bonds_in_phase_bool": true,
             "forming_distances_angstrom": {
-              "1-2": 2.2935064688288693,
-              "3-5": 2.281352373920362
+              "1-2": 2.2935064967491505,
+              "3-5": 2.281352449509033
             },
-            "forming_stretch_overlap": 0.7003203600245803,
-            "imaginary_frequency_cm1": -453.23403861016277,
+            "forming_stretch_overlap": 0.7003032787104474,
+            "imaginary_frequency_cm1": -453.23847951498686,
             "n_imaginary": 1,
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 24.204210511990823
+          "wall_time_s": 20.690189435961656
         },
         "ts1a_n.xtb": {
           "converged_bool": true,
@@ -665,29 +546,29 @@
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 4.702528847963549
+          "wall_time_s": 5.061936397920363
         },
         "ts1b_n.uma": {
           "converged_bool": true,
-          "delta_e_geometric_minus_eta_kcal_mol": 3.573933995184706e-06,
+          "delta_e_geometric_minus_eta_kcal_mol": 1.3488635781037797e-05,
           "eta_failed_reason": null,
           "exit_code": 0,
-          "heavy_atom_rmsd_angstrom": 0.0005719947123733829,
+          "heavy_atom_rmsd_angstrom": 0.0005748090135313442,
           "status": "converged",
           "validation_at_geometric_ts": {
-            "active_core_ke_fraction": 0.942128616529984,
+            "active_core_ke_fraction": 0.9421199577381668,
             "forming_bonds_in_phase_bool": true,
             "forming_distances_angstrom": {
-              "1-2": 2.2061806542436395,
-              "3-5": 2.2068321428830875
+              "1-2": 2.206182260102469,
+              "3-5": 2.2068341087839896
             },
-            "forming_stretch_overlap": 0.7642706414127145,
-            "imaginary_frequency_cm1": -577.2971951721046,
+            "forming_stretch_overlap": 0.7642423500054967,
+            "imaginary_frequency_cm1": -577.299032442114,
             "n_imaginary": 1,
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 24.20972955401521
+          "wall_time_s": 20.36815379897598
         },
         "ts1b_n.xtb": {
           "converged_bool": true,
@@ -709,29 +590,29 @@
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 3.1525444829603657
+          "wall_time_s": 4.088256368995644
         },
         "ts3a.uma": {
           "converged_bool": true,
-          "delta_e_geometric_minus_eta_kcal_mol": 0.0,
+          "delta_e_geometric_minus_eta_kcal_mol": -1.383452567525713e-06,
           "eta_failed_reason": null,
           "exit_code": 0,
-          "heavy_atom_rmsd_angstrom": 0.0003096981711445641,
+          "heavy_atom_rmsd_angstrom": 0.00033153676479056275,
           "status": "converged",
           "validation_at_geometric_ts": {
-            "active_core_ke_fraction": 0.9196848764781643,
+            "active_core_ke_fraction": 0.9196863460195893,
             "forming_bonds_in_phase_bool": true,
             "forming_distances_angstrom": {
-              "0-6": 2.19450761242938,
-              "3-7": 2.2154419774835086
+              "0-6": 2.194497090987856,
+              "3-7": 2.215451007930507
             },
-            "forming_stretch_overlap": 0.763430804573553,
-            "imaginary_frequency_cm1": -461.15212657739085,
+            "forming_stretch_overlap": 0.7634398085178769,
+            "imaginary_frequency_cm1": -461.1529018089811,
             "n_imaginary": 1,
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 23.517220909008756
+          "wall_time_s": 20.330535774002783
         },
         "ts3a.xtb": {
           "converged_bool": true,
@@ -758,29 +639,29 @@
               "imaginary_above_cutoff"
             ]
           },
-          "wall_time_s": 8.230880282004364
+          "wall_time_s": 8.66772518795915
         },
         "ts4a.uma": {
           "converged_bool": true,
-          "delta_e_geometric_minus_eta_kcal_mol": 1.7408424000657965e-05,
+          "delta_e_geometric_minus_eta_kcal_mol": -9.222921997414425e-06,
           "eta_failed_reason": null,
           "exit_code": 0,
-          "heavy_atom_rmsd_angstrom": 4.13050362116485e-05,
+          "heavy_atom_rmsd_angstrom": 4.139315580321463e-05,
           "status": "converged",
           "validation_at_geometric_ts": {
-            "active_core_ke_fraction": 0.8618916022351454,
+            "active_core_ke_fraction": 0.8618940758300111,
             "forming_bonds_in_phase_bool": true,
             "forming_distances_angstrom": {
-              "0-6": 2.3016876967480204,
-              "3-7": 2.309203758152622
+              "0-6": 2.3016877510579135,
+              "3-7": 2.30920366139314
             },
-            "forming_stretch_overlap": 0.8222257927153707,
-            "imaginary_frequency_cm1": -315.177059175648,
+            "forming_stretch_overlap": 0.8222270318685497,
+            "imaginary_frequency_cm1": -315.17553708411276,
             "n_imaginary": 1,
             "passed_bool": true,
             "reasons": []
           },
-          "wall_time_s": 24.73009856499266
+          "wall_time_s": 19.923237707000226
         },
         "ts4a.xtb": {
           "converged_bool": true,
@@ -803,7 +684,7 @@
               "forming_overlap_below_threshold"
             ]
           },
-          "wall_time_s": 22.48615289502777
+          "wall_time_s": 20.963249561027624
         }
       },
       "status": "pass"
@@ -811,22 +692,31 @@
     "t3": {
       "n4": {
         "uma": {
-          "dG_dagger_1M_kcal_mol": 26.611408731999173,
+          "dG_dagger_1M_kcal_mol": 26.611402117893828,
           "failed_checks": [],
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.00011512173056615893,
+            "abs_delta_ts_energy_hartree": 1.1390739018679596e-08,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_n4.uma.json",
+            "heavy_rmsd_angstrom": 1.9784127287963886e-07,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
-            "dG_dagger_1atm_kcal_mol": 28.50573717749345,
-            "delta_dG_dagger_1M_vs_literature_kcal_mol": 4.042408731999174,
+            "dG_dagger_1atm_kcal_mol": 28.505730563388106,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 4.042402117893829,
             "energy_source": {
               "bound_kcal_mol": 0.01,
-              "delta_hartree": 6.2465801420330536e-09,
-              "delta_kcal_mol": 3.919788219620166e-06,
-              "frequency_run_energy_hartree": -424.05565670374773,
-              "gradient_run_energy_hartree": -424.0556567099943,
+              "delta_hartree": 1.543264716019621e-08,
+              "delta_kcal_mol": 9.68413230289612e-06,
+              "frequency_run_energy_hartree": -424.0556567472899,
+              "gradient_run_energy_hartree": -424.05565676272255,
               "within_bound_bool": true
             },
             "failed_reason": null,
@@ -836,9 +726,9 @@
             "literature_dG_dagger_1atm_kcal_mol": 24.463,
             "literature_source": "Paton et al., Angew. Chem. Int. Ed. 2011, 50, 10366, DOI 10.1002/anie.201103998, SI; M06-2X/6-31G(d)",
             "rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.018707377633502626,
-              "forming_core_rmsd_angstrom": 0.0216170519482697,
-              "full_rmsd_angstrom": 0.017537791091828247
+              "active_rmsd_angstrom": 0.018707416503230535,
+              "forming_core_rmsd_angstrom": 0.021617133882449836,
+              "full_rmsd_angstrom": 0.017537829842802246
             },
             "search_counts": {
               "n_gradient_calls": 5,
@@ -848,14 +738,14 @@
               "n_steps": 4
             },
             "validation_numbers": {
-              "active_core_ke_fraction": 0.9498889769426676,
+              "active_core_ke_fraction": 0.9498878221813811,
               "forming_bonds_in_phase_bool": true,
               "forming_distances_angstrom": {
-                "1-9": 2.1421533490744644,
-                "2-10": 2.2535228155719342
+                "1-9": 2.142153500235547,
+                "2-10": 2.2535224957945283
               },
-              "forming_stretch_overlap": 0.7895971186698615,
-              "imaginary_frequency_cm1": -570.1964247572281
+              "forming_stretch_overlap": 0.7895954880795721,
+              "imaginary_frequency_cm1": -570.1864371593668
             }
           },
           "second_run_cache": {
@@ -918,7 +808,7 @@
             },
             "forming_overlap": {
               "status": "reported",
-              "value": 0.7895971186698615
+              "value": 0.7895954880795721
             },
             "identity": {
               "status": "pass"
@@ -940,7 +830,7 @@
             },
             "window_dG_dagger_1M": {
               "status": "pass",
-              "value_kcal_mol": 26.611408731999173
+              "value_kcal_mol": 26.611402117893828
             }
           },
           "window_dG_dagger_1M_kcal_mol": [
@@ -960,8 +850,17 @@
             "status": "pass"
           },
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+            "abs_delta_ts_energy_hartree": 0.0,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_n4.xtb.json",
+            "heavy_rmsd_angstrom": 0.0,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
@@ -1097,22 +996,31 @@
       },
       "ts1a_n": {
         "uma": {
-          "dG_dagger_1M_kcal_mol": 19.58190892861131,
+          "dG_dagger_1M_kcal_mol": 19.58179619037137,
           "failed_checks": [],
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.00027203610608594886,
+            "abs_delta_ts_energy_hartree": 1.6075716757768532e-08,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts1a_n.uma.json",
+            "heavy_rmsd_angstrom": 1.3694395080475151e-07,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
-            "dG_dagger_1atm_kcal_mol": 21.476237374105587,
-            "delta_dG_dagger_1M_vs_literature_kcal_mol": 1.8399089286113082,
+            "dG_dagger_1atm_kcal_mol": 21.47612463586565,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 1.83979619037137,
             "energy_source": {
               "bound_kcal_mol": 0.01,
-              "delta_hartree": 8.175675247912295e-09,
-              "delta_kcal_mol": 5.130313674928149e-06,
-              "frequency_run_energy_hartree": -310.6723359933382,
-              "gradient_run_energy_hartree": -310.6723360015139,
+              "delta_hartree": -9.094264896702953e-09,
+              "delta_kcal_mol": -5.706737382320583e-06,
+              "frequency_run_energy_hartree": -310.67233602144773,
+              "gradient_run_energy_hartree": -310.67233601235347,
               "within_bound_bool": true
             },
             "failed_reason": null,
@@ -1122,9 +1030,9 @@
             "literature_dG_dagger_1atm_kcal_mol": 19.637,
             "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
             "rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.020963666721979038,
-              "forming_core_rmsd_angstrom": 0.0248528537285031,
-              "full_rmsd_angstrom": 0.022722126878678094
+              "active_rmsd_angstrom": 0.020963596890531316,
+              "forming_core_rmsd_angstrom": 0.02485277968171451,
+              "full_rmsd_angstrom": 0.022722126187082997
             },
             "search_counts": {
               "n_gradient_calls": 5,
@@ -1134,14 +1042,14 @@
               "n_steps": 4
             },
             "validation_numbers": {
-              "active_core_ke_fraction": 0.9018047156154839,
+              "active_core_ke_fraction": 0.9018054983298497,
               "forming_bonds_in_phase_bool": true,
               "forming_distances_angstrom": {
-                "1-2": 2.2935222293349993,
-                "3-5": 2.2813779279375432
+                "1-2": 2.2935223024994307,
+                "3-5": 2.281378140390726
               },
-              "forming_stretch_overlap": 0.700390463875549,
-              "imaginary_frequency_cm1": -453.2180391725082
+              "forming_stretch_overlap": 0.7003945049315531,
+              "imaginary_frequency_cm1": -453.22169135397235
             }
           },
           "second_run_cache": {
@@ -1204,7 +1112,7 @@
             },
             "forming_overlap": {
               "status": "reported",
-              "value": 0.700390463875549
+              "value": 0.7003945049315531
             },
             "identity": {
               "status": "pass"
@@ -1226,7 +1134,7 @@
             },
             "window_dG_dagger_1M": {
               "status": "pass",
-              "value_kcal_mol": 19.58190892861131
+              "value_kcal_mol": 19.58179619037137
             }
           },
           "window_dG_dagger_1M_kcal_mol": [
@@ -1246,8 +1154,17 @@
             "status": "pass"
           },
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+            "abs_delta_ts_energy_hartree": 0.0,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts1a_n.xtb.json",
+            "heavy_rmsd_angstrom": 2.7755575615628914e-17,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
@@ -1383,22 +1300,31 @@
       },
       "ts1b_n": {
         "uma": {
-          "dG_dagger_1M_kcal_mol": 29.094293379715733,
+          "dG_dagger_1M_kcal_mol": 29.09446482000435,
           "failed_checks": [],
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 1.4815123705602673e-05,
+            "abs_delta_ts_energy_hartree": 2.0576919723680476e-08,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts1b_n.uma.json",
+            "heavy_rmsd_angstrom": 1.3893217761511217e-07,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
-            "dG_dagger_1atm_kcal_mol": 30.98862182521001,
-            "delta_dG_dagger_1M_vs_literature_kcal_mol": 3.195293379715732,
+            "dG_dagger_1atm_kcal_mol": 30.98879326549863,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 3.19546482000435,
             "energy_source": {
               "bound_kcal_mol": 0.01,
-              "delta_hartree": -7.900041509856237e-09,
-              "delta_kcal_mol": -4.957350892926546e-06,
-              "frequency_run_energy_hartree": -350.0008501319019,
-              "gradient_run_energy_hartree": -350.0008501240019,
+              "delta_hartree": -1.506526814409881e-08,
+              "delta_kcal_mol": -9.453598489723018e-06,
+              "frequency_run_energy_hartree": -350.00085014641604,
+              "gradient_run_energy_hartree": -350.0008501313508,
               "within_bound_bool": true
             },
             "failed_reason": null,
@@ -1408,9 +1334,9 @@
             "literature_dG_dagger_1atm_kcal_mol": 27.793,
             "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
             "rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.01597579358411357,
-              "forming_core_rmsd_angstrom": 0.017167412968412118,
-              "full_rmsd_angstrom": 0.5497967107019653
+              "active_rmsd_angstrom": 0.015975834280435152,
+              "forming_core_rmsd_angstrom": 0.017167481291589355,
+              "full_rmsd_angstrom": 0.5497966821841133
             },
             "search_counts": {
               "n_gradient_calls": 11,
@@ -1420,14 +1346,14 @@
               "n_steps": 8
             },
             "validation_numbers": {
-              "active_core_ke_fraction": 0.9421064561080172,
+              "active_core_ke_fraction": 0.9421046495470492,
               "forming_bonds_in_phase_bool": true,
               "forming_distances_angstrom": {
-                "1-2": 2.206683611395963,
-                "3-5": 2.2066306274402683
+                "1-2": 2.2066836262384126,
+                "3-5": 2.2066303275195938
               },
-              "forming_stretch_overlap": 0.76422903218864,
-              "imaginary_frequency_cm1": -577.1595513585747
+              "forming_stretch_overlap": 0.7642238948022837,
+              "imaginary_frequency_cm1": -577.1569014981392
             }
           },
           "second_run_cache": {
@@ -1490,7 +1416,7 @@
             },
             "forming_overlap": {
               "status": "reported",
-              "value": 0.76422903218864
+              "value": 0.7642238948022837
             },
             "identity": {
               "status": "pass"
@@ -1512,7 +1438,7 @@
             },
             "window_dG_dagger_1M": {
               "status": "pass",
-              "value_kcal_mol": 29.094293379715733
+              "value_kcal_mol": 29.09446482000435
             }
           },
           "window_dG_dagger_1M_kcal_mol": [
@@ -1532,8 +1458,17 @@
             "status": "pass"
           },
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+            "abs_delta_ts_energy_hartree": 0.0,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts1b_n.xtb.json",
+            "heavy_rmsd_angstrom": 9.791246743253677e-17,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
@@ -1669,22 +1604,31 @@
       },
       "ts3a": {
         "uma": {
-          "dG_dagger_1M_kcal_mol": 22.15753968118327,
+          "dG_dagger_1M_kcal_mol": 22.196180008096004,
           "failed_checks": [],
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.02814270769966143,
+            "abs_delta_ts_energy_hartree": 1.0931501037703129e-08,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts3a.uma.json",
+            "heavy_rmsd_angstrom": 1.815812516886303e-07,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
-            "dG_dagger_1atm_kcal_mol": 24.051868126677547,
-            "delta_dG_dagger_1M_vs_literature_kcal_mol": 5.174539681183269,
+            "dG_dagger_1atm_kcal_mol": 24.09050845359028,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 5.213180008096003,
             "energy_source": {
               "bound_kcal_mol": 0.01,
-              "delta_hartree": 2.204672000516439e-09,
-              "delta_kcal_mol": 1.383452567525713e-06,
-              "frequency_run_energy_hartree": -491.573595768666,
-              "gradient_run_energy_hartree": -491.57359577087067,
+              "delta_hartree": -4.5929482439532876e-10,
+              "delta_kcal_mol": -2.882118536962166e-07,
+              "frequency_run_energy_hartree": -491.5735957664613,
+              "gradient_run_energy_hartree": -491.57359576600203,
               "within_bound_bool": true
             },
             "failed_reason": null,
@@ -1694,26 +1638,26 @@
             "literature_dG_dagger_1atm_kcal_mol": 18.877,
             "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
             "rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.02675017953097579,
-              "forming_core_rmsd_angstrom": 0.036069342312175484,
-              "full_rmsd_angstrom": 0.03555186576483498
+              "active_rmsd_angstrom": 0.02675013038195363,
+              "forming_core_rmsd_angstrom": 0.03606925791643756,
+              "full_rmsd_angstrom": 0.03555178159662259
             },
             "search_counts": {
-              "n_gradient_calls": 10,
-              "n_hessian_calls": 3,
-              "n_hessian_refreshes": 2,
-              "n_rejected_steps": 1,
-              "n_steps": 7
+              "n_gradient_calls": 8,
+              "n_hessian_calls": 2,
+              "n_hessian_refreshes": 1,
+              "n_rejected_steps": 0,
+              "n_steps": 6
             },
             "validation_numbers": {
-              "active_core_ke_fraction": 0.9196859832988983,
+              "active_core_ke_fraction": 0.9196787739466016,
               "forming_bonds_in_phase_bool": true,
               "forming_distances_angstrom": {
-                "0-6": 2.194673416327186,
-                "3-7": 2.2153960830130655
+                "0-6": 2.194673567273252,
+                "3-7": 2.21539620246472
               },
-              "forming_stretch_overlap": 0.7634846584623364,
-              "imaginary_frequency_cm1": -461.0404438183499
+              "forming_stretch_overlap": 0.7634691119520881,
+              "imaginary_frequency_cm1": -461.0365457181979
             }
           },
           "second_run_cache": {
@@ -1776,7 +1720,7 @@
             },
             "forming_overlap": {
               "status": "reported",
-              "value": 0.7634846584623364
+              "value": 0.7634691119520881
             },
             "identity": {
               "status": "pass"
@@ -1798,7 +1742,7 @@
             },
             "window_dG_dagger_1M": {
               "status": "pass",
-              "value_kcal_mol": 22.15753968118327
+              "value_kcal_mol": 22.196180008096004
             }
           },
           "window_dG_dagger_1M_kcal_mol": [
@@ -1818,8 +1762,17 @@
             "status": "pass"
           },
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+            "abs_delta_ts_energy_hartree": 0.0,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts3a.xtb.json",
+            "heavy_rmsd_angstrom": 0.0,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
@@ -1955,7 +1908,7 @@
       },
       "ts4a": {
         "uma": {
-          "dG_dagger_1M_kcal_mol": 14.60030007784736,
+          "dG_dagger_1M_kcal_mol": 14.600172786799309,
           "failed_checks": [],
           "graft_summary": {
             "alignment_rmsd_angstrom": [
@@ -1973,7 +1926,7 @@
                 6,
                 7
               ],
-              "final_energy_hartree": -1087.2017464697249,
+              "final_energy_hartree": -1087.2017464830449,
               "maxiter": 200,
               "n_engine_calls": 15,
               "n_steps": 14,
@@ -1983,9 +1936,9 @@
               }
             },
             "pre_relaxed_start_rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.04439591774374345,
-              "forming_core_rmsd_angstrom": 0.059879783171639785,
-              "full_rmsd_angstrom": 1.109554185513562
+              "active_rmsd_angstrom": 0.044395921425554694,
+              "forming_core_rmsd_angstrom": 0.05987978316728777,
+              "full_rmsd_angstrom": 1.1095543808017867
             },
             "pure_graft_rmsd_to_literature_ts": {
               "active_rmsd_angstrom": 0.046696686936151414,
@@ -1994,19 +1947,28 @@
             }
           },
           "regression": {
-            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
-            "status": "pending_promotion"
+            "abs_delta_dG_dagger_1M_kcal_mol": 0.0005169106705071869,
+            "abs_delta_ts_energy_hartree": 6.98150870448444e-09,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts4a.uma.json",
+            "heavy_rmsd_angstrom": 1.6552543455616798e-07,
+            "mismatches": [],
+            "status": "pass"
           },
           "reported": {
             "connectivity_equal_bool": true,
-            "dG_dagger_1atm_kcal_mol": 16.49462852334164,
-            "delta_dG_dagger_1M_vs_literature_kcal_mol": 6.903300077847359,
+            "dG_dagger_1atm_kcal_mol": 16.494501232293587,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 6.903172786799309,
             "energy_source": {
               "bound_kcal_mol": 0.01,
-              "delta_hartree": 7.34871719032526e-10,
-              "delta_kcal_mol": 4.611389659139466e-07,
-              "frequency_run_energy_hartree": -1087.2037793231743,
-              "gradient_run_energy_hartree": -1087.2037793239092,
+              "delta_hartree": -9.461473382543772e-09,
+              "delta_kcal_mol": -5.937164186142063e-06,
+              "frequency_run_energy_hartree": -1087.20377932593,
+              "gradient_run_energy_hartree": -1087.2037793164686,
               "within_bound_bool": true
             },
             "failed_reason": null,
@@ -2016,9 +1978,9 @@
             "literature_dG_dagger_1atm_kcal_mol": 9.591,
             "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
             "rmsd_to_literature_ts": {
-              "active_rmsd_angstrom": 0.02642585658926033,
-              "forming_core_rmsd_angstrom": 0.036794417797726964,
-              "full_rmsd_angstrom": 1.1123996300740056
+              "active_rmsd_angstrom": 0.026425733555045326,
+              "forming_core_rmsd_angstrom": 0.0367942478756203,
+              "full_rmsd_angstrom": 1.1123996645796548
             },
             "search_counts": {
               "n_gradient_calls": 7,
@@ -2028,14 +1990,14 @@
               "n_steps": 5
             },
             "validation_numbers": {
-              "active_core_ke_fraction": 0.8618797948644699,
+              "active_core_ke_fraction": 0.8618678454865931,
               "forming_bonds_in_phase_bool": true,
               "forming_distances_angstrom": {
-                "0-6": 2.3017676914803418,
-                "3-7": 2.309188961632417
+                "0-6": 2.301767961263285,
+                "3-7": 2.309189386650942
               },
-              "forming_stretch_overlap": 0.8222336251674283,
-              "imaginary_frequency_cm1": -315.1292658961202
+              "forming_stretch_overlap": 0.8222281446965991,
+              "imaginary_frequency_cm1": -315.1295838497305
             }
           },
           "second_run_cache": {
@@ -2098,7 +2060,7 @@
             },
             "forming_overlap": {
               "status": "reported",
-              "value": 0.8222336251674283
+              "value": 0.8222281446965991
             },
             "identity": {
               "status": "pass"
@@ -2107,8 +2069,8 @@
               "status": "pass"
             },
             "ordering_ts4a_below_ts3a": {
-              "dG_dagger_1M_ts3a_kcal_mol": 22.15753968118327,
-              "dG_dagger_1M_ts4a_kcal_mol": 14.60030007784736,
+              "dG_dagger_1M_ts3a_kcal_mol": 22.196180008096004,
+              "dG_dagger_1M_ts4a_kcal_mol": 14.600172786799309,
               "status": "pass"
             },
             "search_converged": {
@@ -2125,7 +2087,7 @@
             },
             "window_dG_dagger_1M": {
               "status": "pass",
-              "value_kcal_mol": 14.60030007784736
+              "value_kcal_mol": 14.600172786799309
             }
           },
           "window_dG_dagger_1M_kcal_mol": [
@@ -2182,6 +2144,20 @@
             }
           },
           "regression": {
+            "abs_delta_dG_dagger_1M_kcal_mol": null,
+            "abs_delta_ts_energy_hartree": null,
+            "bounds": {
+              "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+              "abs_delta_ts_energy_hartree": 1e-05,
+              "heavy_rmsd_angstrom": 0.01
+            },
+            "fixture": "tests/fixtures/v0.5.0/t3_ts4a.xtb.json",
+            "heavy_rmsd_angstrom": null,
+            "mismatches": [
+              "abs_delta_ts_energy_hartree: missing",
+              "abs_delta_dG_dagger_1M_kcal_mol: missing",
+              "heavy_rmsd_angstrom: missing"
+            ],
             "note": "report-only pair (R32)",
             "status": "reported"
           },
@@ -2306,8 +2282,9 @@
       }
     },
     "transcription_confirmation": {
-      "note": "TJ confirms the six transcriptions at Phase 3 (TJ A3)",
-      "status": "pending_confirmation"
+      "answer": "option A: the six SI files (TS3a, TS4a, 3_dimethyltetrazine, 4_bis_cf3_tetrazine, cyclobutenone, TS_N4) and the five t3_*.yaml (TJ A3 / Q-E3)",
+      "source": "mission R33 (TJ's Phase 3; closes R28)",
+      "status": "confirmed"
     },
     "transcriptions": {
       "r9": {
@@ -2377,7 +2354,7 @@
     "flags": [],
     "gpu": {
       "compute_capability": "12.0",
-      "free_vram_bytes": 6593970176,
+      "free_vram_bytes": 6398214144,
       "name": "NVIDIA GeForce RTX 5060 Ti",
       "total_vram_bytes": 8073248768,
       "total_vram_gib": 7.52
@@ -2407,63 +2384,43 @@
   "logs": {
     "uma_driver.log": {
       "exit_code": 0,
-      "summary": "1 passed, 1 deselected, 2 warnings in 10.51s"
-    },
-    "uma_repro_n4.log": {
-      "exit_code": 0,
-      "summary": "1 passed, 8 deselected, 15 warnings in 59.32s"
-    },
-    "uma_repro_ts1a_n.log": {
-      "exit_code": 0,
-      "summary": "1 passed, 8 deselected, 15 warnings in 52.98s"
-    },
-    "uma_repro_ts1b_n.log": {
-      "exit_code": 0,
-      "summary": "1 passed, 8 deselected, 15 warnings in 60.84s (0:01:00)"
-    },
-    "uma_repro_ts3a.log": {
-      "exit_code": 0,
-      "summary": "1 passed, 8 deselected, 15 warnings in 77.32s (0:01:17)"
-    },
-    "uma_repro_ts4a.log": {
-      "exit_code": 0,
-      "summary": "1 passed, 8 deselected, 15 warnings in 83.91s (0:01:23)"
+      "summary": "1 passed, 1 deselected, 2 warnings in 8.80s"
     },
     "uma_t3_n4.log": {
       "exit_code": 0,
-      "summary": "1 passed, 1 deselected, 15 warnings in 55.27s"
+      "summary": "1 passed, 1 deselected, 15 warnings in 44.01s"
     },
     "uma_t3_tetrazine.log": {
       "exit_code": 0,
-      "summary": "1 passed, 1 deselected, 15 warnings in 104.01s (0:01:44)"
+      "summary": "1 passed, 1 deselected, 15 warnings in 85.58s (0:01:25)"
     },
     "uma_t3_ts1a_n.log": {
       "exit_code": 0,
-      "summary": "1 passed, 3 deselected, 15 warnings in 56.34s"
+      "summary": "1 passed, 3 deselected, 15 warnings in 44.21s"
     },
     "uma_t3_ts1b_n.log": {
       "exit_code": 0,
-      "summary": "1 passed, 3 deselected, 15 warnings in 54.93s"
+      "summary": "1 passed, 3 deselected, 15 warnings in 48.49s"
     },
     "uma_xcheck_n4.log": {
       "exit_code": 0,
-      "summary": "1 passed, 10 deselected, 15 warnings in 58.43s"
+      "summary": "1 passed, 10 deselected, 15 warnings in 49.96s"
     },
     "uma_xcheck_ts1a_n.log": {
       "exit_code": 0,
-      "summary": "1 passed, 10 deselected, 15 warnings in 58.66s"
+      "summary": "1 passed, 10 deselected, 15 warnings in 48.54s"
     },
     "uma_xcheck_ts1b_n.log": {
       "exit_code": 0,
-      "summary": "1 passed, 10 deselected, 15 warnings in 62.86s (0:01:02)"
+      "summary": "1 passed, 10 deselected, 15 warnings in 52.02s"
     },
     "uma_xcheck_ts3a.log": {
       "exit_code": 0,
-      "summary": "1 passed, 10 deselected, 15 warnings in 62.36s (0:01:02)"
+      "summary": "1 passed, 10 deselected, 15 warnings in 53.65s"
     },
     "uma_xcheck_ts4a.log": {
       "exit_code": 0,
-      "summary": "1 passed, 10 deselected, 15 warnings in 81.32s (0:01:21)"
+      "summary": "1 passed, 10 deselected, 15 warnings in 71.32s (0:01:11)"
     },
     "xcheck_fragment.log": {
       "exit_code": 0,
@@ -2471,11 +2428,11 @@
     },
     "xtb_cross_check.log": {
       "exit_code": 0,
-      "summary": "5 passed, 6 deselected in 179.92s (0:02:59)"
+      "summary": "5 passed, 6 deselected in 172.01s (0:02:52)"
     },
-    "xtb_t3_repro_driver.log": {
+    "xtb_t3_driver.log": {
       "exit_code": 0,
-      "summary": "9 passed, 10 deselected in 335.80s (0:05:35)"
+      "summary": "5 passed, 5 deselected in 178.19s (0:02:58)"
     }
   },
   "proposed_regression_bounds": {
@@ -2554,6 +2511,23 @@
     "rule": "propose TJ's bound only if every measured difference of that recipe is <= 1/10 of it; otherwise propose 10x the measured maximum (slice 12 SPEC; the numeric bounds are TJ's, v0.3.0 R1 'R1. A')"
   },
   "record_schema": 1,
+  "regression_bounds": {
+    "excluded": "search_history (N11)",
+    "recipes": {
+      "uma": {
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+        "abs_delta_ts_energy_hartree": 1e-05,
+        "heavy_rmsd_angstrom": 0.01
+      },
+      "xtb": {
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.01,
+        "abs_delta_ts_energy_hartree": 1e-05,
+        "heavy_rmsd_angstrom": 0.01
+      }
+    },
+    "report_only": "GFN2 TS4a: compared and recorded, never gated (R32)",
+    "source": "mission R33 (TJ at Phase 3)"
+  },
   "reported_notes": {
     "geometric_hessian_units": "the cross-check seeds geometric-optimize with eta's Cartesian Hessian in Eh/Bohr^2; --help gives the file format but no units, so the units are an assumption (slice 11)",
     "geometric_licence": "geomeTRIC 1.1.1 is 'BSD 3-clause Non-AI'; the licence question is open with TJ; it runs only as a CLI subprocess in .venv-accept-uma, nothing in src/ imports it (slice 11)",
@@ -2758,5 +2732,7 @@
       }
     }
   },
-  "run_at_utc": "2026-11-24T20:34:42+00:00"
+  "run_at_utc": "2026-11-24T22:57:27+00:00",
+  "verdict": "pass",
+  "verdict_reasons": []
 }
