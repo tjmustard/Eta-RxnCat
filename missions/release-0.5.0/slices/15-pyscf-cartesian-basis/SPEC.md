@@ -10,7 +10,7 @@ intent: "Add a keyed cartesian_basis option to the pyscf_gpu_cpu engine (default
 depends_on: [OPR.0.5.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_engines
 parent: null
 hacf_touches: ["src/eta_rxncat/engines/pyscf_gpu_cpu/**", "tests/unit/engines/**", spec/compiled/architecture.yml]
@@ -190,11 +190,11 @@ refuses what fails, rather than assuming.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; compute the MR 2 literals at Start.
-- [ ] Task 2: option, the remove-when-False rewrite, `_build_mol`'s `cart`, the `atom` refusal.
-- [ ] Task 3: tests for MR 2–5; required checks.
-- [ ] Task 4: host check; GPU runs for MR 6–7, as separate calls; record.
-- [ ] Task 5: commit by explicit path; updater for node `eta_rxncat_engines` (no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; compute the MR 2 literals at Start.
+- [x] Task 2: option, the remove-when-False rewrite, `_build_mol`'s `cart`, the `atom` refusal.
+- [x] Task 3: tests for MR 2–5; required checks.
+- [x] Task 4: host check; GPU runs for MR 6–7, as separate calls; record.
+- [x] Task 5: commit by explicit path; updater for node `eta_rxncat_engines` (no glob change).
 
 ## 4. The Negative Space (Constraints)
 

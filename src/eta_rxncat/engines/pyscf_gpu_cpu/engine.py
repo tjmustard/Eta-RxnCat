@@ -160,6 +160,9 @@ class PySCFEngine(Engine):
         "stability_noise_eh": OptionSpec(float, 1e-6),
         "fd_step_bohr": OptionSpec(float, 0.005),
         "hessian_mode": OptionSpec(str, "auto", frozenset({"auto", "fd_gradients", "analytic"})),
+        # R30, ADR-0041: Cartesian basis functions for every angular momentum (mol.cart). Keyed
+        # only when True: __init__ drops a False value, so earlier resolved stages are unchanged.
+        "cartesian_basis": OptionSpec(bool, False),
     }
 
     def __init__(
@@ -184,6 +187,18 @@ class PySCFEngine(Engine):
             data = self._stage.model_dump()
             data["options"]["ladder_small_basis"] = default_small_basis(self._stage.basis)
             self._stage = StageConfig.model_validate(data)
+        if self._stage.options.get("cartesian_basis") is False:
+            # R30, ADR-0041: absent means spherical. A False value (default or explicit) is not
+            # keyed, so every pre-v0.5.0 resolved stage and cache key stays byte-identical.
+            data = self._stage.model_dump()
+            del data["options"]["cartesian_basis"]
+            self._stage = StageConfig.model_validate(data)
+        if self.cartesian_basis and self._stage.options["init_guess"] == "atom":
+            # GPU4PySCF 1.9.2's atom guess asserts on a Cartesian basis; refused on both devices
+            # so one resolved stage never behaves differently by device (ADR-0018).
+            raise EngineInputError(
+                "pyscf_gpu_cpu: cartesian_basis=True is not supported with init_guess='atom'"
+            )
         if device not in ("auto", "cpu", "cuda"):
             raise EngineInputError(f"pyscf_gpu_cpu: device {device!r} not in auto|cpu|cuda")
         self.requested_device = device
@@ -231,6 +246,11 @@ class PySCFEngine(Engine):
                 ) from exc
         self._dielectric = self._resolve_dielectric()
         hessian_method_for(self.stage)  # refuses an unreliable explicit "analytic" up front
+
+    @property
+    def cartesian_basis(self) -> bool:
+        """Whether every Mole uses Cartesian basis functions (``cartesian_basis``, R30)."""
+        return self._stage.options.get("cartesian_basis") is True
 
     @classmethod
     def normalise_stage(cls, stage: StageConfig) -> StageConfig:
@@ -334,6 +354,8 @@ class PySCFEngine(Engine):
         }
         if ecp.lower() != ECP_NONE:
             kwargs["ecp"] = ecp
+        if self.cartesian_basis:
+            kwargs["cart"] = True
         if self.max_memory_mb is not None:
             kwargs["max_memory"] = self.max_memory_mb
         try:

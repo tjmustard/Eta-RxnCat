@@ -1658,8 +1658,8 @@ nodes:
   - ADR-0018
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
