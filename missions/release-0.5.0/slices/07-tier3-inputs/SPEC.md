@@ -10,7 +10,7 @@ intent: "Land the Tier 3 inputs: six XYZ files re-transcribed byte-equal to reso
 depends_on: [OPR.0.5.0.6, OPR.0.5.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
@@ -104,7 +104,8 @@ Context the builder needs:
   of graft 2's `source_bonds` graph onto TS4a's perceived graph, as v0.4.0 R2):
   `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 17, 18, 19, 20, 14, 15, 16, 10, 11, 12]` (HF-10).
 - **R9 energy check** (PySCF, `.venv-accept-gpu`, eta's `pyscf_gpu_cpu` engine, M06-2X/6-31G(d)
-  with stage option `cartesian_basis=True` (Gaussian's 6D d functions; mission R30, slice 15),
+  with stage options `cartesian_basis=True` (Gaussian's 6D d functions; mission R30, slice 15)
+  and `grids_level=4` (mission R31),
   read `engines/pyscf_gpu_cpu/` for its other stage options; heavy-run gate; one structure at a time;
   `timeout 3600` each): controls TJ's `TS1a_n.xyz` (Liu E −310.559154) and `5_cyclopropene.xyz`
   (−116.562552); targets `TS3a.xyz` (−491.366826), `TS4a.xyz` (−1086.627595),
