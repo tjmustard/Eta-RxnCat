@@ -10,7 +10,7 @@ intent: "Run the TS1a_n (unmapped) and TS1b_n (mapped from M1) TS searches and b
 depends_on: [OPR.0.5.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.5.0/**", spec/compiled/architecture.yml]
@@ -154,9 +154,9 @@ a saddle.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the v0.3.0 T2 E2E and its helpers.
-- [ ] Task 2: the E2E test and any shared helper in `tests/e2e/t3.py`; tier-D tests of the helper.
-- [ ] Task 3: required checks; commit C1.
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the v0.3.0 T2 E2E and its helpers.
+- [x] Task 2: the E2E test and any shared helper in `tests/e2e/t3.py`; tier-D tests of the helper.
+- [x] Task 3: required checks; commit C1.
 - [ ] Task 4: host check; xtb run (`ETA_RXNCAT_XTB` set), then UMA run (separate calls); second runs.
 - [ ] Task 5: commit C2 (candidates only); ledger `ensure-node`; updater.
 
