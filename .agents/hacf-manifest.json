@@ -109,7 +109,7 @@
     },
     ".agents/schemas/openrig/notes.md": {
       "owner": "hacf",
-      "sha256": "b6b28788c454a657a330cc3b532519b9e7c3b7aab6ed100f0c5e3fabf2ffa6e0"
+      "sha256": "7cef6aa990a0adb4783188a2859990d8b9700ef8aec5a8ece4d05316c242576e"
     },
     ".agents/schemas/openrig/project_spec.md": {
       "owner": "hacf",
@@ -185,7 +185,7 @@
     },
     ".agents/scripts/commit-msg": {
       "owner": "hacf",
-      "sha256": "685a350ca6969d08a31474f74c86da308522db5084b1fff8f46e9b6084b2cf90"
+      "sha256": "0815088cec09406d795f416f622724a9618959e06243da3879c5f691f01de162"
     },
     ".agents/scripts/heuristic_classifier.py": {
       "owner": "hacf",
@@ -197,7 +197,7 @@
     },
     ".agents/scripts/hyper_codegraph.py": {
       "owner": "hacf",
-      "sha256": "abb6caaf51d99fd16fd7f7b2c997cc9b02e34376c0cb0de29310f271db889b8d"
+      "sha256": "3fbc4c547f669b776b3804ce9450781db744d589d410ea84e64800c673084764"
     },
     ".agents/scripts/hyper_daemon.py": {
       "owner": "hacf",
@@ -221,7 +221,7 @@
     },
     ".agents/scripts/hyper_gate_hook.py": {
       "owner": "hacf",
-      "sha256": "ae027bc55372015c488b4ed4dead4111c8ec4da075844f3d054cb9a08553cbab"
+      "sha256": "c7c6a2d5155972a876eede27199e004d2ee0108a1d1999516676239bb80da6a8"
     },
     ".agents/scripts/hyper_gates.py": {
       "owner": "hacf",
@@ -233,7 +233,7 @@
     },
     ".agents/scripts/hyper_lore.py": {
       "owner": "hacf",
-      "sha256": "30c2a90861e7f7eece68722737860d9805a20d75e87bbec5d75b697c864b1969"
+      "sha256": "71e757436cb3721eb05938dabe2c2f4e5d4c2f05f7a8a3b6e7b943ed66957be5"
     },
     ".agents/scripts/hyper_migrate.py": {
       "owner": "hacf",
@@ -261,7 +261,7 @@
     },
     ".agents/scripts/hyper_spec.py": {
       "owner": "hacf",
-      "sha256": "3438383d97acd795550af943b8c2a5031f15757c404ffe247ad3eb1b1e39825d"
+      "sha256": "296f6b5205ddc833bc24c7b7d82b38433aea8e38a69bf923c7ec26b475d066ae"
     },
     ".agents/scripts/hyper_update_core.py": {
       "owner": "hacf",
@@ -281,7 +281,7 @@
     },
     ".agents/scripts/hypergraph_updater.py": {
       "owner": "hacf",
-      "sha256": "5530f2f12565d7edadb3e40524a810f8072db7fcbb2d4236250155c58f25fc33"
+      "sha256": "3dee4983bc61acb22952dc31f37c8b8f358fb57414521933900d314076b6133b"
     },
     ".agents/scripts/meta_loader.py": {
       "owner": "hacf",
@@ -325,7 +325,7 @@
     },
     ".agents/skills/hyper-audit/SKILL.md": {
       "owner": "hacf",
-      "sha256": "e065d73e603ff3820033775edc4e662733f45f774c2cf78d4f007621eedd0871"
+      "sha256": "8b337baf523097e642d4bbc8b151689482e987e9e62ae18de6e840a8659516b6"
     },
     ".agents/skills/hyper-baseline/SKILL.md": {
       "owner": "hacf",
@@ -381,7 +381,7 @@
     },
     ".agents/skills/hyper-execute/SKILL.md": {
       "owner": "hacf",
-      "sha256": "6c4f34613f2dc024e6092aa7eb0a0bd0d01275dcd26d79cd8766528bda0ff6e3"
+      "sha256": "36be86d0c1c2eda71585ce345ce237c414ff3041417a71e9fddaa96d48829208"
     },
     ".agents/skills/hyper-grill-docs/ADR-FORMAT.md": {
       "owner": "hacf",
@@ -457,7 +457,7 @@
     },
     ".agents/skills/hyper-publish/examples/example_commit_messages.md": {
       "owner": "hacf",
-      "sha256": "ee971c3a29fcd3188bad8453b0112a56b1b0331b042c0782de8585728ba2321f"
+      "sha256": "df344e6b2213ac309a920ea350d7cb65e9e8fcce7ebb23513af4f1da010c23d6"
     },
     ".agents/skills/hyper-publish/examples/example_pr_description.md": {
       "owner": "hacf",
@@ -465,7 +465,7 @@
     },
     ".agents/skills/hyper-publish/resources/commit_template.md": {
       "owner": "hacf",
-      "sha256": "6d6e9eafaaa1d4134868a6340f6ee99b38806470e5fccdbaf7438d34cfb4fc65"
+      "sha256": "d4f91f32dad5047f8ec69ff4382ac7584f6a835bde385ca3bbc7049c463ddbfc"
     },
     ".agents/skills/hyper-publish/resources/pr_description_template.md": {
       "owner": "hacf",
@@ -493,7 +493,7 @@
     },
     ".agents/skills/hyper-resolve/SKILL.md": {
       "owner": "hacf",
-      "sha256": "d02f3f31d5377fb4643ce3ac79e8f297292654c571cfcfa2c790c1357bb15285"
+      "sha256": "2d476adfc917d1053702fb91f815168fdf53b6764664e602a6b2ff959452dc19"
     },
     ".agents/skills/hyper-session-update/SKILL.md": {
       "owner": "hacf",
@@ -501,7 +501,7 @@
     },
     ".agents/skills/hyper-sop/SKILL.md": {
       "owner": "hacf",
-      "sha256": "e68ed0d1df60615b19999a0788b795a66ba11734a6212dedf094f773e5e72552"
+      "sha256": "a9f586613a4cd1d0d50dd5f4571c6b872a589661caf508964108e7efb46649d4"
     },
     ".agents/skills/hyper-status/SKILL.md": {
       "owner": "hacf",
@@ -689,7 +689,7 @@
     },
     "HACF-uninstall.sh": {
       "owner": "hacf",
-      "sha256": "156c5448cef326d414481624a80cfdba2ac1702fb92cea0e1b2932389771e5e0"
+      "sha256": "80a375d193c44ca540efa14f200316527aeb50bf11baf01a306cf55b2b951472"
     }
   },
   "hooks": {
@@ -702,7 +702,7 @@
     "git": {
       "commit-msg": {
         "path": ".git/hooks/commit-msg",
-        "sha256": "685a350ca6969d08a31474f74c86da308522db5084b1fff8f46e9b6084b2cf90"
+        "sha256": "0815088cec09406d795f416f622724a9618959e06243da3879c5f691f01de162"
       },
       "pre-commit": {
         "path": ".git/hooks/pre-commit",
@@ -718,8 +718,9 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-24T01:36:55+00:00",
-  "installed_commit": "b7dcb443411c23d59825ac0f20f9ac0eacee0789",
+  "installed_at": "2026-11-24T23:31:38+00:00",
+  "installed_commit": "a215447dd24a6e54d13b461e798e842b809b9864",
+  "installer_sha256": "6bf0af3c54f795144118a6d9a4ce03d781acbaf5ac97f255d399f6021e6cbc2b",
   "mcp_entries": {
     ".mcp.json": {
       "codebase-memory-mcp": {
@@ -764,8 +765,8 @@
     ]
   },
   "source": {
-    "commit": "b7dcb443411c23d59825ac0f20f9ac0eacee0789",
+    "commit": "a215447dd24a6e54d13b461e798e842b809b9864",
     "kind": "local"
   },
-  "version": "0.6.3"
+  "version": "0.6.5"
 }
