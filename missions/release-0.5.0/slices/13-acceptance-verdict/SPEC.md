@@ -10,7 +10,7 @@ intent: "After TJ's Phase 3 promotion and regression bounds, run the verdict on 
 depends_on: [OPR.0.5.0.12]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.5.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
@@ -137,10 +137,10 @@ start without them).
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; verify the precondition.
-- [ ] Task 2: regression wiring with TJ's bounds; tests; required checks; C1.
-- [ ] Task 3: host check → xtb verdict → host check → UMA verdict.
-- [ ] Task 4: record; bump; `uv lock`; README; tests; required checks; C2; updater.
+- [x] Task 1: codegraph index → `index: ok`; record Start; verify the precondition.
+- [x] Task 2: regression wiring with TJ's bounds; tests; required checks; C1.
+- [x] Task 3: host check → xtb verdict → host check → UMA verdict.
+- [x] Task 4: record; bump; `uv lock`; README; tests; required checks; C2; updater.
 
 ## 4. The Negative Space (Constraints)
 
