@@ -1,0 +1,1 @@
+Context: Q-E5 "C" covered windows and orderings, not whether a GFN2 TS must validate. Decision (TJ Q-TJ3, verbatim "A / A / A"): on GFN2, convergence and exactly one imaginary mode below -50 cm-1 are gated; KE fraction, TS identity, connectivity and dG-dagger are reported. On UMA all of them plus the A4 window and the TS4a < TS3a ordering are gated. Mission release-0.5.0 R4.

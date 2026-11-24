@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 32
+  ADR: 40
   STORY: 0
   CANON: 0
 nodes:
@@ -1308,3 +1308,330 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+- id: ADR-0033
+  type: decision
+  title: TS search is a separate TransitionStateOptimizer ABC with a clean-room Cartesian
+    P-RFO
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0033-ts-search-is-a-separate-transitionstateoptimizer-abc-with-a.md
+  content_sha256: 4d248fda26cad041167f6c116b939a3d49f5e5827fafeb4402cb53145c551533
+  anchors:
+    components:
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/optimize/base.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/optimize/ts_base.py
+    - src/eta_rxncat/optimize/prfo.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:32+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:32+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0034
+  type: decision
+  title: Initial TS mode is the maximum overlap with the forming-bond stretch, refused
+    below 0.60
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0034-initial-ts-mode-is-the-maximum-overlap-with-the-forming-bond.md
+  content_sha256: f526813904f5b14e5e1fe62f696797b9e5837f672f75c35a82efa003e7ea8dff
+  anchors:
+    components:
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/optimize/base.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/optimize/prfo.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:42+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:42+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0035
+  type: decision
+  title: TS identity is gated on the imaginary mode's forming-bond overlap, phase
+    and distances, not on perceived connectivity
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0035-ts-identity-is-gated-on-the-imaginary-mode-s-forming-bond-ov.md
+  content_sha256: 7807d0e40b02061df9a035a20a646610a7ae9b191b3138d3f5c481531add0f61
+  anchors:
+    components:
+    - eta_rxncat_thermo
+    files:
+    - src/eta_rxncat/thermo/modes.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/thermo/ts.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:42+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:42+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0036
+  type: decision
+  title: TS sigma from the perceived bond graph of the geometry; TS degeneracy 1
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0036-ts-sigma-from-the-perceived-bond-graph-of-the-geometry-ts-de.md
+  content_sha256: c7fcc8f999b4c1563b301f69d0870a2c969c0c6bc8ddb31555f877da44433a0b
+  anchors:
+    components:
+    - eta_rxncat_thermo
+    files:
+    - src/eta_rxncat/thermo/symmetry.py
+    - src/eta_rxncat/thermo/rrho.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/thermo/ts.py
+    - src/eta_rxncat/orchestrator/barrier.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:43+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:43+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0037
+  type: decision
+  title: GFN2 gates TS convergence and the mode count only; UMA gates every TS check
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0037-gfn2-gates-ts-convergence-and-the-mode-count-only-uma-gates.md
+  content_sha256: f391f5f49d4349a0cdf222f1f3bdbde090f7bed6bed4de522dd2cf296a9a2d36
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/e2e_env.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - tests/e2e/test_t3_diels_alder.py
+    - tests/e2e/test_t3_tetrazine.py
+    - tests/e2e/test_t3_cyclobutenone.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:43+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:43+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0038
+  type: decision
+  title: New stage kind ts_opt for TS search rows
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0038-new-stage-kind-ts-opt-for-ts-search-rows.md
+  content_sha256: c0806e4bb0c92dc34f7f695770bbbd17dd76a3eaed6c8e4076a9e7e5957e2637
+  anchors:
+    components:
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/core/models.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/core/ts_models.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:51+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:51+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0039
+  type: decision
+  title: geomeTRIC TS cross-check runs only through its documented CLI in a subprocess
+    with an ASE-calculator shim over eta's engine
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0039-geometric-ts-cross-check-runs-only-through-its-documented-cl.md
+  content_sha256: 20e540ff881381f472d654b937d3d65b9f2238aeef43d1ec64fa8a133c1f1d98
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/e2e_env.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - tests/e2e/eta_geometric_shim.py
+    - tests/e2e/test_t3_cross_check.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:51+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:51+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
+- id: ADR-0040
+  type: decision
+  title: 'Pre-build go/no-go for TS windows: projected UMA barrier in window with
+    1 kcal/mol margin and A2 met at the literature TS'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0040-pre-build-go-no-go-for-ts-windows-projected-uma-barrier-in-w.md
+  content_sha256: e1941280ad58d8cb9ee8483bacd5e8bb91362c5289a9584e426a1f993554b074
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/data/e2e5/SOURCES.md
+    symbols: []
+  planned:
+    components: []
+    files:
+    - tests/e2e/data/e2e5/t3_ts1a_n_unmapped.yaml
+    - tests/e2e/data/e2e5/t3_ts1b_n_mapped.yaml
+    - tests/e2e/data/e2e5/t3_ts3a_unmapped.yaml
+    - tests/e2e/data/e2e5/t3_ts4a_mapped.yaml
+    - tests/e2e/data/e2e5/t3_n4_unmapped.yaml
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T03:50:51+00:00'
+    source: OPR.0.5.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T03:50:51+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0
