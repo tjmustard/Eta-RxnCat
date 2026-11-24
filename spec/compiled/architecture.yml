@@ -184,7 +184,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -228,12 +228,12 @@ nodes:
   provenance:
     last_slice: 05-ts-runner
   review:
-    reviewed_at: '2026-11-23T21:44:27+00:00'
-    reviewed_by: audit:07-acceptance-record
+    reviewed_at: '2026-11-24T06:09:51+00:00'
+    reviewed_by: audit:05-ts-runner
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -274,8 +274,8 @@ nodes:
   provenance:
     last_slice: 05-ts-runner
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
+    reviewed_at: '2026-11-24T06:09:51+00:00'
+    reviewed_by: audit:05-ts-runner
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -518,30 +518,29 @@ nodes:
   - tests/e2e/**
   - tests/candidate_outputs/v0.3.0/**
   description: >-
-    eta_rxncat.orchestrator (v0.3.0): the single-species stage runner (TJ Q4 C), reactions
-    and reports. counting.py: CountingEngine wraps an Engine, counting evaluations
-    per stage kind (optimizer calls included). species.py: SpeciesSpec, Recipe, SinglePoint;
-    ENGINE_CLASSES tag registry; run_species caches every stage in the v0.1.0 ArtifactStore
-    under build_stage_key: conformer_search (0 engine calls; keyed on pass-1 embedding
-    0; options = conformer options + canonical SMILES, rdkit_version, seed hash),
-    geometry_opt per pre-dedup survivor (engine options + opt.-prefixed requested
-    optimizer options + opt.name/opt.version; engine never sees opt. keys), dedup
-    and energy window, frequency per kept (energy + full Hessian; thermo recomputed,
-    never stored), one imaginary-mode push (both ways, 0.1 A, new geometry_opt rows)
-    then not_a_minimum, re-dedup of the final geometries by G (duplicate_after_push,
-    R53), degeneracy, mirror-partner drop, build_ensemble, incremental single points
-    (R35 geometry check for energy_source single_point). Failures (OptimizationFailedError,
-    ScfConvergenceError) are cached as completed rows with failed_reason and dropped;
-    EngineUnavailable/Input/Runtime and OptimizerInputError propagate. Per-kind metrics
-    (wall time, calls, hits, rows). run_constrained_point (R42): one geometry_opt
-    row keyed with opt.constraints, no frequency/thermo/ensemble; frozen atoms plus
-    dihedrals refused. reaction.py: ReactionSpec (atoms and charge conserved from
-    SMILES), reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON
-    schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 and TJ T1/T2 (e2e5:
-    XYZ seeds, planar point, ALPB(dioxane), UMA window) E2E on the xtb and uma recipes
-    (marker e2e), loaders, derived/accuracy helpers, recursive unit-kind derived regression
-    (R54), assert_no_duplicate_records, TJ reference transcription (R46); writes tests/candidate_outputs/v0.3.0
-    (never read back); acceptance driver, gated_outcome, merge + verdict.
+    eta_rxncat.orchestrator (v0.3.0; TS runner v0.5.0): species stage runner (TJ Q4
+    C), TS runner, reactions, reports. counting.py: CountingEngine counts evaluations
+    per stage kind. species.py: SpeciesSpec, Recipe, SinglePoint; ENGINE_CLASSES registry;
+    run_species caches every stage in the ArtifactStore under build_stage_key: conformer_search
+    (0 engine calls; keyed on embedding 0, conformer options, SMILES, rdkit_version,
+    seed hash), geometry_opt per pre-dedup survivor (engine options + opt. optimizer
+    options + opt.name/opt.version), dedup and energy window, frequency per kept (energy
+    + full Hessian; thermo recomputed), one imaginary-mode push then not_a_minimum,
+    re-dedup by G (R53), degeneracy, mirror-partner drop, build_ensemble, incremental
+    single points (R35). OptimizationFailedError/ScfConvergenceError cached as completed
+    rows with failed_reason and dropped; other engine/optimizer input errors propagate.
+    Per-kind metrics. run_constrained_point (R42): one keyed geometry_opt row, frozen
+    atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe,
+    store) -> TSRunResult: ts_opt (key = engine options + resolved opt. TS options,
+    identity, sorted opt.forming_bonds), frequency (species key and payload), perceive_bonds,
+    validate_transition_state, ts_thermochemistry, TransitionStateRecord (degeneracy
+    1); failures cached (ts_search_failed:<reason>, scf_convergence), ts_validation_failed
+    keeps the validation; connectivity reported only; never the minimum path (N3).
+    reaction.py: ReactionSpec, reaction_free_energy at 1 M and 1 atm. report.py: deterministic
+    JSON schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 and TJ T1/T2
+    E2E on the xtb and uma recipes (marker e2e), unit-kind regression (R54), duplicate
+    check, TJ transcription (R46); writes v0.3.0 candidates (never read back); acceptance
+    driver, gated_outcome, verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -555,12 +554,22 @@ nodes:
     source_id: eta_rxncat_thermo
   - data_type: cached_stage_artifacts
     source_id: eta_rxncat_store
+  - data_type: ts_spec_recipe_and_ts_optimizer
+    external: eta_rxncat_consumers
+  - data_type: perceived_bonds
+    source_id: eta_rxncat_mapping
+  - data_type: ts_validation_and_ts_thermo
+    source_id: eta_rxncat_thermo
+  - data_type: ts_search_result
+    source_id: eta_rxncat_optimize
   outputs:
   - data_type: species_result_ensemble_dropped_metrics
     external: eta_rxncat_consumers
   - data_type: stage_artifact_rows
     target_id: eta_rxncat_store
   - data_type: reaction_energies_and_json_report
+    external: eta_rxncat_consumers
+  - data_type: ts_run_result_and_transition_state_record
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -570,6 +579,7 @@ nodes:
     - eta_rxncat_conformers
     - eta_rxncat_engines
     - eta_rxncat_store
+    - eta_rxncat_mapping
     implements: []
     member_of: []
   spec_refs:
@@ -581,9 +591,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T05:55:10+00:00'
-    reviewed_by: audit:14-bofill-guard
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-24T06:09:51+00:00'
+    reviewed_by: audit:05-ts-runner
+    summary: patched description, inputs, outputs, edges.depends_on
   provenance:
     last_slice: 05-ts-runner
 - id: eta_rxncat_mapping

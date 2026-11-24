@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: TS runner per SPEC; cache, keys, cached failures, N3 spy; species frequency key/payload identical; 1622 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
