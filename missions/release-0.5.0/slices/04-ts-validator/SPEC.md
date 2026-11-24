@@ -10,7 +10,7 @@ intent: "Add validate_transition_state (TJ's A2 numbers plus the measured TS ide
 depends_on: [OPR.0.5.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_thermo
 parent: null
 hacf_touches: ["src/eta_rxncat/thermo/**", "tests/unit/thermo/**", spec/compiled/architecture.yml]
@@ -182,11 +182,11 @@ numbers are already measured.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the files named above.
-- [ ] Task 2: σ helper; `_thermochemistry` refactor (run the thermo suite before going on).
-- [ ] Task 3: `thermo/ts.py`; exports.
-- [ ] Task 4: `tests/unit/thermo/test_ts.py`; required checks (host check before an xtb test).
-- [ ] Task 5: commit; updater for node `eta_rxncat_thermo` (no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the files named above.
+- [x] Task 2: σ helper; `_thermochemistry` refactor (run the thermo suite before going on).
+- [x] Task 3: `thermo/ts.py`; exports.
+- [x] Task 4: `tests/unit/thermo/test_ts.py`; required checks (host check before an xtb test).
+- [x] Task 5: commit; updater for node `eta_rxncat_thermo` (no glob change).
 
 ## 4. The Negative Space (Constraints)
 

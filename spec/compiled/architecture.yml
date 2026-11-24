@@ -334,7 +334,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -379,7 +379,7 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: 02-ts-contracts
+    last_slice: 04-ts-validator
   review:
     reviewed_at: '2026-11-24T04:34:24+00:00'
     reviewed_by: audit:02-ts-contracts
@@ -443,7 +443,7 @@ nodes:
     last_slice: 03-prfo
 - id: eta_rxncat_conformers
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -499,10 +499,10 @@ nodes:
     reviewed_by: audit:02-ts-contracts
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 02-ts-contracts
+    last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -577,7 +577,7 @@ nodes:
     reviewed_by: audit:03-prfo
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 03-prfo
+    last_slice: 04-ts-validator
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean

@@ -150,11 +150,41 @@ def thermochemistry(
     """
     config = config if config is not None else ThermoConfig()
     analysis = analysis if analysis is not None else ThermoAnalysisOptions()
+    # The modes are analysed before sigma, as before the v0.5.0 refactor, so an input that fails
+    # both checks still raises the normal-mode error first.
+    normal_modes(state.symbols, state.coordinates, hessian_hartree_per_bohr2, analysis=analysis)
+    sigma = rotational_symmetry_number(state, smiles, analysis=analysis)
+    return _thermochemistry(
+        state,
+        hessian_hartree_per_bohr2,
+        electronic_energy_hartree,
+        sigma,
+        energy_source=energy_source,
+        config=config,
+        analysis=analysis,
+    )
+
+
+def _thermochemistry(
+    state: MolecularState,
+    hessian_hartree_per_bohr2: ArrayLike,
+    electronic_energy_hartree: float,
+    sigma: int,
+    *,
+    energy_source: Literal["optimization", "single_point"],
+    config: ThermoConfig,
+    analysis: ThermoAnalysisOptions,
+) -> ThermoResult:
+    """Return the quasi-RRHO thermochemistry of ``state`` for a given symmetry number ``sigma``.
+
+    The body of ``thermochemistry`` after sigma (v0.5.0 refactor): ``thermochemistry`` takes sigma
+    from a SMILES, ``ts_thermochemistry`` from a bond graph. Imaginary modes (below
+    ``-analysis.imag_tol_cm1``) are excluded and listed; soft modes enter with ``|nu|``.
+    """
     t = config.temperature_k
     modes = normal_modes(
         state.symbols, state.coordinates, hessian_hartree_per_bohr2, analysis=analysis
     )
-    sigma = rotational_symmetry_number(state, smiles, analysis=analysis)
     masses = atomic_masses_amu(state.symbols)
     n = len(state.symbols)
 
