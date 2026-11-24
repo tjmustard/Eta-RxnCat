@@ -4,10 +4,10 @@
       "gitignore": "6c820ccc0429896bbb79d2eca27a8300c3bbde10e5bcc49c7855fb708026927b"
     },
     "AGENTS.md": {
-      "hacf": "10e2e740c740a099082d1ca0537a9b133d1e62520e40ca89a5440162458a5081"
+      "hacf": "0f973ab31b17cda1bce88fa02dfff1849b0a33572c5ff82b11bcc759766b9798"
     },
     "CLAUDE.md": {
-      "hacf": "d03561436dd6de3bd64da16d704134d8bc229540648530eae815c4231defebe0"
+      "hacf": "0781ab9675dcef77960707a138bae36ae47514e5f069668fb6bb77cc71900b8a"
     }
   },
   "files": {
@@ -17,7 +17,7 @@
     },
     ".agents/config/code_graph.defaults.yml": {
       "owner": "hacf",
-      "sha256": "8587cbc702418ddb90cef9d0cc538abbd7d642baac0f3394fbb2548b3c480e12"
+      "sha256": "aa4003a252a6059da343f460db8688cdfc6682efa1b6d75487e9758bb06568ae"
     },
     ".agents/config/heuristic_rules.yaml": {
       "owner": "hacf",
@@ -41,19 +41,19 @@
     },
     ".agents/config/upstream.yml": {
       "owner": "hacf",
-      "sha256": "964c3f2db44ec424c6c571596d47fff5f6b7df1b64c4de36a9949063ed27c041"
+      "sha256": "024c2349124f239c5a08ae8e6e446ba42e2d01f95aa24065cf81144dc19323bb"
     },
     ".agents/install-templates/AGENTS.md": {
       "owner": "hacf",
-      "sha256": "10e2e740c740a099082d1ca0537a9b133d1e62520e40ca89a5440162458a5081"
+      "sha256": "0f973ab31b17cda1bce88fa02dfff1849b0a33572c5ff82b11bcc759766b9798"
     },
     ".agents/install-templates/CLAUDE.md": {
       "owner": "hacf",
-      "sha256": "d03561436dd6de3bd64da16d704134d8bc229540648530eae815c4231defebe0"
+      "sha256": "0781ab9675dcef77960707a138bae36ae47514e5f069668fb6bb77cc71900b8a"
     },
     ".agents/install-templates/GEMINI.md": {
       "owner": "hacf",
-      "sha256": "ba5a71cd244718497d40bb24abd837351e27e56eb3c644f29ad02936788b6b6c"
+      "sha256": "9e6733d98ab971442ffa30577322d1243287f19a60558540332ed8ed909904c6"
     },
     ".agents/install-templates/claude-settings.fragment.json": {
       "owner": "hacf",
@@ -145,7 +145,7 @@
     },
     ".agents/schemas/project-templates/CONTRIBUTING.md": {
       "owner": "hacf",
-      "sha256": "241a1744e6521eed42121079991259d4728c413d4727f4fb55db16622504195f"
+      "sha256": "325e04d29462ae7c782c4a5deb9db519c406062cf5f40237c8eefda6d439f38c"
     },
     ".agents/schemas/project-templates/DEVELOPMENT.md": {
       "owner": "hacf",
@@ -153,7 +153,7 @@
     },
     ".agents/schemas/project-templates/README.md": {
       "owner": "hacf",
-      "sha256": "e3c1fbe72262c1d732ba3c74a7b87e535e8f0ea72f97acf46e72381f487d0bb7"
+      "sha256": "f3bc7dd6960ac69cd45a7d591faeba51ac5b49f7fbc5b27e748866f8be755a8f"
     },
     ".agents/schemas/project-templates/SECURITY.md": {
       "owner": "hacf",
@@ -177,11 +177,11 @@
     },
     ".agents/scripts/ceiling_enforcer.py": {
       "owner": "hacf",
-      "sha256": "797eb512aaf998776e1629b9b9cb78754b9a84002533876b97078dbcd091951b"
+      "sha256": "0c20d05ed858e8406abac73689dda48fe60fa70256360d5386fc6c720ddb6188"
     },
     ".agents/scripts/ceiling_resolver.py": {
       "owner": "hacf",
-      "sha256": "d53a53abe20061d5f3df3ed968076a6040eb0bb94fb258a6f45dac9d615844fa"
+      "sha256": "55f2d594f11cbfc91aad4cad8c0b46c8a71af80a5a0a558d79407c1022f2ea66"
     },
     ".agents/scripts/commit-msg": {
       "owner": "hacf",
@@ -189,7 +189,7 @@
     },
     ".agents/scripts/heuristic_classifier.py": {
       "owner": "hacf",
-      "sha256": "355364a2a9810ebe71d0f6f559fd9dcde0efb59d4c07e01a932309a3d08c1078"
+      "sha256": "a84733cd1bf31e0d9f4f3d0b552d6f825df515f7a74dffe594e263f78744fc8e"
     },
     ".agents/scripts/hyper_blocks.py": {
       "owner": "hacf",
@@ -197,7 +197,7 @@
     },
     ".agents/scripts/hyper_codegraph.py": {
       "owner": "hacf",
-      "sha256": "8c03871e810f655d1ceaffaecbd415dc42835d607e09f20f8aa468fa2fbc4045"
+      "sha256": "abb6caaf51d99fd16fd7f7b2c997cc9b02e34376c0cb0de29310f271db889b8d"
     },
     ".agents/scripts/hyper_daemon.py": {
       "owner": "hacf",
@@ -229,7 +229,7 @@
     },
     ".agents/scripts/hyper_ledger.py": {
       "owner": "hacf",
-      "sha256": "844f47442fd418003dd4eb065e63ca14e18564c0d1786580c11769fff626984e"
+      "sha256": "df839c29c9fd70c9baad9a329930067bcaa927cc7d478fb13a4d1451b615a6d4"
     },
     ".agents/scripts/hyper_lore.py": {
       "owner": "hacf",
@@ -265,7 +265,7 @@
     },
     ".agents/scripts/hyper_update_core.py": {
       "owner": "hacf",
-      "sha256": "19cec08585ae24e2c4419f73d4a73abd6eb3ea2adc31c6735ddd1890dfe73678"
+      "sha256": "497aa3d85336f856b164170c00428639ce33cc1efcac8808d1811ed7d8fcbd44"
     },
     ".agents/scripts/hyper_update_merge_engine.py": {
       "owner": "hacf",
@@ -273,7 +273,7 @@
     },
     ".agents/scripts/hyper_update_recovery.py": {
       "owner": "hacf",
-      "sha256": "31e7cdc568db0a6578c95085c2ddb4f9fb80f9709c77f4eaffb42c434fd3e7d4"
+      "sha256": "66a844b88bd38eac74241712389ec6b9cef21774a08a9d3c918f90962fe49a5b"
     },
     ".agents/scripts/hyper_update_verification.py": {
       "owner": "hacf",
@@ -285,7 +285,7 @@
     },
     ".agents/scripts/meta_loader.py": {
       "owner": "hacf",
-      "sha256": "fce0cf22b1b25b80579dcda9215ab20e5d498e361888ff18d3c89052290327ef"
+      "sha256": "776d594bf4cc8b940477ecb4658befa97b24386b79f42e5acbccc690741337c8"
     },
     ".agents/scripts/model_router.py": {
       "owner": "hacf",
@@ -293,7 +293,7 @@
     },
     ".agents/scripts/override_manager.py": {
       "owner": "hacf",
-      "sha256": "a272c3cc244176834bfd90db2eb46c237b5b283aa8f6ae1936d78dc5d4838e95"
+      "sha256": "d2855e62ac9187b788c0e19c87679f5b91fa77d19aec45308168d539e29cb4d4"
     },
     ".agents/scripts/pre-commit": {
       "owner": "hacf",
@@ -309,7 +309,7 @@
     },
     ".agents/scripts/thinking_token_monitor.py": {
       "owner": "hacf",
-      "sha256": "3c17f26fdeb89f89cead2d89257d0cd6844a8343fbd89de40260cb5a26915260"
+      "sha256": "41e72b9c1dc6730428326bbd1d4d77b0871b797ed4b760a4570620409da8fa64"
     },
     ".agents/scripts/token_budget_checker.py": {
       "owner": "hacf",
@@ -349,7 +349,7 @@
     },
     ".agents/skills/hyper-contextualize/SKILL.md": {
       "owner": "hacf",
-      "sha256": "1a4a93c0a5754677be7007d3dc95397cf6c69165b44c0b6215674bbe154255f3"
+      "sha256": "d9c52cdf7b2da8ecdf09ccd1b69246e40a062e5bf6ce7b50d6985c032fabef1a"
     },
     ".agents/skills/hyper-create-issue/SKILL.md": {
       "owner": "hacf",
@@ -357,7 +357,7 @@
     },
     ".agents/skills/hyper-create-skill/SKILL.md": {
       "owner": "hacf",
-      "sha256": "0e8abd883b1774daadb8cbfbf7e3a6ebac060340fc5562957e76a6faa558a215"
+      "sha256": "14549021664831c37fece40f5c037383e3c8648a2e6422cb44820f9c04d57549"
     },
     ".agents/skills/hyper-create-skill/examples/gemini-gem-example.md": {
       "owner": "hacf",
@@ -433,7 +433,7 @@
     },
     ".agents/skills/hyper-new-workflow/SKILL.md": {
       "owner": "hacf",
-      "sha256": "a9b8e7b87fe077f4595d860d4aed890c132bf7c8fc10b5aa305621f008b5f263"
+      "sha256": "e17a12a73fecca7fd8b3c5890aa59984cbe6b5ceef1b7ac0d6df3026ecaab21b"
     },
     ".agents/skills/hyper-peer-review/SKILL.md": {
       "owner": "hacf",
@@ -457,7 +457,7 @@
     },
     ".agents/skills/hyper-publish/examples/example_commit_messages.md": {
       "owner": "hacf",
-      "sha256": "b6d96b4b605bd4c4e0f35ff90bf4e02155f04f0dd6bf29f34c5c9ef896eee349"
+      "sha256": "ee971c3a29fcd3188bad8453b0112a56b1b0331b042c0782de8585728ba2321f"
     },
     ".agents/skills/hyper-publish/examples/example_pr_description.md": {
       "owner": "hacf",
@@ -473,15 +473,15 @@
     },
     ".agents/skills/hyper-publish/scripts/generate_commit_message.py": {
       "owner": "hacf",
-      "sha256": "1a08e72b1b8afa038f949cad05dfb97374c40fce073aacf3a318c7f0bfc2dc8b"
+      "sha256": "f9071b196d8b98a1e1230b81727649241e54ce35fc5f32fe9d86123b253e89b2"
     },
     ".agents/skills/hyper-publish/scripts/generate_pr_description.py": {
       "owner": "hacf",
-      "sha256": "6aaa1f1c18a59016768144468c409b4258f1e90cedc7e7ffdbeda754e3509b9e"
+      "sha256": "c8a2cac3ad0449cf4b33abf2395ab34d7f88bf9971df77af907e6b015a2be533"
     },
     ".agents/skills/hyper-publish/scripts/setup_permissions.py": {
       "owner": "hacf",
-      "sha256": "4309ae29fca136005a96c1fb726f501bd0bc5686489390d0e84891693a993796"
+      "sha256": "9e16ac38490898150a2f3784ef379317db27dc0a0db22e38e8d29a559f672f60"
     },
     ".agents/skills/hyper-redteam/SKILL.md": {
       "owner": "hacf",
@@ -501,7 +501,7 @@
     },
     ".agents/skills/hyper-sop/SKILL.md": {
       "owner": "hacf",
-      "sha256": "597ab81463c80fec1163bba997b201ca8f2b8d2d13d515bef410fd66e945a701"
+      "sha256": "e68ed0d1df60615b19999a0788b795a66ba11734a6212dedf094f773e5e72552"
     },
     ".agents/skills/hyper-status/SKILL.md": {
       "owner": "hacf",
@@ -517,7 +517,7 @@
     },
     ".agents/skills/hyper-troubleshooting/SKILL.md": {
       "owner": "hacf",
-      "sha256": "7713039607a3dd0f622bef8eb4c4477f21308670cbb2ff4006518882ccc30ca8"
+      "sha256": "a23b5fe94fad46bd38131dfdf75f25b2a642f1082b54ca7e4d59dfacd4732b5c"
     },
     ".agents/skills/hyper-tutorial-audit/SKILL.md": {
       "owner": "hacf",
@@ -689,7 +689,7 @@
     },
     "HACF-uninstall.sh": {
       "owner": "hacf",
-      "sha256": "bd5565df4e817dea84f065ac24e844b1d8d5247dbf13a4573ca41194adec63f6"
+      "sha256": "156c5448cef326d414481624a80cfdba2ac1702fb92cea0e1b2932389771e5e0"
     }
   },
   "hooks": {
@@ -718,8 +718,8 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-23T17:41:17+00:00",
-  "installed_commit": "5028b9f61b1c860d487c156ee3c67058b67a3a5b",
+  "installed_at": "2026-11-24T01:36:55+00:00",
+  "installed_commit": "b7dcb443411c23d59825ac0f20f9ac0eacee0789",
   "mcp_entries": {
     ".mcp.json": {
       "codebase-memory-mcp": {
@@ -764,8 +764,8 @@
     ]
   },
   "source": {
-    "commit": "5028b9f61b1c860d487c156ee3c67058b67a3a5b",
+    "commit": "b7dcb443411c23d59825ac0f20f9ac0eacee0789",
     "kind": "local"
   },
-  "version": "0.6.2"
+  "version": "0.6.3"
 }
