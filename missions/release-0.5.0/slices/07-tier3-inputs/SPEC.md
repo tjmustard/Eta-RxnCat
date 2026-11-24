@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
 intent: "Land the Tier 3 inputs: six XYZ files re-transcribed byte-equal to resolve's checked copies, SOURCES.md provenance with derived references, five provisional TS-fixture YAMLs and a loader, tier-D checks and the PySCF energy reproduction of the Liu files."
-depends_on: [OPR.0.5.0.6]
+depends_on: [OPR.0.5.0.6, OPR.0.5.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -103,8 +103,9 @@ Context the builder needs:
   `start_to_reference_map` (stated rule: lexicographically smallest element-preserving isomorphism
   of graft 2's `source_bonds` graph onto TS4a's perceived graph, as v0.4.0 R2):
   `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 17, 18, 19, 20, 14, 15, 16, 10, 11, 12]` (HF-10).
-- **R9 energy check** (PySCF, `.venv-accept-gpu`, eta's `pyscf_gpu_cpu` engine, M06-2X/6-31G(d),
-  read `engines/pyscf_gpu_cpu/` for its stage options; heavy-run gate; one structure at a time;
+- **R9 energy check** (PySCF, `.venv-accept-gpu`, eta's `pyscf_gpu_cpu` engine, M06-2X/6-31G(d)
+  with stage option `cartesian_basis=True` (Gaussian's 6D d functions; mission R30, slice 15),
+  read `engines/pyscf_gpu_cpu/` for its other stage options; heavy-run gate; one structure at a time;
   `timeout 3600` each): controls TJ's `TS1a_n.xyz` (Liu E −310.559154) and `5_cyclopropene.xyz`
   (−116.562552); targets `TS3a.xyz` (−491.366826), `TS4a.xyz` (−1086.627595),
   `3_dimethyltetrazine.xyz` (−374.809570), `4_bis_cf3_tetrazine.xyz` (−970.056992). Bound
@@ -240,3 +241,4 @@ N/A: non-visual slice.
 ## Dependencies
 
 - OPR.0.5.0.6 (build order; its code and contracts are used here)
+- OPR.0.5.0.15 (replan 2, R30: the `cartesian_basis` option R9 sets)

@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 40
+  ADR: 41
   STORY: 0
   CANON: 0
 nodes:
@@ -1635,3 +1635,43 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+- id: ADR-0041
+  type: decision
+  title: PySCF cartesian_basis option, keyed only when True (narrow exception to ADR-0016)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0041-pyscf-cartesian-basis-option-keyed-only-when-true-narrow-exc.md
+  content_sha256: 2523fda649b1b9f3c1f58571ba7e8df712137b152163e2fc12e8b5ed59beee8a
+  anchors:
+    components:
+    - eta_rxncat_engines
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/engines/pyscf_gpu_cpu/engine.py
+  relates_to:
+  - ADR-0016
+  - ADR-0018
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-24T06:45:41+00:00'
+    source: OPR.0.5.0.15
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-24T06:45:41+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.5.0.15

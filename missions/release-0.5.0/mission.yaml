@@ -52,4 +52,7 @@ composition:
     - ref: slices/14-bofill-guard/slice.yaml
       order: 140
       active: true
+    - ref: slices/15-pyscf-cartesian-basis/slice.yaml
+      order: 150
+      active: true
 # Optional team and SDLC sections are added here.

@@ -27,4 +27,5 @@
 | OPR.0.5.0.12 | 12-acceptance-record | compiled | OPR.0.5.0.11 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.13 | 13-acceptance-verdict | compiled | OPR.0.5.0.12 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.14 | 14-bofill-guard | audited | OPR.0.5.0.3 | 2026-11-24T05:55:11+00:00 audited |
+| OPR.0.5.0.15 | 15-pyscf-cartesian-basis | compiled | OPR.0.5.0.1 | 2026-11-24T06:44:57+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->
