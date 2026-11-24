@@ -294,9 +294,13 @@ def test_esen_stage_key_differs_from_uma() -> None:
 
 
 def test_core_import_is_engine_free() -> None:
-    """Importing eta_rxncat.core loads no numpy, torch, pyscf, rdkit or fairchem."""
+    """Importing eta_rxncat.core loads no numpy, torch, pyscf, rdkit or fairchem.
+
+    v0.5.0: the TS contracts (``eta_rxncat.core.ts_models``) are loaded by the same import.
+    """
     code = (
         "import eta_rxncat.core, sys; "
+        "assert 'eta_rxncat.core.ts_models' in sys.modules; "
         "bad = {'numpy', 'torch', 'pyscf', 'rdkit', 'fairchem', 'ase'} & set(sys.modules); "
         "sys.exit(f'loaded: {sorted(bad)}' if bad else 0)"
     )

@@ -13,14 +13,15 @@ from eta_rxncat.core.models import CoreModel, MolecularState, NonNegativeInt, Sc
 class OptimizerIdentity(CoreModel):
     """The optimizer that produced a result.
 
-    v0.5.0 widens ``name`` for its P-RFO transition-state optimizer.
+    ``geometric`` is the geomeTRIC minimum optimizer (v0.3.0); ``prfo`` is eta's own clean-room
+    P-RFO transition-state optimizer (v0.5.0, additive). Any other name is rejected.
 
     Attributes:
         name: Optimizer name.
-        version: Optimizer library version.
+        version: Optimizer library version (for ``prfo``, eta's source identity).
     """
 
-    name: Literal["geometric"]
+    name: Literal["geometric", "prfo"]
     version: str = Field(min_length=1)
 
 

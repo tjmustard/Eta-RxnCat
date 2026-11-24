@@ -10,7 +10,7 @@ intent: "Add the frozen TS contracts to eta_rxncat.core (prfo optimizer name, ts
 depends_on: [OPR.0.5.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", spec/compiled/architecture.yml]
@@ -171,10 +171,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the files named above.
-- [ ] Task 2: widen `name`, add `"ts_opt"`; write `ts_models.py`; export.
-- [ ] Task 3: tests under `tests/unit/core/test_ts_models.py`; required checks.
-- [ ] Task 4: commit; updater for node `eta_rxncat_core` (no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the files named above.
+- [x] Task 2: widen `name`, add `"ts_opt"`; write `ts_models.py`; export.
+- [x] Task 3: tests under `tests/unit/core/test_ts_models.py`; required checks.
+- [x] Task 4: commit; updater for node `eta_rxncat_core` (no glob change).
 
 ## 4. The Negative Space (Constraints)
 

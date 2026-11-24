@@ -14,9 +14,9 @@ from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, StrictInt, model
 from eta_rxncat.core.elements import ATOMIC_NUMBERS
 
 StageKind = Literal[
-    "conformer_search", "constrained_preopt", "geometry_opt", "frequency", "single_point"
+    "conformer_search", "constrained_preopt", "geometry_opt", "frequency", "single_point", "ts_opt"
 ]
-"""The computational stages a node can run."""
+"""The computational stages a node can run (``ts_opt``, the transition-state search, is v0.5.0)."""
 
 EngineTag = Literal[
     "rdkit_ff", "mace", "uma_direct", "pyscf_gpu_cpu", "xtb_subprocess", "esen_omol25"
