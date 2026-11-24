@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -599,7 +599,7 @@ nodes:
     reviewed_by: audit:08-e2e-diels-alder
     summary: patched description
   provenance:
-    last_slice: 07-tier3-inputs
+    last_slice: 09-e2e-tetrazine
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean

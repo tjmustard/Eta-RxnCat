@@ -15,12 +15,12 @@ from pathlib import Path
 from typing import Any
 
 from e2e_env import REPO
-from fixtures import TSFixture
+from fixtures import TSFixture, read_xyz
 
-from eta_rxncat.core import MolecularState
+from eta_rxncat.core import AtomMappingSpec, GraftResult, GraftSpec, MolecularState
 from eta_rxncat.engines import HARTREE_KCAL_MOL
-from eta_rxncat.mapping import core_rmsd_angstrom
-from eta_rxncat.optimize import PRFOOptimizer
+from eta_rxncat.mapping import core_rmsd_angstrom, graft, relax_constrained_core
+from eta_rxncat.optimize import GeometricOptimizer, PRFOOptimizer
 from eta_rxncat.orchestrator import (
     BarrierEnergies,
     Recipe,
@@ -29,6 +29,7 @@ from eta_rxncat.orchestrator import (
     TSRunResult,
     TSSpec,
     activation_free_energy,
+    build_engine,
     run_species,
     run_transition_state,
 )
@@ -61,11 +62,14 @@ def ts_recipe(recipe: Recipe) -> TSRecipe:
     )
 
 
-def ts_spec(fixture: TSFixture, recipe_name: str) -> TSSpec:
-    """The TS request of a fixture for one recipe (a mapped start reads that recipe's M1)."""
+def ts_spec(fixture: TSFixture, recipe_name: str, start: MolecularState | None = None) -> TSSpec:
+    """The TS request of a fixture for one recipe (a mapped start reads that recipe's M1).
+
+    ``start`` overrides the fixture's start form (the TS4a grafted, pre-relaxed start).
+    """
     return TSSpec(
         ts_id=fixture.ts_id,
-        start=fixture.start_state(recipe_name),
+        start=fixture.start_state(recipe_name) if start is None else start,
         forming_bonds=fixture.forming_bonds,
         reference=fixture.reference,
         reference_map=fixture.start_to_reference_map,
@@ -82,11 +86,18 @@ class CaseRun:
     barrier_error: str | None
 
 
-def run_case(fixture: TSFixture, recipe: Recipe, recipe_name: str, store_path: Path) -> CaseRun:
+def run_case(
+    fixture: TSFixture,
+    recipe: Recipe,
+    recipe_name: str,
+    store_path: Path,
+    start: MolecularState | None = None,
+) -> CaseRun:
     """Run the reactants, the TS and the barrier once in the store at ``store_path``."""
     with ArtifactStore(store_path) as store:
         reactants = {s.species_id: run_species(s, recipe, store) for s in fixture.species}
-        ts = run_transition_state(ts_spec(fixture, recipe_name), ts_recipe(recipe), store)
+        spec = ts_spec(fixture, recipe_name, start)
+        ts = run_transition_state(spec, ts_recipe(recipe), store)
     barrier = error = None
     if ts.failed_reason is None and ts.record is not None:
         try:
@@ -299,3 +310,90 @@ def reactant_summary(results: Mapping[str, SpeciesResult]) -> dict[str, Any]:
             ].thermo.gibbs_free_energy_hartree,
         }
     return out
+
+
+# --- TS4a: two single CF3 grafts on TS3a, then a core-frozen pre-relaxation (R22) -------------
+
+
+def ts4a_grafts(fixture: TSFixture) -> tuple[GraftResult, GraftResult]:
+    """The two grafts of the TS4a fixture on TS3a; Liu's TS4a is never a donor (N13)."""
+    block = fixture.start.grafts
+    if block is None:
+        raise ValueError(f"{fixture.name} has no start_grafts")
+    base = fixture.path.parent
+    template = read_xyz(base / block["template"], fixture.charge, fixture.spin_multiplicity)
+    template = MolecularState.model_validate(
+        {**template.model_dump(), "active_atom_indices": list(fixture.active_atom_indices)}
+    )
+    fragment = read_xyz(base / block["fragment"], fixture.charge, fixture.spin_multiplicity)
+    results: list[GraftResult] = []
+    for g in block["grafts"]:
+        spec = GraftSpec(
+            template=AtomMappingSpec(
+                keep=list(g["keep"]),
+                delete=list(g["delete"]),
+                alignment=[t for t, _ in g["alignment_pairs"]],
+            ),
+            fragment_alignment=[fr for _, fr in g["alignment_pairs"]],
+            fragment_delete=list(g["fragment_delete"]),
+            constrained_core=list(g["constrained_core"]),
+            product_charge=fixture.charge,
+            product_multiplicity=fixture.spin_multiplicity,
+        )
+        results.append(graft(template, fragment, spec))
+        template = results[-1].product
+    if len(results) != 2:
+        raise ValueError(f"{fixture.name}: expected two grafts, got {len(results)}")
+    return results[0], results[1]
+
+
+def grafted_start(
+    fixture: TSFixture, recipe: Recipe, forming_core: list[int]
+) -> tuple[MolecularState, dict[str, Any]]:
+    """The TS4a start for one recipe: both grafts, then ``relax_constrained_core`` on its engine.
+
+    Runs once per recipe; both E2E passes use the returned state (the start keys ``ts_opt``).
+    """
+    first, second = ts4a_grafts(fixture)
+    block = fixture.start.grafts
+    if block is None:
+        raise ValueError(f"{fixture.name} has no start_grafts")
+    pre = block["pre_relax"]
+    engine = build_engine(recipe.engine_stage, recipe.engine_runtime)
+    relaxed = relax_constrained_core(
+        second.product,
+        engine,
+        GeometricOptimizer(),
+        list(pre["core"]),
+        options={"maxiter": int(pre["maxiter"])},
+    )
+    start = MolecularState.model_validate(
+        {
+            **relaxed.final_state.model_dump(),
+            "active_atom_indices": list(fixture.active_atom_indices),
+        }
+    )
+    summary = {
+        "alignment_rmsd_angstrom": [
+            first.alignment_rmsd_angstrom,
+            second.alignment_rmsd_angstrom,
+        ],
+        "close_contacts": [
+            [c.model_dump(mode="json") for c in first.close_contacts],
+            [c.model_dump(mode="json") for c in second.close_contacts],
+        ],
+        "pure_graft_rmsd_to_literature_ts": rmsds_to_reference(
+            second.product, fixture, forming_core
+        ),
+        "pre_relaxed_start_rmsd_to_literature_ts": rmsds_to_reference(start, fixture, forming_core),
+        "pre_relax": {
+            "core": list(pre["core"]),
+            "maxiter": int(pre["maxiter"]),
+            "n_steps": relaxed.n_steps,
+            "n_engine_calls": relaxed.n_engine_calls,
+            "final_energy_hartree": relaxed.final_energy_hartree,
+            "optimizer": relaxed.optimizer.model_dump(mode="json"),
+        },
+        "pre_relaxed_start": start.model_dump(mode="json"),
+    }
+    return start, summary

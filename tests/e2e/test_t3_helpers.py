@@ -173,3 +173,20 @@ def test_candidate_dir_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     monkeypatch.setenv("ETA_RXNCAT_CANDIDATE_DIR", str(tmp_path / "c"))
     assert candidate_dir() == tmp_path / "c" and (tmp_path / "c").is_dir()
     assert CANDIDATES_V050.parts[-2:] == ("candidate_outputs", "v0.5.0")
+
+
+def test_ts4a_grafts_reproduce_slice_07() -> None:
+    """The helper reproduces slice 07: C7H4F6N4, 0.1462 / 0.1463 A, no contacts, core 0.0599."""
+    from collections import Counter
+
+    from t3 import ts4a_grafts
+
+    fixture = t3("t3_ts4a_mapped.yaml")
+    first, second = ts4a_grafts(fixture)
+    assert Counter(second.product.symbols) == Counter({"C": 7, "H": 4, "F": 6, "N": 4})
+    assert first.alignment_rmsd_angstrom == pytest.approx(0.1462, abs=1e-3)
+    assert second.alignment_rmsd_angstrom == pytest.approx(0.1463, abs=1e-3)
+    assert first.close_contacts == [] and second.close_contacts == []
+    assert second.product.active_atom_indices == list(range(8))
+    rmsds = rmsds_to_reference(second.product, fixture, [0, 3, 6, 7])
+    assert rmsds["forming_core_rmsd_angstrom"] == pytest.approx(0.0599, abs=1e-3)
