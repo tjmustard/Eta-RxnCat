@@ -10,7 +10,7 @@ intent: "Assemble the v0.5.0 acceptance record from real per-check outcomes with
 depends_on: [OPR.0.5.0.11]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.5.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, spec/compiled/architecture.yml]
@@ -154,10 +154,10 @@ rule is fixed.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the precedent files.
-- [ ] Task 2: record module, driver, verdict function, tests; required checks; C1.
-- [ ] Task 3: host check → xtb acceptance → host check → UMA acceptance; reproducibility runs.
-- [ ] Task 4: write the record and README; required checks; C2; updater (node
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the precedent files.
+- [x] Task 2: record module, driver, verdict function, tests; required checks; C1.
+- [x] Task 3: host check → xtb acceptance → host check → UMA acceptance; reproducibility runs.
+- [x] Task 4: write the record and README; required checks; C2; updater (node
   `eta_rxncat_species_runner`; `docs/**` stays the scaffold's).
 
 ## 4. The Negative Space (Constraints)
