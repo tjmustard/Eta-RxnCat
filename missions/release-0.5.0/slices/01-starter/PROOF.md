@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: 34/34 starter sha256 = zip, DV-01..DV-09b decided, PD-009 cell only, all gates exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

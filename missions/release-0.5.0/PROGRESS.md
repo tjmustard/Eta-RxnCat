@@ -13,7 +13,7 @@
 <!-- BEGIN HACF GENERATED: slice-table -->
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
-| OPR.0.5.0.1 | 01-starter | executed |  | 2026-11-24T04:06:36+00:00 executed |
+| OPR.0.5.0.1 | 01-starter | audited |  | 2026-11-24T04:14:24+00:00 audited |
 | OPR.0.5.0.2 | 02-ts-contracts | compiled | OPR.0.5.0.1 | 2026-11-24T03:49:11+00:00 compiled |
 | OPR.0.5.0.3 | 03-prfo | compiled | OPR.0.5.0.2 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.4 | 04-ts-validator | compiled | OPR.0.5.0.2 | 2026-11-24T03:49:12+00:00 compiled |
