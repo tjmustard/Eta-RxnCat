@@ -34,6 +34,10 @@ Context the builder needs:
   verbatim answer, the regression bounds TJ set, and his confirmation of the six transcriptions).
   Only TJ writes `tests/fixtures/v0.5.0/`. Verify the precondition by file names and blob ids;
   never read `tests/candidate_outputs/`.
+  **Met: mission R33** (promotion `ccacac5`, eleven files with sha256 and blob id, TJ's
+  "A: 0.75 all (Recommended)", transcriptions confirmed). Bounds from R33: \|ΔE_TS\| ≤ 1e-5 Eh;
+  heavy-atom RMSD ≤ 0.01 Å; \|ΔΔG‡(1 M)\| ≤ 0.75 kcal/mol on UMA (every case), ≤ 0.01 kcal/mol on
+  xtb; GFN2 TS4a's regression reported, not gated (R32).
 - **Pattern:** v0.4.0 slice 08 (`missions/release-0.4.0/slices/08-acceptance-verdict/SPEC.md`,
   read-only), including its R27 rules: the verdict is `fail` on a default suite with a non-zero
   exit, failures or errors, or on any command with a non-zero exit or a skip; `check()`
@@ -167,4 +171,4 @@ N/A: non-visual slice.
 ## Dependencies
 
 - OPR.0.5.0.12 (build order; its code and contracts are used here)
-- TJ's Phase 3 promotion and regression bounds, recorded by the lead as a mission R-row
+- TJ's Phase 3 promotion and regression bounds, recorded by the lead as a mission R-row (R33)
