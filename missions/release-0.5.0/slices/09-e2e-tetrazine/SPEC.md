@@ -32,7 +32,10 @@ candidates.
 Context the builder needs:
 - **TJ, verbatim:** A3 "Q3. A" (dual −CF₃ = two single grafts); A4 "Q4. A" (TS3a [10.0, 24.0],
   TS4a [0.7, 14.7], UMA, 1 M); Q-TJ3 (third of "A / A / A"): GFN2 gates convergence and the mode
-  count only. TJ's spec: "Dual −CF₃ graft onto TS3a → TS4a, lowering ΔG‡_ref from 18.9 to 9.6".
+  count; **amended by Q-TJ4 A (mission R32)**, verbatim: "**A (Recommended).** GFN2 TS4a becomes
+  report-only (the failure recorded honestly in the candidate and the acceptance record, not a
+  verdict fail), AND GFN2 also gates TS identity (overlap >= 0.50, in phase, KE >= 0.60) on every
+  other Tier 3 case. UMA unchanged. Resolve writes it; slices 09-13 follow." TJ's spec: "Dual −CF₃ graft onto TS3a → TS4a, lowering ΔG‡_ref from 18.9 to 9.6".
 - **Inputs (slice 07):** `t3_ts3a_unmapped.yaml`, `t3_ts4a_mapped.yaml` (graft blocks,
   `pre_relax`, map), `load_ts_fixture`, the XYZ files.
 - **TS4a start per recipe:** `graft` twice with the YAML blocks, then
@@ -44,13 +47,22 @@ Context the builder needs:
 - **Runners, stores, gates, reports and candidate rule:** exactly as slice 08 (read its SPEC
   `missions/release-0.5.0/slices/08-e2e-diels-alder/SPEC.md` and its test once it is committed).
   Gated per recipe: both — converged and `mode_count_passed_bool`; UMA — KE, identity, window and
-  the **ordering ΔG‡(TS4a) < ΔG‡(TS3a)** (1 M); both — second-run hits and conservation.
-  Reported: GFN2 extras and GFN2's ordering, connectivity, forming-core `[0, 3, 6, 7]` RMSD of the
+  the **ordering ΔG‡(TS4a) < ΔG‡(TS3a)** (1 M); GFN2 — the identity core (R32, TJ Q-TJ4 A): `forming_stretch_overlap` ≥
+  `min_forming_stretch_overlap` (0.50), `forming_bonds_in_phase_bool` true, `active_core_passed_bool`
+  (KE ≥ 0.60), from the validator's fields, **not** `identity_passed_bool` (which includes the
+  forming-distance window; reported on GFN2); both — second-run hits and
+  conservation. **Exception: GFN2 TS4a is report-only (R32)**: it runs and is recorded with every
+  measured check, `failed_reason` and `failed_checks` as they came out, `report_only: true` and
+  `reported_outcome` (`passed`/`failed`); nothing of that pair is gated or fails the test, and an
+  `EngineError` from `run_transition_state` on that pair is caught in the test and recorded as
+  `failed_reason: engine_error:<type>` with its message.
+  Reported: GFN2 extras, the GFN2 window, ΔG‡ and ordering, connectivity, forming-core `[0, 3, 6, 7]` RMSD of the
   final TS4a to Liu's TS4a under the YAML map (G5) and of TS3a to Liu's TS3a, the pure-graft and
   pre-relaxed-start RMSDs, close contacts of each graft.
 - **Measured at Liu's geometries (HF-3, HF-4):** UMA ΔG‡ TS3a 19.76, TS4a 12.38 (margin 2.32 to
   14.7); GFN2 −5.60 / 5.96 and ΔE‡ −16.4 / −5.9, so a GFN2 search may not keep a saddle near Liu's:
-  a miss on the GFN2 gates is stop-and-report with the output (it fails the verdict by TJ's Q-TJ3).
+  measured at C1 fc4f38e: GFN2 TS4a `ts_search_failed:max_steps` (now report-only, R32); GFN2 TS3a
+  KE 0.834, overlap 0.689, in phase. A miss on any other gate is stop-and-report with the output.
 - **Candidates:** `tests/candidate_outputs/v0.5.0/t3_ts3a.{xtb,uma}.json`,
   `t3_ts4a.{xtb,uma}.json` (+ the graft summary inside `t3_ts4a.*`). C1 / E2E at C1 / C2 as slice 08.
 
@@ -129,13 +141,17 @@ and report): GFN2's saddle for these two, and UMA's stationary TS4a against 14.7
 
 1. `tests/e2e/test_t3_tetrazine.py` (`e2e` + `slow`), both recipes, cases TS3a and TS4a, each run
    under `timeout 3600`.
-2. Gates per case × recipe as above; the ordering gated on UMA and reported on GFN2.
-3. Second runs: 100% hits on the reactants' stages, `ts_opt` and `frequency`. The graft and the
+2. Gates per case × recipe as above; the ordering gated on UMA and reported on GFN2; GFN2 TS4a
+   report-only (a test asserts its fragment has `report_only: true` and no gated check).
+3. Second runs: 100% hits on the reactants' stages and on every TS stage that ran in the first run
+   (`ts_opt`, a cached failure row counts; `frequency` only if it ran), no new rows (G6, R32). Fix
+   `second_run_ts_all_hits` (`tests/e2e/t3.py`), which required a `frequency` hit after a failed search. The graft and the
    pre-relaxation are not store stages: they run once per recipe and both runs use that same
    start state (GPU runs need not be bitwise reproducible, and the start is part of the `ts_opt`
    key).
 4. Four candidate files in C2.
-5. A failing gate: candidate written with `test_outcome: fail`, stop and report.
+5. A failing gate: candidate written with `test_outcome: fail`, stop and report. GFN2 TS4a's
+   report-only outcome is not a failing gate.
 
 ## 3. Implementation Plan (Task List)
 
@@ -148,13 +164,14 @@ and report): GFN2's saddle for these two, and UMA's stationary TS4a against 14.7
 ## 4. The Negative Space (Constraints)
 
 - **DO NOT** use Liu's TS4a coordinates in the start (N13); **DO NOT** add a dihedral constraint (N12).
-- **DO NOT** gate GFN2 beyond convergence and the mode count; **DO NOT** loosen any bound.
+- **DO NOT** gate GFN2 beyond convergence, the mode count and the identity core (R32), or anything
+  of GFN2 TS4a; **DO NOT** gate the GFN2 window; **DO NOT** loosen any bound.
 - **DO NOT** compare `history`.
 
 ## Proof contract
 
 - [ ] Both recipes' commands with host checks, `timeout`, exit codes, 0 skips.
-- [ ] Each gated value per case × recipe, and the ordering.
+- [ ] Each gated value per case × recipe, and the ordering; GFN2 TS4a's reported outcome.
 - [ ] Second runs 100% hits.
 - [ ] C2 contains only `t3_ts3a.*` and `t3_ts4a.*` (file names only).
 - [ ] The required checks exit 0.

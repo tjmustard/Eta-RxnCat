@@ -43,7 +43,14 @@ Context the builder needs:
 - **Checks in the record** (state ∈ `pass` / `fail` / `pending_promotion` /
   `pending_confirmation` / `skipped` with reason / `missing`):
   - per case × recipe (ten): the slice 08–10 gates (both recipes: converged, mode count; UMA: KE,
-    identity, window; UMA ordering TS4a < TS3a), the second-run cache hits, conservation;
+    identity, window; UMA ordering TS4a < TS3a; GFN2: the identity core of mission R32, overlap
+    ≥ 0.50, in phase, KE ≥ 0.60, from the validation fields, window reported), the second-run cache
+    hits (stages that ran, G6/R32), conservation. GFN2 TS1a_n/TS1b_n (slice 08, which did not gate
+    identity) get the GFN2 identity core here from their committed candidates;
+  - **GFN2 TS4a is report-only** (TJ Q-TJ4 A, R32): its block is copied with `report_only: true`,
+    `reported_outcome`, `failed_reason` and `failed_checks` as measured, and none of it is a gated
+    check; a test asserts that a report-only `failed` entry leaves the record's gated checks
+    unaffected, and that the same failure on any other pair fails;
   - the reported blocks (GFN2 extras, connectivity, G5 RMSDs) copied, never gated;
   - transcriptions: the six sha256s (HF-1) and the R9 energy differences (slice 07 proof values);
   - the cross-check fragment (slice 11): every record present (gate: attempted and recorded);
@@ -157,7 +164,8 @@ rule is fixed.
 
 - **DO NOT** read `tests/candidate_outputs/` by any route; **DO NOT** write `tests/fixtures/`.
 - **DO NOT** set `verdict` or bump the version here.
-- **DO NOT** turn a reported value into a gate, or a failure into a known limit.
+- **DO NOT** turn a reported value into a gate, or a failure into a known limit; the only
+  report-only pair is GFN2 TS4a, by TJ's Q-TJ4 A (R32).
 
 ## Proof contract
 

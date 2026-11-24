@@ -30,7 +30,9 @@ candidates.
 
 Context the builder needs:
 - **TJ, verbatim:** A3 "Q3. A"; A4 "Q4. A" (N4 [15.6, 29.6], UMA, 1 M); Q-TJ3 (third of "A / A /
-  A"): GFN2 gates convergence and the mode count only.
+  A"): GFN2 gates convergence and the mode count; amended by **Q-TJ4 A** (mission R32), verbatim:
+  "GFN2 also gates TS identity (overlap >= 0.50, in phase, KE >= 0.60) on every other Tier 3
+  case. UMA unchanged." N4 is one of those cases.
 - **Inputs (slice 07):** `t3_n4_unmapped.yaml` (active `[1, 2, 9, 10, 12, 13]`, forming bonds
   `[[1, 9], [2, 10]]`), `xyz/TS_N4.xyz`, `xyz/cyclobutenone.xyz`, `xyz/1_cyclopentadiene.xyz`.
 - **Paton's energies:** its "E(M06-2X)" column is the **thermally corrected** energy, not the
@@ -38,8 +40,10 @@ Context the builder needs:
   to 2e-6 Eh). The reference is G only: 24.463 kcal/mol at 1 atm, 22.569 at 1 M (HF-9). Never
   report a literature ΔE‡ for N4.
 - **Runners, stores, gates, reports, candidate rule:** exactly as slice 08 (read its SPEC and
-  test). Gated: both — converged and `mode_count_passed_bool`; UMA — KE, identity, window; both —
-  second-run hits, conservation. Reported: GFN2 extras, connectivity, RMSD of the final TS to
+  test). Gated: both — converged and `mode_count_passed_bool`; UMA — KE, identity, window; GFN2 — the identity core (R32, TJ Q-TJ4 A): `forming_stretch_overlap` ≥
+  `min_forming_stretch_overlap` (0.50), `forming_bonds_in_phase_bool` true, `active_core_passed_bool`
+  (KE ≥ 0.60), from the validator's fields, **not** `identity_passed_bool` (which includes the
+  forming-distance window; reported on GFN2); both — second-run hits, conservation. Reported: GFN2 extras, the GFN2 window and ΔG‡, connectivity, RMSD of the final TS to
   Paton's N4 (identity map), the asymmetric forming distances (Paton 2.166 / 2.309 Å, HF-2).
 - **Measured at Paton's geometry (HF-3, HF-4):** UMA ΔG‡ 26.50 (margin 3.10), one imaginary at
   −517.9 cm⁻¹, KE 0.951, overlap 0.802; GFN2 12.91, −471.4 cm⁻¹, 0.951.
@@ -119,7 +123,9 @@ Context the builder needs:
 
 1. `tests/e2e/test_t3_cyclobutenone.py` (`e2e` + `slow`), both recipes, under `timeout 3600`.
 2. Gates as above; no literature ΔE‡ anywhere in the candidate.
-3. Second runs 100% hits.
+3. Second runs: 100% hits on the reactants' stages and on every TS stage that ran in the first run
+   (`ts_opt`, a cached failure row counts; `frequency` only if it ran), no new rows (G6, R32). Use slice 09's fixed
+   `second_run_ts_all_hits`.
 4. Two candidate files in C2.
 5. A failing gate: candidate written with `test_outcome: fail`, stop and report.
 
@@ -134,7 +140,8 @@ Context the builder needs:
 ## 4. The Negative Space (Constraints)
 
 - **DO NOT** use Paton's E column as an electronic energy.
-- **DO NOT** gate GFN2 beyond convergence and the mode count; **DO NOT** loosen any bound.
+- **DO NOT** gate GFN2 beyond convergence, the mode count and the identity core (R32); **DO NOT**
+  gate the GFN2 window; **DO NOT** loosen any bound.
 
 ## Proof contract
 

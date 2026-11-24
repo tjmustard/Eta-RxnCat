@@ -42,7 +42,9 @@ Context the builder needs:
   each promoted file's sha256 and blob id.
 - **Regression:** each case × recipe's verdict result against its promoted fixture with TJ's
   bounds (energy, ΔG‡, heavy-atom RMSD; `history` excluded, N11). The cache-hit, gate and
-  cross-check checks re-run as in slice 12. `transcription_confirmation` becomes `confirmed` only
+  cross-check checks re-run as in slice 12, with mission R32: GFN2 gates the identity core on every
+  case but TS4a; **GFN2 TS4a is report-only** (TJ Q-TJ4 A): its outcome and regression comparison
+  are recorded, never part of `verdict`. `transcription_confirmation` becomes `confirmed` only
   from TJ's recorded answer.
 - **Bump** (only on `pass`): `pyproject.toml`, `src/eta_rxncat/__init__.py`,
   `tests/unit/test_package.py`, `uv.lock` to 0.5.0. The P-RFO identity is the source hash of
