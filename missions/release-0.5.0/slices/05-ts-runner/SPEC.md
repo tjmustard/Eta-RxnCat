@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
 intent: "Add run_transition_state: P-RFO search, final Hessian in the frequency stage, validation and TS thermochemistry, every stage cached under ts_opt with failures, never through the minimum path."
-depends_on: [OPR.0.5.0.3, OPR.0.5.0.4]
+depends_on: [OPR.0.5.0.3, OPR.0.5.0.4, OPR.0.5.0.14]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -213,3 +213,4 @@ N/A: non-visual slice.
 
 - OPR.0.5.0.3 (build order; its code and contracts are used here)
 - OPR.0.5.0.4 (build order; its code and contracts are used here)
+- OPR.0.5.0.14 (build order; replan 1 R29: `bofill_update` no longer raises at r = 0)

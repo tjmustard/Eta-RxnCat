@@ -297,6 +297,7 @@ Lore (all PROPOSED, `origin: agent`; TJ approves through `/hyper-lore-approve`):
 | R26 | v0.3.0/v0.4.0 lessons carried | — | resolved | In every slice's seat rules: unit-suffixed keys (R54); no energy- or record-ordered lists in compared outputs (R55); one `gated_outcome` per test, `pending_*` fails under acceptance (R56); readers check `failed_reason` first (R50); re-dedup after a geometry change (reactant ensembles unchanged; one TS needs none); the candidate rule incl. `git show`; measured tolerances (R26 of v0.4.0); `ETA_RXNCAT_XTB` on every xtb command; timeouts (R15); heavy-run gate; the verdict gates on suite, commands and skips (v0.4.0 R27). |
 | R27 | US-002 (draft) has P-RFO return the final exact Hessian | — | resolved | P-RFO returns no Hessian. The runner computes the final Hessian in the `frequency` stage (cached, keyed by geometry and engine) and validates with it, so the search and the validator are independent and a rerun of validation never re-runs the search. |
 | R28 | Regression bounds for the verdict (not raised by the red team; needed by slice 13) | — | resolved (TJ at Phase 3) | Numeric bounds are TJ's (v0.3.0 R1 "R1. A"). Slice 12 measures run-to-run reproducibility per case × recipe and proposes TJ's v0.4.0 Q6 numbers (\|ΔE\| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å) plus \|ΔΔG‡\| ≤ 0.01 kcal/mol if every measured difference is ≤ 1/10 of them, else 10× the measured maximum. The lead puts that block in TJ's Phase 3 row; slice 13 uses TJ's answer and cannot start without it. |
+| R29 | Replan 1 (audit 03 handback `qitem-20261124051212-668b769f`): `bofill_update` raises a bare `ZeroDivisionError` when r = y − Hs = 0 (reproduced with H = diag(1, 2, 3), y = Hs), because the PSB-only test \|rᵀs\| < 1e-12‖r‖‖s‖ is false at 0 < 0; the same at s = 0; and the "mode lost on a Bofill Hessian → exact refresh → recover" path has no test | medium | resolved | From Bofill 1994: the update is the correction that makes H_new satisfy the secant condition H_new s = y; at r = 0 H already does and both correction terms vanish, so the update is the identity. If rᵀr == 0 or sᵀs == 0 (computed floats), `bofill_update` returns ½(H + Hᵀ) before any division; that step stays `hessian_source = "bofill"`. No tolerance changes, no exception is caught. Rejected: raising `TSSearchFailedError` (a satisfied secant condition is not a failure; it would fail good searches on near-quadratic surfaces). A new slice `14-bofill-guard` (node `eta_rxncat_optimize`, depends on .3 only) carries the guard, unit tests at r = 0 and s = 0, and a recovery test that forces the lost-mode branch with a patched update; it was placed as a new slice because no unfinished slice touches `eta_rxncat_optimize`. Slice 05 depends on .14, so it runs after 04 and before 05; it neither depends on nor blocks 04. |
 
 ### Seed deviations
 
@@ -330,7 +331,7 @@ None yet (first compile). Replans add rows here.
 - **Accept/reject, trust** per R14. **Bofill update** (Bofill 1994) between exact refreshes:
   with s = Δx, y = Δg, r = y − Hs: H_MS = H + rrᵀ/(rᵀs); H_PSB = H + (rsᵀ + srᵀ)/(sᵀs) −
   (rᵀs)ssᵀ/(sᵀs)²; φ = (rᵀs)²/((rᵀr)(sᵀs)); H_new = φ·H_MS + (1 − φ)·H_PSB, symmetrised; if
-  \|rᵀs\| < 1e-12·‖r‖‖s‖ use PSB only. Refresh exactly at every `hessian_refresh_steps`-th accepted
+  \|rᵀs\| < 1e-12·‖r‖‖s‖ use PSB only; if rᵀr = 0 or sᵀs = 0, return H unchanged before any division (R29, slice 14). Refresh exactly at every `hessian_refresh_steps`-th accepted
   step and after every rejection.
 - **Convergence:** all four criteria (R24) on the unprojected Cartesian gradient and the last
   accepted step, checked after each accepted step. Then return `TSSearchResult` (§5 "Contracts").
@@ -485,7 +486,8 @@ Read from `spec/compiled/architecture.yml` (11 nodes, all `clean`; delta mode), 
 | 2 | `slices/02-ts-contracts` | OPR.0.5.0.2 | .1 | `eta_rxncat_core` |
 | 3 | `slices/03-prfo` | OPR.0.5.0.3 | .2 | `eta_rxncat_optimize` |
 | 4 | `slices/04-ts-validator` | OPR.0.5.0.4 | .2 | `eta_rxncat_thermo` |
-| 5 | `slices/05-ts-runner` | OPR.0.5.0.5 | .3, .4 | `eta_rxncat_species_runner` |
+| 4b | `slices/14-bofill-guard` (replan 1, R29) | OPR.0.5.0.14 | .3 | `eta_rxncat_optimize` |
+| 5 | `slices/05-ts-runner` | OPR.0.5.0.5 | .3, .4, .14 | `eta_rxncat_species_runner` |
 | 6 | `slices/06-barrier` | OPR.0.5.0.6 | .5 | `eta_rxncat_species_runner` |
 | 7 | `slices/07-tier3-inputs` | OPR.0.5.0.7 | .6 | `eta_rxncat_species_runner` |
 | 8 | `slices/08-e2e-diels-alder` | OPR.0.5.0.8 | .7 | `eta_rxncat_species_runner` |
@@ -590,6 +592,7 @@ ledger; no slice creates a node. The feature is done when 13 is audited PASS wit
 | OPR.0.5.0.11 | slices/11-geometric-crosscheck | Cross-check every Tier 3 TS against geomeTRIC's TS search run as a black box (documented CLI, subprocess, same start, engine and seed Hessian) and record the comparison, reported only. |
 | OPR.0.5.0.12 | slices/12-acceptance-record | Assemble the v0.5.0 acceptance record from real per-check outcomes with pending states, measure run-to-run reproducibility to propose the regression bounds TJ sets at Phase 3, and derive the README claims. |
 | OPR.0.5.0.13 | slices/13-acceptance-verdict | After TJ's Phase 3 promotion and regression bounds, run the verdict on both recipes against the promoted fixtures and bump the version to 0.5.0 only on pass. |
+| OPR.0.5.0.14 | slices/14-bofill-guard | Make bofill_update return the Hessian unchanged when the residual or the step is exactly zero, so no bare ZeroDivisionError escapes the TS search, and test the lost-mode-on-Bofill exact-refresh recovery path. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
