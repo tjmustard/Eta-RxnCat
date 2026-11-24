@@ -1,0 +1,397 @@
+{
+  "barrier": null,
+  "case": "ts4a",
+  "checks": {
+    "tier_gates": {
+      "active_core": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "barrier_conservation": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "energy_source_consistent": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "forming_in_phase": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "forming_overlap": {
+        "measured": "fail",
+        "status": "reported",
+        "value": null
+      },
+      "identity": {
+        "measured": "reported",
+        "status": "reported"
+      },
+      "mode_count": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "ordering_ts4a_below_ts3a": {
+        "dG_dagger_1M_ts3a_kcal_mol": 7.498265973485924,
+        "dG_dagger_1M_ts4a_kcal_mol": null,
+        "status": "reported"
+      },
+      "search_converged": {
+        "measured": "fail",
+        "status": "reported"
+      },
+      "second_run_equal_payload": {
+        "measured": "pass",
+        "status": "reported"
+      },
+      "second_run_reactants_all_hits": {
+        "measured": "pass",
+        "status": "reported"
+      },
+      "second_run_ts_all_hits": {
+        "measured": "pass",
+        "status": "reported"
+      },
+      "window_dG_dagger_1M": {
+        "measured": "reported",
+        "status": "reported",
+        "value_kcal_mol": null
+      }
+    }
+  },
+  "commit_sha": "0dcd3fc3b5ee068583eef5ff9d51dc9c1f000f6c",
+  "environment": {
+    "device": "cpu",
+    "engine": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    },
+    "versions": {
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2"
+    }
+  },
+  "failed_checks": [
+    "active_core",
+    "barrier_conservation",
+    "energy_source_consistent",
+    "forming_in_phase",
+    "forming_overlap",
+    "mode_count",
+    "search_converged"
+  ],
+  "failed_reason": "ts_search_failed:max_steps",
+  "fixture": "e2e5_t3_ts4a_mapped",
+  "graft_summary": {
+    "alignment_rmsd_angstrom": [
+      0.14617540752604163,
+      0.14632705133010593
+    ],
+    "close_contacts": [
+      [],
+      []
+    ],
+    "pre_relax": {
+      "core": [
+        0,
+        3,
+        6,
+        7
+      ],
+      "final_energy_hartree": -56.93899369068,
+      "maxiter": 200,
+      "n_engine_calls": 18,
+      "n_steps": 17,
+      "optimizer": {
+        "name": "geometric",
+        "version": "1.1.1"
+      }
+    },
+    "pre_relaxed_start": {
+      "active_atom_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "charge": 0,
+      "coordinates": [
+        [
+          1.255071999793238,
+          -0.5764929999324747,
+          0.07813300060361858
+        ],
+        [
+          0.6367685199822459,
+          -0.5575489391301041,
+          1.2766416372003473
+        ],
+        [
+          -0.636920461582415,
+          -0.5574505098710588,
+          1.2767212834053974
+        ],
+        [
+          -1.2554999988825264,
+          -0.5760429994274632,
+          0.07821999349975559
+        ],
+        [
+          -0.6330339228868502,
+          -1.3058910966030777,
+          -0.8801694271794666
+        ],
+        [
+          0.6321789274641948,
+          -1.306166617724762,
+          -0.8802555934716458
+        ],
+        [
+          0.6638589992332107,
+          1.4830340022393764,
+          -0.6829320023462474
+        ],
+        [
+          -0.6633369940633976,
+          1.4837049857040971,
+          -0.6822070220260825
+        ],
+        [
+          0.0012156926834331456,
+          2.2011649470945835,
+          0.44579909634401277
+        ],
+        [
+          -2.756813917904174,
+          -0.4577295838306822,
+          0.04965233383849574
+        ],
+        [
+          2.75620902174066,
+          -0.45669491763088826,
+          0.04958421554226527
+        ],
+        [
+          1.5323454858448329,
+          1.484256441969145,
+          -1.3000648729879536
+        ],
+        [
+          -1.5325677934025619,
+          1.4854410895457457,
+          -1.2982461738075155
+        ],
+        [
+          0.0017776952771349668,
+          3.2838135874830536,
+          0.4576408244401712
+        ],
+        [
+          0.0017494609770439338,
+          1.7619107085847563,
+          1.4366139713123358
+        ],
+        [
+          3.214957076477865,
+          -0.2460914255139062,
+          -1.188395235863467
+        ],
+        [
+          3.346968735780056,
+          -1.5579947415245379,
+          0.5118561080880464
+        ],
+        [
+          3.1786086218280487,
+          0.5674505482721897,
+          0.7987741479344913
+        ],
+        [
+          -3.210332533474274,
+          -0.23297148741535487,
+          -1.1897572041859683
+        ],
+        [
+          -3.186365512529661,
+          0.5535550293706902,
+          0.8084273635737084
+        ],
+        [
+          -3.3460568106472763,
+          -1.5691492249918595,
+          0.48957395916828284
+        ]
+      ],
+      "metadata": {
+        "alignment_rmsd_angstrom": 0.14632705133010593
+      },
+      "spin_multiplicity": 1,
+      "symbols": [
+        "C",
+        "N",
+        "N",
+        "C",
+        "N",
+        "N",
+        "C",
+        "C",
+        "C",
+        "C",
+        "C",
+        "H",
+        "H",
+        "H",
+        "H",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F"
+      ]
+    },
+    "pre_relaxed_start_rmsd_to_literature_ts": {
+      "active_rmsd_angstrom": 0.057565133821439726,
+      "forming_core_rmsd_angstrom": 0.05987978580677181,
+      "full_rmsd_angstrom": 1.1237502136444233
+    },
+    "pure_graft_rmsd_to_literature_ts": {
+      "active_rmsd_angstrom": 0.046696686936151414,
+      "forming_core_rmsd_angstrom": 0.05987978475554946,
+      "full_rmsd_angstrom": 1.0832878792497633
+    }
+  },
+  "reactants": {
+    "cyclopropene": {
+      "dropped": [],
+      "ensemble_gibbs_hartree": -8.312830158120875,
+      "lowest_gibbs_hartree": -8.312830158120875,
+      "n_kept": 1
+    },
+    "tetrazine_4": {
+      "dropped": [
+        {
+          "reason": "duplicate_after_push",
+          "source_id": 0
+        },
+        {
+          "reason": "mirror_partner",
+          "source_id": 1
+        },
+        {
+          "reason": "duplicate_after_push",
+          "source_id": 7
+        }
+      ],
+      "ensemble_gibbs_hartree": -48.54307541820133,
+      "lowest_gibbs_hartree": -48.542420959122396,
+      "n_kept": 1
+    }
+  },
+  "recipe": "xtb",
+  "report_only": true,
+  "reported": {
+    "connectivity_equal_bool": null,
+    "energy_source": null,
+    "failed_reason": "ts_search_failed:max_steps",
+    "gated_on": "convergence, mode count",
+    "literature_dG_dagger_1M_kcal_mol": 7.697,
+    "literature_dG_dagger_1atm_kcal_mol": 9.591,
+    "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"
+  },
+  "reported_outcome": "failed",
+  "schema": 1,
+  "second_run_cache": {
+    "reactants": {
+      "cyclopropene": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 1,
+          "rows_created": 0
+        }
+      },
+      "tetrazine_4": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 6,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 11,
+          "rows_created": 0
+        }
+      }
+    },
+    "ts": {
+      "frequency": {
+        "cache_hits": 0,
+        "engine_calls": 0,
+        "rows_created": 0
+      },
+      "ts_opt": {
+        "cache_hits": 1,
+        "engine_calls": 0,
+        "rows_created": 0
+      }
+    }
+  },
+  "test_outcome": "report_only",
+  "thermo_config": {
+    "entropy_model": "grimme_qrrho",
+    "pressure_atm": 1.0,
+    "qrrho_alpha": 4.0,
+    "qrrho_cutoff_cm1": 100.0,
+    "qrrho_rotor_moment_kg_m2": 1e-44,
+    "standard_state_mol_l": 1.0,
+    "temperature_k": 298.15
+  },
+  "ts": {
+    "connectivity_equal_bool": null,
+    "degeneracy": null,
+    "failed_reason": "ts_search_failed:max_steps",
+    "keys": {
+      "ts_opt": "ee4862f218398f63b52aed3d0e70f4a39f4841122bea180e3dbd7a0b5001f796"
+    },
+    "metrics": {
+      "frequency": {
+        "cache_hits": 0,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "ts_opt": {
+        "cache_hits": 0,
+        "engine_calls": 125,
+        "rows_created": 1,
+        "wall_time_s": 68.19585097301751
+      }
+    },
+    "search": null,
+    "search_history": null,
+    "state": null,
+    "thermo": null,
+    "ts_id": "TS4a",
+    "validation": null
+  },
+  "window_dG_dagger_1M_kcal_mol": [
+    0.7,
+    14.7
+  ]
+}
