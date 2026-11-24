@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: validator per SPEC; G2 ≤1e-12; GFN2 TS1a_n -416.2/0.930/0.805 pass; minimum path hash-identical; 1602 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

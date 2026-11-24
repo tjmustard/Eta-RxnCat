@@ -16,8 +16,8 @@
 | OPR.0.5.0.1 | 01-starter | audited |  | 2026-11-24T04:14:24+00:00 audited |
 | OPR.0.5.0.2 | 02-ts-contracts | audited | OPR.0.5.0.1 | 2026-11-24T04:34:50+00:00 audited |
 | OPR.0.5.0.3 | 03-prfo | audited | OPR.0.5.0.2 | 2026-11-24T05:11:54+00:00 audited |
-| OPR.0.5.0.4 | 04-ts-validator | compiled | OPR.0.5.0.2 | 2026-11-24T03:49:12+00:00 compiled |
-| OPR.0.5.0.5 | 05-ts-runner | compiled | OPR.0.5.0.3, OPR.0.5.0.4 | 2026-11-24T03:49:12+00:00 compiled |
+| OPR.0.5.0.4 | 04-ts-validator | audited | OPR.0.5.0.2 | 2026-11-24T05:33:38+00:00 audited |
+| OPR.0.5.0.5 | 05-ts-runner | compiled | OPR.0.5.0.3, OPR.0.5.0.4, OPR.0.5.0.14 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.6 | 06-barrier | compiled | OPR.0.5.0.5 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.7 | 07-tier3-inputs | compiled | OPR.0.5.0.6 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.8 | 08-e2e-diels-alder | compiled | OPR.0.5.0.7 | 2026-11-24T03:49:12+00:00 compiled |
