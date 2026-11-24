@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: barrier per SPEC; Liu 19.637/17.742 recomputed; xtb E(Hessian)=E(gradient); 1640 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

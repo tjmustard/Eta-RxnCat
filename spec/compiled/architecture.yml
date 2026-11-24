@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -527,20 +527,21 @@ nodes:
     options + opt.name/opt.version), dedup and energy window, frequency per kept (energy
     + full Hessian; thermo recomputed), one imaginary-mode push then not_a_minimum,
     re-dedup by G (R53), degeneracy, mirror-partner drop, build_ensemble, incremental
-    single points (R35). OptimizationFailedError/ScfConvergenceError cached as completed
-    rows with failed_reason and dropped; other engine/optimizer input errors propagate.
-    Per-kind metrics. run_constrained_point (R42): one keyed geometry_opt row, frozen
-    atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe,
-    store) -> TSRunResult: ts_opt (key = engine options + resolved opt. TS options,
-    identity, sorted opt.forming_bonds), frequency (species key and payload), perceive_bonds,
-    validate_transition_state, ts_thermochemistry, TransitionStateRecord (degeneracy
-    1); failures cached (ts_search_failed:<reason>, scf_convergence), ts_validation_failed
-    keeps the validation; connectivity reported only; never the minimum path (N3).
-    reaction.py: ReactionSpec, reaction_free_energy at 1 M and 1 atm. report.py: deterministic
-    JSON schema 1. Tests in tests/unit/orchestrator; tests/e2e: HF1/HF2 and TJ T1/T2
-    E2E on the xtb and uma recipes (marker e2e), unit-kind regression (R54), duplicate
-    check, TJ transcription (R46); writes v0.3.0 candidates (never read back); acceptance
-    driver, gated_outcome, verdict.
+    single points (R35). Optimization/SCF failures cached with failed_reason and dropped;
+    other errors propagate. Per-kind metrics. run_constrained_point (R42): one keyed
+    geometry_opt row, frozen atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec,
+    TSRecipe, store) -> TSRunResult: ts_opt (key = engine options + resolved opt.
+    TS options, identity, sorted opt.forming_bonds), frequency (species key and payload),
+    perceive_bonds, validate_transition_state, ts_thermochemistry, TransitionStateRecord
+    (degeneracy 1); failures cached (ts_search_failed:<reason>, scf_convergence),
+    ts_validation_failed keeps the validation; connectivity reported only; never the
+    minimum path (N3). barrier.py (v0.5.0): activation_free_energy(BarrierSpec, ensembles,
+    TS) -> dE/dH/dG dagger at 1 M and 1 atm (delta_n shift); conservation from reactant
+    SMILES vs TS atoms; configs checked; degeneracy 1. reaction.py: ReactionSpec,
+    reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON schema 1.
+    Tests: tests/unit/orchestrator; tests/e2e HF1/HF2, T1/T2 on xtb and uma (marker
+    e2e), R54 regression, R46 transcription, v0.3.0 candidates (never read back),
+    acceptance verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -571,6 +572,8 @@ nodes:
     external: eta_rxncat_consumers
   - data_type: ts_run_result_and_transition_state_record
     external: eta_rxncat_consumers
+  - data_type: activation_barrier_energies
+    external: eta_rxncat_consumers
   edges:
     depends_on:
     - eta_rxncat_core
@@ -591,9 +594,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T06:09:51+00:00'
-    reviewed_by: audit:05-ts-runner
-    summary: patched description, inputs, outputs, edges.depends_on
+    reviewed_at: '2026-11-24T06:30:56+00:00'
+    reviewed_by: audit:06-barrier
+    summary: patched description, outputs
   provenance:
     last_slice: 06-barrier
 - id: eta_rxncat_mapping
