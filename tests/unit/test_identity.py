@@ -909,3 +909,189 @@ def test_v040_claims_refused_without_verdict() -> None:
     problems = check_v040_claims(readme(), record)
     assert problems and all("has no verdict" in p for p in problems)
     assert len(problems) == len(V040_CLAIMS)
+
+
+# v0.5.0 claims derived from the pre-promotion acceptance record (slice 12) ---------------------
+
+V050_RECORD = REPO / "docs" / "prd" / "v0.5.0" / "ACCEPTANCE_RESULT.json"
+V050_CASES = ("ts1a_n", "ts1b_n", "ts3a", "ts4a", "n4")
+
+
+def _v050_t3(record: dict[str, Any]) -> dict[str, Any]:
+    t3 = dict(record["fixtures"]["t3"])
+    if set(t3) != set(V050_CASES) or any(set(t3[c]) != {"xtb", "uma"} for c in t3):
+        raise KeyError("fixtures.t3 is not every case x recipe")
+    return t3
+
+
+def _v050_gates_pass(entry: dict[str, Any]) -> bool:
+    """A gated entry passed: its test passed and every gated status is ``pass``."""
+    return entry["test_outcome"] == "passed" and all(
+        g["status"] in ("pass", "reported") for g in entry["tier_gates"].values()
+    )
+
+
+def _v050_uma_all_gates(record: dict[str, Any]) -> bool:
+    """UMA: all five cases pass every gate incl. identity, window and the TS4a < TS3a ordering."""
+    t3 = _v050_t3(record)
+    return all(
+        _v050_gates_pass(t3[c]["uma"])
+        and t3[c]["uma"]["tier_gates"]["identity"]["status"] == "pass"
+        and t3[c]["uma"]["tier_gates"]["window_dG_dagger_1M"]["status"] == "pass"
+        for c in V050_CASES
+    ) and (t3["ts4a"]["uma"]["tier_gates"]["ordering_ts4a_below_ts3a"]["status"] == "pass")
+
+
+def _v050_gfn2_identity_core(record: dict[str, Any]) -> bool:
+    """GFN2: four cases pass convergence, mode count and the identity core; TS4a report-only."""
+    t3 = _v050_t3(record)
+    return (
+        all(
+            _v050_gates_pass(t3[c]["xtb"])
+            and t3[c]["xtb"]["identity_core"]["status"] == "pass"
+            and t3[c]["xtb"]["tier_gates"]["search_converged"]["status"] == "pass"
+            and t3[c]["xtb"]["tier_gates"]["mode_count"]["status"] == "pass"
+            for c in V050_CASES
+            if c != "ts4a"
+        )
+        and t3["ts4a"]["xtb"]["report_only"] is True
+    )
+
+
+def _v050_pending_promotion(record: dict[str, Any]) -> bool:
+    """Every gate passes on both recipes; the regression and the transcriptions await TJ."""
+    t3 = _v050_t3(record)
+    return (
+        "verdict" not in record
+        and _v050_uma_all_gates(record)
+        and _v050_gfn2_identity_core(record)
+        and all(
+            t3[c][r]["regression"]["status"] == "pending_promotion"
+            for c in V050_CASES
+            for r in ("xtb", "uma")
+            if (c, r) != ("ts4a", "xtb")
+        )
+        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    )
+
+
+def _v050_cross_check(record: dict[str, Any]) -> bool:
+    """The geomeTRIC cross-check ran on every case and recipe (reported, not gated)."""
+    return bool(record["fixtures"]["cross_check"]["status"] == "pass")
+
+
+def _v050_transcriptions(record: dict[str, Any]) -> bool:
+    """HF-1 sha256s and R9 hold; TJ's confirmation pending."""
+    tr = record["fixtures"]["transcriptions"]
+    return (
+        tr["sha256"]["status"] == "pass"
+        and tr["r9"]["status"] == "pass"
+        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    )
+
+
+V050_CLAIMS = (
+    (
+        "P-RFO transition-state search, active-core frequency validator and transition-state "
+        "barriers on TJ's five Tier 3 transition states; Tier 3 regression pending TJ promotion.",
+        _v050_pending_promotion,
+    ),
+    (
+        "With UMA, all five transition states pass every gate: convergence, one imaginary mode, "
+        "the active core, the TS identity and TJ's ΔG‡(1 M) window, and ΔG‡(TS4a) < ΔG‡(TS3a).",
+        _v050_uma_all_gates,
+    ),
+    (
+        "With GFN2, TS1a_n, TS1b_n, TS3a and N4 pass convergence, the mode count and the identity "
+        "core (forming-bond overlap ≥ 0.50, in phase, active-core KE ≥ 0.60); GFN2 TS4a is "
+        "report-only by TJ's decision.",
+        _v050_gfn2_identity_core,
+    ),
+    (
+        "A geomeTRIC black-box cross-check ran on every case and recipe; "
+        "it is reported, not gated.",
+        _v050_cross_check,
+    ),
+    (
+        "The six new Tier 3 structures match their recorded sha256s and reproduce Liu's energies "
+        "within 1e-4 Eh where Liu prints one; TJ's confirmation of the transcriptions is pending.",
+        _v050_transcriptions,
+    ),
+    (
+        "**v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an "
+        "active-core frequency validator; Tier 3 regression pending TJ promotion.",
+        _v050_pending_promotion,
+    ),
+)
+
+
+def check_v050_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
+    """Each v0.5.0 README claim is present and true of the record; none without a record.
+
+    A claim needs its checks ``pass``; a pending check needs the "pending TJ" wording, so a
+    settled promotion is drift too. A ``verdict`` of ``fail`` refuses every claim (R56).
+    """
+    text = " ".join(readme_text.split())
+    present = [phrase for phrase, _ in V050_CLAIMS if phrase in text]
+    if record is None:
+        return [f"README claims {p[:40]!r}… but there is no v0.5.0 record" for p in present]
+    if record.get("verdict") == "fail":
+        return [f"README claims {p[:40]!r}… but the record's verdict is fail" for p in present] or [
+            "the v0.5.0 record's verdict is fail"
+        ]
+    problems = []
+    for phrase, holds in V050_CLAIMS:
+        if phrase not in text:
+            problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
+        elif not _holds(holds, record):
+            problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
+    if "](docs/prd/v0.5.0/ACCEPTANCE_RESULT.json)" not in text:
+        problems.append(
+            "record present, but no Markdown link to docs/prd/v0.5.0/ACCEPTANCE_RESULT.json"
+        )
+    return problems
+
+
+def _v050_record() -> dict[str, Any]:
+    return dict(json.loads(V050_RECORD.read_text(encoding="utf-8")))
+
+
+def test_readme_v050_claims_match_record() -> None:
+    """Every README v0.5.0 claim is derived from (and true of) the v0.5.0 record."""
+    record = _v050_record() if V050_RECORD.is_file() else None
+    assert check_v050_claims(readme(), record) == []
+    assert project_version() == "0.4.0"
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda r: r["fixtures"]["t3"]["ts3a"]["uma"]["tier_gates"]["identity"].update(
+            status="fail"
+        ),
+        lambda r: r["fixtures"]["t3"]["n4"]["xtb"]["identity_core"].update(status="fail"),
+        lambda r: r["fixtures"]["t3"]["ts1a_n"]["xtb"]["identity_core"].update(status="missing"),
+        lambda r: r["fixtures"]["t3"]["ts1b_n"]["uma"].update(test_outcome="missing"),
+        lambda r: r["fixtures"]["t3"]["ts4a"]["xtb"].update(report_only=False),
+        lambda r: r["fixtures"]["cross_check"].update(status="missing"),
+        lambda r: r["fixtures"]["transcriptions"]["sha256"].update(status="fail"),
+        lambda r: r["fixtures"]["t3"]["ts3a"]["xtb"]["regression"].update(status="pass"),
+        lambda r: r["fixtures"]["transcription_confirmation"].update(status="pass"),
+        lambda r: r["fixtures"]["t3"].pop("n4"),
+    ],
+)
+def test_v050_claim_check_catches_drift(change: Any) -> None:
+    """A failed, missing or settled check the README words otherwise is caught."""
+    record = _v050_record()
+    change(record)
+    assert any("not what the record shows" in p for p in check_v050_claims(readme(), record))
+
+
+def test_v050_claims_refused_on_fail_or_without_record() -> None:
+    """A fail verdict refuses every claim; no record refuses any claim present."""
+    record = _v050_record()
+    record["verdict"] = "fail"
+    problems = check_v050_claims(readme(), record)
+    assert len(problems) == len(V050_CLAIMS) and all("verdict is fail" in p for p in problems)
+    assert len(check_v050_claims(readme(), None)) == len(V050_CLAIMS)
+    assert check_v050_claims("no claims here", None) == []

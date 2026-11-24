@@ -172,6 +172,22 @@ for a new one. Everything beyond it is listed under [Roadmap](#-roadmap) and is 
   and UMA recipes with TS1b_n's connectivity and junction handedness.
 - TJ confirmed the M1 atom map by promoting the graft.
 
+### Transition-state search and validation (v0.5.0, pre-release)
+
+Not released: the version is still 0.4.0 until TJ promotes the Tier 3 regression. The pre-promotion
+acceptance record ([ACCEPTANCE_RESULT.json](docs/prd/v0.5.0/ACCEPTANCE_RESULT.json)) shows:
+
+- P-RFO transition-state search, active-core frequency validator and transition-state barriers
+  on TJ's five Tier 3 transition states; Tier 3 regression pending TJ promotion.
+- With UMA, all five transition states pass every gate: convergence, one imaginary mode, the
+  active core, the TS identity and TJ's ΔG‡(1 M) window, and ΔG‡(TS4a) < ΔG‡(TS3a).
+- With GFN2, TS1a_n, TS1b_n, TS3a and N4 pass convergence, the mode count and the identity core
+  (forming-bond overlap ≥ 0.50, in phase, active-core KE ≥ 0.60); GFN2 TS4a is report-only by
+  TJ's decision.
+- A geomeTRIC black-box cross-check ran on every case and recipe; it is reported, not gated.
+- The six new Tier 3 structures match their recorded sha256s and reproduce Liu's energies within
+  1e-4 Eh where Liu prints one; TJ's confirmation of the transcriptions is pending.
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
@@ -316,7 +332,7 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
 - **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
-  frequency validator.
+  frequency validator; Tier 3 regression pending TJ promotion.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.

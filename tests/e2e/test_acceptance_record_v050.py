@@ -1,6 +1,7 @@
 """The v0.5.0 acceptance record: merge, schema check, verdict rule and bounds rule (slice 12)."""
 
 import copy
+import json
 from pathlib import Path
 from typing import Any
 
@@ -362,3 +363,33 @@ def test_command_entry_reads_summary_and_rss(tmp_path: Path) -> None:
     entry = command_entry(log, 0, 13.0, {"A": "1"}, ["pytest", "-k", "x"])
     assert entry["summary"] == "1 passed, 3 deselected in 12.50s"
     assert entry["max_rss_kbytes"] == 6912345 and entry["log"] == "run.log"
+
+
+# --- the committed record ------------------------------------------------------------------
+
+RECORD = Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.5.0" / "ACCEPTANCE_RESULT.json"
+
+
+def test_committed_record_is_valid_pre_promotion() -> None:
+    """The committed record is valid, has no verdict, and fails only on what awaits TJ (R56)."""
+    record = json.loads(RECORD.read_text(encoding="utf-8"))
+    assert record["record_schema"] == 1
+    assert check(record) == []
+    assert "verdict" not in record and "verdict_reasons" not in record
+    assert record["known_limits"] == list(KNOWN_LIMITS)
+    assert record["default_suite"]["exit_code"] == 0
+    assert record["commands"] and all(c["exit_code"] == 0 for c in record["commands"])
+    rule = record_verdict(record["fixtures"], record["default_suite"], record["commands"])
+    assert rule["verdict"] == "fail"
+    assert rule["verdict_reasons"], "a pre-promotion record awaits TJ"
+    assert all(
+        r.endswith((": pending_promotion", ": pending_confirmation"))
+        for r in rule["verdict_reasons"]
+    ), rule["verdict_reasons"]
+    assert record["fixtures"]["t3"]["ts4a"]["xtb"]["report_only"] is True
+    assert {(r, c) for r in RECIPES for c in CASES} - set(REPORT_ONLY) <= {
+        (r, c)
+        for r in RECIPES
+        for c in CASES
+        if record["reproducibility"][r][c]["status"] == "measured"
+    }

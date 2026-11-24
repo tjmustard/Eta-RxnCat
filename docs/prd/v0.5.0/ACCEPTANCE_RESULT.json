@@ -1,0 +1,2762 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and xtb",
+        "tests/e2e/test_t3_diels_alder.py",
+        "tests/e2e/test_t3_tetrazine.py",
+        "tests/e2e/test_t3_cyclobutenone.py",
+        "tests/e2e/test_t3_reproducibility.py",
+        "tests/e2e/test_accept_v050.py",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 160896,
+      "summary": "9 passed, 10 deselected in 335.80s (0:05:35)",
+      "wall_s": 336.1
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and xtb",
+        "tests/e2e/test_t3_cross_check.py",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 148252,
+      "summary": "5 passed, 6 deselected in 179.92s (0:02:59)",
+      "wall_s": 180.5
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_diels_alder.py",
+        "-k",
+        "uma-ts1a_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7032352,
+      "summary": "1 passed, 3 deselected, 15 warnings in 56.34s",
+      "wall_s": 58.8
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_diels_alder.py",
+        "-k",
+        "uma-ts1b_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6974432,
+      "summary": "1 passed, 3 deselected, 15 warnings in 54.93s",
+      "wall_s": 57.4
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_tetrazine.py",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7005844,
+      "summary": "1 passed, 1 deselected, 15 warnings in 104.01s (0:01:44)",
+      "wall_s": 106.6
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cyclobutenone.py",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6997920,
+      "summary": "1 passed, 1 deselected, 15 warnings in 55.27s",
+      "wall_s": 58.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_reproducibility.py",
+        "-k",
+        "uma-ts1a_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7014732,
+      "summary": "1 passed, 8 deselected, 15 warnings in 52.98s",
+      "wall_s": 55.5
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_reproducibility.py",
+        "-k",
+        "uma-ts1b_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6994580,
+      "summary": "1 passed, 8 deselected, 15 warnings in 60.84s (0:01:00)",
+      "wall_s": 63.3
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_reproducibility.py",
+        "-k",
+        "uma-ts3a",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6907204,
+      "summary": "1 passed, 8 deselected, 15 warnings in 77.32s (0:01:17)",
+      "wall_s": 80.2
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_reproducibility.py",
+        "-k",
+        "uma-ts4a",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6982620,
+      "summary": "1 passed, 8 deselected, 15 warnings in 83.91s (0:01:23)",
+      "wall_s": 86.3
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_reproducibility.py",
+        "-k",
+        "uma-n4",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7041476,
+      "summary": "1 passed, 8 deselected, 15 warnings in 59.32s",
+      "wall_s": 62.1
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cross_check.py",
+        "-k",
+        "uma-ts1a_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6909348,
+      "summary": "1 passed, 10 deselected, 15 warnings in 58.66s",
+      "wall_s": 61.4
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cross_check.py",
+        "-k",
+        "uma-ts1b_n",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6913624,
+      "summary": "1 passed, 10 deselected, 15 warnings in 62.86s (0:01:02)",
+      "wall_s": 65.4
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cross_check.py",
+        "-k",
+        "uma-ts3a",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6916072,
+      "summary": "1 passed, 10 deselected, 15 warnings in 62.36s (0:01:02)",
+      "wall_s": 64.8
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cross_check.py",
+        "-k",
+        "uma-ts4a",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6910604,
+      "summary": "1 passed, 10 deselected, 15 warnings in 81.32s (0:01:21)",
+      "wall_s": 83.7
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_t3_cross_check.py",
+        "-k",
+        "uma-n4",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 6937524,
+      "summary": "1 passed, 10 deselected, 15 warnings in 58.43s",
+      "wall_s": 61.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and acceptance",
+        "tests/e2e/test_t3_cross_check.py::test_t3_cross_check_fragment",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 92616,
+      "summary": "1 passed in 0.03s",
+      "wall_s": 0.5
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-m",
+        "e2e and mlip_uma",
+        "tests/e2e/test_accept_v050.py",
+        "-rA",
+        "-s"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_ACCEPTANCE_OUT": "$TMPDIR/v050-12/out (scratch)",
+        "ETA_RXNCAT_CANDIDATE_DIR": "$TMPDIR/v050-12/cand (scratch)",
+        "ETA_RXNCAT_XCHECK_DIR": "$TMPDIR/v050-12/xcheck (scratch)",
+        "ETA_RXNCAT_XTB": "$HOME/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "TMPDIR": "~/.cache/eta-rxncat-tmp",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 5406796,
+      "summary": "1 passed, 1 deselected, 2 warnings in 10.51s",
+      "wall_s": 11.8
+    }
+  ],
+  "commit_sha": "fc1965db2b1d843af81f00e1a51ae707a3333051",
+  "default_suite": {
+    "command": "uv run pytest",
+    "deselected": 164,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 1762,
+    "skipped": 0
+  },
+  "devices": {
+    "uma": "cuda",
+    "xtb": "cpu"
+  },
+  "engines": {
+    "uma": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "xtb": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    }
+  },
+  "environment": {
+    "uma": {
+      "python": "3.12.16"
+    },
+    "xtb": {
+      "python": "3.12.16"
+    }
+  },
+  "evidence": {
+    "candidate_values": "the acceptance run reruns slice 08-10 code in-process at this commit; its values stand for the candidates' (no candidate file is read, slice 12 firewall)",
+    "candidates_phase3_set": "tests/candidate_outputs/v0.5.0/ (slices 08-11), committed for TJ's Phase 3 review; never read by this record",
+    "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+    "verdict_run": "slice 13, ETA_RXNCAT_ACCEPTANCE=1, after TJ's Phase 3 promotion"
+  },
+  "fixtures": {
+    "cross_check": {
+      "gate": "every case x recipe attempted and recorded (R5); the values are reported only",
+      "geometric_version": "1.1.1",
+      "hessian_units_assumption": "geometric-optimize --help documents --hessian file+last:<path> as 'NumPy format' but states no units; the seed is eta's Cartesian Hessian in Eh/Bohr^2 (atomic units), written with numpy.savetxt (assumption, slice 11)",
+      "licence_note": "geomeTRIC 1.1.1 'BSD 3-clause Non-AI' licence: open with TJ; used only as a CLI subprocess in .venv-accept-uma, nothing vendored or imported in src/ (reported, not decided)",
+      "records": {
+        "n4.uma": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 1.1874578060771239e-05,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.00015571194255850458,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.9498338494440609,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-9": 2.1420387213806267,
+              "2-10": 2.2538200173138634
+            },
+            "forming_stretch_overlap": 0.7894465587527909,
+            "imaginary_frequency_cm1": -570.1189305577683,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 24.490003149025142
+        },
+        "n4.xtb": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 5.484432142414753e-06,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.00029876482504843677,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.9050197009331146,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-9": 2.271099523315591,
+              "2-10": 2.4394943606966972
+            },
+            "forming_stretch_overlap": 0.7627295569477601,
+            "imaginary_frequency_cm1": -306.41887256553116,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 4.175265603000298
+        },
+        "ts1a_n.uma": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": -1.2854569702906121e-05,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 1.950862416372251e-05,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.9017775987536243,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-2": 2.2935064688288693,
+              "3-5": 2.281352373920362
+            },
+            "forming_stretch_overlap": 0.7003203600245803,
+            "imaginary_frequency_cm1": -453.23403861016277,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 24.204210511990823
+        },
+        "ts1a_n.xtb": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 8.985936412083243e-06,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 5.989740803782529e-05,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.8870136720842691,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-2": 2.4050057609081157,
+              "3-5": 2.4050057608875828
+            },
+            "forming_stretch_overlap": 0.7548866789199375,
+            "imaginary_frequency_cm1": -290.423582043547,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 4.702528847963549
+        },
+        "ts1b_n.uma": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 3.573933995184706e-06,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.0005719947123733829,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.942128616529984,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-2": 2.2061806542436395,
+              "3-5": 2.2068321428830875
+            },
+            "forming_stretch_overlap": 0.7642706414127145,
+            "imaginary_frequency_cm1": -577.2971951721046,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 24.20972955401521
+        },
+        "ts1b_n.xtb": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": -1.578813744438253e-05,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.0004779459823861022,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.9232406997885538,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "1-2": 2.303847251236791,
+              "3-5": 2.303814778322075
+            },
+            "forming_stretch_overlap": 0.7709967322719329,
+            "imaginary_frequency_cm1": -392.3359371241396,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 3.1525444829603657
+        },
+        "ts3a.uma": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 0.0,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.0003096981711445641,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.9196848764781643,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "0-6": 2.19450761242938,
+              "3-7": 2.2154419774835086
+            },
+            "forming_stretch_overlap": 0.763430804573553,
+            "imaginary_frequency_cm1": -461.15212657739085,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 23.517220909008756
+        },
+        "ts3a.xtb": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": -0.14651025939567436,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 0.12289183937010095,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.26559948256587673,
+            "forming_bonds_in_phase_bool": false,
+            "forming_distances_angstrom": {
+              "0-6": 2.830459990120987,
+              "3-7": 2.831211212403695
+            },
+            "forming_stretch_overlap": 0.0003505260234132751,
+            "imaginary_frequency_cm1": -37.295672326654234,
+            "n_imaginary": 1,
+            "passed_bool": false,
+            "reasons": [
+              "active_core_fraction_below_threshold",
+              "forming_bonds_out_of_phase",
+              "forming_overlap_below_threshold",
+              "imaginary_above_cutoff"
+            ]
+          },
+          "wall_time_s": 8.230880282004364
+        },
+        "ts4a.uma": {
+          "converged_bool": true,
+          "delta_e_geometric_minus_eta_kcal_mol": 1.7408424000657965e-05,
+          "eta_failed_reason": null,
+          "exit_code": 0,
+          "heavy_atom_rmsd_angstrom": 4.13050362116485e-05,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.8618916022351454,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "0-6": 2.3016876967480204,
+              "3-7": 2.309203758152622
+            },
+            "forming_stretch_overlap": 0.8222257927153707,
+            "imaginary_frequency_cm1": -315.177059175648,
+            "n_imaginary": 1,
+            "passed_bool": true,
+            "reasons": []
+          },
+          "wall_time_s": 24.73009856499266
+        },
+        "ts4a.xtb": {
+          "converged_bool": true,
+          "eta_failed_reason": "ts_search_failed:max_steps",
+          "exit_code": 0,
+          "status": "converged",
+          "validation_at_geometric_ts": {
+            "active_core_ke_fraction": 0.8209236529372094,
+            "forming_bonds_in_phase_bool": true,
+            "forming_distances_angstrom": {
+              "0-6": 2.915921232043754,
+              "3-7": 2.9966585257596092
+            },
+            "forming_stretch_overlap": 0.19609643622494452,
+            "imaginary_frequency_cm1": -81.23834534557548,
+            "n_imaginary": 1,
+            "passed_bool": false,
+            "reasons": [
+              "forming_distance_out_of_window",
+              "forming_overlap_below_threshold"
+            ]
+          },
+          "wall_time_s": 22.48615289502777
+        }
+      },
+      "status": "pass"
+    },
+    "t3": {
+      "n4": {
+        "uma": {
+          "dG_dagger_1M_kcal_mol": 26.611408731999173,
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 28.50573717749345,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 4.042408731999174,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 6.2465801420330536e-09,
+              "delta_kcal_mol": 3.919788219620166e-06,
+              "frequency_run_energy_hartree": -424.05565670374773,
+              "gradient_run_energy_hartree": -424.0556567099943,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "all (UMA, Q-TJ3)",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 22.569,
+            "literature_dG_dagger_1atm_kcal_mol": 24.463,
+            "literature_source": "Paton et al., Angew. Chem. Int. Ed. 2011, 50, 10366, DOI 10.1002/anie.201103998, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.018707377633502626,
+              "forming_core_rmsd_angstrom": 0.0216170519482697,
+              "full_rmsd_angstrom": 0.017537791091828247
+            },
+            "search_counts": {
+              "n_gradient_calls": 5,
+              "n_hessian_calls": 1,
+              "n_hessian_refreshes": 0,
+              "n_rejected_steps": 0,
+              "n_steps": 4
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9498889769426676,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-9": 2.1421533490744644,
+                "2-10": 2.2535228155719342
+              },
+              "forming_stretch_overlap": 0.7895971186698615,
+              "imaginary_frequency_cm1": -570.1964247572281
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclobutenone": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "status": "reported",
+              "value": 0.7895971186698615
+            },
+            "identity": {
+              "status": "pass"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "pass",
+              "value_kcal_mol": 26.611408731999173
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            15.6,
+            29.6
+          ]
+        },
+        "xtb": {
+          "dG_dagger_1M_kcal_mol": 13.657678522119426,
+          "failed_checks": [],
+          "identity_core": {
+            "parts": {
+              "active_core": "pass",
+              "forming_in_phase": "pass",
+              "forming_overlap": "pass"
+            },
+            "status": "pass"
+          },
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 15.552006967613705,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": -8.911321477880573,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 0.0,
+              "delta_kcal_mol": 0.0,
+              "frequency_run_energy_hartree": -28.30259758066,
+              "gradient_run_energy_hartree": -28.30259758066,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "convergence, mode count",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 22.569,
+            "literature_dG_dagger_1atm_kcal_mol": 24.463,
+            "literature_source": "Paton et al., Angew. Chem. Int. Ed. 2011, 50, 10366, DOI 10.1002/anie.201103998, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.06091187932469827,
+              "forming_core_rmsd_angstrom": 0.0663403409723148,
+              "full_rmsd_angstrom": 0.08144461005325883
+            },
+            "search_counts": {
+              "n_gradient_calls": 12,
+              "n_hessian_calls": 3,
+              "n_hessian_refreshes": 2,
+              "n_rejected_steps": 1,
+              "n_steps": 9
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9050738761073341,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-9": 2.270906159494853,
+                "2-10": 2.4396664808646507
+              },
+              "forming_stretch_overlap": 0.762794312885003,
+              "imaginary_frequency_cm1": -306.48277482705157
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclobutenone": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "pass"
+            },
+            "forming_overlap": {
+              "status": "pass",
+              "value": 0.762794312885003
+            },
+            "identity": {
+              "status": "reported"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "reported",
+              "value_kcal_mol": 13.657678522119426
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            15.6,
+            29.6
+          ]
+        }
+      },
+      "ts1a_n": {
+        "uma": {
+          "dG_dagger_1M_kcal_mol": 19.58190892861131,
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 21.476237374105587,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 1.8399089286113082,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 8.175675247912295e-09,
+              "delta_kcal_mol": 5.130313674928149e-06,
+              "frequency_run_energy_hartree": -310.6723359933382,
+              "gradient_run_energy_hartree": -310.6723360015139,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "all (UMA, Q-TJ3)",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 17.742,
+            "literature_dG_dagger_1atm_kcal_mol": 19.637,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.020963666721979038,
+              "forming_core_rmsd_angstrom": 0.0248528537285031,
+              "full_rmsd_angstrom": 0.022722126878678094
+            },
+            "search_counts": {
+              "n_gradient_calls": 5,
+              "n_hessian_calls": 1,
+              "n_hessian_refreshes": 0,
+              "n_rejected_steps": 0,
+              "n_steps": 4
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9018047156154839,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-2": 2.2935222293349993,
+                "3-5": 2.2813779279375432
+              },
+              "forming_stretch_overlap": 0.700390463875549,
+              "imaginary_frequency_cm1": -453.2180391725082
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "status": "reported",
+              "value": 0.700390463875549
+            },
+            "identity": {
+              "status": "pass"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "pass",
+              "value_kcal_mol": 19.58190892861131
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            10.7,
+            24.7
+          ]
+        },
+        "xtb": {
+          "dG_dagger_1M_kcal_mol": 12.935008635744673,
+          "failed_checks": [],
+          "identity_core": {
+            "parts": {
+              "active_core": "pass",
+              "forming_in_phase": "pass",
+              "forming_overlap": "pass"
+            },
+            "status": "pass"
+          },
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 14.829337081238952,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": -4.806991364255328,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 0.0,
+              "delta_kcal_mol": 0.0,
+              "frequency_run_energy_hartree": -22.05931044712,
+              "gradient_run_energy_hartree": -22.05931044712,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "convergence, mode count",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 17.742,
+            "literature_dG_dagger_1atm_kcal_mol": 19.637,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.033128215094460435,
+              "forming_core_rmsd_angstrom": 0.03551014289955383,
+              "full_rmsd_angstrom": 0.05530040977125935
+            },
+            "search_counts": {
+              "n_gradient_calls": 8,
+              "n_hessian_calls": 2,
+              "n_hessian_refreshes": 1,
+              "n_rejected_steps": 0,
+              "n_steps": 6
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.8869361511244084,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-2": 2.405061914480824,
+                "3-5": 2.4050619144806715
+              },
+              "forming_stretch_overlap": 0.7548184025547178,
+              "imaginary_frequency_cm1": -290.28467043942595
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "pass"
+            },
+            "forming_overlap": {
+              "status": "pass",
+              "value": 0.7548184025547178
+            },
+            "identity": {
+              "status": "reported"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "reported",
+              "value_kcal_mol": 12.935008635744673
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            10.7,
+            24.7
+          ]
+        }
+      },
+      "ts1b_n": {
+        "uma": {
+          "dG_dagger_1M_kcal_mol": 29.094293379715733,
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 30.98862182521001,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 3.195293379715732,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": -7.900041509856237e-09,
+              "delta_kcal_mol": -4.957350892926546e-06,
+              "frequency_run_energy_hartree": -350.0008501319019,
+              "gradient_run_energy_hartree": -350.0008501240019,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "all (UMA, Q-TJ3)",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 25.899,
+            "literature_dG_dagger_1atm_kcal_mol": 27.793,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.01597579358411357,
+              "forming_core_rmsd_angstrom": 0.017167412968412118,
+              "full_rmsd_angstrom": 0.5497967107019653
+            },
+            "search_counts": {
+              "n_gradient_calls": 11,
+              "n_hessian_calls": 3,
+              "n_hessian_refreshes": 2,
+              "n_rejected_steps": 1,
+              "n_steps": 8
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9421064561080172,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-2": 2.206683611395963,
+                "3-5": 2.2066306274402683
+              },
+              "forming_stretch_overlap": 0.76422903218864,
+              "imaginary_frequency_cm1": -577.1595513585747
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclobutene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "status": "reported",
+              "value": 0.76422903218864
+            },
+            "identity": {
+              "status": "pass"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "pass",
+              "value_kcal_mol": 29.094293379715733
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            20.0,
+            34.0
+          ]
+        },
+        "xtb": {
+          "dG_dagger_1M_kcal_mol": 18.444842845438163,
+          "failed_checks": [],
+          "identity_core": {
+            "parts": {
+              "active_core": "pass",
+              "forming_in_phase": "pass",
+              "forming_overlap": "pass"
+            },
+            "status": "pass"
+          },
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 20.33917129093244,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": -7.4541571545618375,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 0.0,
+              "delta_kcal_mol": 0.0,
+              "frequency_run_energy_hartree": -25.26211766444,
+              "gradient_run_energy_hartree": -25.26211766444,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "convergence, mode count",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 25.899,
+            "literature_dG_dagger_1atm_kcal_mol": 27.793,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.03255149796151781,
+              "forming_core_rmsd_angstrom": 0.03272205057291003,
+              "full_rmsd_angstrom": 0.5503632720559484
+            },
+            "search_counts": {
+              "n_gradient_calls": 5,
+              "n_hessian_calls": 1,
+              "n_hessian_refreshes": 0,
+              "n_rejected_steps": 0,
+              "n_steps": 4
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9232175967365083,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "1-2": 2.3035646605431364,
+                "3-5": 2.3040921610124943
+              },
+              "forming_stretch_overlap": 0.770972005424786,
+              "imaginary_frequency_cm1": -392.380946868399
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclobutene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "pass"
+            },
+            "forming_overlap": {
+              "status": "pass",
+              "value": 0.770972005424786
+            },
+            "identity": {
+              "status": "reported"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "reported",
+              "value_kcal_mol": 18.444842845438163
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            20.0,
+            34.0
+          ]
+        }
+      },
+      "ts3a": {
+        "uma": {
+          "dG_dagger_1M_kcal_mol": 22.15753968118327,
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 24.051868126677547,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 5.174539681183269,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 2.204672000516439e-09,
+              "delta_kcal_mol": 1.383452567525713e-06,
+              "frequency_run_energy_hartree": -491.573595768666,
+              "gradient_run_energy_hartree": -491.57359577087067,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "all (UMA, Q-TJ3)",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 16.983,
+            "literature_dG_dagger_1atm_kcal_mol": 18.877,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.02675017953097579,
+              "forming_core_rmsd_angstrom": 0.036069342312175484,
+              "full_rmsd_angstrom": 0.03555186576483498
+            },
+            "search_counts": {
+              "n_gradient_calls": 10,
+              "n_hessian_calls": 3,
+              "n_hessian_refreshes": 2,
+              "n_rejected_steps": 1,
+              "n_steps": 7
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.9196859832988983,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "0-6": 2.194673416327186,
+                "3-7": 2.2153960830130655
+              },
+              "forming_stretch_overlap": 0.7634846584623364,
+              "imaginary_frequency_cm1": -461.0404438183499
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              },
+              "tetrazine_3": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 7,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 11,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "status": "reported",
+              "value": 0.7634846584623364
+            },
+            "identity": {
+              "status": "pass"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "pass",
+              "value_kcal_mol": 22.15753968118327
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            10.0,
+            24.0
+          ]
+        },
+        "xtb": {
+          "dG_dagger_1M_kcal_mol": 7.498265973485924,
+          "failed_checks": [],
+          "identity_core": {
+            "parts": {
+              "active_core": "pass",
+              "forming_in_phase": "pass",
+              "forming_overlap": "pass"
+            },
+            "status": "pass"
+          },
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 9.392594418980202,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": -9.484734026514076,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 0.0,
+              "delta_kcal_mol": 0.0,
+              "frequency_run_energy_hartree": -31.60598715389,
+              "gradient_run_energy_hartree": -31.60598715389,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "convergence, mode count",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 16.983,
+            "literature_dG_dagger_1atm_kcal_mol": 18.877,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.11562019904351875,
+              "forming_core_rmsd_angstrom": 0.1346305610185026,
+              "full_rmsd_angstrom": 0.12072961366608569
+            },
+            "search_counts": {
+              "n_gradient_calls": 32,
+              "n_hessian_calls": 8,
+              "n_hessian_refreshes": 7,
+              "n_rejected_steps": 3,
+              "n_steps": 24
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.8344350026809133,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "0-6": 2.511260766161637,
+                "3-7": 2.551123885065805
+              },
+              "forming_stretch_overlap": 0.6889659464304034,
+              "imaginary_frequency_cm1": -106.87928640280818
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              },
+              "tetrazine_3": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 7,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "pass"
+            },
+            "forming_overlap": {
+              "status": "pass",
+              "value": 0.6889659464304034
+            },
+            "identity": {
+              "status": "reported"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "reported",
+              "value_kcal_mol": 7.498265973485924
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            10.0,
+            24.0
+          ]
+        }
+      },
+      "ts4a": {
+        "uma": {
+          "dG_dagger_1M_kcal_mol": 14.60030007784736,
+          "failed_checks": [],
+          "graft_summary": {
+            "alignment_rmsd_angstrom": [
+              0.14617540752604163,
+              0.14632705133010593
+            ],
+            "close_contacts": [
+              [],
+              []
+            ],
+            "pre_relax": {
+              "core": [
+                0,
+                3,
+                6,
+                7
+              ],
+              "final_energy_hartree": -1087.2017464697249,
+              "maxiter": 200,
+              "n_engine_calls": 15,
+              "n_steps": 14,
+              "optimizer": {
+                "name": "geometric",
+                "version": "1.1.1"
+              }
+            },
+            "pre_relaxed_start_rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.04439591774374345,
+              "forming_core_rmsd_angstrom": 0.059879783171639785,
+              "full_rmsd_angstrom": 1.109554185513562
+            },
+            "pure_graft_rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.046696686936151414,
+              "forming_core_rmsd_angstrom": 0.05987978475554946,
+              "full_rmsd_angstrom": 1.0832878792497633
+            }
+          },
+          "regression": {
+            "note": "the v0.5.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "connectivity_equal_bool": true,
+            "dG_dagger_1atm_kcal_mol": 16.49462852334164,
+            "delta_dG_dagger_1M_vs_literature_kcal_mol": 6.903300077847359,
+            "energy_source": {
+              "bound_kcal_mol": 0.01,
+              "delta_hartree": 7.34871719032526e-10,
+              "delta_kcal_mol": 4.611389659139466e-07,
+              "frequency_run_energy_hartree": -1087.2037793231743,
+              "gradient_run_energy_hartree": -1087.2037793239092,
+              "within_bound_bool": true
+            },
+            "failed_reason": null,
+            "gated_on": "all (UMA, Q-TJ3)",
+            "hessian_method": "finite_difference",
+            "literature_dG_dagger_1M_kcal_mol": 7.697,
+            "literature_dG_dagger_1atm_kcal_mol": 9.591,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)",
+            "rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.02642585658926033,
+              "forming_core_rmsd_angstrom": 0.036794417797726964,
+              "full_rmsd_angstrom": 1.1123996300740056
+            },
+            "search_counts": {
+              "n_gradient_calls": 7,
+              "n_hessian_calls": 2,
+              "n_hessian_refreshes": 1,
+              "n_rejected_steps": 1,
+              "n_steps": 5
+            },
+            "validation_numbers": {
+              "active_core_ke_fraction": 0.8618797948644699,
+              "forming_bonds_in_phase_bool": true,
+              "forming_distances_angstrom": {
+                "0-6": 2.3017676914803418,
+                "3-7": 2.309188961632417
+              },
+              "forming_stretch_overlap": 0.8222336251674283,
+              "imaginary_frequency_cm1": -315.1292658961202
+            }
+          },
+          "second_run_cache": {
+            "reactants": {
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              },
+              "tetrazine_4": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 7,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "active_core": {
+              "status": "pass"
+            },
+            "barrier_conservation": {
+              "status": "pass"
+            },
+            "energy_source_consistent": {
+              "status": "pass"
+            },
+            "forming_in_phase": {
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "status": "reported",
+              "value": 0.8222336251674283
+            },
+            "identity": {
+              "status": "pass"
+            },
+            "mode_count": {
+              "status": "pass"
+            },
+            "ordering_ts4a_below_ts3a": {
+              "dG_dagger_1M_ts3a_kcal_mol": 22.15753968118327,
+              "dG_dagger_1M_ts4a_kcal_mol": 14.60030007784736,
+              "status": "pass"
+            },
+            "search_converged": {
+              "status": "pass"
+            },
+            "second_run_equal_payload": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "second_run_ts_all_hits": {
+              "status": "pass"
+            },
+            "window_dG_dagger_1M": {
+              "status": "pass",
+              "value_kcal_mol": 14.60030007784736
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            0.7,
+            14.7
+          ]
+        },
+        "xtb": {
+          "dG_dagger_1M_kcal_mol": null,
+          "failed_checks": [
+            "active_core",
+            "barrier_conservation",
+            "energy_source_consistent",
+            "forming_in_phase",
+            "forming_overlap",
+            "mode_count",
+            "search_converged"
+          ],
+          "failed_reason": "ts_search_failed:max_steps",
+          "graft_summary": {
+            "alignment_rmsd_angstrom": [
+              0.14617540752604163,
+              0.14632705133010593
+            ],
+            "close_contacts": [
+              [],
+              []
+            ],
+            "pre_relax": {
+              "core": [
+                0,
+                3,
+                6,
+                7
+              ],
+              "final_energy_hartree": -56.93899369068,
+              "maxiter": 200,
+              "n_engine_calls": 18,
+              "n_steps": 17,
+              "optimizer": {
+                "name": "geometric",
+                "version": "1.1.1"
+              }
+            },
+            "pre_relaxed_start_rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.057565133821439726,
+              "forming_core_rmsd_angstrom": 0.05987978580677181,
+              "full_rmsd_angstrom": 1.1237502136444233
+            },
+            "pure_graft_rmsd_to_literature_ts": {
+              "active_rmsd_angstrom": 0.046696686936151414,
+              "forming_core_rmsd_angstrom": 0.05987978475554946,
+              "full_rmsd_angstrom": 1.0832878792497633
+            }
+          },
+          "regression": {
+            "note": "report-only pair (R32)",
+            "status": "reported"
+          },
+          "report_only": true,
+          "reported": {
+            "connectivity_equal_bool": null,
+            "energy_source": null,
+            "failed_reason": "ts_search_failed:max_steps",
+            "gated_on": "convergence, mode count",
+            "literature_dG_dagger_1M_kcal_mol": 7.697,
+            "literature_dG_dagger_1atm_kcal_mol": 9.591,
+            "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"
+          },
+          "reported_outcome": "failed",
+          "second_run_cache": {
+            "reactants": {
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              },
+              "tetrazine_4": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 6,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 11,
+                  "rows_created": 0
+                }
+              }
+            },
+            "ts": {
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 0,
+                "rows_created": 0
+              },
+              "ts_opt": {
+                "cache_hits": 1,
+                "engine_calls": 0,
+                "rows_created": 0
+              }
+            }
+          },
+          "test_outcome": "report_only",
+          "tier_gates": {
+            "active_core": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "barrier_conservation": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "energy_source_consistent": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "forming_in_phase": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "forming_overlap": {
+              "measured": "fail",
+              "status": "reported",
+              "value": null
+            },
+            "identity": {
+              "measured": "reported",
+              "status": "reported"
+            },
+            "mode_count": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "ordering_ts4a_below_ts3a": {
+              "dG_dagger_1M_ts3a_kcal_mol": 7.498265973485924,
+              "dG_dagger_1M_ts4a_kcal_mol": null,
+              "status": "reported"
+            },
+            "search_converged": {
+              "measured": "fail",
+              "status": "reported"
+            },
+            "second_run_equal_payload": {
+              "measured": "pass",
+              "status": "reported"
+            },
+            "second_run_reactants_all_hits": {
+              "measured": "pass",
+              "status": "reported"
+            },
+            "second_run_ts_all_hits": {
+              "measured": "pass",
+              "status": "reported"
+            },
+            "window_dG_dagger_1M": {
+              "measured": "reported",
+              "status": "reported",
+              "value_kcal_mol": null
+            }
+          },
+          "window_dG_dagger_1M_kcal_mol": [
+            0.7,
+            14.7
+          ]
+        }
+      }
+    },
+    "transcription_confirmation": {
+      "note": "TJ confirms the six transcriptions at Phase 3 (TJ A3)",
+      "status": "pending_confirmation"
+    },
+    "transcriptions": {
+      "r9": {
+        "bound_hartree": 0.0001,
+        "rows": {
+          "3_dimethyltetrazine": {
+            "E_pyscf_hartree": -374.8096524937,
+            "delta_vs_literature_hartree": -8.249e-05
+          },
+          "4_bis_cf3_tetrazine": {
+            "E_pyscf_hartree": -970.0570537571,
+            "delta_vs_literature_hartree": -6.176e-05
+          },
+          "5_cyclopropene": {
+            "E_pyscf_hartree": -116.562557745,
+            "delta_vs_literature_hartree": -5.745e-06
+          },
+          "TS1a_n": {
+            "E_pyscf_hartree": -310.5591789251,
+            "delta_vs_literature_hartree": -2.493e-05
+          },
+          "TS3a": {
+            "E_pyscf_hartree": -491.3668527636,
+            "delta_vs_literature_hartree": -2.676e-05
+          },
+          "TS4a": {
+            "E_pyscf_hartree": -1086.6276171274,
+            "delta_vs_literature_hartree": -2.213e-05
+          }
+        },
+        "source": "missions/release-0.5.0/slices/07-tier3-inputs/proof/01-qa.md, MR5 R9 table (auditor rerun through test_r9_pyscf_reproduces_liu_energy, cuda, M06-2X/6-31G(d) cartesian basis, R30)",
+        "status": "pass",
+        "transcribed": true
+      },
+      "sha256": {
+        "files": {
+          "3_dimethyltetrazine.xyz": {
+            "expected": "e42ed53adaa7bc3a9fe542d88cafb632d4351c3e419e9b2b3b3b961744a7662d",
+            "observed": "e42ed53adaa7bc3a9fe542d88cafb632d4351c3e419e9b2b3b3b961744a7662d"
+          },
+          "4_bis_cf3_tetrazine.xyz": {
+            "expected": "174c23d2c794196f7d1fa5367529fe623e1529007bab76cb32b9139816e92f74",
+            "observed": "174c23d2c794196f7d1fa5367529fe623e1529007bab76cb32b9139816e92f74"
+          },
+          "TS3a.xyz": {
+            "expected": "6bf308b6846732718499d2370f355116a849a232f476c27a026dafb5ab1ea1b4",
+            "observed": "6bf308b6846732718499d2370f355116a849a232f476c27a026dafb5ab1ea1b4"
+          },
+          "TS4a.xyz": {
+            "expected": "b00f6a874efd2b30112e34d2cb16892923f73b756e7bdbca4a2f6583b4bf008c",
+            "observed": "b00f6a874efd2b30112e34d2cb16892923f73b756e7bdbca4a2f6583b4bf008c"
+          },
+          "TS_N4.xyz": {
+            "expected": "cf7e45014bdab5971b2c993da3f2d5125ce744a8def5bda64998e047dc3dc46f",
+            "observed": "cf7e45014bdab5971b2c993da3f2d5125ce744a8def5bda64998e047dc3dc46f"
+          },
+          "cyclobutenone.xyz": {
+            "expected": "c489e5124f42895bb0408f127aa10d51db70ccfbd72f4cf5c929c10052f4f30c",
+            "observed": "c489e5124f42895bb0408f127aa10d51db70ccfbd72f4cf5c929c10052f4f30c"
+          }
+        },
+        "status": "pass"
+      }
+    }
+  },
+  "hardware": {
+    "flags": [],
+    "gpu": {
+      "compute_capability": "12.0",
+      "free_vram_bytes": 6593970176,
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "total_vram_bytes": 8073248768,
+      "total_vram_gib": 7.52
+    },
+    "gpu4pyscf": {
+      "installed": true,
+      "version": "1.9.2"
+    },
+    "notes": [],
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "python_version": "3.12.16",
+    "report_schema": 1,
+    "torch": {
+      "cuda_available": true,
+      "cuda_version": "12.9",
+      "installed": true,
+      "version": "2.13.0+cu129"
+    },
+    "vram_budget_bytes": 6979321856,
+    "vram_budget_gib": 6.5
+  },
+  "known_limits": [
+    "GFN2 TS4a is report-only (TJ Q-TJ4 A, mission R32): from the grafted, pre-relaxed start GFN2 finds no converged TS of this reaction; it is recorded as measured and never gated",
+    "on GFN2 the forming-distance window of the identity check, ΔG‡ and the TS4a < TS3a ordering are reported, not gated (TJ Q-TJ3 A as amended by Q-TJ4 A, mission R4/R32)",
+    "an xtb crash (exit 128) inside a TS search raises EngineError out of run_transition_state instead of a cached failed_reason; a v0.6.0+ robustness item (mission R32), not built"
+  ],
+  "logs": {
+    "uma_driver.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 2 warnings in 10.51s"
+    },
+    "uma_repro_n4.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 8 deselected, 15 warnings in 59.32s"
+    },
+    "uma_repro_ts1a_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 8 deselected, 15 warnings in 52.98s"
+    },
+    "uma_repro_ts1b_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 8 deselected, 15 warnings in 60.84s (0:01:00)"
+    },
+    "uma_repro_ts3a.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 8 deselected, 15 warnings in 77.32s (0:01:17)"
+    },
+    "uma_repro_ts4a.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 8 deselected, 15 warnings in 83.91s (0:01:23)"
+    },
+    "uma_t3_n4.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 15 warnings in 55.27s"
+    },
+    "uma_t3_tetrazine.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 15 warnings in 104.01s (0:01:44)"
+    },
+    "uma_t3_ts1a_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected, 15 warnings in 56.34s"
+    },
+    "uma_t3_ts1b_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected, 15 warnings in 54.93s"
+    },
+    "uma_xcheck_n4.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 10 deselected, 15 warnings in 58.43s"
+    },
+    "uma_xcheck_ts1a_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 10 deselected, 15 warnings in 58.66s"
+    },
+    "uma_xcheck_ts1b_n.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 10 deselected, 15 warnings in 62.86s (0:01:02)"
+    },
+    "uma_xcheck_ts3a.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 10 deselected, 15 warnings in 62.36s (0:01:02)"
+    },
+    "uma_xcheck_ts4a.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 10 deselected, 15 warnings in 81.32s (0:01:21)"
+    },
+    "xcheck_fragment.log": {
+      "exit_code": 0,
+      "summary": "1 passed in 0.03s"
+    },
+    "xtb_cross_check.log": {
+      "exit_code": 0,
+      "summary": "5 passed, 6 deselected in 179.92s (0:02:59)"
+    },
+    "xtb_t3_repro_driver.log": {
+      "exit_code": 0,
+      "summary": "9 passed, 10 deselected in 335.80s (0:05:35)"
+    }
+  },
+  "proposed_regression_bounds": {
+    "decided_by": "TJ at Phase 3",
+    "recipes": {
+      "uma": {
+        "abs_delta_dG_dagger_1M_kcal_mol": {
+          "basis": "ten_times_measured_max",
+          "measured_max": 0.03478040225696333,
+          "measured_max_case": "ts3a",
+          "proposed": 0.3478040225696333,
+          "statement": "measured max 0.0348 (ts3a) exceeds 1/10 of TJ's 0.01: proposing 10x the measured maximum, 0.348, for TJ to decide",
+          "tj_bound": 0.01
+        },
+        "abs_delta_ts_energy_hartree": {
+          "basis": "tj_bound",
+          "measured_max": 4.3909665237151785e-08,
+          "measured_max_case": "ts1a_n",
+          "proposed": 1e-05,
+          "statement": "measured max 4.39e-08 <= 1/10 of TJ's 1e-05: TJ's bound",
+          "tj_bound": 1e-05
+        },
+        "cases_measured": [
+          "n4",
+          "ts1a_n",
+          "ts1b_n",
+          "ts3a",
+          "ts4a"
+        ],
+        "cases_not_measured": {},
+        "heavy_rmsd_angstrom": {
+          "basis": "tj_bound",
+          "measured_max": 3.471309786003978e-07,
+          "measured_max_case": "ts3a",
+          "proposed": 0.01,
+          "statement": "measured max 3.47e-07 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        }
+      },
+      "xtb": {
+        "abs_delta_dG_dagger_1M_kcal_mol": {
+          "basis": "tj_bound",
+          "measured_max": 0.0,
+          "measured_max_case": "ts1a_n",
+          "proposed": 0.01,
+          "statement": "measured max 0 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        },
+        "abs_delta_ts_energy_hartree": {
+          "basis": "tj_bound",
+          "measured_max": 0.0,
+          "measured_max_case": "ts1a_n",
+          "proposed": 1e-05,
+          "statement": "measured max 0 <= 1/10 of TJ's 1e-05: TJ's bound",
+          "tj_bound": 1e-05
+        },
+        "cases_measured": [
+          "n4",
+          "ts1a_n",
+          "ts1b_n",
+          "ts3a"
+        ],
+        "cases_not_measured": {
+          "ts4a": "GFN2 TS4a is report-only (R32): no converged TS of this reaction to reproduce, so it was not rerun"
+        },
+        "heavy_rmsd_angstrom": {
+          "basis": "tj_bound",
+          "measured_max": 9.791246743253677e-17,
+          "measured_max_case": "ts1b_n",
+          "proposed": 0.01,
+          "statement": "measured max 9.79e-17 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        }
+      }
+    },
+    "rule": "propose TJ's bound only if every measured difference of that recipe is <= 1/10 of it; otherwise propose 10x the measured maximum (slice 12 SPEC; the numeric bounds are TJ's, v0.3.0 R1 'R1. A')"
+  },
+  "record_schema": 1,
+  "reported_notes": {
+    "geometric_hessian_units": "the cross-check seeds geometric-optimize with eta's Cartesian Hessian in Eh/Bohr^2; --help gives the file format but no units, so the units are an assumption (slice 11)",
+    "geometric_licence": "geomeTRIC 1.1.1 is 'BSD 3-clause Non-AI'; the licence question is open with TJ; it runs only as a CLI subprocess in .venv-accept-uma, nothing in src/ imports it (slice 11)",
+    "gfn2_ts3a_cross_check": "on GFN2 TS3a geomeTRIC converged to a soft saddle that is not the reaction's (about -37 cm^-1, forming overlap 0.0), while eta's GFN2 TS3a passes the identity core; reported, not gated (slice 11 audit)"
+  },
+  "reproducibility": {
+    "uma": {
+      "n4": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.00013174174533503447,
+        "max_abs_delta_ts_energy_hartree": 2.7374653654987924e-08,
+        "max_heavy_rmsd_angstrom": 2.3261385575429313e-07,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 26.611408731999173,
+            "ts_energy_hartree": -424.05565670374773
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 26.611294942356686,
+            "ts_energy_hartree": -424.05565672267113
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 26.611276990253838,
+            "ts_energy_hartree": -424.0556567311224
+          }
+        },
+        "status": "measured"
+      },
+      "ts1a_n": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.00039500511776680014,
+        "max_abs_delta_ts_energy_hartree": 4.3909665237151785e-08,
+        "max_heavy_rmsd_angstrom": 1.6537761997003543e-07,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 19.58190892861131,
+            "ts_energy_hartree": -310.6723359933382
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 19.581979730350056,
+            "ts_energy_hartree": -310.6723360372479
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 19.58158472523229,
+            "ts_energy_hartree": -310.67233602052914
+          }
+        },
+        "status": "measured"
+      },
+      "ts1b_n": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.000309191607797743,
+        "max_abs_delta_ts_energy_hartree": 7.34871719032526e-10,
+        "max_heavy_rmsd_angstrom": 1.9086710404755104e-07,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 29.094293379715733,
+            "ts_energy_hartree": -350.0008501319019
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 29.09440859208322,
+            "ts_energy_hartree": -350.0008501319019
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 29.09460257132353,
+            "ts_energy_hartree": -350.00085013116706
+          }
+        },
+        "status": "measured"
+      },
+      "ts3a": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.03478040225696333,
+        "max_abs_delta_ts_energy_hartree": 2.2597816951019922e-08,
+        "max_heavy_rmsd_angstrom": 3.471309786003978e-07,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 22.15753968118327,
+            "ts_energy_hartree": -491.573595768666
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 22.192320083440233,
+            "ts_energy_hartree": -491.5735957460682
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 22.186567510492644,
+            "ts_energy_hartree": -491.5735957641648
+          }
+        },
+        "status": "measured"
+      },
+      "ts4a": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.0006798137173831265,
+        "max_abs_delta_ts_energy_hartree": 2.9579496185760945e-08,
+        "max_heavy_rmsd_angstrom": 2.5837638650938066e-07,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 14.60030007784736,
+            "ts_energy_hartree": -1087.2037793231743
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 14.599779425273844,
+            "ts_energy_hartree": -1087.2037793527538
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 14.600459238991228,
+            "ts_energy_hartree": -1087.2037793309826
+          }
+        },
+        "status": "measured"
+      }
+    },
+    "xtb": {
+      "n4": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 0.0,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 13.657678522119426,
+            "ts_energy_hartree": -28.30259758066
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 13.657678522119426,
+            "ts_energy_hartree": -28.30259758066
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 13.657678522119426,
+            "ts_energy_hartree": -28.30259758066
+          }
+        },
+        "status": "measured"
+      },
+      "ts1a_n": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 2.7755575615628914e-17,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 12.935008635744673,
+            "ts_energy_hartree": -22.05931044712
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 12.935008635744673,
+            "ts_energy_hartree": -22.05931044712
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 12.935008635744673,
+            "ts_energy_hartree": -22.05931044712
+          }
+        },
+        "status": "measured"
+      },
+      "ts1b_n": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 9.791246743253677e-17,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 18.444842845438163,
+            "ts_energy_hartree": -25.26211766444
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 18.444842845438163,
+            "ts_energy_hartree": -25.26211766444
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 18.444842845438163,
+            "ts_energy_hartree": -25.26211766444
+          }
+        },
+        "status": "measured"
+      },
+      "ts3a": {
+        "max_abs_delta_dG_dagger_1M_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 0.0,
+        "n_runs": 3,
+        "runs": {
+          "acceptance_run": {
+            "dG_dagger_1M_kcal_mol": 7.498265973485924,
+            "ts_energy_hartree": -31.60598715389
+          },
+          "fresh_store_1": {
+            "dG_dagger_1M_kcal_mol": 7.498265973485924,
+            "ts_energy_hartree": -31.60598715389
+          },
+          "fresh_store_2": {
+            "dG_dagger_1M_kcal_mol": 7.498265973485924,
+            "ts_energy_hartree": -31.60598715389
+          }
+        },
+        "status": "measured"
+      },
+      "ts4a": {
+        "reason": "GFN2 TS4a is report-only (R32): no converged TS of this reaction to reproduce, so it was not rerun",
+        "status": "n/a"
+      }
+    }
+  },
+  "run_at_utc": "2026-11-24T20:34:42+00:00"
+}
