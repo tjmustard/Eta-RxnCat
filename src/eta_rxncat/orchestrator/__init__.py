@@ -1,10 +1,11 @@
-"""The single-species stage runner, reactions and reports (v0.3.0) and the TS runner (v0.5.0).
+"""The species runner, reactions and reports (v0.3.0); the TS runner and barrier (v0.5.0).
 
 The v0.8.0 DAG comes later.
 
 TJ Q4 "C": the incremental-solvation test runs on this small runner.
 """
 
+from eta_rxncat.orchestrator.barrier import BarrierEnergies, BarrierSpec, activation_free_energy
 from eta_rxncat.orchestrator.counting import CountingEngine
 from eta_rxncat.orchestrator.reaction import (
     ReactionEnergies,
@@ -29,6 +30,8 @@ from eta_rxncat.orchestrator.species import (
 from eta_rxncat.orchestrator.ts import TSRecipe, TSRunResult, TSSpec, run_transition_state
 
 __all__ = [
+    "BarrierEnergies",
+    "BarrierSpec",
     "ENGINE_CLASSES",
     "ConstrainedPoint",
     "CountingEngine",
@@ -43,6 +46,7 @@ __all__ = [
     "TSRecipe",
     "TSRunResult",
     "TSSpec",
+    "activation_free_energy",
     "build_engine",
     "ensemble_to_payload",
     "reaction_free_energy",

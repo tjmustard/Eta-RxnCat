@@ -10,7 +10,7 @@ intent: "Add BarrierSpec and activation_free_energy: dE, dH and dG dagger at 1 M
 depends_on: [OPR.0.5.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -142,10 +142,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the code named above.
-- [ ] Task 2: `orchestrator/barrier.py`; export.
-- [ ] Task 3: `tests/unit/orchestrator/test_barrier.py`; required checks.
-- [ ] Task 4: commit; updater for node `eta_rxncat_species_runner`.
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the code named above.
+- [x] Task 2: `orchestrator/barrier.py`; export.
+- [x] Task 3: `tests/unit/orchestrator/test_barrier.py`; required checks.
+- [x] Task 4: commit; updater for node `eta_rxncat_species_runner`.
 
 ## 4. The Negative Space (Constraints)
 
