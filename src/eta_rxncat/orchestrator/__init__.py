@@ -1,4 +1,6 @@
-"""The single-species stage runner, reactions and reports (v0.3.0; the v0.8.0 DAG comes later).
+"""The single-species stage runner, reactions and reports (v0.3.0) and the TS runner (v0.5.0).
+
+The v0.8.0 DAG comes later.
 
 TJ Q4 "C": the incremental-solvation test runs on this small runner.
 """
@@ -24,6 +26,7 @@ from eta_rxncat.orchestrator.species import (
     run_constrained_point,
     run_species,
 )
+from eta_rxncat.orchestrator.ts import TSRecipe, TSRunResult, TSSpec, run_transition_state
 
 __all__ = [
     "ENGINE_CLASSES",
@@ -37,12 +40,16 @@ __all__ = [
     "SpeciesResult",
     "SpeciesSpec",
     "StageMetrics",
+    "TSRecipe",
+    "TSRunResult",
+    "TSSpec",
     "build_engine",
     "ensemble_to_payload",
     "reaction_free_energy",
     "report_text",
     "run_constrained_point",
     "run_species",
+    "run_transition_state",
     "standard_state_shift_kcal_mol",
     "write_report",
 ]

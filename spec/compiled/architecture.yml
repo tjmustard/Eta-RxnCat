@@ -184,7 +184,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -226,14 +226,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 07-acceptance-record
+    last_slice: 05-ts-runner
   review:
     reviewed_at: '2026-11-23T21:44:27+00:00'
     reviewed_by: audit:07-acceptance-record
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -272,7 +272,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: 02-ts-contracts
+    last_slice: 05-ts-runner
   review:
     reviewed_at: '2026-11-24T04:34:24+00:00'
     reviewed_by: audit:02-ts-contracts
@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -585,7 +585,7 @@ nodes:
     reviewed_by: audit:14-bofill-guard
     summary: reviewed; nothing patched
   provenance:
-    last_slice: 14-bofill-guard
+    last_slice: 05-ts-runner
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean
