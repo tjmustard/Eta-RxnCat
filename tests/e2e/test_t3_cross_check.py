@@ -7,10 +7,12 @@ reads geomeTRIC source and no geomeTRIC function is called in this process (N2, 
 is reported only (US-014, P1): disagreement is information for TJ, never a failure.
 """
 
+import gc
 import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from importlib import metadata
 from pathlib import Path
@@ -31,13 +33,7 @@ from eta_rxncat.orchestrator import TSRecipe, TSSpec, build_engine, run_transiti
 from eta_rxncat.store import ArtifactStore
 from eta_rxncat.thermo import validate_transition_state
 
-pytestmark = [
-    pytest.mark.e2e,
-    pytest.mark.slow,
-    pytest.mark.acceptance,
-    pytest.mark.xtb,
-    pytest.mark.mlip_uma,
-]
+pytestmark = [pytest.mark.e2e, pytest.mark.slow, pytest.mark.acceptance]
 
 CASES = {
     "ts1a_n": "t3_ts1a_n_unmapped.yaml",
@@ -47,6 +43,12 @@ CASES = {
     "n4": "t3_n4_unmapped.yaml",
 }
 RECIPES = ("xtb", "uma")
+RECIPE_MARKS = {"xtb": pytest.mark.xtb, "uma": pytest.mark.mlip_uma}
+XCHECK_DIR = Path(
+    os.environ.get("ETA_RXNCAT_XCHECK_DIR", str(Path(tempfile.gettempdir()) / "eta-xcheck"))
+)
+"""Per-run records (scratch, never a candidate). Runs are split per recipe and case to cut peak
+memory; ``test_t3_cross_check_fragment`` assembles the ten records into the fragment."""
 GEOMETRIC = REPO / ".venv-accept-uma" / "bin" / "geometric-optimize"
 HESSIAN_UNITS_ASSUMPTION = (
     "geometric-optimize --help documents --hessian file+last:<path> as 'NumPy format' but states "
@@ -118,6 +120,9 @@ def cross_check(case: str, recipe: str, work: Path) -> dict[str, Any]:
     start = start_state(fixture, case, recipe, work)
     seed = engine.evaluate(start, forces=False, hessian=True).hessian_hartree_per_bohr2
     np.savetxt(work / "seed.txt", np.asarray(seed))
+    # Release this process's engine while geomeTRIC's subprocess holds its own copy (peak memory).
+    del engine
+    gc.collect()
     write_xyz(work / "start.xyz", start)
     prefix = work / f"{case}.{recipe}"
     argv = [
@@ -176,6 +181,7 @@ def cross_check(case: str, recipe: str, work: Path) -> dict[str, Any]:
     record["eta_failed_reason"] = eta.failed_reason
     if not converged:
         return record
+    engine = build_engine(stage, runtime)
     final = last_frame(optim, start)
     energy = engine.evaluate(final, forces=True).energy_hartree
     hessian = engine.evaluate(final, forces=False, hessian=True).hessian_hartree_per_bohr2
@@ -199,22 +205,35 @@ def cross_check(case: str, recipe: str, work: Path) -> dict[str, Any]:
     return record
 
 
-def test_t3_cross_check(tmp_path: Path, commit_sha: str) -> None:
-    """Ten geomeTRIC TS runs, one at a time (xtb first, then UMA); every one recorded."""
-    records: dict[str, Any] = {}
-    for recipe in RECIPES:
-        for case in CASES:
-            work = tmp_path / f"{case}.{recipe}"
-            work.mkdir()
-            records[f"{case}.{recipe}"] = cross_check(case, recipe, work)
-            r = records[f"{case}.{recipe}"]
-            print(
-                f"\nXCHECK {case}.{recipe}: status {r['status']} exit {r['exit_code']} "
-                f"wall {r['wall_time_s']:.0f}s eta {r['eta_failed_reason']} "
-                f"dE {r.get('delta_e_geometric_minus_eta_kcal_mol')} "
-                f"rmsd {r.get('heavy_atom_rmsd_angstrom')} "
-                f"val {r.get('validation_at_geometric_ts')}"
-            )
+@pytest.mark.parametrize("case", list(CASES))
+@pytest.mark.parametrize("recipe", [pytest.param(r, marks=RECIPE_MARKS[r], id=r) for r in RECIPES])
+def test_t3_cross_check_case(recipe: str, case: str, tmp_path: Path) -> None:
+    """One geomeTRIC TS run for one case and recipe; its record goes to ``XCHECK_DIR``."""
+    work = tmp_path / f"{case}.{recipe}"
+    work.mkdir()
+    record = cross_check(case, recipe, work)
+    XCHECK_DIR.mkdir(parents=True, exist_ok=True)
+    (XCHECK_DIR / f"{case}.{recipe}.json").write_text(json.dumps(record), encoding="utf-8")
+    print(
+        f"\nXCHECK {case}.{recipe}: status {record['status']} exit {record['exit_code']} "
+        f"wall {record['wall_time_s']:.0f}s eta {record['eta_failed_reason']} "
+        f"dE {record.get('delta_e_geometric_minus_eta_kcal_mol')} "
+        f"rmsd {record.get('heavy_atom_rmsd_angstrom')} "
+        f"val {record.get('validation_at_geometric_ts')}"
+    )
+    assert "status" in record and "exit_code" in record
+    assert "geometric" not in sys.modules  # MR5: no geomeTRIC module in this eta process
+
+
+def test_t3_cross_check_fragment(commit_sha: str) -> None:
+    """Assemble the ten per-run records into the cross_check fragment (reported only)."""
+    records = {
+        f"{case}.{recipe}": json.loads(
+            (XCHECK_DIR / f"{case}.{recipe}.json").read_text(encoding="utf-8")
+        )
+        for recipe in RECIPES
+        for case in CASES
+    }
     payload = {
         "fragment": "cross_check",
         "commit_sha": commit_sha,
@@ -227,4 +246,4 @@ def test_t3_cross_check(tmp_path: Path, commit_sha: str) -> None:
     write(candidate_dir() / "t3_cross_check.json", payload)
     assert len(records) == 10
     assert all("status" in r and "exit_code" in r for r in records.values())
-    assert "geometric" not in sys.modules  # MR5: no geomeTRIC module in this eta process
+    assert "geometric" not in sys.modules  # MR5
