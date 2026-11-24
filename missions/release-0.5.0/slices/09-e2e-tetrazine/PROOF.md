@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: E2E rerun at C1 code: xtb 1/1 (TS4a report-only max_steps), UMA 1/1 all gates, TS4a 14.600 < TS3a 22.177; 1734 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

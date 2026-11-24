@@ -21,7 +21,7 @@
 | OPR.0.5.0.6 | 06-barrier | audited | OPR.0.5.0.5 | 2026-11-24T06:30:57+00:00 audited |
 | OPR.0.5.0.7 | 07-tier3-inputs | audited | OPR.0.5.0.6, OPR.0.5.0.15 | 2026-11-24T11:32:30+00:00 audited |
 | OPR.0.5.0.8 | 08-e2e-diels-alder | audited | OPR.0.5.0.7 | 2026-11-24T11:48:30+00:00 audited |
-| OPR.0.5.0.9 | 09-e2e-tetrazine | executing | OPR.0.5.0.8 | 2026-11-24T13:42:15+00:00 executing |
+| OPR.0.5.0.9 | 09-e2e-tetrazine | audited | OPR.0.5.0.8 | 2026-11-24T14:25:48+00:00 audited |
 | OPR.0.5.0.10 | 10-e2e-cyclobutenone | compiled | OPR.0.5.0.8 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.11 | 11-geometric-crosscheck | compiled | OPR.0.5.0.9, OPR.0.5.0.10 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.12 | 12-acceptance-record | compiled | OPR.0.5.0.11 | 2026-11-24T03:49:13+00:00 compiled |
