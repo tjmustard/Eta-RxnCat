@@ -32,14 +32,22 @@ def fake_ts(
     mode: bool = True,
     core: bool = True,
     identity: bool = True,
+    overlap: float = 0.7,
+    in_phase: bool = True,
     hits: int = 0,
     rows: int = 1,
     e_freq: float = -100.0,
     e_grad: float = -100.0,
+    stages: tuple[str, ...] = ("ts_opt", "frequency"),
 ) -> Any:
     """A stand-in TSRunResult with the attributes the gates read."""
     validation = SimpleNamespace(
-        mode_count_passed_bool=mode, active_core_passed_bool=core, identity_passed_bool=identity
+        mode_count_passed_bool=mode,
+        active_core_passed_bool=core,
+        identity_passed_bool=identity,
+        forming_stretch_overlap=overlap,
+        forming_bonds_in_phase_bool=in_phase,
+        options=SimpleNamespace(min_forming_stretch_overlap=0.5),
     )
     record = SimpleNamespace(
         thermo=SimpleNamespace(electronic_energy_hartree=e_freq),
@@ -51,6 +59,7 @@ def fake_ts(
         record=record,
         failed_reason=None,
         metrics=metrics(hits, rows),
+        keys={k: "key" for k in stages},
         as_payload=lambda: {"search": {"history": [1], "n_steps": 3}, "metrics": {}, "x": 1},
     )
 
@@ -81,21 +90,69 @@ def statuses(result: dict[str, dict[str, Any]]) -> dict[str, str]:
 
 
 def test_all_pass_on_uma() -> None:
-    """A clean UMA case inside the window passes every gate."""
+    """A clean UMA case inside the window passes every gate (the GFN2-only split is reported)."""
     first = case(fake_ts(), 17.0)
     second = case(fake_ts(hits=1, rows=0), 17.0, reactant_hits=1, reactant_rows=0)
-    assert set(statuses(gates("uma", first, second, (10.7, 24.7))).values()) == {"pass"}
+    result = statuses(gates("uma", first, second, (10.7, 24.7)))
+    assert result.pop("forming_overlap") == result.pop("forming_in_phase") == "reported"
+    assert set(result.values()) == {"pass"}
 
 
-def test_gfn2_reports_core_identity_and_window() -> None:
-    """On GFN2 the active core, identity and window are reported, never gated (Q-TJ3)."""
-    first = case(fake_ts(core=False, identity=False), 40.0)
+def test_gfn2_reports_full_identity_and_window() -> None:
+    """On GFN2 the full identity (distance window) and the dG window are reported (R32)."""
+    first = case(fake_ts(identity=False), 40.0)
     second = case(fake_ts(hits=1, rows=0), 40.0, reactant_hits=1, reactant_rows=0)
     result = statuses(gates("xtb", first, second, (10.7, 24.7)))
-    assert (
-        result["active_core"] == result["identity"] == result["window_dG_dagger_1M"] == "reported"
-    )
-    assert result["mode_count"] == result["search_converged"] == "pass"
+    assert result["identity"] == result["window_dG_dagger_1M"] == "reported"
+    others = {v for k, v in result.items() if k not in ("identity", "window_dG_dagger_1M")}
+    assert others == {"pass"}
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "gate"),
+    [
+        ({"core": False}, "active_core"),
+        ({"overlap": 0.3}, "forming_overlap"),
+        ({"in_phase": False}, "forming_in_phase"),
+    ],
+)
+def test_gfn2_gates_the_identity_core(kwargs: dict[str, Any], gate: str) -> None:
+    """R32 (TJ Q-TJ4 A): GFN2 gates KE >= 0.60, forming overlap >= 0.50 and in phase."""
+    first = case(fake_ts(**kwargs), 17.0)
+    second = case(fake_ts(hits=1, rows=0, **kwargs), 17.0, reactant_hits=1, reactant_rows=0)
+    assert statuses(gates("xtb", first, second, (10.7, 24.7)))[gate] == "fail"
+
+
+def test_uma_reports_the_split_identity_core_and_gates_the_full_identity() -> None:
+    """UMA is unchanged: full identity gated; the GFN2 overlap/phase split is reported there."""
+    first = case(fake_ts(overlap=0.3, identity=False), 17.0)
+    second = case(fake_ts(hits=1, rows=0), 17.0, reactant_hits=1, reactant_rows=0)
+    result = statuses(gates("uma", first, second, (10.7, 24.7)))
+    assert result["forming_overlap"] == result["forming_in_phase"] == "reported"
+    assert result["identity"] == "fail"
+
+
+def test_report_only_keeps_measured_statuses() -> None:
+    """GFN2 TS4a (R32): every status is reported; what was measured is kept and summarised."""
+    from t3 import reported_outcome
+
+    first = case(fake_ts(mode=False), None)
+    second = case(fake_ts(hits=1, rows=0), None, reactant_hits=1, reactant_rows=0)
+    tier = gates("xtb", first, second, (0.7, 14.7), report_only=True)
+    assert {v["status"] for v in tier.values()} == {"reported"}
+    assert tier["mode_count"]["measured"] == "fail"
+    outcome, failed = reported_outcome(tier)
+    assert outcome == "failed" and "mode_count" in failed and "search_converged" not in failed
+
+
+def test_second_run_after_a_failed_search_needs_only_the_ts_opt_hit() -> None:
+    """R32: a cached ts_opt failure row is a hit; frequency, which never ran, is not required."""
+    first = case(fake_ts(stages=("ts_opt",)), None)
+    second = case(fake_ts(hits=1, rows=0, stages=("ts_opt",)), None, 1, 0)
+    second.ts.metrics["frequency"].cache_hits = 0
+    assert statuses(gates("xtb", first, second, (0.7, 14.7)))["second_run_ts_all_hits"] == "pass"
+    extra = case(fake_ts(hits=1, rows=0), None, 1, 0)
+    assert statuses(gates("xtb", first, extra, (0.7, 14.7)))["second_run_ts_all_hits"] == "fail"
 
 
 @pytest.mark.parametrize(

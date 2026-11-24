@@ -4,6 +4,8 @@ TJ A3 "Q3. A" (dual -CF3 = two single grafts), A4 "Q4. A" (windows TS3a [10.0, 2
 [0.7, 14.7], 1 M, UMA-gated) and Q-TJ3 (GFN2 gates convergence and the mode count only). TJ's
 ordering, dG dagger(TS4a) < dG dagger(TS3a) at 1 M, is gated on UMA and reported on GFN2. The
 TS4a start is built once per recipe (grafts + core-frozen pre-relaxation) and both passes use it.
+Q-TJ4 A (mission R32): GFN2 TS4a is report-only (recorded, never gated; an EngineError on that
+pair is caught here and recorded), and GFN2 gates the identity core on TS3a.
 """
 
 from collections.abc import Callable
@@ -24,10 +26,12 @@ from t3 import (
     grafted_start,
     reactant_summary,
     reported_block,
+    reported_outcome,
     run_case,
     ts_payload,
 )
 
+from eta_rxncat.engines import EngineError
 from eta_rxncat.orchestrator import Recipe, build_engine
 
 pytestmark = [pytest.mark.e2e, pytest.mark.slow]
@@ -82,17 +86,24 @@ def test_t3_tetrazine(
     ts4a = t3("t3_ts4a_mapped.yaml")
     start, graft_summary = grafted_start(ts4a, recipe, FORMING_CORE)
 
+    report_only = {"ts3a": False, "ts4a": recipe_name == "xtb"}  # R32: GFN2 TS4a
     runs = {}
+    engine_errors: dict[str, EngineError] = {}
     for case, fixture, fixed in (("ts3a", ts3a, None), ("ts4a", ts4a, start)):
         store_path = tmp_path / f"{case}.sqlite"
-        first = run_case(fixture, recipe, recipe_name, store_path, fixed)
-        second = run_case(fixture, recipe, recipe_name, store_path, fixed)
+        try:
+            first = run_case(fixture, recipe, recipe_name, store_path, fixed)
+            second = run_case(fixture, recipe, recipe_name, store_path, fixed)
+        except EngineError as exc:
+            if not report_only[case]:
+                raise
+            engine_errors[case] = exc
+            continue
         runs[case] = (fixture, first, second)
 
-    dg = {
-        case: None if first.barrier is None else first.barrier.dG_dagger_1M_kcal_mol
-        for case, (_, first, _) in runs.items()
-    }
+    dg: dict[str, float | None] = {"ts3a": None, "ts4a": None}
+    for case, (_, first, _) in runs.items():
+        dg[case] = None if first.barrier is None else first.barrier.dG_dagger_1M_kcal_mol
     ordered = dg["ts3a"] is not None and dg["ts4a"] is not None and dg["ts4a"] < dg["ts3a"]
     ordering = {
         "status": ("pass" if ordered else "fail") if recipe_name == "uma" else "reported",
@@ -101,8 +112,33 @@ def test_t3_tetrazine(
     }
 
     payloads = {}
+    for case, exc in engine_errors.items():
+        payload = {
+            "fixture": ts4a.name,
+            "case": case,
+            "recipe": recipe_name,
+            "commit_sha": commit_sha,
+            "report_only": True,
+            "reported_outcome": "failed",
+            "failed_reason": f"engine_error:{type(exc).__name__}",
+            "engine_error_message": str(exc),
+            "failed_checks": ["engine_error"],
+            "graft_summary": graft_summary,
+            "ordering_ts4a_below_ts3a": ordering,
+            "checks": {"tier_gates": {}},
+            "test_outcome": "report_only",
+        }
+        write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
+        payloads[case] = payload
+        print(f"\nT3 {case} {recipe_name}: REPORT-ONLY engine_error {type(exc).__name__}: {exc}")
     for case, (fixture, first, second) in runs.items():
-        tier = gates(recipe_name, first, second, fixture.window_dG_dagger_1M_kcal_mol)
+        tier = gates(
+            recipe_name,
+            first,
+            second,
+            fixture.window_dG_dagger_1M_kcal_mol,
+            report_only=report_only[case],
+        )
         extra: dict[str, Any] = {}
         if case == "ts4a":
             tier["ordering_ts4a_below_ts3a"] = ordering
@@ -112,6 +148,15 @@ def test_t3_tetrazine(
         payload = candidate(
             case, recipe_name, recipe, commit_sha, fixture, first, second, tier, extra
         )
+        if report_only[case]:
+            outcome, failed = reported_outcome(tier)
+            payload.update(
+                report_only=True,
+                reported_outcome=outcome,
+                failed_reason=first.ts.failed_reason,
+                failed_checks=failed,
+                test_outcome="report_only",
+            )
         write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
         payloads[case] = payload
         print(
@@ -121,4 +166,9 @@ def test_t3_tetrazine(
         )
     print(f"\nT3 tetrazine {recipe_name}: ordering {ordering}; graft {graft_summary['pre_relax']}")
     for payload in payloads.values():
-        assert_checks_pass(payload["checks"])
+        if payload.get("report_only"):
+            # R32: GFN2 TS4a is report-only: marked so, and none of its checks is gated.
+            statuses = {v["status"] for v in payload["checks"]["tier_gates"].values()}
+            assert payload["report_only"] is True and statuses <= {"reported"}
+        else:
+            assert_checks_pass(payload["checks"])

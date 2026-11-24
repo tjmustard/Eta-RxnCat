@@ -118,11 +118,16 @@ def all_hit(result: SpeciesResult, kind: str) -> bool:
     return m.rows_created == 0 and m.cache_hits == len(result.keys[kind]) > 0
 
 
-def ts_all_hit(ts: TSRunResult) -> bool:
-    """Both TS stages were served from the store with no row created."""
-    return all(
-        ts.metrics[k].cache_hits == 1 and ts.metrics[k].rows_created == 0
-        for k in ("ts_opt", "frequency")
+def ts_all_hit(first: TSRunResult, second: TSRunResult) -> bool:
+    """G6, R32: the second run hit exactly the TS stages the first run visited, creating no row.
+
+    A cached ``ts_opt`` failure row counts as a hit; ``frequency`` is required only if it ran.
+    """
+    ran = set(first.keys)
+    return (
+        set(second.keys) == ran
+        and all(second.metrics[k].cache_hits == 1 for k in ran)
+        and all(m.rows_created == 0 for m in second.metrics.values())
     )
 
 
@@ -176,8 +181,18 @@ def gates(
     first: CaseRun,
     second: CaseRun,
     window: tuple[float, float],
+    *,
+    report_only: bool = False,
 ) -> dict[str, dict[str, Any]]:
-    """The per-recipe tier gates (Q-TJ3): status ``pass``, ``fail`` or ``reported``."""
+    """The per-recipe tier gates: status ``pass``, ``fail`` or ``reported``.
+
+    Q-TJ3 as amended by Q-TJ4 A (mission R32): both recipes gate convergence, the mode count, the
+    active core (KE >= 0.60), conservation, the energy source and the second run. GFN2 also gates
+    the identity core (forming overlap >= the validator's threshold, in phase) but reports the full
+    ``identity_passed_bool`` (it holds the distance window), the ΔG‡ window and the ordering. UMA
+    gates the full identity and the window, as before. ``report_only`` (GFN2 TS4a, R32) turns every
+    status into ``reported`` and keeps what was measured under ``measured``.
+    """
     ts = first.ts
     validation = ts.validation
     converged = ts.search is not None  # a failed search or SCF leaves no search result
@@ -189,15 +204,26 @@ def gates(
     dg = None if first.barrier is None else first.barrier.dG_dagger_1M_kcal_mol
     source = energy_source(ts)
     inside = dg is not None and window[0] <= dg <= window[1]
-    return {
+    overlap = None if validation is None else validation.forming_stretch_overlap
+    threshold = None if validation is None else validation.options.min_forming_stretch_overlap
+    result = {
         "search_converged": status(converged),
         "mode_count": status(validation is not None and validation.mode_count_passed_bool),
-        "active_core": status(validation is not None and validation.active_core_passed_bool, uma),
+        "active_core": status(validation is not None and validation.active_core_passed_bool),
+        "forming_overlap": {
+            **status(
+                overlap is not None and threshold is not None and overlap >= threshold, not uma
+            ),
+            "value": overlap,
+        },
+        "forming_in_phase": status(
+            validation is not None and validation.forming_bonds_in_phase_bool is True, not uma
+        ),
         "identity": status(validation is not None and validation.identity_passed_bool, uma),
         "window_dG_dagger_1M": {**status(inside, uma), "value_kcal_mol": dg},
         "barrier_conservation": status(first.barrier is not None and first.barrier_error is None),
         "energy_source_consistent": status(source is not None and source["within_bound_bool"]),
-        "second_run_ts_all_hits": status(ts_all_hit(second.ts)),
+        "second_run_ts_all_hits": status(ts_all_hit(first.ts, second.ts)),
         "second_run_reactants_all_hits": status(
             all(all_hit(r, k) for r in second.reactants.values() for k in REACTANT_STAGES)
         ),
@@ -205,6 +231,15 @@ def gates(
             comparable_ts(first.ts) == comparable_ts(second.ts) and first.barrier == second.barrier
         ),
     }
+    if report_only:
+        return {k: {**v, "status": "reported", "measured": v["status"]} for k, v in result.items()}
+    return result
+
+
+def reported_outcome(tier: dict[str, dict[str, Any]]) -> tuple[str, list[str]]:
+    """A report-only pair's outcome from its measured statuses: (``passed``|``failed``, names)."""
+    failed = sorted(k for k, v in tier.items() if v.get("measured") == "fail")
+    return ("failed" if failed else "passed"), failed
 
 
 def reported_block(
