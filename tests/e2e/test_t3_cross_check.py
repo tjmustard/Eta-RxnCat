@@ -20,6 +20,7 @@ from typing import Any
 
 import numpy as np
 import pytest
+from acceptance import write_fragment
 from checks import write
 from e2e_env import REPO, engine_for
 from fixtures import TSFixture, t3
@@ -245,6 +246,7 @@ def test_t3_cross_check_fragment(commit_sha: str) -> None:
         "records": records,
     }
     write(candidate_dir() / "t3_cross_check.json", payload)
+    write_fragment("t3_cross_check", "all", payload)
     assert len(records) == 10
     assert all("status" in r and "exit_code" in r for r in records.values())
     assert "geometric" not in sys.modules  # MR5

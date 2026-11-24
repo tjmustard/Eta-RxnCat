@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from acceptance import write_fragment
 from candidates import environment
 from checks import assert_checks_pass, outcome_fields, write
 from e2e_env import DEVICES, RECIPE_PARAMS
@@ -129,6 +130,7 @@ def test_t3_tetrazine(
             "test_outcome": "report_only",
         }
         write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
+        write_fragment(f"t3_{case}", recipe_name, payload)
         payloads[case] = payload
         print(f"\nT3 {case} {recipe_name}: REPORT-ONLY engine_error {type(exc).__name__}: {exc}")
     for case, (fixture, first, second) in runs.items():
@@ -158,6 +160,7 @@ def test_t3_tetrazine(
                 test_outcome="report_only",
             )
         write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
+        write_fragment(f"t3_{case}", recipe_name, payload)
         payloads[case] = payload
         print(
             f"\nT3 {case} {recipe_name}: failed_reason {first.ts.failed_reason}; "

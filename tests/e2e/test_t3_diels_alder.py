@@ -9,6 +9,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import write_fragment
 from candidates import environment
 from checks import assert_checks_pass, outcome_fields, write
 from e2e_env import DEVICES, RECIPE_PARAMS
@@ -68,6 +69,7 @@ def test_t3_diels_alder(
     }
     payload.update(outcome_fields(payload["checks"]))
     write(candidate_dir() / f"t3_{case}.{recipe_name}.json", payload)
+    write_fragment(f"t3_{case}", recipe_name, payload)
     print(
         f"\nT3 {case} {recipe_name}: failed_reason {first.ts.failed_reason}; "
         f"gates { {k: v['status'] for k, v in tier.items()} }; "

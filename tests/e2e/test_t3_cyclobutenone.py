@@ -11,6 +11,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
+from acceptance import write_fragment
 from candidates import environment
 from checks import assert_checks_pass, outcome_fields, write
 from e2e_env import DEVICES, RECIPE_PARAMS
@@ -69,6 +70,7 @@ def test_t3_cyclobutenone(
     # Paton prints no electronic energy: no literature dE dagger may appear (mission R8, HF-9).
     assert "dE_dagger" not in json.dumps(payload["reported"])
     write(candidate_dir() / f"t3_n4.{recipe_name}.json", payload)
+    write_fragment("t3_n4", recipe_name, payload)
     print(
         f"\nT3 n4 {recipe_name}: failed_reason {first.ts.failed_reason}; "
         f"gates { {k: v['status'] for k, v in tier.items()} }; "
