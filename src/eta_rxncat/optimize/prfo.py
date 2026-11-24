@@ -112,6 +112,11 @@ def bofill_update(hessian: Matrix, step: Vector, gradient_change: Vector) -> Mat
     - (r^T s) s s^T / (s^T s)^2``, ``phi = (r^T s)^2 / ((r^T r)(s^T s))`` and the update is
     ``phi H_MS + (1 - phi) H_PSB``, symmetrised. When ``|r^T s| < 1e-12 |r| |s|`` it is PSB alone.
 
+    When ``r^T r == 0`` or ``s^T s == 0`` (the computed floats) the update is the identity and
+    ``0.5 (H + H^T)`` is returned before any division (mission R29): the update is the correction
+    that makes H satisfy the secant condition ``H_new s = y``, which H already satisfies at r = 0,
+    and with s = 0 there is no step to learn from.
+
     Args:
         hessian: The current Cartesian Hessian (3N x 3N), Eh/Bohr^2.
         step: The accepted step s (3N,), Bohr.
@@ -121,6 +126,8 @@ def bofill_update(hessian: Matrix, step: Vector, gradient_change: Vector) -> Mat
     rs = float(residual @ step)
     ss = float(step @ step)
     rr = float(residual @ residual)
+    if rr == 0.0 or ss == 0.0:
+        return 0.5 * (hessian + hessian.T)
     psb = (
         hessian
         + (np.outer(residual, step) + np.outer(step, residual)) / ss

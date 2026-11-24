@@ -468,14 +468,22 @@ def test_without_forming_bonds_the_lowest_mode_is_followed() -> None:
 # --- Hessian cadence (US-004) ---------------------------------------------------------------
 
 
-def expected_calls(result: TSSearchResult, refresh_every: int) -> tuple[list[bool], list[str]]:
-    """Return the expected call log (True = Hessian) and the expected source of each step."""
+def expected_calls(
+    result: TSSearchResult, refresh_every: int, extra_exact_before: int | None = None
+) -> tuple[list[bool], list[str]]:
+    """Return the expected call log (True = Hessian) and the expected source of each step.
+
+    ``extra_exact_before`` names a step preceded by one extra exact Hessian (a lost-mode refresh).
+    """
     calls = [True]
     sources: list[str] = []
     exact = True
     accepted = 0
     last = len(result.history) - 1
     for k, step in enumerate(result.history):
+        if k == extra_exact_before:
+            calls.append(True)
+            exact = True
         sources.append("exact" if exact else "bofill")
         calls.append(False)
         if not step.accepted_bool:
@@ -782,3 +790,97 @@ def test_ts_module_imports(path: Path, banned: set[str]) -> None:
             names.add(node.module)
     hits = {name for name in names for ban in banned if ban in name.split(".")}
     assert hits == set()
+
+
+# --- Bofill zero-residual guard and lost-mode recovery (slice 14, mission R29) ----------------
+
+
+def test_bofill_zero_residual_returns_the_hessian() -> None:
+    """With y = H s (r = 0) the update is the identity, with no division (R29)."""
+    h = np.diag([1.0, 2.0, 3.0])
+    s = np.array([0.3, -0.2, 0.5])
+    y = h @ s
+    with np.errstate(all="raise"):
+        updated = bofill_update(h, s, y)
+    assert np.array_equal(updated, h)
+    np.testing.assert_allclose(updated @ s, y, rtol=0.0, atol=1e-12)
+
+
+def test_bofill_zero_step_returns_the_hessian() -> None:
+    """With s = 0 there is no step to learn from: the Hessian is returned, nothing raised."""
+    h = np.diag([1.0, 2.0, 3.0])
+    with np.errstate(all="raise"):
+        updated = bofill_update(h, np.zeros(3), np.array([0.1, -0.4, 0.2]))
+    assert np.array_equal(updated, h)
+
+
+SPREAD_6 = np.kron(
+    np.array([[1.0, 1.0], [1.0, -1.0]]) / np.sqrt(2.0),
+    np.array([[-1.0, 2.0, 2.0], [2.0, -1.0, 2.0], [2.0, 2.0, -1.0]]) / 3.0,
+)
+"""A 6 x 6 orthogonal matrix with every |entry| <= sqrt(2)/3 = 0.471."""
+
+
+def test_spread_matrix_is_orthogonal_and_flat() -> None:
+    """SPREAD_6 is orthogonal and no entry reaches 0.5."""
+    np.testing.assert_allclose(SPREAD_6 @ SPREAD_6.T, np.eye(6), atol=1e-15)
+    assert np.max(np.abs(SPREAD_6)) < 0.5
+
+
+def test_mode_lost_on_bofill_recovers_after_an_exact_refresh(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A Bofill Hessian that loses the mode triggers one exact refresh; the search recovers."""
+    import eta_rxncat.optimize.prfo as prfo
+
+    model = s1()
+    points: list[Array] = []
+    followed: list[Array] = []
+    real_update = prfo.bofill_update
+    real_choose = prfo._Search._choose_mode
+    lost_overlaps: list[float] = []
+
+    def recording(x: Array) -> tuple[float, Array, Array]:
+        points.append(x.copy())
+        return model.evaluate(x)
+
+    def spy(self: Any, x: Array, comp: Array, vals: Array, vecs: Array, *rest: Any) -> Any:
+        chosen = real_choose(self, x, comp, vals, vecs, *rest)
+        if chosen[0] >= 0:
+            followed.append(vecs[:, chosen[0]].copy())
+        return chosen
+
+    def rotating_update(hessian: Array, step: Array, gradient_change: Array) -> Array:
+        if lost_overlaps:
+            return real_update(hessian, step, gradient_change)
+        # First call: the exact Hessian's eigenvalues on a new eigenbasis in which the followed
+        # vector has overlap 1/sqrt(6) (0.408) with six eigenvectors and 0 with the rest, below
+        # min_mode_overlap 0.50, so the search must refresh exactly.
+        x = points[-1]
+        _, _, exact = model.evaluate(x)
+        values, _ = projected_eigen(x, exact)
+        c = complement(x)
+        lead = c @ (c.T @ followed[-1])
+        basis = spread_basis(x, lead / np.linalg.norm(lead), uniform_first_row(6))
+        lost_overlaps.append(float(np.max(np.abs(basis.T @ followed[-1]))))
+        rotated = basis @ np.diag(values) @ basis.T
+        return 0.5 * (rotated + rotated.T)
+
+    monkeypatch.setattr(prfo, "bofill_update", rotating_update)
+    monkeypatch.setattr(prfo._Search, "_choose_mode", spy)
+    engine = SurfaceEngine(recording)
+    result = PRFOOptimizer().find_saddle(model.state(s1_start()), engine, forming_bonds=[(0, 3)])
+
+    assert len(lost_overlaps) == 1
+    assert lost_overlaps[0] < 0.50
+    assert superposed_deviation(x_of(result.final_state), model.reference) <= 1e-4
+    _, regular_sources = expected_calls(result, 5)
+    after_first_bofill = regular_sources.index("bofill")
+    calls, sources = expected_calls(result, 5, extra_exact_before=after_first_bofill)
+    assert engine.log == calls
+    assert sum(engine.log) == sum(expected_calls(result, 5)[0]) + 1
+    assert [step.hessian_source for step in result.history] == sources
+    assert result.history[after_first_bofill].hessian_source == "exact"
+    assert result.n_hessian_calls == sum(engine.log)
+    assert result.n_hessian_refreshes == sum(engine.log) - 1
+    assert result.n_gradient_calls == len(engine.log)

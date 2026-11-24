@@ -10,7 +10,7 @@ intent: "Make bofill_update return the Hessian unchanged when the residual or th
 depends_on: [OPR.0.5.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: [src/eta_rxncat/optimize/prfo.py, "tests/unit/optimize/**", spec/compiled/architecture.yml]
@@ -158,10 +158,10 @@ needs no tuned surface parameter.
    The existing `mode_lost` test still passes; it is the other outcome (exact refresh also lost).
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read the interfaces named above.
-- [ ] Task 2: the guard and docstring in `bofill_update`.
-- [ ] Task 3: tests 2, 3 and 5 in `tests/unit/optimize/test_prfo.py`; required checks.
-- [ ] Task 4: commit; updater for node `eta_rxncat_optimize` (no glob change).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read the interfaces named above.
+- [x] Task 2: the guard and docstring in `bofill_update`.
+- [x] Task 3: tests 2, 3 and 5 in `tests/unit/optimize/test_prfo.py`; required checks.
+- [x] Task 4: commit; updater for node `eta_rxncat_optimize` (no glob change).
 
 ## 4. The Negative Space (Constraints)
 
