@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: six sha256 = HF-1 and resolve; references recomputed; R9 six reruns on cuda all <= 1e-4 (worst 8.25e-5); 1710 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

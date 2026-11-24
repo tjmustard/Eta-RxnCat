@@ -19,7 +19,7 @@
 | OPR.0.5.0.4 | 04-ts-validator | audited | OPR.0.5.0.2 | 2026-11-24T05:33:38+00:00 audited |
 | OPR.0.5.0.5 | 05-ts-runner | audited | OPR.0.5.0.3, OPR.0.5.0.4, OPR.0.5.0.14 | 2026-11-24T06:10:11+00:00 audited |
 | OPR.0.5.0.6 | 06-barrier | audited | OPR.0.5.0.5 | 2026-11-24T06:30:57+00:00 audited |
-| OPR.0.5.0.7 | 07-tier3-inputs | executed | OPR.0.5.0.6, OPR.0.5.0.15 | 2026-11-24T10:56:28+00:00 executed |
+| OPR.0.5.0.7 | 07-tier3-inputs | audited | OPR.0.5.0.6, OPR.0.5.0.15 | 2026-11-24T11:32:30+00:00 audited |
 | OPR.0.5.0.8 | 08-e2e-diels-alder | compiled | OPR.0.5.0.7 | 2026-11-24T03:49:12+00:00 compiled |
 | OPR.0.5.0.9 | 09-e2e-tetrazine | compiled | OPR.0.5.0.8 | 2026-11-24T03:49:13+00:00 compiled |
 | OPR.0.5.0.10 | 10-e2e-cyclobutenone | compiled | OPR.0.5.0.8 | 2026-11-24T03:49:13+00:00 compiled |

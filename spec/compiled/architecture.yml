@@ -510,7 +510,7 @@ nodes:
     last_slice: 04-ts-validator
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -519,9 +519,9 @@ nodes:
   - tests/candidate_outputs/v0.3.0/**
   description: >-
     eta_rxncat.orchestrator (v0.3.0; TS runner v0.5.0): species stage runner (TJ Q4
-    C), TS runner, reactions, reports. counting.py: CountingEngine counts evaluations
-    per stage kind. species.py: SpeciesSpec, Recipe, SinglePoint; ENGINE_CLASSES registry;
-    run_species caches every stage in the ArtifactStore under build_stage_key: conformer_search
+    C), TS runner, reactions. counting.py: CountingEngine counts calls per stage kind.
+    species.py: SpeciesSpec, Recipe, SinglePoint; ENGINE_CLASSES registry; run_species
+    caches every stage in the ArtifactStore under build_stage_key: conformer_search
     (0 engine calls; keyed on embedding 0, conformer options, SMILES, rdkit_version,
     seed hash), geometry_opt per pre-dedup survivor (engine options + opt. optimizer
     options + opt.name/opt.version), dedup and energy window, frequency per kept (energy
@@ -539,9 +539,9 @@ nodes:
     TS) -> dE/dH/dG dagger at 1 M and 1 atm (delta_n shift); conservation from reactant
     SMILES vs TS atoms; configs checked; degeneracy 1. reaction.py: ReactionSpec,
     reaction_free_energy at 1 M and 1 atm. report.py: deterministic JSON schema 1.
-    Tests: tests/unit/orchestrator; tests/e2e HF1/HF2, T1/T2 on xtb and uma (marker
-    e2e), R54 regression, R46 transcription, v0.3.0 candidates (never read back),
-    acceptance verdict.
+    Tests: tests/unit/orchestrator; tests/e2e HF1/HF2, T1/T2 on xtb and uma (e2e),
+    T3 TS fixtures (load_ts_fixture, 5 YAMLs; tier D, R9 PySCF gpu), R54 regression,
+    R46 transcription, v0.3.0 candidates (never read back), acceptance verdict.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -594,14 +594,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T09:04:22+00:00'
-    reviewed_by: audit:15-pyscf-cartesian-basis
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-24T11:32:07+00:00'
+    reviewed_by: audit:07-tier3-inputs
+    summary: patched description
   provenance:
     last_slice: 07-tier3-inputs
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -654,8 +654,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-24T09:04:22+00:00'
-    reviewed_by: audit:15-pyscf-cartesian-basis
+    reviewed_at: '2026-11-24T11:32:07+00:00'
+    reviewed_by: audit:07-tier3-inputs
     summary: reviewed; nothing patched
   provenance:
     last_slice: 07-tier3-inputs

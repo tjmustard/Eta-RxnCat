@@ -2,7 +2,7 @@
 id: OPR.0.5.0.7
 slice: 07-tier3-inputs
 mission: release-0.5.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-24 against scaffold (hyper_scope slice create)"
 created: "2026-11-24"
@@ -10,7 +10,7 @@ intent: "Land the Tier 3 inputs: six XYZ files re-transcribed byte-equal to reso
 depends_on: [OPR.0.5.0.6, OPR.0.5.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
