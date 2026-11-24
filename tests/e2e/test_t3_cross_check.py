@@ -73,9 +73,10 @@ which imports geomeTRIC, and this process must stay free of it (MR5)."""
 
 
 def write_xyz(path: Path, state: MolecularState) -> None:
-    """An XYZ file in Angstrom."""
+    """An XYZ file in Angstrom, fixed-point (geomeTRIC's XYZ reader refuses scientific notation)."""
     rows = "".join(
-        f"{s} {x!r} {y!r} {z!r}\n" for s, (x, y, z) in zip(state.symbols, state.coordinates)
+        f"{s} {x:.10f} {y:.10f} {z:.10f}\n"
+        for s, (x, y, z) in zip(state.symbols, state.coordinates)
     )
     path.write_text(f"{len(state.symbols)}\nstart\n{rows}", encoding="utf-8")
 
