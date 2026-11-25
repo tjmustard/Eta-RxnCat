@@ -2,7 +2,7 @@
 id: OPR.0.6.0.13
 slice: 13-hf13-pre-relax-guard
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Bound each ensemble pre-relaxation by a wall-time budget so a stalled g
 depends_on: [OPR.0.6.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]

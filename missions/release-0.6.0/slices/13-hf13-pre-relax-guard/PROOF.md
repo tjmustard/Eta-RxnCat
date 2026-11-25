@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Slice tests 38 passed; full pytest 2103 passed; 4 of 6 mutants killed (no-resend caught as a hang, no-clear survives but 300-block stress shows 0 late exceptions); UMA test_t4_mapped[uma] 1 passed exit 0 in 378.9 s (< 1300) under timeout 3600.
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
