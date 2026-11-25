@@ -2,7 +2,7 @@
 id: OPR.0.6.0.9
 slice: 09-e2e-unmapped
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Run the unmapped Cp + cyclopropene endo/exo pair with TS ensembles on G
 depends_on: [OPR.0.6.0.7, OPR.0.6.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.6.0/**", spec/compiled/architecture.yml]

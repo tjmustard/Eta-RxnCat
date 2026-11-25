@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Audit reruns at C1 cc8438f in a throwaway worktree, each behind a blocking host check: GFN2 1 passed exit 0 ddG +3.97729, UMA 1 passed exit 0 ddG +4.60162 in [2.3,6.3]; all gates pass; oracles at 8db667d green (pytest 2071 passed).
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
