@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: faces endo (+1,+1), crossover (-1,-1); 11 samples/seed core-exact, face kept, byte-deterministic; suite 1980 pass at bc243eb
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

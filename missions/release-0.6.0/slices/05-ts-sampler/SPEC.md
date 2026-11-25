@@ -2,7 +2,7 @@
 id: OPR.0.6.0.5
 slice: 05-ts-sampler
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Add a deterministic core-frozen TS conformer sampler (per-fragment ETKD
 depends_on: [OPR.0.6.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_conformers
 parent: null
 hacf_touches: ["src/eta_rxncat/conformers/**", "tests/unit/conformers/**", spec/compiled/architecture.yml]
