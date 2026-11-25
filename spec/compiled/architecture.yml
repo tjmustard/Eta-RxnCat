@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -84,29 +84,29 @@ nodes:
   - spec/compiled/architecture.yml
   description: >-
     eta_rxncat.core: frozen, extra=forbid, strict Pydantic v2 contracts and the ReactionGraph
-    loader. elements.py: Z 1-118, ATOMIC_NUMBERS. models.py: MolecularState (symbols,
-    finite Angstrom coords, StrictInt charge, multiplicity with electron parity, unique
-    active atoms, scalar metadata); Solvation (none/ddcosmo/pcm/alpb); StageConfig
-    (kind incl. v0.5.0 ts_opt, engine tag, method, basis iff pyscf, solvation pairing,
-    frozen atoms for constrained_preopt); EngineIdentity; AtomMappingSpec (disjoint
-    ordered lists, >= 3 alignment); ThermoConfig (grimme_qrrho). results.py: PotentialResult
-    (atomic units: energy, forces, symmetric Hessian with method/asymmetry, engine,
-    device, wall time, recovery_steps). thermo_models.py: ThermoAnalysisOptions; ThermoResult
-    (E, ZPE, H/G corrections, four entropy parts, sigma, is_linear, ascending frequencies,
-    imaginary/soft lists, G = E + G corr, masses_source). optimization_models.py:
-    OptimizerIdentity (geometric|prfo); OptimizationResult (converged, steps, engine
-    calls, recovery_steps). ensemble_models.py: ConformerRecord (degeneracy 1/2);
-    ConformerEnsemble (weights sum 1, lowest_index argmin G). mapping_models.py (v0.4.0):
-    GraftSpec (template mapping, 1:1 fragment_alignment, delete disjoint, core within
-    keep, product charge/multiplicity, four tolerances); GraftResult (product, index_map,
-    RMSD, ascending in-range index lists); CloseContact; JunctionVolume. ts_models.py
-    (v0.5.0, R1): FormingBond (i < j); TSStep; TSSearchResult (converged strictly
-    True, forming_bonds ascending in range, history[k].step == k, never compared);
-    TSValidationOptions (TJ A2 -20/-50/0.60; R3 overlap/distance window); TSValidation
-    (passed == three checks; reasons sorted, from TS_VALIDATION_REASONS, empty iff
-    passed); TransitionStateRecord (mode count passed, one imaginary, state == search.final_state,
-    degeneracy 1). graph.py: ReactionGraph (nodes, edges, templates, pruning). io.py:
-    YAML/JSON load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml only.
+    loader. elements.py: Z 1-118. models.py: MolecularState (symbols, finite Angstrom
+    coords, charge, multiplicity parity, active atoms); Solvation; StageConfig (kind
+    incl. ts_opt, constrained_preopt frozen atoms, basis iff pyscf); EngineIdentity;
+    AtomMappingSpec; ThermoConfig. results.py: PotentialResult (atomic units: energy,
+    forces, symmetric Hessian, engine, device, wall time). thermo_models.py: ThermoAnalysisOptions;
+    ThermoResult (E, ZPE, H/G corrections, entropy parts, frequencies, G). optimization_models.py:
+    OptimizerIdentity (geometric|prfo); OptimizationResult. ensemble_models.py: ConformerRecord;
+    ConformerEnsemble (weights sum 1). mapping_models.py (v0.4.0): GraftSpec; GraftResult;
+    CloseContact; JunctionVolume. ts_models.py (v0.5.0): FormingBond; TSStep; TSSearchResult;
+    TSValidationOptions (A2 -20/-50/0.60); TSValidation (reasons from TS_VALIDATION_REASONS);
+    TransitionStateRecord (one imaginary, degeneracy 1). graph.py: ReactionGraph (nodes,
+    edges, templates, inert free-form PruningRule; v0.6.0 optional ReactionNode.pathway
+    and typed PathwayPruningRule: ddG_dagger metric, two distinct pathways labelling
+    priority-1 nodes, required threshold > 0, prune minor priority>=2; rule ids unique
+    across both lists). selectivity_models.py (v0.6.0, R7/R8/R16-R19/R25): TSEnsembleOptions
+    (keyed sampler/dedup/window defaults); TSEnsembleMember (source seed|fragment_embed:k|perturb:k,
+    start sha256, G, degeneracy, face +-1, weight, pre-relax wall time); TSEnsembleExclusion
+    (closed reason set); TSEnsembleMerge; TSEnsemble (pathway, T, reactant_key, recipe
+    EngineIdentity; weights sum 1 within 1e-12; G_pathway xor failed_reason); PruningDecision
+    and SelectivityResult (signed ddG keyed '<b>_vs_<a>' = G_b - G_a; ratio >= 1;
+    percent 0-100; kind ee|de|regio; per_pathway PathwaySelectivity). io.py: YAML/JSON
+    load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml only (no numpy/RDKit,
+    G8).
   inputs:
   - data_type: reaction_graph_file_yaml_or_json
     external: graph_files
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.2
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,8 +177,8 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.2
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -274,12 +274,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.2
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -329,12 +329,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.2
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -388,12 +388,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.2
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -444,14 +444,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.2
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -503,14 +503,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.2
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -595,14 +595,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.2
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -655,8 +655,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-25T06:56:41+00:00'
-    reviewed_by: audit:01-starter
+    reviewed_at: '2026-11-25T07:14:13+00:00'
+    reviewed_by: audit:02-core-contracts
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.2
