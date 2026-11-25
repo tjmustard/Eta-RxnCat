@@ -242,6 +242,7 @@ def synthetic(
     )
     return SimpleNamespace(
         pre=SimpleNamespace(failed_reason=pre_reason),
+        seed_face=(1, 1),
         runs=(first, second),
         reactants=({"a": species_hit()}, {"a": species_hit()}),
     )
@@ -267,6 +268,10 @@ def test_every_gate_passes_on_a_good_run() -> None:
             synthetic(members=[member(0, "seed"), member(1, face=(1, -1))]),
             "faces_equal_the_seeds_no_face_or_engine_error",
         ),
+        (
+            synthetic(members=[member(0, "merged", face=(-1, -1)), member(1, face=(-1, -1))]),
+            "faces_equal_the_seeds_no_face_or_engine_error",
+        ),
         (synthetic(excluded=["face_mismatch"]), "faces_equal_the_seeds_no_face_or_engine_error"),
         (synthetic(excluded=["engine_error"]), "faces_equal_the_seeds_no_face_or_engine_error"),
         (synthetic(pre_reason="graft_pre_relax_timeout"), "graft_pre_relax_no_timeout"),
@@ -280,6 +285,12 @@ def test_each_gate_fails_on_its_own_defect(run: Any, gate: str) -> None:
     assert statuses(run)[gate] == "fail"
 
 
+def test_the_seed_may_have_merged_into_a_member_of_another_source() -> None:
+    """The seed's face is its own, not the face of a member named ``seed`` (it may have merged)."""
+    run = synthetic(members=[member(0, "perturb:3"), member(1, "fragment_embed:2")])
+    assert statuses(run)["faces_equal_the_seeds_no_face_or_engine_error"] == "pass"
+
+
 def test_other_exclusions_do_not_gate() -> None:
     """outside_window, connectivity_changed and a search failure are reported, not gated."""
     run = synthetic(excluded=["outside_window", "connectivity_changed", "ts_search_failed:x"])
@@ -290,6 +301,7 @@ def test_a_missing_ensemble_fails_the_gates() -> None:
     """A graft pre-relax timeout leaves no ensemble; every ensemble gate fails (never a skip)."""
     run = SimpleNamespace(
         pre=SimpleNamespace(failed_reason=TIMEOUT_REASON),
+        seed_face=None,
         runs=(None, None),
         reactants=({}, {}),
     )

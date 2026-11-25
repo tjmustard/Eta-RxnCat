@@ -30,6 +30,7 @@ from rdkit.Chem import rdMolTransforms as transforms
 from t3 import REACTANT_STAGES, all_hit, ts_recipe
 from t4 import STAGE_KINDS, exclusions_by_reason, member_gates
 
+from eta_rxncat.conformers import forming_bond_configuration
 from eta_rxncat.core import (
     AtomMappingSpec,
     GraftResult,
@@ -344,6 +345,7 @@ class FlexRun:
     barrier_error: str | None = None
     wall_time_s: tuple[float, float] = (0.0, 0.0)
     store_rows: dict[str, int] = field(default_factory=dict)
+    seed_face: tuple[int, ...] | None = None
 
 
 def reactant_specs(fixture: FlexFixture, series: FlexSeries) -> tuple[SpeciesSpec, ...]:
@@ -437,6 +439,11 @@ def run_flexible(
                 "ensemble_dG_dagger_1M_kcal_mol": seed_barrier.dG_dagger_1M_kcal_mol + shift,
                 "ensemble_correction_kcal_mol": shift,
             }
+    seed_face = None
+    if first is not None and first.seed_result.record is not None:
+        final = first.seed_result.record.state
+        pairs = sorted((min(i, j), max(i, j)) for i, j in fixture.forming_bonds)
+        seed_face = forming_bond_configuration(final, pairs, perceive_bonds(final))
     return FlexRun(
         series,
         result,
@@ -447,6 +454,7 @@ def run_flexible(
         error,
         (walls[0], walls[1]),
         rows,
+        seed_face,
     )
 
 
@@ -479,7 +487,7 @@ def gates(run: FlexRun) -> dict[str, dict[str, Any]]:
     members = [] if ensemble is None else ensemble.members
     reasons = {} if ensemble is None else exclusions_by_reason(ensemble)
     weight_sum = sum(m.weight for m in members)
-    seed_face = next((m.face for m in members if m.source == "seed"), None)
+    seed_face = None if run.seed_face is None else list(run.seed_face)
     return {
         "graft_pre_relax_no_timeout": {
             **_status(run.pre.failed_reason is None),
