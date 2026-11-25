@@ -120,3 +120,21 @@ Each ΔΔG‡ is header G arithmetic, G(exo TS) − G(endo TS), × 627.509474063
 |---|---|---|---|---|
 | TS1a_x − TS1a_n (unmapped) | −310.428509 | −310.435319 | 4.273 | +4.3 |
 | TS1b_x − TS1b_n (mapped) | −349.718879 | −349.721825 | 1.849 | +1.8 |
+
+## Tier 4 flexible-ensemble fragments (v0.6.0, slice 14; mission R29, HF-14)
+
+TJ's amended Q-RES1 B (verbatim): "Can we r-group enumerate a new TS from with a alkyl chain". The
+three files below are generated, not transcribed: 3-R-cyclopropenes (SMILES `CCC1C=C1`,
+`CCCC1C=C1`, `CCCCC1C=C1`) built with RDKit 2026.09.2 `Chem.AddHs`, then ETKDGv3 with
+`randomSeed=42`, then `MMFFOptimizeMolecule`, then the chain set all-anti with
+`rdMolTransforms.SetDihedralDeg`: the ring-H - ring C(sp3) - C-alpha - C-beta dihedral to 180°, then
+every C-C-C-C dihedral outward to 180° (the plain ETKDG conformer of n-propyl folds the chain onto
+the ring and the graft refuses it). Written once with 6 decimals by
+`tests/e2e/t4_flexible.py::write_fragment_xyz`. They graft onto `xyz/TS1a_n.xyz` (above) through
+`t4_flexible_alkyl.yaml`; the sp2 pair order of each is the lower alignment fit.
+
+| File | SMILES | Generated | sha256 |
+|---|---|---|---|
+| `xyz/r_ethyl_cyclopropene.xyz` | `CCC1C=C1` | RDKit 2026.09.2, recipe above | `ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0` |
+| `xyz/r_npropyl_cyclopropene.xyz` | `CCCC1C=C1` | RDKit 2026.09.2, recipe above | `e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56` |
+| `xyz/r_nbutyl_cyclopropene.xyz` | `CCCCC1C=C1` | RDKit 2026.09.2, recipe above | `d9d00a49a4d892ce633da4f61ea86b9f205b4d6ce98ca844c92f4460c2a7af50` |

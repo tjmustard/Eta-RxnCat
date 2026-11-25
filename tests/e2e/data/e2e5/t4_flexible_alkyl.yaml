@@ -1,0 +1,59 @@
+# Tier 4 flexible-ensemble fixture (v0.6.0, slice 14): an alkyl R-group series on TS1a_n.
+# TJ's amended Q-RES1 B (verbatim): "Can we r-group enumerate a new TS from with a alkyl chain".
+# R = ethyl, n-propyl, n-butyl on the cyclopropene CH2 of TS1a_n; eta's existing graft; core-frozen
+# pre-relax (inside the HF-13 guard), then the v0.6.0 TS ensemble on GFN2 and UMA. Indices 0-based.
+# The sp2 order of each R is the one with the lower alignment RMSD (HF-14), as literal indices.
+# expected_members are resolve's measured counts (replan 4), stated before the run; only >= 2 is
+# gated. Fragment sources: SOURCES.md.
+schema: 1
+fixture: e2e5_t4_flexible_alkyl
+template:
+  xyz: xyz/TS1a_n.xyz
+  active_atom_indices: [0, 1, 2, 3, 4, 5]
+  keep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17]
+  delete: [16]
+  alignment: [7, 2, 3, 17]
+core: [0, 1, 2, 3, 4, 5]
+forming_bonds: [[1, 2], [3, 5]]
+pre_relax: {maxiter: 200}
+temperature_k: 298.15
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+gates:
+  min_distinct_members: 2
+  weights_sum_tolerance: 1.0e-12
+series:
+  - r_group: ethyl
+    smiles: CCC1C=C1
+    fragment_xyz: xyz/r_ethyl_cyclopropene.xyz
+    sha256: ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0
+    ring_sp3: 2
+    sp2_order: [3, 4]
+    ring_h: 10
+    fragment_delete: [11, 12]
+    expected_members: 3
+  - r_group: npropyl
+    smiles: CCCC1C=C1
+    fragment_xyz: xyz/r_npropyl_cyclopropene.xyz
+    sha256: e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56
+    ring_sp3: 3
+    sp2_order: [5, 4]
+    ring_h: 13
+    fragment_delete: [14, 15]
+    expected_members: 4
+  - r_group: nbutyl
+    smiles: CCCCC1C=C1
+    fragment_xyz: xyz/r_nbutyl_cyclopropene.xyz
+    sha256: d9d00a49a4d892ce633da4f61ea86b9f205b4d6ce98ca844c92f4460c2a7af50
+    ring_sp3: 4
+    sp2_order: [6, 5]
+    ring_h: 16
+    fragment_delete: [17, 18]
+    expected_members: 5
