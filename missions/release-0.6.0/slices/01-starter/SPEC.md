@@ -77,7 +77,7 @@ Context the builder needs:
       saved in the proof).
 - [x] Task 3: `.ruff.toml` gate file.
 - [x] Task 4: `DISCREPANCIES.md` DV-01…DV-09; PD-010 status.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_scaffold`).
+- [x] Task 5: commit; updater once (node `eta_rxncat_scaffold`).
 
 ## 4. The Negative Space (Constraints)
 
