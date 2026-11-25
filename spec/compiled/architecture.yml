@@ -515,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -526,27 +526,28 @@ nodes:
   description: >-
     eta_rxncat.orchestrator (v0.3.0; TS v0.5.0; selectivity, TS ensemble v0.6.0):
     species stage runner (TJ Q4 C); __init__ exports load lazily (R26). selectivity.py:
-    score_selectivity pure: log-sum-exp G_p, ddG, ratio (inf on overflow), 100 tanh(x/2),
-    softmax shares, signed '<b>_vs_<a>'; SelectivityInputError (R8 ee); no engine/RDKit/geomeTRIC
-    (G8). ts_ensemble.py: run_ts_ensemble(_detailed) seed first (failure -> seed:<reason>),
-    samples (slice 05), cached constrained_preopt with injected optimizer, run_transition_state
-    per sample, gate/connectivity/face exclusions (R19), dedup on RMSD + face, 3 kcal/mol
-    window, degeneracy weights, log-sum-exp G; metrics per kind, max pre-relax wall
-    time. counting.py: CountingEngine. species.py: SpeciesSpec, Recipe, SinglePoint,
-    ENGINE_CLASSES; run_species caches each stage under build_stage_key: conformer_search,
-    geometry_opt, dedup, window, frequency, imaginary push then not_a_minimum, re-dedup
-    (R53), ensemble, single points (R35). Opt/SCF failures cached; other errors propagate.
-    run_constrained_point (R42). ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe,
-    store) -> TSRunResult: ts_opt (key: engine + TS options, identity, forming bonds),
-    frequency, validate_transition_state, TransitionStateRecord; failures cached (ts_search_failed:<reason>,
-    scf_convergence, v0.6.0 engine_error from EngineRuntimeError with message/error_type;
-    EngineUnavailable/InputError raise, never cached), ts_validation_failed keeps
-    the validation; barrier.py (v0.5.0): activation_free_energy -> dE/dH/dG dagger
-    (1 M, 1 atm); atom conservation and configs checked. reaction.py: ReactionSpec,
-    reaction_free_energy (1 M, 1 atm). report.py: JSON schema 1. Tests: unit; e2e
-    HF1/HF2, T1/T2 xtb/uma, T3 fixtures (R9 PySCF gpu), T3 E2E Diels-Alder, tetrazine,
-    Paton N4 (t3.py gates R32), geomeTRIC cross-check (CLI subprocess), candidates
-    never read back; v050 record and verdict (R33).
+    score_selectivity pure (log-sum-exp G_p, ddG, ratio inf on overflow, 100 tanh(x/2),
+    softmax, signed '<b>_vs_<a>'; SelectivityInputError, R8 ee); evaluate_pathway_pruning
+    pure (R7: computed minor, strict > threshold, priority>=2 same pathway, never
+    None, no_valid_member:<p>, signed in rule order); run_selectivity: ensembles per
+    priority-1 pathway, score, each rule once, unpruned priority>=2 nodes via run_species,
+    pruned get no call -> SelectivityRun; module import stays RDKit-free (G8). ts_ensemble.py:
+    run_ts_ensemble(_detailed): seed first (else seed:<reason>), samples, cached constrained_preopt
+    (injected optimizer), re-search, gate/connectivity/face exclusions (R19), dedup
+    RMSD + face, window, weights, log-sum-exp G; metrics, max pre-relax wall time.
+    counting.py: CountingEngine. species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES;
+    run_species caches each stage under build_stage_key: conformer_search, geometry_opt,
+    dedup, window, frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble,
+    single points (R35). Opt/SCF failures cached; other errors propagate. run_constrained_point
+    (R42). ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult:
+    ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
+    TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
+    v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
+    keeps the validation; barrier.py (v0.5.0): activation_free_energy -> dE/dH/dG
+    dagger (1 M, 1 atm); atom conservation and configs checked. reaction.py: reaction_free_energy.
+    report.py: JSON schema 1. Tests: unit; e2e HF1-HF3 (xtb/uma/PySCF gpu; t3.py gates
+    R32; geomeTRIC CLI cross-check); candidates never read back; v050 record/verdict
+    (R33).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -574,6 +575,8 @@ nodes:
     source_id: eta_rxncat_conformers
   - data_type: injected_core_frozen_optimizer
     external: eta_rxncat_consumers
+  - data_type: reaction_graph_pathway_labels_and_pruning_rules
+    source_id: eta_rxncat_core
   outputs:
   - data_type: species_result_ensemble_dropped_metrics
     external: eta_rxncat_consumers
@@ -588,6 +591,8 @@ nodes:
   - data_type: selectivity_result
     external: eta_rxncat_consumers
   - data_type: ts_ensemble_and_stage_metrics
+    external: eta_rxncat_consumers
+  - data_type: pruning_decisions_and_node_outcomes
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -609,8 +614,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T08:02:55+00:00'
-    reviewed_by: audit:06-ts-ensemble
+    reviewed_at: '2026-11-25T08:13:26+00:00'
+    reviewed_by: audit:07-selectivity-runner
     summary: patched description, inputs, outputs
   provenance:
     last_slice: OPR.0.6.0.7
