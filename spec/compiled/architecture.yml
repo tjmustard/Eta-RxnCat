@@ -515,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -525,30 +525,30 @@ nodes:
   - tests/candidate_outputs/v0.5.0/**
   - tests/candidate_outputs/v0.6.0/**
   description: >-
-    eta_rxncat.orchestrator (v0.3.0; TS v0.5.0; selectivity, TS ensemble v0.6.0):
-    species stage runner (TJ Q4 C); __init__ exports load lazily (R26). selectivity.py:
-    score_selectivity pure (log-sum-exp G_p, ddG, ratio inf on overflow, 100 tanh(x/2),
-    softmax, signed '<b>_vs_<a>'; SelectivityInputError, R8 ee); evaluate_pathway_pruning
-    pure (R7: computed minor, strict > threshold, priority>=2 same pathway, never
-    None, no_valid_member:<p>, signed in rule order); run_selectivity: ensembles per
-    priority-1 pathway, score, each rule once, unpruned priority>=2 nodes via run_species,
-    pruned get no call -> SelectivityRun; module import stays RDKit-free (G8). ts_ensemble.py:
-    run_ts_ensemble(_detailed): seed first (else seed:<reason>), samples, cached constrained_preopt
-    (injected optimizer), re-search, gate/connectivity/face exclusions (R19), dedup
-    RMSD + face, window, weights, log-sum-exp G; metrics, max pre-relax wall time.
-    counting.py: CountingEngine. species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES;
-    run_species caches each stage under build_stage_key: conformer_search, geometry_opt,
-    dedup, window, frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble,
-    single points (R35). Opt/SCF failures cached; other errors propagate. run_constrained_point
+    eta_rxncat.orchestrator (v0.3.0; TS 0.5.0; selectivity, ensemble 0.6.0): species
+    stage runner (TJ Q4 C); __init__ exports load lazily (R26). selectivity.py: score_selectivity
+    pure (log-sum-exp G_p, ddG, ratio inf on overflow, 100 tanh(x/2), softmax, signed
+    '<b>_vs_<a>'; SelectivityInputError, R8 ee); evaluate_pathway_pruning pure (R7:
+    computed minor, strict > threshold, priority>=2 same pathway, never None, no_valid_member:<p>,
+    signed in rule order); run_selectivity: ensembles per priority-1 pathway, score,
+    each rule once, unpruned priority>=2 nodes via run_species, pruned get no call
+    -> SelectivityRun; module import stays RDKit-free (G8). ts_ensemble.py: run_ts_ensemble(_detailed):
+    seed first (else seed:<reason>), samples, cached constrained_preopt (injected
+    optimizer), re-search, gate/connectivity/face exclusions (R19); pre-relax wall
+    budget 600 s (_deadline.py PreRelaxTimeout, cached; R28), dedup RMSD + face, window,
+    weights, log-sum-exp G; metrics, max pre-relax wall time. counting.py: CountingEngine.
+    species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES; run_species caches
+    each stage under build_stage_key: conformer_search, geometry_opt, dedup, window,
+    frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble, single
+    points (R35). Opt/SCF failures cached, others propagate. run_constrained_point
     (R42). ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult:
     ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
     TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
     v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
     keeps the validation; barrier.py (v0.5.0): activation_free_energy (1 M, 1 atm).
     reaction.py: reaction_free_energy. report.py: JSON schema 1. Tests: unit; e2e
-    t3 (HF1-HF3, R32), T4 inputs + t4.py E2E (unmapped/mapped pairs, run_selectivity
-    G6 pruning, Q3 A gates; see slices OPR.0.6.0.8-10); candidates never read back;
-    v050 record (R33).
+    t3 (HF1-HF3, R32), T4 inputs + t4.py E2E (pairs, G6 pruning; slices OPR.0.6.0.8-10);
+    candidates never read back; v050 record (R33).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -615,8 +615,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T11:40:25+00:00'
-    reviewed_by: audit:OPR.0.6.0.10
+    reviewed_at: '2026-11-25T13:26:24+00:00'
+    reviewed_by: audit:OPR.0.6.0.13
     summary: patched description
   provenance:
     last_slice: OPR.0.6.0.13
