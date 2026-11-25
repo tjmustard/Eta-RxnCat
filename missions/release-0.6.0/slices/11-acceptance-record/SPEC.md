@@ -10,7 +10,7 @@ intent: "Assemble the v0.6.0 acceptance record from real per-check outcomes with
 depends_on: [OPR.0.6.0.10, OPR.0.6.0.13, OPR.0.6.0.14]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.6.0/ACCEPTANCE_RESULT.json, README.md, spec/compiled/architecture.yml]
@@ -123,10 +123,10 @@ counts, which slices 09/10 already serialise.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start.
-- [ ] Task 2: record assembly + `check()` + offline tests.
-- [ ] Task 3: host-checked acceptance runs (GFN2, then UMA) and reproducibility runs; record.
-- [ ] Task 4: README derivation; required checks; commit; updater once.
+- [x] Task 1: codegraph index → `index: ok`; record Start.
+- [x] Task 2: record assembly + `check()` + offline tests.
+- [x] Task 3: host-checked acceptance runs (GFN2, then UMA) and reproducibility runs; record.
+- [x] Task 4: README derivation; required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -136,9 +136,9 @@ counts, which slices 09/10 already serialise.
 
 ## Proof contract
 
-- [ ] `docs/prd/v0.6.0/ACCEPTANCE_RESULT.json` committed; `check()` passes; test outcomes with exit
+- [x] `docs/prd/v0.6.0/ACCEPTANCE_RESULT.json` committed; `check()` passes; test outcomes with exit
       codes and skip counts, each heavy run behind a recorded host check.
-- [ ] Required checks exit 0.
+- [x] Required checks exit 0.
 
 ## Source material
 

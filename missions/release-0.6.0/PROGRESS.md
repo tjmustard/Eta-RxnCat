@@ -23,7 +23,7 @@
 | OPR.0.6.0.8 | 08-tier4-inputs | audited | OPR.0.6.0.2, OPR.0.6.0.5 | 2026-11-25T08:25:09+00:00 audited |
 | OPR.0.6.0.9 | 09-e2e-unmapped | audited | OPR.0.6.0.7, OPR.0.6.0.8 | 2026-11-25T10:05:07+00:00 audited |
 | OPR.0.6.0.10 | 10-e2e-mapped-pruning | audited | OPR.0.6.0.9 | 2026-11-25T11:40:30+00:00 audited |
-| OPR.0.6.0.11 | 11-acceptance-record | compiled | OPR.0.6.0.10, OPR.0.6.0.13, OPR.0.6.0.14 | 2026-11-25T06:45:55+00:00 compiled |
+| OPR.0.6.0.11 | 11-acceptance-record | executed | OPR.0.6.0.10, OPR.0.6.0.13, OPR.0.6.0.14 | 2026-11-25T20:02:49+00:00 executed |
 | OPR.0.6.0.12 | 12-acceptance-verdict | compiled | OPR.0.6.0.11 | 2026-11-25T06:45:55+00:00 compiled |
 | OPR.0.6.0.13 | 13-hf13-pre-relax-guard | audited | OPR.0.6.0.10 | 2026-11-25T13:26:29+00:00 audited |
 | OPR.0.6.0.14 | 14-flexible-ensemble-e2e | audited | OPR.0.6.0.13 | 2026-11-25T16:46:29+00:00 audited |
