@@ -515,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -546,9 +546,9 @@ nodes:
     v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
     keeps the validation; barrier.py (v0.5.0): activation_free_energy (1 M, 1 atm).
     reaction.py: reaction_free_energy. report.py: JSON schema 1. Tests: unit; e2e
-    HF1-HF3 (t3.py R32; geomeTRIC CLI); T4 inputs (exo xyz, prov. YAMLs, load_t4_fixture);
-    t4.py + test_t4_unmapped (ensembles, Q3 A gates, endo seed regression R6); candidates
-    never read back; v050 record (R33).
+    t3 (HF1-HF3, R32), T4 inputs + t4.py E2E (unmapped/mapped pairs, run_selectivity
+    G6 pruning, Q3 A gates; see slices OPR.0.6.0.8-10); candidates never read back;
+    v050 record (R33).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -615,8 +615,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T10:04:59+00:00'
-    reviewed_by: audit:OPR.0.6.0.9
+    reviewed_at: '2026-11-25T11:40:25+00:00'
+    reviewed_by: audit:OPR.0.6.0.10
     summary: patched description
   provenance:
     last_slice: OPR.0.6.0.10
