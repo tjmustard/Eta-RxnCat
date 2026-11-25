@@ -10,7 +10,7 @@ intent: "Add ReactionNode.pathway, a typed evaluable PathwayPruningRule beside t
 depends_on: [OPR.0.6.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", spec/compiled/architecture.yml]
@@ -89,11 +89,11 @@ by the load-everything test.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `core/graph.py`, `core/ts_models.py`.
-- [ ] Task 2: `ReactionNode.pathway`; `PathwayPruningRule`; graph validators.
-- [ ] Task 3: `core/selectivity_models.py`; exports.
-- [ ] Task 4: `tests/unit/core/test_selectivity_models.py`, `test_graph_pathway.py`; required checks.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_core`).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `core/graph.py`, `core/ts_models.py`.
+- [x] Task 2: `ReactionNode.pathway`; `PathwayPruningRule`; graph validators.
+- [x] Task 3: `core/selectivity_models.py`; exports.
+- [x] Task 4: `tests/unit/core/test_selectivity_models.py`, `test_graph_pathway.py`; required checks.
+- [x] Task 5: commit; updater once (node `eta_rxncat_core`).
 
 ## 4. The Negative Space (Constraints)
 
