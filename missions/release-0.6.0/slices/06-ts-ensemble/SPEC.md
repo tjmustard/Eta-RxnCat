@@ -10,7 +10,7 @@ intent: "Add run_ts_ensemble: sample, cached core-frozen pre-relax, P-RFO re-sea
 depends_on: [OPR.0.6.0.3, OPR.0.6.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -105,12 +105,12 @@ build; the spec names the cases.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts.py`,
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts.py`,
       `mapping/relax.py`, `store/keys.py`, slice 05's module.
-- [ ] Task 2: the pre-relax cache wrapper and its tests.
-- [ ] Task 3: `run_ts_ensemble` (seed, sample, members, exclusions, dedup, window, weights).
-- [ ] Task 4: `tests/unit/orchestrator/test_ts_ensemble.py` (requirements 1–7); required checks.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 2: the pre-relax cache wrapper and its tests.
+- [x] Task 3: `run_ts_ensemble` (seed, sample, members, exclusions, dedup, window, weights).
+- [x] Task 4: `tests/unit/orchestrator/test_ts_ensemble.py` (requirements 1–7); required checks.
+- [x] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
