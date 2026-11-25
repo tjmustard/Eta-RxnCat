@@ -1,10 +1,11 @@
-"""Core contracts, graph loader, PotentialResult; v0.3.0 records, v0.4.0 graft, v0.5.0 TS models."""
+"""Core contracts, graph loader, PotentialResult; records, graft, TS and selectivity models."""
 
 from eta_rxncat.core.elements import ATOMIC_NUMBERS, ELEMENT_SYMBOLS
 from eta_rxncat.core.ensemble_models import ConformerEnsemble, ConformerRecord
 from eta_rxncat.core.graph import (
     Component,
     NodeKind,
+    PathwayPruningRule,
     PruningRule,
     ReactionEdge,
     ReactionGraph,
@@ -32,6 +33,17 @@ from eta_rxncat.core.models import (
 )
 from eta_rxncat.core.optimization_models import OptimizationResult, OptimizerIdentity
 from eta_rxncat.core.results import Device, HessianMethod, PotentialResult
+from eta_rxncat.core.selectivity_models import (
+    PathwaySelectivity,
+    PruningDecision,
+    SelectivityKind,
+    SelectivityResult,
+    TSEnsemble,
+    TSEnsembleExclusion,
+    TSEnsembleMember,
+    TSEnsembleMerge,
+    TSEnsembleOptions,
+)
 from eta_rxncat.core.thermo_models import ThermoAnalysisOptions, ThermoResult
 from eta_rxncat.core.ts_models import (
     TS_VALIDATION_REASONS,
@@ -66,15 +78,25 @@ __all__ = [
     "NonNegativeFiniteFloat",
     "OptimizationResult",
     "OptimizerIdentity",
+    "PathwayPruningRule",
+    "PathwaySelectivity",
     "PotentialResult",
+    "PruningDecision",
     "PruningRule",
     "ReactionEdge",
     "ReactionGraph",
     "ReactionNode",
+    "SelectivityKind",
+    "SelectivityResult",
     "Solvation",
     "SolvationModel",
     "StageConfig",
     "StageKind",
+    "TSEnsemble",
+    "TSEnsembleExclusion",
+    "TSEnsembleMember",
+    "TSEnsembleMerge",
+    "TSEnsembleOptions",
     "TSSearchResult",
     "TSStep",
     "TSValidation",

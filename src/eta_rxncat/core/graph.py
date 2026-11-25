@@ -1,14 +1,15 @@
 """ReactionGraph contracts: templates, nodes, edges, pruning rules and the graph itself."""
 
 from collections import Counter
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from eta_rxncat.core.models import (
     AtomMappingSpec,
     CoreModel,
     MolecularState,
+    PositiveFiniteFloat,
     PositiveInt,
     ScalarValue,
     StageConfig,
@@ -91,6 +92,9 @@ class ReactionNode(CoreModel):
         templates: Ranked alternative geometries; all share total charge and element multiset.
         stages: Node-specific stages; ``None`` means the graph's ``default_stages``.
         pruning_rules: Ids of graph pruning rules that apply to this node.
+        pathway: Optional label of the competing pathway this node belongs to (v0.6.0); the
+            ``PathwayPruningRule`` of the graph names pathways by it. ``None`` for every
+            existing graph.
     """
 
     id: str = Field(pattern=r"^[A-Za-z][A-Za-z0-9_.-]*$")
@@ -100,6 +104,7 @@ class ReactionNode(CoreModel):
     templates: list[TemplateGeometry] = Field(min_length=1)
     stages: list[StageConfig] | None = None
     pruning_rules: list[str] = Field(default_factory=list)
+    pathway: str | None = Field(default=None, pattern=r"^[A-Za-z][A-Za-z0-9_.-]*$")
 
     @model_validator(mode="after")
     def _check_templates(self) -> Self:
@@ -154,6 +159,37 @@ class PruningRule(CoreModel):
     parameters: dict[str, ScalarValue] = Field(default_factory=dict)
 
 
+class PathwayPruningRule(CoreModel):
+    """A typed, evaluable rule: prune the computed minor pathway of two competing pathways (v0.6.0).
+
+    Unlike the free-form ``PruningRule`` (inert), this one is evaluated by the selectivity runner
+    once every priority-1 pathway has its TS ensemble. There is no default threshold.
+
+    Attributes:
+        id: Rule identifier, unique across both rule lists of the graph.
+        metric: The compared quantity; only the TS free-energy gap, in kcal/mol.
+        pathways: The two competing pathway labels (distinct).
+        threshold_kcal_mol: The gap above which the minor pathway is pruned (> 0, required).
+        prune: What is pruned: the minor pathway's nodes with ``priority >= 2``.
+    """
+
+    id: str
+    metric: Literal["ddG_dagger_kcal_mol"]
+    pathways: tuple[
+        Annotated[str, Field(pattern=r"^[A-Za-z][A-Za-z0-9_.-]*$")],
+        Annotated[str, Field(pattern=r"^[A-Za-z][A-Za-z0-9_.-]*$")],
+    ]
+    threshold_kcal_mol: PositiveFiniteFloat
+    prune: Literal["minor_pathway_priority_ge_2"]
+
+    @field_validator("pathways")
+    @classmethod
+    def _distinct(cls, value: tuple[str, str]) -> tuple[str, str]:
+        if value[0] == value[1]:
+            raise ValueError(f"pathways must be two distinct labels, got {value}")
+        return value
+
+
 class ReactionGraph(CoreModel):
     """A reaction network: nodes, directed edges (cycles allowed), stages and thermo settings.
 
@@ -165,6 +201,8 @@ class ReactionGraph(CoreModel):
         default_stages: Stages for nodes whose ``stages`` is ``None``.
         thermo: Thermochemistry settings.
         pruning_rules: Rules that nodes may reference by id.
+        pathway_pruning_rules: Typed per-pathway pruning rules (v0.6.0), evaluated by the
+            selectivity runner.
     """
 
     schema_version: Literal[1]
@@ -174,6 +212,7 @@ class ReactionGraph(CoreModel):
     default_stages: list[StageConfig] = Field(default_factory=list)
     thermo: ThermoConfig = Field(default_factory=ThermoConfig)
     pruning_rules: list[PruningRule] = Field(default_factory=list)
+    pathway_pruning_rules: list[PathwayPruningRule] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _check_graph(self) -> Self:
@@ -182,7 +221,8 @@ class ReactionGraph(CoreModel):
         if dup_nodes:
             raise ValueError(f"duplicate node ids {dup_nodes}")
         rule_ids = Counter(r.id for r in self.pruning_rules)
-        dup_rules = sorted(i for i, n in rule_ids.items() if n > 1)
+        all_rule_ids = rule_ids + Counter(r.id for r in self.pathway_pruning_rules)
+        dup_rules = sorted(i for i, n in all_rule_ids.items() if n > 1)
         if dup_rules:
             raise ValueError(f"duplicate pruning rule ids {dup_rules}")
         seen_edges: set[tuple[str, str]] = set()
@@ -198,6 +238,14 @@ class ReactionGraph(CoreModel):
             if pair in seen_edges:
                 raise ValueError(f"duplicate edge {edge.source} -> {edge.target}")
             seen_edges.add(pair)
+        first_tier = {n.pathway for n in self.nodes if n.priority == 1 and n.pathway is not None}
+        for pruning_rule in self.pathway_pruning_rules:
+            missing = [p for p in pruning_rule.pathways if p not in first_tier]
+            if missing:
+                raise ValueError(
+                    f"pathway pruning rule '{pruning_rule.id}': pathways {missing} are not the "
+                    "pathway of any priority-1 node"
+                )
         for node in self.nodes:
             undefined = [r for r in node.pruning_rules if r not in rule_ids]
             if undefined:
