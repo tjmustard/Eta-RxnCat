@@ -14,7 +14,7 @@
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
 | OPR.0.6.0.1 | 01-starter | audited |  | 2026-11-25T06:57:01+00:00 audited |
-| OPR.0.6.0.2 | 02-core-contracts | executed | OPR.0.6.0.1 | 2026-11-25T07:03:14+00:00 executed |
+| OPR.0.6.0.2 | 02-core-contracts | audit_failed | OPR.0.6.0.1 | 2026-11-25T07:07:28+00:00 audit_failed |
 | OPR.0.6.0.3 | 03-engine-error | compiled | OPR.0.6.0.1 | 2026-11-25T06:45:37+00:00 compiled |
 | OPR.0.6.0.4 | 04-scorer | compiled | OPR.0.6.0.2 | 2026-11-25T06:45:38+00:00 compiled |
 | OPR.0.6.0.5 | 05-ts-sampler | compiled | OPR.0.6.0.2 | 2026-11-25T06:45:38+00:00 compiled |

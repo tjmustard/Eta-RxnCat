@@ -10,7 +10,7 @@ intent: "Add ReactionNode.pathway, a typed evaluable PathwayPruningRule beside t
 depends_on: [OPR.0.6.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audit_failed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", spec/compiled/architecture.yml]
