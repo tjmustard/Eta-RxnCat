@@ -10,7 +10,7 @@ intent: "Run the mapped Cp + cyclobutene endo/exo pair (TS1b_x grafted from TS1a
 depends_on: [OPR.0.6.0.9]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.6.0/**", spec/compiled/architecture.yml]
@@ -92,11 +92,11 @@ in slice 07.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start.
-- [ ] Task 2: `tests/e2e/test_t4_mapped.py` (reusing slice 09's `t4.py`); offline helper tests.
-- [ ] Task 3: host check (own call) → GFN2 run; host check → UMA run; record both. Each run under
+- [x] Task 1: codegraph index → `index: ok`; record Start.
+- [x] Task 2: `tests/e2e/test_t4_mapped.py` (reusing slice 09's `t4.py`); offline helper tests.
+- [x] Task 3: host check (own call) → GFN2 run; host check → UMA run; record both. Each run under
       `timeout 3600` (mission R25); a timeout is a stop-and-report with its output.
-- [ ] Task 4: candidates-only commit; code commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 4: candidates-only commit; code commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
