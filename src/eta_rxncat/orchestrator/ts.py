@@ -24,7 +24,7 @@ from eta_rxncat.core import (
     TSValidationOptions,
 )
 from eta_rxncat.core.models import ScalarValue
-from eta_rxncat.engines import ScfConvergenceError
+from eta_rxncat.engines import EngineRuntimeError, ScfConvergenceError
 from eta_rxncat.mapping import perceive_bonds
 from eta_rxncat.optimize import TransitionStateOptimizer, TSSearchFailedError
 from eta_rxncat.orchestrator.counting import CountingEngine
@@ -149,6 +149,15 @@ def _sorted_pairs(pairs: Sequence[tuple[int, int]]) -> list[tuple[int, int]]:
     return sorted((min(i, j), max(i, j)) for i, j in pairs)
 
 
+def _runtime_failure(exc: EngineRuntimeError) -> dict[str, str]:
+    """Return the cached payload of an engine crash (mission R3): a completed failure row."""
+    return {
+        "failed_reason": "engine_error",
+        "message": str(exc),
+        "error_type": type(exc).__name__,
+    }
+
+
 class _TSRun:
     """One TS run: counted engine, store, metrics and keys."""
 
@@ -208,6 +217,9 @@ class _TSRun:
                 failure = {"failed_reason": "scf_convergence", "message": str(exc)}
                 self._save("ts_opt", key, failure)
                 return "scf_convergence"
+            except EngineRuntimeError as exc:
+                self._save("ts_opt", key, _runtime_failure(exc))
+                return "engine_error"
             self._save("ts_opt", key, result.model_dump(mode="json"))
         return result
 
@@ -227,6 +239,9 @@ class _TSRun:
                 failure = {"failed_reason": "scf_convergence", "message": str(exc)}
                 self._save("frequency", key, failure)
                 return "scf_convergence"
+            except EngineRuntimeError as exc:
+                self._save("frequency", key, _runtime_failure(exc))
+                return "engine_error"
             hessian = result.hessian_hartree_per_bohr2
             if hessian is None:
                 raise TypeError("engine.evaluate(hessian=True) returned no Hessian")
@@ -297,7 +312,13 @@ def run_transition_state(spec: TSSpec, recipe: TSRecipe, store: ArtifactStore) -
     Raises:
         eta_rxncat.optimize.OptimizerInputError: Bad TS options or forming bonds.
         eta_rxncat.thermo.TSValidationInputError: A validator input that cannot be judged.
-        eta_rxncat.engines.EngineError: Any engine error other than an SCF failure.
+        eta_rxncat.engines.EngineUnavailableError: The engine cannot run on this host; never
+            cached.
+        eta_rxncat.engines.EngineInputError: The engine refuses the input; never cached.
+
+    An ``EngineRuntimeError`` (the engine crashed) and an SCF failure do not raise: each is cached
+    as a completed row and returned as ``failed_reason`` ``"engine_error"`` or
+    ``"scf_convergence"`` (mission R3).
     """
     run = _TSRun(spec, recipe, store)
     search = run.search()
