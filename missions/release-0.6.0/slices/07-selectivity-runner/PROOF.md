@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: R7 pruning: 1.753 > 1.5 prunes exo downstream only, 1.410/1.5 none; pruned nodes never run; suite 2013 pass at 074313d
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
