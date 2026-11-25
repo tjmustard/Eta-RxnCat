@@ -40,6 +40,9 @@ composition:
     - ref: slices/10-e2e-mapped-pruning/slice.yaml
       order: 100
       active: true
+    - ref: slices/13-hf13-pre-relax-guard/slice.yaml
+      order: 105
+      active: true
     - ref: slices/11-acceptance-record/slice.yaml
       order: 110
       active: true

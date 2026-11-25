@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
 intent: "Assemble the v0.6.0 acceptance record from real per-check outcomes with pending states for TJ, measure run-to-run reproducibility for the Phase 3 bounds, and derive the README claims."
-depends_on: [OPR.0.6.0.10]
+depends_on: [OPR.0.6.0.10, OPR.0.6.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled

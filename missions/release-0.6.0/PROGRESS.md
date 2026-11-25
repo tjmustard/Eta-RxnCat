@@ -25,4 +25,5 @@
 | OPR.0.6.0.10 | 10-e2e-mapped-pruning | audited | OPR.0.6.0.9 | 2026-11-25T11:40:30+00:00 audited |
 | OPR.0.6.0.11 | 11-acceptance-record | compiled | OPR.0.6.0.10 | 2026-11-25T06:45:55+00:00 compiled |
 | OPR.0.6.0.12 | 12-acceptance-verdict | compiled | OPR.0.6.0.11 | 2026-11-25T06:45:55+00:00 compiled |
+| OPR.0.6.0.13 | 13-hf13-pre-relax-guard | compiled | OPR.0.6.0.10 | 2026-11-25T12:47:35+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->

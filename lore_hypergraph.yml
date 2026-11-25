@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 47
+  ADR: 48
   STORY: 0
   CANON: 0
 nodes:
@@ -1929,3 +1929,44 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+- id: ADR-0048
+  type: decision
+  title: Ensemble pre-relaxation runs under an in-process wall-time budget (HF-13)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0048-ensemble-pre-relaxation-runs-under-an-in-process-wall-time-b.md
+  content_sha256: cbaf6a2c66a124e8578df7b0b3e3b79e604ba8683df276b955eb8c253888ae08
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/orchestrator/_deadline.py
+  relates_to:
+  - ADR-0024
+  - ADR-0045
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T12:48:21+00:00'
+    source: OPR.0.6.0.13
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T12:48:21+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0.13

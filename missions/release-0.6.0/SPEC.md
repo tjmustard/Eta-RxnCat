@@ -10,7 +10,7 @@ hacf_schema: 1
 hacf_type: SuperPRD
 hacf_status: compiled
 node_id: null
-lore_refs: [ADR-0007, ADR-0008, ADR-0014, ADR-0019, ADR-0021, ADR-0023, ADR-0024, ADR-0025, ADR-0026, ADR-0027, ADR-0028, ADR-0031, ADR-0032, ADR-0033, ADR-0035, ADR-0036, ADR-0038, ADR-0040, ADR-0042, ADR-0043, ADR-0044, ADR-0045, ADR-0046, ADR-0047]
+lore_refs: [ADR-0007, ADR-0008, ADR-0014, ADR-0019, ADR-0021, ADR-0023, ADR-0024, ADR-0025, ADR-0026, ADR-0027, ADR-0028, ADR-0031, ADR-0032, ADR-0033, ADR-0035, ADR-0036, ADR-0038, ADR-0040, ADR-0042, ADR-0043, ADR-0044, ADR-0045, ADR-0046, ADR-0047, ADR-0048]
 hacf_source: {draft: spec/active/Draft_PRD.md}
 ---
 
@@ -249,6 +249,15 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
   box), then P-RFO 5.4 s. eta's `maxiter` (200 passed, 300 default) did not bound the stall. Not
   reproduced; cause unknown. Mitigation: every E2E command runs under `timeout 3600` and per-member
   wall time is recorded (R25).
+  **Replan 3 (measured, `~/.hacf/eta-rxncat-hacf/evidence/v060-replan3/`):** now 3 stalls in 13 known
+  UMA TS1b_x(graft) runs at the same inputs (resolve; audit #1 of slice 10, exit 124 at 3600 s; resolve's
+  replan-3 run 7 of 9). Run 7's six faulthandler dumps (filtered to eta frames + a geomeTRIC frame
+  count) all sit in an ensemble member's pre-relax: `_PreRelax.run` → `relax_constrained_core` →
+  `GeometricOptimizer._run` → geomeTRIC (10–16 frames) → numpy `eigh`/`svd`/`max`, with the leaf
+  changing between dumps. The black box is looping, live, between engine calls: no engine frame, GPU
+  0–1 %, ~17 cores of OpenBLAS threads (20 by default, torch also 20). Thread count multiplies the burn
+  but is not the cause. The trigger is UMA run-to-run noise, since eta seeds geomeTRIC's RNG. The fix
+  inside the black box is not cheap, so slice 13 bounds it (R28).
 
 ### OPEN for TJ (row ids in the handoff; the build does not wait unless noted)
 - **Q-RES1 (M2 → TJ, as the draft required; row `qitem-20261125064639-149cf207118abaab` to advisor-lead@kernel, OPEN).** Every Tier 4 ensemble is one member on GFN2
@@ -293,7 +302,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 - `kind="ee"` over multi-member ensembles (R8, DV-08); chirality assignment of mirror-image TS
   conformers.
 - Carry-forward (b): the v0.5.0 `reported.gated_on` text nit — TJ's call, outside this diff.
-- A flexible Tier 4b case — only if TJ picks Q-RES1 B (then a replan adds slice 13).
+- A flexible Tier 4b case — only if TJ picks Q-RES1 B (then a replan adds slice 14).
 
 ## 4. User Stories (Atomic)
 
@@ -342,9 +351,10 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 | R22 | Draft module homes | — | resolved | Sampler + face descriptor: `src/eta_rxncat/conformers/ts_sampler.py` (node `eta_rxncat_conformers`). Ensemble runner: `src/eta_rxncat/orchestrator/ts_ensemble.py`; scorer: `orchestrator/selectivity.py` (`score_selectivity`, `run_selectivity`) (node `eta_rxncat_species_runner`). Models: `src/eta_rxncat/core/selectivity_models.py` (node `eta_rxncat_core`). |
 | R23 | Draft "Pruning: extend `PruningRule` or a new model" | — | resolved | New model beside it (R7). Reason: `PruningRule.parameters` is free-form and existing graphs (e.g. `tests/data/reaction_graphs/example_reaction_graph.yaml` `barrier_gate`) must keep loading unchanged; a typed model is evaluated, the free-form one stays inert. |
 | R24 | Draft P9 "new stage kind or reuse" | — | resolved | **No new stage kind.** Pre-relaxation is keyed as the existing `constrained_preopt` (R5, its `frozen_atom_indices` = the core); search and frequency are `run_transition_state`'s `ts_opt`/`frequency`. Sampling is pure and deterministic (≤ 0.02 s per seed, HF-5) and is not cached: G7 checks byte-equal resampling instead. |
-| R25 | HF-13: an injected pre-relax can stall past `maxiter` | — | resolved | Every Tier 4 E2E / acceptance / verdict command runs under `timeout 3600`; a timeout is a stop-and-report with the output (TJ Q3 amended: a failed run is a finding). `TSEnsembleMember`/`TSEnsembleExclusion` record `pre_relax_wall_time_s`; the candidate reports the maximum. No in-process watchdog in v0.6.0 (geomeTRIC runs in-process, ADR-0024). |
+| R25 | HF-13: an injected pre-relax can stall past `maxiter` | — | resolved | Every Tier 4 E2E / acceptance / verdict command runs under `timeout 3600`; a timeout is a stop-and-report with the output (TJ Q3 amended: a failed run is a finding). `TSEnsembleMember`/`TSEnsembleExclusion` record `pre_relax_wall_time_s`; the candidate reports the maximum. No in-process watchdog in v0.6.0 (geomeTRIC runs in-process, ADR-0024). *Superseded in part by R28 (replan 3): slice 13 adds an in-process wall-time budget; `timeout 3600` stays.* |
 | R26 | Replan 1 (slice 04, builder block at `808e50c`): G8 vs DV-03 — `import eta_rxncat.thermo.constants` loads RDKit because `thermo/__init__.py` imports `symmetry.py`/`masses.py` eagerly | — | resolved (lead ruling A) | Slice 04 makes `src/eta_rxncat/thermo/__init__.py`'s exports lazy (PEP 562 `__getattr__` + `TYPE_CHECKING` imports, `__all__` and every `from eta_rxncat.thermo import X` unchanged); the scorer uses the real `eta_rxncat.thermo.constants`. Not B (moving constants), never C/D. Blast radius of slice 04 gains `eta_rxncat_thermo` (already owns `src/eta_rxncat/thermo/**`; no ledger change). No thermo behaviour or constant changes. |
 | R27 | Replan 2 (slice 04): slice 04 requires `ratio = inf` on float overflow, but slice 02's `SelectivityResult.ratio` is `Field(ge=1.0, allow_inf_nan=False)` and refuses it | — | resolved (lead ruling) | Slice 04 changes that one field to accept `+inf` (`allow_inf_nan=True`, `ge=1.0` kept, so NaN, `-inf` and < 1 are still refused; tested), plus its docstring line and a core model test. Slice 04's touches gain `src/eta_rxncat/core/selectivity_models.py` and `tests/unit/core/test_selectivity_models.py`; its blast radius gains `eta_rxncat_core` (ratio field only; no ledger change). No other core change. |
+| R28 | Replan 3: HF-13 is recurrent (3 of 13 UMA TS1b_x(graft) runs; a stall would make the slice 11/12 verdict runs a coin flip). Measured as a live geomeTRIC-internal numpy loop between engine calls inside the ensemble pre-relax | — | resolved (lead ruling: measure, then bound or fix) | New slice 13 (OPR.0.6.0.13, before 11): `orchestrator/_deadline.py`, a watchdog thread raising `PreRelaxTimeout(BaseException)` into the calling thread via `PyThreadState_SetAsyncExc` after `pre_relax_budget_s` (default `PRE_RELAX_BUDGET_S = 600.0`, ~12× the healthy 49 s max), re-sent every 1 s, cleared on exit. `_PreRelax.run` excludes the member as `pre_relax_failed:PreRelaxTimeout` (fits the existing reason regex; no core change), records the wall time, caches the row with `budget_s`, and the ensemble continues. Budget not in the stage key. Not a cure: the cause is inside the black box. Optimizer stays in-process (ADR-0024 unchanged); new ADR-0048 PROPOSED. P-RFO and the E2E graft pre-relax are unguarded (no stall seen). Not N-consecutive-runs proof: the oracle is unit tests of the interrupt plus one UMA mapped run < 1300 s. Tier 4 G is unchanged by a timeout, since every member re-converges to the seed (HF-10). Blast radius: `eta_rxncat_species_runner` only (description 1967/2000; compress, no split). |
 
 ### Seed deviations (from the draft)
 - Sampler: per-fragment ETKDGv3 + perturbation (R16), not ETKDG coordMap on the whole TS.
@@ -355,6 +365,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 - Slice 08 lands resolve's measured inputs instead of measuring.
 - Replan 1 (R26): slice 04 also makes `thermo/__init__.py` exports lazy.
 - Replan 2 (R27): slice 04 also lets `SelectivityResult.ratio` hold `+inf`.
+- Replan 3 (R28): new slice 13 (before 11) bounds the ensemble pre-relax by a wall-time budget; slice 11 depends on it.
 
 ### Face check (normative; slices 05, 06)
 - Input: a state, its forming bonds, its perceived bonds (`mapping.perceive_bonds`, which excludes
@@ -431,15 +442,15 @@ No exception escapes for a member; `OptimizerInputError` / `TSValidationInputErr
 `python3 .agents/scripts/hyper_ledger.py impact --nodes eta_rxncat_species_runner,eta_rxncat_core,eta_rxncat_conformers`
 → the draft's nine nodes (cli, conformers, core, engines, mapping, optimize, species_runner, store,
 thermo). **Written:** `eta_rxncat_core` (02), `eta_rxncat_species_runner` (03, 04, 06, 07, 08–11),
-`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26), `eta_rxncat_core` also in 04 (`SelectivityResult.ratio` accepts `+inf`, R27). **Read only:** thermo (otherwise), mapping
+`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26), `eta_rxncat_core` also in 04 (`SelectivityResult.ratio` accepts `+inf`, R27), `eta_rxncat_species_runner` also in 13 (`orchestrator/_deadline.py` + `ts_ensemble.py` pre-relax budget, R28). **Read only:** thermo (otherwise), mapping
 (graft, `relax_constrained_core`, `perceive_bonds`, `core_rmsd_angstrom`), optimize (P-RFO,
 `GeometricOptimizer` via injection), engines, store. No new node.
 
 ### Execution checklist (build order; the lead's work queue)
 01 starter + DV rows · 02 core contracts · 03 EngineError · 04 scorer · 05 TS sampler + face ·
 06 TS ensemble runner · 07 selectivity runner + pruning · 08 Tier 4 inputs · 09 unmapped E2E ·
-10 mapped E2E + pruning · 11 acceptance record → **TJ Phase 3** → 12 verdict + 0.6.0 bump.
-(Q-RES1 B would insert 13 before 11 by replan.)
+10 mapped E2E + pruning · 13 HF-13 pre-relax guard (R28) · 11 acceptance record → **TJ Phase 3** →
+12 verdict + 0.6.0 bump. (Q-RES1 B would insert 14 before 11 by replan.)
 
 ### Dependencies
 No new runtime dependency. RDKit (already the conformer engine) and numpy for the sampler; the
@@ -478,7 +489,7 @@ No new runtime dependency. RDKit (already the conformer engine) and numpy for th
 | Asymmetric exclusions from host failures (F3) | Unavailable/Input never cached; any `engine_error` exclusion fails G5 |
 | Mapped ΔΔG‡ near the 1.5 pruning threshold (GFN2 1.753, UMA 1.410) | G6 accepts either branch against the measured value; both branches unit-tested |
 | UMA mapped ΔΔG‡ 0.91 above the 0.5 floor | Inside TJ's window; recorded (R4); a run below 0.5 is a stop-and-report |
-| Injected pre-relax stalls (1 in ~84 members, HF-13) | `timeout 3600` per command; per-member wall time recorded; a timeout is a finding for the lead/TJ |
+| Injected pre-relax stalls (HF-13: 3 of 13 UMA TS1b_x runs; a live geomeTRIC-internal loop) | Slice 13 bounds each pre-relax at 600 s and excludes it as `pre_relax_failed:PreRelaxTimeout` (R28); `timeout 3600` per command stays; per-member wall time recorded |
 | Pre-relax core bound fails on a perturbed sample (1/44, HF-10) | Excluded `pre_relax_failed:CoreDisplacementError`, reported, not gated |
 | ETKDG nondeterminism breaks G7 | `numThreads=1`, fixed seeds; byte-equal resampling test |
 | Exo graft drifts from TS1b_x | Measured 0.046 Å pure graft, 0.022–0.027 Å final (HF-8); forming-core RMSD reported |
@@ -510,6 +521,7 @@ No new runtime dependency. RDKit (already the conformer engine) and numpy for th
 | OPR.0.6.0.10 | slices/10-e2e-mapped-pruning | Run the mapped Cp + cyclobutene endo/exo pair (TS1b_x grafted from TS1a_x) with TS ensembles on GFN2 and UMA, check TJ's 1.5 kcal/mol pruning against the measured ddG dagger, and commit the candidates. |
 | OPR.0.6.0.11 | slices/11-acceptance-record | Assemble the v0.6.0 acceptance record from real per-check outcomes with pending states for TJ, measure run-to-run reproducibility for the Phase 3 bounds, and derive the README claims. |
 | OPR.0.6.0.12 | slices/12-acceptance-verdict | After TJ's Phase 3 promotion and bounds, run the verdict on both recipes against the promoted fixtures and bump the version to 0.6.0 only on pass. |
+| OPR.0.6.0.13 | slices/13-hf13-pre-relax-guard | Bound each ensemble pre-relaxation by a wall-time budget so a stalled geomeTRIC pre-relax (HF-13) becomes a cached, recorded pre_relax_failed:PreRelaxTimeout exclusion and the ensemble continues. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
