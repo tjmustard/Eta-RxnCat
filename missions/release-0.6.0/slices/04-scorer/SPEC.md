@@ -2,7 +2,7 @@
 id: OPR.0.6.0.4
 slice: 04-scorer
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Add score_selectivity, a pure function giving Boltzmann-summed pathway 
 depends_on: [OPR.0.6.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", src/eta_rxncat/thermo/__init__.py, src/eta_rxncat/core/selectivity_models.py, tests/unit/core/test_selectivity_models.py, spec/compiled/architecture.yml]

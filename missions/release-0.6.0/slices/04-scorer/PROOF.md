@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: score_selectivity matches 60-digit closed form (ddG 5e-14 kcal/mol); G8 clean; thermo lazy w/o rdkit; suite 1959 pass at c6bde6f
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

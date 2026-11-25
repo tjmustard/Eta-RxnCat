@@ -16,7 +16,7 @@
 | OPR.0.6.0.1 | 01-starter | audited |  | 2026-11-25T06:57:01+00:00 audited |
 | OPR.0.6.0.2 | 02-core-contracts | audited | OPR.0.6.0.1 | 2026-11-25T07:14:40+00:00 audited |
 | OPR.0.6.0.3 | 03-engine-error | audited | OPR.0.6.0.1 | 2026-11-25T07:23:35+00:00 audited |
-| OPR.0.6.0.4 | 04-scorer | executed | OPR.0.6.0.2 | 2026-11-25T07:32:09+00:00 executed |
+| OPR.0.6.0.4 | 04-scorer | audited | OPR.0.6.0.2 | 2026-11-25T07:37:51+00:00 audited |
 | OPR.0.6.0.5 | 05-ts-sampler | compiled | OPR.0.6.0.2 | 2026-11-25T06:45:38+00:00 compiled |
 | OPR.0.6.0.6 | 06-ts-ensemble | compiled | OPR.0.6.0.3, OPR.0.6.0.5 | 2026-11-25T06:45:48+00:00 compiled |
 | OPR.0.6.0.7 | 07-selectivity-runner | compiled | OPR.0.6.0.4, OPR.0.6.0.6 | 2026-11-25T06:45:48+00:00 compiled |
