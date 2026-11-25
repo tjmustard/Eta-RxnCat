@@ -18,7 +18,7 @@ from typing import Any
 
 import pytest
 from acceptance import out_dir
-from acceptance_record_v060 import PAIRS
+from acceptance_record_v060 import FLEX, PAIRS
 from e2e_env import DEVICES, RECIPE_PARAMS, REPO
 
 from eta_rxncat.orchestrator import Recipe, build_engine, write_report
@@ -44,6 +44,7 @@ def test_accept_v060(recipe_name: str, recipes: Callable[[str], Recipe], commit_
     fragments = out / "fragments"
     pairs = {p: _fragment(fragments / f"{p}.{recipe_name}.json") for p in PAIRS}
     repro = {p: _fragment(fragments / f"repro_{p}.{recipe_name}.json") for p in PAIRS}
+    flexible = {r: _fragment(fragments / f"t4_flexible_{r}.{recipe_name}.json") for r in FLEX}
     status = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=no"],
         cwd=REPO,
@@ -68,6 +69,7 @@ def test_accept_v060(recipe_name: str, recipes: Callable[[str], Recipe], commit_
             "hardware": probe_hardware().model_dump(mode="json"),
             "pairs": pairs,
             "reproducibility": repro,
+            "flexible": flexible,
         },
     )
     assert status == "", "the acceptance record must be produced at a clean, committed tree"

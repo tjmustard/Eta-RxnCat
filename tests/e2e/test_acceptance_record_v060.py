@@ -7,6 +7,8 @@ from typing import Any
 
 import pytest
 from acceptance_record_v060 import (
+    FLEX,
+    FLEX_GATES,
     G1_TESTS,
     G4_TESTS,
     HF1_SHA256,
@@ -19,6 +21,8 @@ from acceptance_record_v060 import (
     ensemble_block,
     entry_states,
     fixture_states,
+    flexible_entry,
+    flexible_states,
     merge_runs,
     outstanding,
     pair_entry,
@@ -115,6 +119,29 @@ def fragment(pair: str, recipe: str, status: str = "pass", **change: Any) -> dic
     return out
 
 
+def flex_fragment(
+    r_group: str, recipe: str, status: str = "pass", n_members: int = 3
+) -> dict[str, Any]:
+    """A slice 14 fragment as test_t4_flexible writes it."""
+    return {
+        "case": f"t4_flexible_{r_group}",
+        "recipe": recipe,
+        "commit_sha": "feed001",
+        "test_outcome": "passed" if status == "pass" else "failed",
+        "failed_checks": [],
+        "checks": {"tier_gates": {g: {"status": status} for g in FLEX_GATES}},
+        "graft": {"n_atoms": 24},
+        "inputs_sha256": {"fragment": "ab"},
+        "reported": {
+            "n_members": n_members,
+            "exclusions_by_reason": {"outside_window": 1},
+            "barrier": {"ensemble_dG_dagger_1M_kcal_mol": 14.0 + FLEX.index(r_group)},
+            "max_pre_relax_wall_time_s": 20.0,
+        },
+        "regression": {"status": "pending_promotion"},
+    }
+
+
 def repro(
     pair: str, recipe: str, d_e: float = 0.0, d_g: float = 0.0, d_y: float = 0.0
 ) -> dict[str, Any]:
@@ -151,6 +178,7 @@ def run_file(recipe: str, **kw: Any) -> dict[str, Any]:
         "hardware": {"gpu": "x"},
         "pairs": {p: fragment(p, recipe) for p in PAIRS},
         "reproducibility": {p: repro(p, recipe, **kw) for p in PAIRS},
+        "flexible": {r: flex_fragment(r, recipe, n_members=3 + i) for i, r in enumerate(FLEX)},
     }
 
 
@@ -172,9 +200,11 @@ COMMANDS = [
 ]
 SUITE = {"command": "uv run pytest", "exit_code": 0, "passed": 10, "failed": 0, "errors": 0}
 UNIT = {"G1": {"status": "pass", "nodes": {}}, "G4": {"status": "pass", "nodes": {}}}
-PENDING = {f"t4.{p}.{r}.regression": "pending_promotion" for p in PAIRS for r in RECIPES} | {
-    "transcription_confirmation": "pending_confirmation"
-}
+PENDING = (
+    {f"t4.{p}.{r}.regression": "pending_promotion" for p in PAIRS for r in RECIPES}
+    | {f"flexible_ensemble.{r}.{x}.regression": "pending_promotion" for r in FLEX for x in RECIPES}
+    | {"transcription_confirmation": "pending_confirmation"}
+)
 
 
 def merged(runs: dict[str, dict[str, Any]] | None = None, commands: Any = None) -> dict[str, Any]:
@@ -505,3 +535,59 @@ def test_bounds_are_missing_when_a_pair_is_not_measured() -> None:
     block = proposed_bounds(reproducibility)["recipes"]["uma"]
     assert block["abs_delta_ts_energy_hartree"]["status"] == "missing"
     assert block["pairs_not_measured"] == ["t4_unmapped"]
+
+
+# --- Slice 14's flexible-ensemble entries -----------------------------------------------------
+
+
+def test_the_record_holds_six_flexible_entries_gated_as_slice_14() -> None:
+    """Replan 4: three R x two recipes, each with gates (a)-(f) as states, regression pending."""
+    record = merged()
+    flexible = record["fixtures"]["flexible_ensemble"]
+    assert set(flexible) == set(FLEX) and all(set(v) == set(RECIPES) for v in flexible.values())
+    states = fixture_states(record["fixtures"])
+    for r in FLEX:
+        for recipe in RECIPES:
+            for gate in FLEX_GATES:
+                assert states[f"flexible_ensemble.{r}.{recipe}.tier_gates.{gate}"] == "pass"
+            assert states[f"flexible_ensemble.{r}.{recipe}.regression"] == "pending_promotion"
+
+
+def test_a_failed_flexible_gate_or_a_missing_entry_is_not_pass() -> None:
+    """A failing gate is a fail state, a missing fragment is missing, a short gate list too."""
+    runs = {r: run_file(r) for r in RECIPES}
+    runs["uma"]["flexible"]["npropyl"] = flex_fragment("npropyl", "uma", "fail")
+    runs["xtb"]["flexible"]["nbutyl"] = {"test_outcome": "missing"}
+    states = fixture_states(merged(runs)["fixtures"])
+    assert states["flexible_ensemble.npropyl.uma.test_outcome"] == "fail"
+    assert states["flexible_ensemble.npropyl.uma.tier_gates.distinct_members_at_least_2"] == "fail"
+    assert states["flexible_ensemble.nbutyl.xtb.test_outcome"] == "missing"
+    short = flexible_entry(flex_fragment("ethyl", "xtb"))
+    short["tier_gates"].pop("weights_sum_to_one")
+    assert flexible_states(short)["tier_gates.complete"] == "missing"
+
+
+def test_flexible_members_order_and_ddg_vs_ethyl_are_reported_not_gated() -> None:
+    """Members per R, the non-decreasing flag and ddG vs ethyl are reported; a decrease passes."""
+    runs = {r: run_file(r) for r in RECIPES}
+    block = merged(runs)["fixtures"]["flexible_ensemble"]
+    nbutyl = block["nbutyl"]["xtb"]["reported"]
+    assert nbutyl["chain_length_order"]["members_by_r"] == {"ethyl": 3, "npropyl": 4, "nbutyl": 5}
+    assert nbutyl["chain_length_order"]["non_decreasing"] is True
+    assert nbutyl["ddG_dagger_vs_ethyl_kcal_mol"] == 2.0
+    assert block["ethyl"]["xtb"]["reported"]["ddG_dagger_vs_ethyl_kcal_mol"] == 0.0
+    runs["xtb"]["flexible"]["nbutyl"] = flex_fragment("nbutyl", "xtb", n_members=2)
+    record = merged(runs)
+    nbutyl = record["fixtures"]["flexible_ensemble"]["nbutyl"]["xtb"]["reported"]
+    assert nbutyl["chain_length_order"]["non_decreasing"] is False
+    assert outstanding(record) == PENDING
+
+
+def test_run_commits_and_the_resume_note_are_in_the_evidence() -> None:
+    """Each fragment's own commit is recorded; the R30 reuse is stated, never implied."""
+    runs = {r: run_file(r) for r in RECIPES}
+    runs["xtb"]["pairs"]["t4_mapped"]["commit_sha"] = "1273070"
+    evidence = merged(runs)["evidence"]
+    assert evidence["run_commits"]["t4.t4_mapped.xtb"] == "1273070"
+    assert evidence["run_commits"]["flexible_ensemble.ethyl.uma"] == "feed001"
+    assert "1273070" in evidence["resume_note"] and "no src/" in evidence["resume_note"]

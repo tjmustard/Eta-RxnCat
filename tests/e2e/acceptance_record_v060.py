@@ -34,10 +34,21 @@ REPO = Path(__file__).resolve().parents[2]
 PAIRS = ("t4_unmapped", "t4_mapped")
 RECIPES = ("xtb", "uma")
 PATHWAYS = ("endo", "exo")
+FLEX = ("ethyl", "npropyl", "nbutyl")
+"""Slice 14: the alkyl R-group series grafted onto TS1a_n (chain length order)."""
 STATES = {"pass", "fail", "pending_promotion", "pending_confirmation", "skipped", "missing"}
 TEST_OUTCOMES = {"passed", "failed", "missing"}
 XYZ_DIR = REPO / "tests" / "e2e" / "data" / "e2e5" / "xyz"
 TIMEOUT_REASON = "pre_relax_failed:PreRelaxTimeout"
+FLEX_GATES = (
+    "graft_pre_relax_no_timeout",
+    "ensemble_no_failed_reason",
+    "distinct_members_at_least_2",
+    "weights_sum_to_one",
+    "faces_equal_the_seeds_no_face_or_engine_error",
+    "second_pass_all_hits_equal_ensemble",
+)
+"""Slice 14's gates (a)-(f), by the names ``t4_flexible.gates`` writes."""
 
 HF1_SHA256 = {
     "TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
@@ -106,6 +117,12 @@ MEASURED_KEYS = {
     "heavy_rmsd_angstrom": "max_heavy_rmsd_angstrom",
     "abs_delta_ddG_dagger_kcal_mol": "max_abs_delta_ddG_dagger_kcal_mol",
 }
+RESUME_NOTE = (
+    "slice 11 paused after C1 1273070 for slice 14 (R30); the GFN2 Tier 4 acceptance runs and the "
+    "GFN2 reproducibility run were made at 1273070 and stand: slice 14 changed no src/ file and no "
+    "Tier 4 helper (git diff --name-only 1273070..<resume HEAD> lists only its new fixture, helper "
+    "and test files), so run_commits names the commit of each fragment"
+)
 KNOWN_LIMITS = (
     "Tier 4 ensembles are reported as measured (member count, exclusions by reason, merges); "
     "HF-10 expects one distinct member per pathway, so the Boltzmann sum is gated at unit level "
@@ -124,7 +141,13 @@ REPORTED_NOTES = {
         "that comparison is a gate, and distinct from the pending Tier 4 regression"
     ),
 }
-FIXTURE_KEYS = {"t4", "unit_proof", "transcriptions", "transcription_confirmation"}
+FIXTURE_KEYS = {
+    "t4",
+    "flexible_ensemble",
+    "unit_proof",
+    "transcriptions",
+    "transcription_confirmation",
+}
 TOP_KEYS = (
     "record_schema",
     "commit_sha",
@@ -168,6 +191,21 @@ def entry_states(entry: dict[str, Any]) -> dict[str, Any]:
     return states
 
 
+def flexible_states(entry: dict[str, Any]) -> dict[str, Any]:
+    """The gated states of one R x recipe flexible-ensemble entry (slice 14 gates (a)-(f))."""
+    outcome = entry.get("test_outcome")
+    if outcome == "missing":
+        return {"test_outcome": "missing"}
+    states: dict[str, Any] = {} if outcome == "passed" else {"test_outcome": "fail"}
+    for gate, value in sorted(entry.get("tier_gates", {}).items()):
+        if _status(value) != "reported":
+            states[f"tier_gates.{gate}"] = _status(value)
+    if len(entry.get("tier_gates", {})) != len(FLEX_GATES):
+        states["tier_gates.complete"] = "missing"
+    states["regression"] = _status(entry.get("regression"))
+    return states
+
+
 def fixture_states(fixtures: dict[str, Any]) -> dict[str, Any]:
     """Every gated state of the record's ``fixtures`` by dotted name."""
     states: dict[str, Any] = {}
@@ -177,6 +215,12 @@ def fixture_states(fixtures: dict[str, Any]) -> dict[str, Any]:
             entry = t4.get(pair, {}).get(recipe, {"test_outcome": "missing"})
             for name, state in entry_states(entry).items():
                 states[f"t4.{pair}.{recipe}.{name}"] = state
+    flexible = fixtures.get("flexible_ensemble", {})
+    for r_group in FLEX:
+        for recipe in RECIPES:
+            entry = flexible.get(r_group, {}).get(recipe, {"test_outcome": "missing"})
+            for name, state in flexible_states(entry).items():
+                states[f"flexible_ensemble.{r_group}.{recipe}.{name}"] = state
     unit = fixtures.get("unit_proof", {})
     for group in UNIT_GROUPS:
         states[f"unit_proof.{group}"] = _status(unit.get(group, {"status": "missing"}))
@@ -220,6 +264,9 @@ def check(record: dict[str, Any]) -> list[str]:
     t4 = fixtures.get("t4", {})
     if set(t4) != set(PAIRS) or any(set(t4[p]) != set(RECIPES) for p in t4):
         problems.append("fixtures.t4 must be every pair x recipe")
+    flexible = fixtures.get("flexible_ensemble", {})
+    if set(flexible) != set(FLEX) or any(set(flexible[r]) != set(RECIPES) for r in flexible):
+        problems.append("fixtures.flexible_ensemble must be every R x recipe")
     for name, state in fixture_states(fixtures).items():
         if state not in STATES:
             problems.append(f"{name}: state {state!r} not in {sorted(STATES)}")
@@ -227,6 +274,13 @@ def check(record: dict[str, Any]) -> list[str]:
         for recipe, entry in t4[pair].items():
             if entry.get("test_outcome") not in TEST_OUTCOMES:
                 problems.append(f"t4.{pair}.{recipe}: test_outcome {entry.get('test_outcome')!r}")
+    for r_group in flexible:
+        for recipe, entry in flexible[r_group].items():
+            if entry.get("test_outcome") not in TEST_OUTCOMES:
+                problems.append(
+                    f"flexible_ensemble.{r_group}.{recipe}: test_outcome "
+                    f"{entry.get('test_outcome')!r}"
+                )
     if list(record.get("known_limits", [])) != list(KNOWN_LIMITS):
         problems.append("known_limits are not the fixed lines")
     for key in ("command", "exit_code", "passed", "failed"):
@@ -298,6 +352,7 @@ def pair_entry(fragment: dict[str, Any]) -> dict[str, Any]:
         },
         "reported": fragment.get("reported"),
         "second_run_cache": fragment.get("second_run_cache"),
+        "run_commit_sha": fragment.get("commit_sha"),
         "regression": {
             "status": "pending_promotion",
             "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
@@ -310,6 +365,78 @@ def pair_entry(fragment: dict[str, Any]) -> dict[str, Any]:
         graft.pop("pre_relaxed_start", None)
         entry["exo_graft"] = graft
     return entry
+
+
+def flexible_entry(fragment: dict[str, Any]) -> dict[str, Any]:
+    """The entry of one R x recipe from slice 14's E2E fragment (gated: its gates (a)-(f))."""
+    if fragment.get("test_outcome") == "missing":
+        return {"test_outcome": "missing"}
+    reported = dict(fragment.get("reported") or {})
+    return {
+        "test_outcome": fragment.get("test_outcome"),
+        "failed_checks": fragment.get("failed_checks", []),
+        "tier_gates": dict(fragment.get("checks", {}).get("tier_gates", {})),
+        "reported": reported,
+        "graft": fragment.get("graft"),
+        "inputs_sha256": fragment.get("inputs_sha256"),
+        "run_commit_sha": fragment.get("commit_sha"),
+        "regression": {
+            "status": "pending_promotion",
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+        },
+    }
+
+
+def flexible_block(runs: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """The six ``flexible_ensemble`` entries plus, per recipe, the reported chain-length order.
+
+    Members per R, the order flag and ΔΔG‡ versus ethyl are reported, never gated; the entries'
+    gated states are slice 14's gates (a)-(f).
+    """
+    gone = {"test_outcome": "missing"}
+    block: dict[str, Any] = {
+        r: {
+            recipe: flexible_entry(runs[recipe].get("flexible", {}).get(r, gone))
+            for recipe in RECIPES
+        }
+        for r in FLEX
+    }
+    for recipe in RECIPES:
+        counts = {}
+        barrier = {}
+        for r in FLEX:
+            rep = block[r][recipe].get("reported", {})
+            if rep.get("n_members") is not None:
+                counts[r] = rep["n_members"]
+            b = rep.get("barrier") or {}
+            if b.get("ensemble_dG_dagger_1M_kcal_mol") is not None:
+                barrier[r] = b["ensemble_dG_dagger_1M_kcal_mol"]
+        ordered = [counts[r] for r in FLEX if r in counts]
+        for r in FLEX:
+            if block[r][recipe].get("test_outcome") == "missing":
+                continue
+            block[r][recipe]["reported"]["ddG_dagger_vs_ethyl_kcal_mol"] = (
+                barrier[r] - barrier["ethyl"] if r in barrier and "ethyl" in barrier else None
+            )
+            block[r][recipe]["reported"]["chain_length_order"] = {
+                "status": "reported",
+                "members_by_r": counts,
+                "complete": len(ordered) == len(FLEX),
+                "non_decreasing": all(a <= b for a, b in zip(ordered, ordered[1:], strict=False)),
+            }
+    return block
+
+
+def run_commits(t4: dict[str, Any], flexible: dict[str, Any]) -> dict[str, Any]:
+    """The commit each acceptance fragment's test ran at (a fragment carries its own sha)."""
+    out: dict[str, Any] = {}
+    for pair, by_recipe in sorted(t4.items()):
+        for recipe, entry in sorted(by_recipe.items()):
+            out[f"t4.{pair}.{recipe}"] = entry.get("run_commit_sha")
+    for r_group, by_recipe in sorted(flexible.items()):
+        for recipe, entry in sorted(by_recipe.items()):
+            out[f"flexible_ensemble.{r_group}.{recipe}"] = entry.get("run_commit_sha")
+    return out
 
 
 def transcriptions_block(xyz_dir: Path = XYZ_DIR) -> dict[str, Any]:
@@ -559,8 +686,10 @@ def merge_runs(
         }
         for recipe in RECIPES
     }
+    flexible = flexible_block(runs)
     fixtures = {
         "t4": t4,
+        "flexible_ensemble": flexible,
         "unit_proof": unit_proof,
         **transcription_fixtures(xyz_dir),
     }
@@ -580,6 +709,8 @@ def merge_runs(
         "known_limits": list(KNOWN_LIMITS),
         "reported_notes": dict(REPORTED_NOTES),
         "evidence": {
+            "run_commits": run_commits(t4, flexible),
+            "resume_note": RESUME_NOTE,
             "candidates_phase3_set": (
                 "tests/candidate_outputs/v0.6.0/ (slices 09-10), committed for TJ's Phase 3 "
                 "review; never read by this record"
