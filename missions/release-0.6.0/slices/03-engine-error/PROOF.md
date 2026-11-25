@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: EngineRuntimeError cached as engine_error at ts_opt and frequency, 0 engine calls on rerun; host/input errors uncached; suite 1906 pass at 1ce7049
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

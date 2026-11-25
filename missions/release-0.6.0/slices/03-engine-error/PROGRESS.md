@@ -6,9 +6,9 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: executed
-- status: active
-- last event: 2026-11-25T07:19:21+00:00 executed
+- hacf_status: audited
+- status: done
+- last event: 2026-11-25T07:23:35+00:00 audited
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
@@ -16,3 +16,4 @@
 - 2026-11-25T06:45:37+00:00 compiled - created by hyper_scope.py slice create
 - 2026-11-25T07:19:21+00:00 executing - escape_tracking: v1; 03-engine-error build from 1e39dac
 - 2026-11-25T07:19:21+00:00 executed
+- 2026-11-25T07:23:35+00:00 audited
