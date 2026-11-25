@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -64,9 +64,9 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T23:25:21+00:00'
-    reviewed_by: audit:13-acceptance-verdict
-    summary: patched description
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
-    summary: patched description
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,14 +177,14 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T04:34:24+00:00'
-    reviewed_by: audit:02-ts-contracts
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -228,12 +228,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T06:09:51+00:00'
-    reviewed_by: audit:05-ts-runner
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -274,12 +274,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T23:25:21+00:00'
-    reviewed_by: audit:13-acceptance-verdict
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -329,12 +329,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T09:04:22+00:00'
-    reviewed_by: audit:15-pyscf-cartesian-basis
-    summary: patched description
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -388,12 +388,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.1
   review:
-    reviewed_at: '2026-11-24T05:33:37+00:00'
-    reviewed_by: audit:04-ts-validator
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -444,14 +444,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-24T09:04:22+00:00'
-    reviewed_by: audit:15-pyscf-cartesian-basis
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.1
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -503,14 +503,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-24T09:04:22+00:00'
-    reviewed_by: audit:15-pyscf-cartesian-basis
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.1
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -595,14 +595,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-24T23:25:21+00:00'
-    reviewed_by: audit:13-acceptance-verdict
-    summary: patched description
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
+    summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.1
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -655,8 +655,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-24T18:17:45+00:00'
-    reviewed_by: audit:11-geometric-crosscheck
+    reviewed_at: '2026-11-25T06:56:41+00:00'
+    reviewed_by: audit:01-starter
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.1
