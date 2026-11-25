@@ -78,3 +78,45 @@ kcal/mol (TJ A4), except TS1b_n, where TJ set [20, 34].
 | TS3a | tetrazine 3 −374.733585, cyclopropene −116.529371 | −491.232873 | 18.877 | 16.983 |
 | TS4a | tetrazine 4 −970.031351, cyclopropene −116.529371 | −1086.545437 | 9.591 | 7.697 |
 | N4 | Cp −193.937243 (Paton), cyclobutenone −229.845861 | −423.744120 | 24.463 | 22.569 |
+
+## Tier 4 (v0.6.0): the exo structures
+
+TJ Q-E4, verbatim: "Q4. A but the files attached can be used as reference." The team transcribes
+TS1b_x and P1b_x from Liu's SI and TJ confirms them at Phase 3. TS1a_x is TJ's, taken byte-identical
+from the `XYZ_FILES` literal of his builder (`ast.parse` + `ast.literal_eval`; never executed; the
+builder's sha256 is the one above, equal to its line in `MANIFEST.sha256`).
+
+Procedure for the two transcribed files (mission HF-1), run in a scratch directory by spec-resolve
+and again, independently, by the execute seat in slice 08; the outputs are byte-equal and equal to
+the mission's sha256s. `pdftotext -f <p> -l <p> -x <0|300> -y 0 -W <300|312> -H 792 -layout
+ja408437u_SI.pdf liu_p<p>_<L|R>.txt` (left column `-x 0 -W 300`, right column `-x 300 -W 312`) for
+p = 9 (both columns), 10 (left) and 20 (both). TS1b_x is the one atom line after the `TS1b_x` label in
+`liu_p9_R.txt` plus the first 20 atom lines of `liu_p10_L.txt`; P1b_x is the 21 atom lines after the
+`P1b_x` label in `liu_p20_R.txt`. An atom line is matched whole by
+`([A-Z][a-z]?)\s+(-?\d+\.\d+)\s+(-?\d+\.\d+)\s+(-?\d+\.\d+)` and its coordinate strings are copied
+verbatim; the file is `"<N>\n<header>\n"` and one `S x y z\n` per atom. Neither the SI PDF nor any
+extracted text is committed. The SI is Liu, Paton, Kim, Liang, Houk, *J. Am. Chem. Soc.* 2013, 135,
+15642 (`ja408437u_SI.pdf`, sha256 `98f37dc41f252f4e031e750d9343c3c478d4e5651940c3d0ed54e587b476f6af`),
+M06-2X/6-31G(d).
+
+| File | Source | SI page | Energies as printed (Eh) | sha256 | Transcriber |
+|---|---|---|---|---|---|
+| `xyz/TS1a_x.xyz` | Liu | S9 | E −310.551522, G −310.428509 | `ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60` | TJ (builder `XYZ_FILES`; slice 08 extraction) |
+| `xyz/TS1b_x.xyz` | Liu | S9 (right, 1 atom) + S10 (left, 20 atoms) | E −349.872275, H −349.679329, G −349.718879 | `2a0b8362cdd36464c5f3f7a196927005c1cc933f3fdc6a693ae0d56ff365fd82` | team (spec-resolve; slice 08 re-transcription) |
+| `xyz/P1b_x.xyz` | Liu | S20 (right) | E −349.957548, G −349.797634 | `ca8706431f6e8b57662a3f65196a9ca3cba3288a4eda68308f7bc3c9699b5eec` | team (spec-resolve; slice 08 re-transcription) |
+
+TS1a_x's header does not state the level of theory; TS1b_x and P1b_x state M06-2X/6-31G(d).
+
+Derived SMILES of P1b_x (RDKit 2026.09.2 `DetermineBonds(charge=0)` + `AssignStereochemistryFrom3D`),
+for TJ's confirmation at Phase 3: `C1=C[C@H]2C[C@@H]1[C@@H]1CC[C@@H]12` (the exo adduct of Cp and
+cyclobutene; P1a_n above is the endo adduct of Cp and cyclopropene).
+
+## Tier 4 references (mission HF-2, M3)
+
+Each ΔΔG‡ is header G arithmetic, G(exo TS) − G(endo TS), × 627.5094740631 kcal/mol per Eh. TJ's
++4.3 and +1.8 are the window centres; Liu's values are recorded beside them.
+
+| Pair | G(exo) (Eh) | G(endo) (Eh) | ΔΔG‡ (kcal/mol) | TJ |
+|---|---|---|---|---|
+| TS1a_x − TS1a_n (unmapped) | −310.428509 | −310.435319 | 4.273 | +4.3 |
+| TS1b_x − TS1b_n (mapped) | −349.718879 | −349.721825 | 1.849 | +1.8 |

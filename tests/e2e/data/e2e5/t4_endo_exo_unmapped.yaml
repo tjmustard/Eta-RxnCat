@@ -1,0 +1,61 @@
+# Tier 4 fixture (v0.6.0): endo vs exo for Cp + cyclopropene, unmapped. Provisional per TJ Q-E3
+# ("Q3. B, but these may need updating as we define the YAML/JSON format."); the structures are
+# TJ's Q-E4 "Q4. A but the files attached can be used as reference." Indices are 0-based.
+# Sources and derived references: SOURCES.md. TJ confirms the transcriptions at Phase 3.
+schema: 1
+fixture: e2e5_t4_endo_exo_unmapped
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclopropene
+    smiles: C1=CC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/5_cyclopropene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+pathways:
+  - pathway: endo
+    ts_id: TS1a_n
+    charge: 0
+    spin_multiplicity: 1
+    active_atom_indices: [0, 1, 2, 3, 4, 5]
+    forming_bonds: [[1, 2], [3, 5]]
+    start_xyz: xyz/TS1a_n.xyz
+    reference:
+      xyz: xyz/TS1a_n.xyz
+      start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+      map_rule: "identity: the start is the reference geometry"
+  - pathway: exo
+    ts_id: TS1a_x
+    charge: 0
+    spin_multiplicity: 1
+    active_atom_indices: [0, 1, 2, 3, 4, 5]
+    forming_bonds: [[1, 2], [3, 5]]
+    start_xyz: xyz/TS1a_x.xyz
+    reference:
+      xyz: xyz/TS1a_x.xyz
+      start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+      map_rule: "identity: the start is the reference geometry"
+selectivity:
+  kind: de
+  temperature_k: 298.15
+  # TJ's centre (+4.3) and Liu's header-G value (+4.273), both kcal/mol, exo minus endo.
+  reference_ddG_dagger_kcal_mol: 4.3
+  liu_header_ddG_dagger_kcal_mol: 4.273
+  # UMA (gated): window on the Boltzmann-summed ddG-dagger. GFN2 (mission R21): endo is the major
+  # pathway and ddG-dagger > 0.5 kcal/mol (strict), never a numeric window.
+  uma_window_kcal_mol: {low: 2.3, high: 6.3, low_inclusive: true, high_inclusive: true}
+  gfn2_gate: {endo_major: true, ddG_dagger_greater_than_kcal_mol: 0.5}
+literature:
+  structures:
+    TS1a_n: {E_hartree: -310.559154, G_hartree: -310.435319}
+    TS1a_x: {E_hartree: -310.551522, G_hartree: -310.428509}
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"

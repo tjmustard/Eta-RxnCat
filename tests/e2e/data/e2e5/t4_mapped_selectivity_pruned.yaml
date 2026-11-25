@@ -1,0 +1,95 @@
+# Tier 4 fixture (v0.6.0): endo vs exo for Cp + cyclobutene, mapped, with the evaluated pruning rule
+# (TJ Q2 A: threshold 1.5 kcal/mol, in the fixture, no library default). Provisional per TJ Q-E3
+# ("Q3. B, but these may need updating as we define the YAML/JSON format."); the structures are
+# TJ's Q-E4 "Q4. A but the files attached can be used as reference." Indices are 0-based.
+# Sources and derived references: SOURCES.md. TJ confirms the transcriptions at Phase 3.
+schema: 1
+fixture: e2e5_t4_mapped_selectivity_pruned
+species:
+  - species_id: cyclopentadiene
+    smiles: C1=CCC=C1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/1_cyclopentadiene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+  - species_id: cyclobutene
+    smiles: C1=CCC1
+    charge: 0
+    spin_multiplicity: 1
+    seed_xyz: [xyz/6_cyclobutene.xyz]
+    conformer_options:
+      n_embed: 10
+      seed: 42
+pathways:
+  - pathway: endo
+    ts_id: TS1b_n
+    charge: 0
+    spin_multiplicity: 1
+    active_atom_indices: [0, 1, 2, 3, 4, 5]
+    forming_bonds: [[1, 2], [3, 5]]
+    # The relaxed M1 graft (v0.4.0, promoted by TJ); {recipe} is xtb or uma.
+    start_from_fixture:
+      path_template: tests/fixtures/v0.4.0/m1_relaxed.{recipe}.json
+      key: relaxed_product
+    reference:
+      xyz: xyz/TS1b_n.xyz
+      start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 7, 8, 17, 18, 19, 20]
+      map_rule: "M1 graft_to_ts1b_n_map (v0.4.0 R2): lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_n's perceived graph; no coordinates"
+  - pathway: exo
+    ts_id: TS1b_x
+    charge: 0
+    spin_multiplicity: 1
+    active_atom_indices: [0, 1, 2, 3, 4, 5]
+    forming_bonds: [[1, 2], [3, 5]]
+    # Cyclobutene grafted onto TS1a_x with the M1 YAML's keep/delete/alignment/core lists unchanged
+    # (mission HF-8); Liu's TS1b_x is the reference only, never a coordinate donor.
+    start_grafts:
+      template: xyz/TS1a_x.xyz
+      fragment: xyz/6_cyclobutene.xyz
+      grafts:
+        - keep: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]
+          delete: [7, 16, 17]
+          alignment_pairs: [[2, 0], [3, 3], [10, 4], [11, 9]]  # [template, fragment]
+          fragment_delete: []
+          constrained_core: [1, 2, 3, 5]
+      pre_relax:
+        core: [1, 2, 3, 5]
+        maxiter: 200
+    reference:
+      xyz: xyz/TS1b_x.xyz
+      start_to_reference_map: [0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 7, 8, 17, 18, 19, 20]
+      map_rule: "mission R2 / ADR-0031: lexicographically smallest element-preserving isomorphism of the graft source graph onto TS1b_x's perceived graph; no coordinates (tests re-derive it)"
+pruning_rule:
+  id: endo_exo_ddG
+  metric: ddG_dagger_kcal_mol
+  pathways: [endo, exo]
+  threshold_kcal_mol: 1.5
+  prune: minor_pathway_priority_ge_2
+downstream_exo_minor:
+  node_id: downstream_exo_minor
+  priority: 2
+  pathway: exo
+  species_id: P1b_x
+  # Derived by RDKit DetermineBonds(charge=0) + AssignStereochemistryFrom3D; TJ confirms at Phase 3.
+  smiles: "C1=C[C@H]2C[C@@H]1[C@@H]1CC[C@@H]12"
+  charge: 0
+  spin_multiplicity: 1
+  xyz: xyz/P1b_x.xyz
+selectivity:
+  kind: de
+  temperature_k: 298.15
+  # TJ's centre (+1.8) and Liu's header-G value (+1.849), both kcal/mol, exo minus endo.
+  reference_ddG_dagger_kcal_mol: 1.8
+  liu_header_ddG_dagger_kcal_mol: 1.849
+  # UMA (gated): (0.5, 3.8] on the Boltzmann-summed ddG-dagger (mission R12). GFN2 (R21): endo is
+  # the major pathway and ddG-dagger > 0.5 kcal/mol (strict), never a numeric window.
+  uma_window_kcal_mol: {low: 0.5, high: 3.8, low_inclusive: false, high_inclusive: true}
+  gfn2_gate: {endo_major: true, ddG_dagger_greater_than_kcal_mol: 0.5}
+literature:
+  structures:
+    TS1b_n: {E_hartree: -349.874922, G_hartree: -349.721825}
+    TS1b_x: {E_hartree: -349.872275, H_hartree: -349.679329, G_hartree: -349.718879}
+    P1b_x: {E_hartree: -349.957548, G_hartree: -349.797634}
+  source: "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"

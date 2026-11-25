@@ -8,7 +8,7 @@ from typing import Any
 import yaml
 
 from eta_rxncat.conformers import ConformerOptions
-from eta_rxncat.core import MolecularState
+from eta_rxncat.core import MolecularState, PathwayPruningRule
 from eta_rxncat.orchestrator import BarrierSpec, ReactionSpec, SpeciesSpec
 
 DATA = Path(__file__).parent / "data"
@@ -184,24 +184,43 @@ class TSFixture:
         Raises:
             ValueError: For ``start_grafts`` (built by the TS4a slice), or a missing recipe.
         """
-        if self.start.form == "start_xyz" and self.start.xyz is not None:
-            state = read_xyz(self.start.xyz, self.charge, self.spin_multiplicity)
-        elif self.start.form == "start_from_fixture" and self.start.path_template is not None:
-            if recipe is None:
-                raise ValueError(f"{self.name}: start_from_fixture needs a recipe")
-            path = REPO / self.start.path_template.format(recipe=recipe)
-            raw = json.loads(path.read_text(encoding="utf-8"))[str(self.start.key)]
-            state = MolecularState(
-                symbols=list(raw["symbols"]),
-                coordinates=[list(row) for row in raw["coordinates_angstrom"]],
-                charge=int(raw["charge"]),
-                spin_multiplicity=int(raw["multiplicity"]),
-            )
-        else:
-            raise ValueError(f"{self.name}: start form {self.start.form} has no direct geometry")
-        return MolecularState.model_validate(
-            {**state.model_dump(), "active_atom_indices": list(self.active_atom_indices)}
+        return _resolve_start(
+            self.name,
+            self.start,
+            self.charge,
+            self.spin_multiplicity,
+            self.active_atom_indices,
+            recipe,
         )
+
+
+def _resolve_start(
+    name: str,
+    start: "TSStart",
+    charge: int,
+    spin_multiplicity: int,
+    active_atom_indices: tuple[int, ...],
+    recipe: str | None,
+) -> MolecularState:
+    """Return a start geometry (``start_xyz`` or ``start_from_fixture``) with its active set."""
+    if start.form == "start_xyz" and start.xyz is not None:
+        state = read_xyz(start.xyz, charge, spin_multiplicity)
+    elif start.form == "start_from_fixture" and start.path_template is not None:
+        if recipe is None:
+            raise ValueError(f"{name}: start_from_fixture needs a recipe")
+        path = REPO / start.path_template.format(recipe=recipe)
+        raw = json.loads(path.read_text(encoding="utf-8"))[str(start.key)]
+        state = MolecularState(
+            symbols=list(raw["symbols"]),
+            coordinates=[list(row) for row in raw["coordinates_angstrom"]],
+            charge=int(raw["charge"]),
+            spin_multiplicity=int(raw["multiplicity"]),
+        )
+    else:
+        raise ValueError(f"{name}: start form {start.form} has no direct geometry")
+    return MolecularState.model_validate(
+        {**state.model_dump(), "active_atom_indices": list(active_atom_indices)}
+    )
 
 
 def _exact_keys(path: Path, where: str, block: dict[str, Any], keys: set[str]) -> None:
@@ -332,3 +351,227 @@ T3_YAMLS = (
 def t3(name: str) -> TSFixture:
     """Load one Tier 3 TS fixture by file name."""
     return load_ts_fixture(DATA / "e2e5" / name)
+
+
+# --- Tier 4 selectivity fixtures (v0.6.0, provisional per TJ Q-E3) --------------------------------
+
+
+@dataclass(frozen=True)
+class T4Pathway:
+    """One competing pathway of a Tier 4 fixture: its TS request and reference."""
+
+    pathway: str
+    ts_id: str
+    charge: int
+    spin_multiplicity: int
+    active_atom_indices: tuple[int, ...]
+    forming_bonds: tuple[tuple[int, int], ...]
+    start: TSStart
+    reference: MolecularState
+    start_to_reference_map: tuple[int, ...]
+    map_rule: str
+
+    def start_state(self, recipe: str | None = None) -> MolecularState:
+        """Return the start geometry (``start_xyz`` or ``start_from_fixture``), active set set."""
+        return _resolve_start(
+            self.ts_id,
+            self.start,
+            self.charge,
+            self.spin_multiplicity,
+            self.active_atom_indices,
+            recipe,
+        )
+
+
+@dataclass(frozen=True)
+class T4Downstream:
+    """The priority-2 node ``downstream_exo_minor`` of the mapped fixture."""
+
+    node_id: str
+    priority: int
+    pathway: str
+    species_id: str
+    smiles: str
+    charge: int
+    spin_multiplicity: int
+    xyz: Path
+
+
+@dataclass(frozen=True)
+class T4Window:
+    """A window on the Boltzmann-summed ddG-dagger (kcal/mol) with its inclusive ends."""
+
+    low: float
+    high: float
+    low_inclusive: bool
+    high_inclusive: bool
+
+    def contains(self, value: float) -> bool:
+        """Return whether ``value`` is inside the window."""
+        above = value >= self.low if self.low_inclusive else value > self.low
+        below = value <= self.high if self.high_inclusive else value < self.high
+        return above and below
+
+
+@dataclass(frozen=True)
+class T4Fixture:
+    """A Tier 4 fixture: species, two competing pathways, the references and any pruning."""
+
+    name: str
+    path: Path
+    species: tuple[SpeciesSpec, ...]
+    pathways: tuple[T4Pathway, ...]
+    kind: str
+    temperature_k: float
+    reference_ddG_dagger_kcal_mol: float
+    liu_header_ddG_dagger_kcal_mol: float
+    uma_window: T4Window
+    gfn2_gate: dict[str, Any]
+    literature: dict[str, Any]
+    pruning_rule: PathwayPruningRule | None
+    downstream: T4Downstream | None
+
+    def pathway(self, label: str) -> T4Pathway:
+        """Return the pathway ``label``."""
+        return next(p for p in self.pathways if p.pathway == label)
+
+
+T4_PATHWAY_KEYS = {"pathway", "ts_id", "charge", "spin_multiplicity", "active_atom_indices"}
+T4_SELECTIVITY_KEYS = {
+    "kind",
+    "temperature_k",
+    "reference_ddG_dagger_kcal_mol",
+    "liu_header_ddG_dagger_kcal_mol",
+    "uma_window_kcal_mol",
+    "gfn2_gate",
+}
+
+
+def _t4_pathway(path: Path, block: dict[str, Any]) -> T4Pathway:
+    forms = set(block) & set(TS_START_FORMS)
+    _exact_keys(path, "pathways[]", block, T4_PATHWAY_KEYS | {"forming_bonds", "reference"} | forms)
+    start = _ts_start(path, block)
+    ref = block["reference"]
+    _exact_keys(path, "pathways[].reference", ref, {"xyz", "start_to_reference_map", "map_rule"})
+    reference = read_xyz(
+        path.parent / str(ref["xyz"]), int(block["charge"]), int(block["spin_multiplicity"])
+    )
+    mapping = tuple(int(i) for i in ref["start_to_reference_map"])
+    if sorted(mapping) != list(range(len(reference.symbols))):
+        raise ValueError(f"{path}: start_to_reference_map is not a permutation of the reference")
+    return T4Pathway(
+        pathway=str(block["pathway"]),
+        ts_id=str(block["ts_id"]),
+        charge=int(block["charge"]),
+        spin_multiplicity=int(block["spin_multiplicity"]),
+        active_atom_indices=tuple(int(i) for i in block["active_atom_indices"]),
+        forming_bonds=_pairs(path, "pathways[].forming_bonds", block["forming_bonds"]),
+        start=start,
+        reference=reference,
+        start_to_reference_map=mapping,
+        map_rule=str(ref["map_rule"]),
+    )
+
+
+def load_t4_fixture(path: Path) -> T4Fixture:
+    """Load and validate a Tier 4 fixture YAML (``schema: 1``, two competing pathways).
+
+    The optional ``pruning_rule`` goes through ``PathwayPruningRule`` (slice 02), so its threshold
+    is required and has no default; ``downstream_exo_minor`` must name a pathway of the fixture.
+
+    Raises:
+        ValueError: On a wrong schema; missing or unknown keys at any level; not exactly two
+            pathways with distinct labels; a window that is not ``low < high``; a pruning rule
+            naming other pathways; or a downstream node on an unknown pathway.
+    """
+    path = Path(path)
+    data: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if data.get("schema") != 1:
+        raise ValueError(f"{path}: schema must be 1")
+    optional = {"pruning_rule", "downstream_exo_minor"} & set(data)
+    _exact_keys(
+        path,
+        "top-level",
+        data,
+        {"schema", "fixture", "species", "pathways", "selectivity", "literature"} | optional,
+    )
+    species = _species(path, data["species"])
+    pathways = tuple(_t4_pathway(path, block) for block in data["pathways"])
+    labels = [p.pathway for p in pathways]
+    if len(pathways) != 2 or len(set(labels)) != 2:
+        raise ValueError(f"{path}: need exactly two pathways with distinct labels, got {labels}")
+    selectivity = data["selectivity"]
+    _exact_keys(path, "selectivity", selectivity, T4_SELECTIVITY_KEYS)
+    window_block = selectivity["uma_window_kcal_mol"]
+    _exact_keys(
+        path,
+        "selectivity.uma_window_kcal_mol",
+        window_block,
+        {"low", "high", "low_inclusive", "high_inclusive"},
+    )
+    window = T4Window(
+        low=float(window_block["low"]),
+        high=float(window_block["high"]),
+        low_inclusive=bool(window_block["low_inclusive"]),
+        high_inclusive=bool(window_block["high_inclusive"]),
+    )
+    if not window.low < window.high:
+        raise ValueError(f"{path}: uma_window_kcal_mol must have low < high")
+    rule = None
+    if "pruning_rule" in data:
+        rule = PathwayPruningRule.model_validate(data["pruning_rule"])
+        if sorted(rule.pathways) != sorted(labels):
+            raise ValueError(f"{path}: pruning_rule pathways {rule.pathways} are not {labels}")
+    downstream = None
+    if "downstream_exo_minor" in data:
+        block = data["downstream_exo_minor"]
+        _exact_keys(
+            path,
+            "downstream_exo_minor",
+            block,
+            {
+                "node_id",
+                "priority",
+                "pathway",
+                "species_id",
+                "smiles",
+                "charge",
+                "spin_multiplicity",
+                "xyz",
+            },
+        )
+        if block["pathway"] not in labels:
+            raise ValueError(f"{path}: downstream_exo_minor pathway {block['pathway']!r} unknown")
+        downstream = T4Downstream(
+            node_id=str(block["node_id"]),
+            priority=int(block["priority"]),
+            pathway=str(block["pathway"]),
+            species_id=str(block["species_id"]),
+            smiles=str(block["smiles"]),
+            charge=int(block["charge"]),
+            spin_multiplicity=int(block["spin_multiplicity"]),
+            xyz=path.parent / str(block["xyz"]),
+        )
+    return T4Fixture(
+        name=str(data["fixture"]),
+        path=path,
+        species=tuple(species),
+        pathways=pathways,
+        kind=str(selectivity["kind"]),
+        temperature_k=float(selectivity["temperature_k"]),
+        reference_ddG_dagger_kcal_mol=float(selectivity["reference_ddG_dagger_kcal_mol"]),
+        liu_header_ddG_dagger_kcal_mol=float(selectivity["liu_header_ddG_dagger_kcal_mol"]),
+        uma_window=window,
+        gfn2_gate=dict(selectivity["gfn2_gate"]),
+        literature=data["literature"],
+        pruning_rule=rule,
+        downstream=downstream,
+    )
+
+
+T4_YAMLS = ("t4_endo_exo_unmapped.yaml", "t4_mapped_selectivity_pruned.yaml")
+
+
+def t4(name: str) -> T4Fixture:
+    """Load one Tier 4 fixture by file name."""
+    return load_t4_fixture(DATA / "e2e5" / name)
