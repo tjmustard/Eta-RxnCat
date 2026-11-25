@@ -6,11 +6,13 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: compiled
+- hacf_status: executed
 - status: active
-- last event: 2026-11-25T06:45:48+00:00 compiled
+- last event: 2026-11-25T09:48:10+00:00 executed
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
 
 - 2026-11-25T06:45:48+00:00 compiled - created by hyper_scope.py slice create
+- 2026-11-25T09:48:09+00:00 executing - escape_tracking: v1; 09-e2e-unmapped build from e010dfd
+- 2026-11-25T09:48:10+00:00 executed
