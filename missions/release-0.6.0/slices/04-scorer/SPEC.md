@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_species_runner
 parent: null
-hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
+hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", src/eta_rxncat/thermo/__init__.py, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/orchestrator/test_selectivity_score.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -49,6 +49,14 @@ Context the builder needs:
   `pyscf`, `fairchem`, `geometric`, `rdkit` is in `sys.modules`. If `eta_rxncat.orchestrator`'s
   package `__init__` pulls in heavy modules, import the selectivity module so that it does not (lazy
   exports in `orchestrator/__init__.py` are acceptable; record what changed).
+- **Replan 1 (mission R26, lead ruling A):** `import eta_rxncat.thermo.constants` loads RDKit today,
+  because `thermo/__init__.py` eagerly imports `symmetry.py` and `masses.py` (`from rdkit import
+  Chem`); measured at `808e50c`. Make `src/eta_rxncat/thermo/__init__.py`'s exports lazy (PEP 562
+  module `__getattr__` mapping each public name to its submodule, the same imports under
+  `TYPE_CHECKING` for mypy, `__all__` unchanged), so every existing `from eta_rxncat.thermo import X`
+  still works and the scorer imports the real constants from `eta_rxncat.thermo.constants`. Blast
+  radius gains node `eta_rxncat_thermo` (it already owns `src/eta_rxncat/thermo/**`; no ledger
+  write).
 - **Seat rules (every slice):** `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp` (never /tmp); every
   framework script with `python3`; Task 1 is `python3 .agents/scripts/hyper_codegraph.py index`
   (must print `index: ok`); run `hypergraph_updater.py --from-diff <Start> --apply` **once** after
@@ -75,10 +83,14 @@ which the subprocess test settles.
 2. US-005: weights per member, summing to 1 within 1e-12, order-free.
 3. US-004: every refusal raises `SelectivityInputError` with the offending field named.
 4. G8: the import test passes.
+5. R26: every name in `eta_rxncat.thermo.__all__` still imports (`from eta_rxncat.thermo import X`
+   for each, test), the existing thermo tests pass unchanged, and a subprocess test shows
+   `import eta_rxncat.thermo.constants` leaves `rdkit` out of `sys.modules`.
 
 ## 3. Implementation Plan (Task List)
 
 - [ ] Task 1: codegraph index → `index: ok`; record Start; read `thermo` constants, slice 02 models.
+- [ ] Task 2a: lazy `thermo/__init__.py` (R26) + its tests (requirement 5).
 - [ ] Task 2: `orchestrator/selectivity.py` (`score_selectivity`, `SelectivityInputError`); export.
 - [ ] Task 3: `tests/unit/orchestrator/test_selectivity_score.py` (G1, refusals, G8); required checks.
 - [ ] Task 4: commit; updater once (node `eta_rxncat_species_runner`).
@@ -88,11 +100,14 @@ which the subprocess test settles.
 - **DO NOT** clamp exponents or define local physical constants (DV-03).
 - **DO NOT** call an engine, RDKit or geomeTRIC from the scorer.
 - **DO NOT** read or copy the starter's `selectivity.py`.
+- **DO NOT** change thermo behaviour, any thermo constant or value, or any thermo submodule; R26
+  touches only `thermo/__init__.py`'s import mechanics. **DO NOT** move the constants (lead ruling:
+  not option B).
 
 ## Proof contract
 
 - [ ] `uv run pytest tests/unit/orchestrator/test_selectivity_score.py -q` passes.
-- [ ] The G8 subprocess test passes; required checks exit 0.
+- [ ] The G8 subprocess test passes; the R26 thermo import tests pass; required checks exit 0.
 
 ## Source material
 
