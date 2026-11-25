@@ -46,6 +46,7 @@ from eta_rxncat.mapping import perceive_bonds
 from eta_rxncat.mapping.errors import CoreDisplacementError
 from eta_rxncat.mapping.relax import relax_constrained_core
 from eta_rxncat.optimize import OptimizationFailedError, Optimizer
+from eta_rxncat.orchestrator._deadline import PreRelaxTimeout, deadline, validate_budget
 from eta_rxncat.orchestrator.counting import CountingEngine
 from eta_rxncat.orchestrator.species import (
     StageMetrics,
@@ -65,6 +66,14 @@ from eta_rxncat.thermo.constants import J_PER_MOL_TO_HARTREE, R_GAS
 
 PRE_RELAX_OPTIONS: Mapping[str, ScalarValue] = {"maxiter": 200}
 """The pre-relaxation's optimizer options (mission R24); keyed."""
+
+PRE_RELAX_BUDGET_S: float = 600.0
+"""The wall budget of one pre-relaxation, in seconds (mission R28, HF-13).
+
+The healthy maximum measured on UMA is 49 s, so this is about 12 times that. A pre-relaxation that
+passes it is interrupted and excluded as ``pre_relax_failed:PreRelaxTimeout``. It is not an
+optimizer option and is not part of the stage key.
+"""
 
 PRE_RELAX_KIND = "constrained_preopt"
 STAGE_KINDS = (PRE_RELAX_KIND, "ts_opt", "frequency")
@@ -147,7 +156,9 @@ class _PreRelax:
         store: ArtifactStore,
         optimizer: Optimizer,
         core: Sequence[int],
+        budget_s: float | None = PRE_RELAX_BUDGET_S,
     ) -> None:
+        self.budget_s = budget_s
         self.store = store
         self.optimizer = optimizer
         self.core = sorted(core)
@@ -181,10 +192,16 @@ class _PreRelax:
         failure: str | None = None
         message = ""
         result = None
+        timed_out = False
         try:
-            result = relax_constrained_core(
-                state, self.engine, self.optimizer, self.core, options=PRE_RELAX_OPTIONS
-            )
+            with deadline(self.budget_s):
+                result = relax_constrained_core(
+                    state, self.engine, self.optimizer, self.core, options=PRE_RELAX_OPTIONS
+                )
+        except PreRelaxTimeout:
+            timed_out = True
+            failure = f"pre_relax_failed:{PreRelaxTimeout.__name__}"
+            message = f"the pre-relaxation exceeded its {self.budget_s} s wall budget"
         except (CoreDisplacementError, OptimizationFailedError) as exc:
             failure, message = f"pre_relax_failed:{type(exc).__name__}", str(exc)
         except ScfConvergenceError as exc:
@@ -195,11 +212,14 @@ class _PreRelax:
         self.metrics.wall_time_s += wall
         self.metrics.engine_calls += self.engine.total - calls
         if result is None:
-            self.store.put(
-                key,
-                ArtifactStatus.COMPLETED,
-                {"failed_reason": failure, "message": message, "wall_time_s": wall},
-            )
+            payload: dict[str, ScalarValue] = {
+                "failed_reason": str(failure),
+                "message": message,
+                "wall_time_s": wall,
+            }
+            if timed_out:
+                payload["budget_s"] = float(self.budget_s or 0.0)
+            self.store.put(key, ArtifactStatus.COMPLETED, payload)
             self.metrics.rows_created += 1
             return None, failure, wall
         self.store.put(key, ArtifactStatus.COMPLETED, {**_opt_payload(result), "wall_time_s": wall})
@@ -218,11 +238,13 @@ def run_ts_ensemble_detailed(
     reactant_key: Sequence[tuple[str, int]],
     options: TSEnsembleOptions,
     member_gates: MemberGates,
+    pre_relax_budget_s: float | None = PRE_RELAX_BUDGET_S,
 ) -> TSEnsembleRun:
     """Run ``run_ts_ensemble`` and also return the per-stage metrics and the seed's run.
 
     See ``run_ts_ensemble``.
     """
+    validate_budget(pre_relax_budget_s)
     engine_identity = build_engine(recipe.engine_stage, recipe.engine_runtime).identity
     temperature_k = recipe.thermo_config.temperature_k
     rt = R_GAS * temperature_k * J_PER_MOL_TO_HARTREE
@@ -287,7 +309,7 @@ def run_ts_ensemble_detailed(
         )
 
     samples = sample_ts_conformers(seed_final, core_indices, pairs, seed_bonds, options)
-    pre_relax = _PreRelax(recipe, store, optimizer, core_indices)
+    pre_relax = _PreRelax(recipe, store, optimizer, core_indices, pre_relax_budget_s)
     wall_times: list[float] = []
     for index, sample in enumerate(samples[: options.max_research], start=1):
         relaxed, reason, wall = pre_relax.run(sample.state)
@@ -424,6 +446,7 @@ def run_ts_ensemble(
     reactant_key: Sequence[tuple[str, int]],
     options: TSEnsembleOptions,
     member_gates: MemberGates,
+    pre_relax_budget_s: float | None = PRE_RELAX_BUDGET_S,
 ) -> TSEnsemble:
     """Build one pathway's TS ensemble from a seed TS.
 
@@ -447,11 +470,15 @@ def run_ts_ensemble(
         reactant_key: Sorted ``(SMILES, count)`` pairs of the reactants.
         options: The keyed ensemble options.
         member_gates: The recipe's member gates, ``{check name: passed}`` per result.
+        pre_relax_budget_s: The wall budget of each pre-relaxation in seconds, or ``None`` for no
+            guard. A pre-relaxation past it is excluded as ``pre_relax_failed:PreRelaxTimeout``
+            (cached, with ``budget_s``) and the ensemble continues. Not part of any stage key.
 
     Returns:
         The ensemble.
 
     Raises:
+        ValueError: ``pre_relax_budget_s`` is not ``None`` and not a finite number above zero.
         eta_rxncat.optimize.OptimizerInputError: Bad optimizer options or forming bonds.
         eta_rxncat.thermo.TSValidationInputError: A validator input that cannot be judged.
         eta_rxncat.engines.EngineUnavailableError: A host problem; never cached.
@@ -470,10 +497,12 @@ def run_ts_ensemble(
         reactant_key=reactant_key,
         options=options,
         member_gates=member_gates,
+        pre_relax_budget_s=pre_relax_budget_s,
     ).ensemble
 
 
 __all__ = [
+    "PRE_RELAX_BUDGET_S",
     "PRE_RELAX_OPTIONS",
     "TSEnsembleRun",
     "run_ts_ensemble",

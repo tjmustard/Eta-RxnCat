@@ -6,8 +6,12 @@ minimizer and a stub P-RFO decide each sample's fate from a *script* of tags: th
 failure. Tag ``A`` is the seed's own saddle.
 """
 
+import json
+import sqlite3
 import subprocess
 import sys
+import threading
+import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, ClassVar
@@ -47,6 +51,7 @@ from eta_rxncat.orchestrator import (
     run_ts_ensemble,
     run_ts_ensemble_detailed,
 )
+from eta_rxncat.orchestrator.ts_ensemble import PRE_RELAX_BUDGET_S
 from eta_rxncat.store import ArtifactStore
 from eta_rxncat.thermo import atomic_masses_amu
 from eta_rxncat.thermo.constants import J_PER_MOL_TO_HARTREE, R_GAS
@@ -593,6 +598,131 @@ def test_run_ts_ensemble_returns_the_ensemble(tmp_path: Path) -> None:
     assert relax.calls == 0  # served from the same store
     assert isinstance(plain, TSEnsemble)
     assert plain == detailed.ensemble
+
+
+# --- The pre-relax wall budget (slice 13; R28) -------------------------------------------------
+
+
+class SpinRelax(TagRelax):
+    """A stalled core-frozen minimizer: the listed calls loop on numpy, with no engine call."""
+
+    def __init__(self, script: Sequence[str], spin_calls: Sequence[int]) -> None:
+        """``spin_calls`` are the zero-based call numbers that never return."""
+        super().__init__(script)
+        self.spin_calls = set(spin_calls)
+
+    def minimize(
+        self,
+        state: MolecularState,
+        engine: Engine,
+        *,
+        frozen_atom_indices: Sequence[int] = (),
+        dihedral_constraints: Sequence[Any] = (),
+        options: Mapping[str, ScalarValue] | None = None,
+    ) -> OptimizationResult:
+        """Spin on svd/eigh when this call is scripted to stall, else behave as ``TagRelax``."""
+        if self.calls in self.spin_calls:
+            self.calls += 1
+            a = np.random.default_rng(1).random((40, 40))
+            while True:
+                np.linalg.svd(a)
+                np.linalg.eigh(a @ a.T)
+        return super().minimize(
+            state,
+            engine,
+            frozen_atom_indices=frozen_atom_indices,
+            dihedral_constraints=dihedral_constraints,
+            options=options,
+        )
+
+
+TWO_SAMPLES = TSEnsembleOptions(n_perturb=20, max_research=2)
+BUDGET_S = 2.0
+
+
+def _budgeted(path: Path, relax: TagRelax, budget: float | None) -> Any:
+    with ArtifactStore(path) as store:
+        return run_ts_ensemble_detailed(
+            seed_spec(),
+            recipe(),
+            store,
+            optimizer=relax,
+            core_indices=CORE,
+            pathway="endo",
+            reactant_key=REACTANTS,
+            options=TWO_SAMPLES,
+            member_gates=gates,
+            pre_relax_budget_s=budget,
+        )
+
+
+def test_a_stalled_pre_relax_is_excluded_and_the_ensemble_continues(tmp_path: Path) -> None:
+    """R28 requirements 1, 2, 6: the stall is cut and recorded, the next sample still counts."""
+    start = time.perf_counter()
+    run = _budgeted(tmp_path / "s.sqlite", SpinRelax(["spin", "B"], [0]), BUDGET_S)
+    assert time.perf_counter() - start < BUDGET_S + 8.0
+    assert run.ensemble.failed_reason is None
+    assert reasons(run.ensemble) == {1: "pre_relax_failed:PreRelaxTimeout"}
+    stalled = run.ensemble.excluded[0]
+    assert stalled.pre_relax_wall_time_s is not None
+    assert BUDGET_S <= stalled.pre_relax_wall_time_s <= BUDGET_S + 4.0
+    assert run.max_pre_relax_wall_time_s == stalled.pre_relax_wall_time_s
+    baseline, _ = ensemble(tmp_path / "base.sqlite", ["A", "B"], options=TWO_SAMPLES)
+    good = [m for m in run.ensemble.members if m.index == 2]
+    ref = [m for m in baseline.ensemble.members if m.index == 2]
+    assert good and ref
+    assert good[0].G_hartree == ref[0].G_hartree  # the engine still evaluates correctly
+
+
+def test_the_cached_timeout_is_a_cache_hit(tmp_path: Path) -> None:
+    """G7, R28 requirement 5: a second call re-runs nothing; the row holds the budget."""
+    path = tmp_path / "s.sqlite"
+    first = _budgeted(path, SpinRelax(["spin", "B"], [0]), BUDGET_S)
+    calls = TagEngine.calls
+    relax = SpinRelax(["spin", "B"], [0])
+    second = _budgeted(path, relax, BUDGET_S)
+    assert relax.calls == 0
+    assert TagEngine.calls == calls
+    assert second.ensemble == first.ensemble
+    assert second.metrics["constrained_preopt"].rows_created == 0
+    with sqlite3.connect(path) as conn:
+        rows = conn.execute(
+            "SELECT payload_json FROM stage_artifacts WHERE stage_kind = ?", ("constrained_preopt",)
+        ).fetchall()
+    payloads = [json.loads(r[0]) for r in rows]
+    timed = [p for p in payloads if p.get("failed_reason") == "pre_relax_failed:PreRelaxTimeout"]
+    assert len(timed) == 1
+    assert timed[0]["budget_s"] == BUDGET_S
+
+
+def test_the_budget_is_not_part_of_the_stage_key(tmp_path: Path) -> None:
+    """A run with another budget (or none) reuses the rows of the first."""
+    path = tmp_path / "s.sqlite"
+    first, relax = ensemble(path, ["A", "B"], options=TWO_SAMPLES)
+    relax_again = TagRelax(["A", "B"])
+    again = _budgeted(path, relax_again, 123.0)
+    assert relax_again.calls == 0
+    assert again.ensemble == first.ensemble
+
+
+def test_the_default_budget_and_a_none_budget(tmp_path: Path) -> None:
+    """R28 requirement 7: the default is 600 s; ``None`` starts no watchdog thread."""
+    assert PRE_RELAX_BUDGET_S == 600.0
+    before = threading.active_count()
+    run = _budgeted(tmp_path / "s.sqlite", TagRelax(["A", "B"]), None)
+    assert threading.active_count() == before
+    assert run.ensemble.failed_reason is None
+
+
+@pytest.mark.parametrize("budget", [0.0, -2.0, float("nan"), float("inf")])
+def test_an_invalid_budget_raises_before_any_engine_call(tmp_path: Path, budget: float) -> None:
+    """R28 requirement 7: a bad budget is refused before the seed or any pre-relax runs."""
+    calls = TagEngine.calls
+    relax = TagRelax()
+    with pytest.raises(ValueError, match="budget"):
+        _budgeted(tmp_path / "s.sqlite", relax, budget)
+    assert TagEngine.calls == calls
+    assert relax.calls == 0
 
 
 # --- G8 -----------------------------------------------------------------------------------------
