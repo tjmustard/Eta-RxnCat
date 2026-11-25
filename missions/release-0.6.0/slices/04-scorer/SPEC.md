@@ -10,7 +10,7 @@ intent: "Add score_selectivity, a pure function giving Boltzmann-summed pathway 
 depends_on: [OPR.0.6.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", src/eta_rxncat/thermo/__init__.py, src/eta_rxncat/core/selectivity_models.py, tests/unit/core/test_selectivity_models.py, spec/compiled/architecture.yml]
@@ -96,11 +96,11 @@ which the subprocess test settles.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `thermo` constants, slice 02 models.
-- [ ] Task 2a: lazy `thermo/__init__.py` (R26) + its tests (requirement 5).
-- [ ] Task 2: `orchestrator/selectivity.py` (`score_selectivity`, `SelectivityInputError`); export.
-- [ ] Task 3: `tests/unit/orchestrator/test_selectivity_score.py` (G1, refusals, G8); required checks.
-- [ ] Task 4: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `thermo` constants, slice 02 models.
+- [x] Task 2a: lazy `thermo/__init__.py` (R26) + its tests (requirement 5).
+- [x] Task 2: `orchestrator/selectivity.py` (`score_selectivity`, `SelectivityInputError`); export.
+- [x] Task 3: `tests/unit/orchestrator/test_selectivity_score.py` (G1, refusals, G8); required checks.
+- [x] Task 4: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
