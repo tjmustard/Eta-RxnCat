@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Re-merge of the builder fragments is byte-identical to the committed record; check() empty, only TJ pending states; values match the slice 09/10/14 audit reruns; repro max well under 1/10 of the bounds; oracles 0, pytest 2199 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

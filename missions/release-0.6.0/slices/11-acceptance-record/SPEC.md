@@ -2,7 +2,7 @@
 id: OPR.0.6.0.11
 slice: 11-acceptance-record
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Assemble the v0.6.0 acceptance record from real per-check outcomes with
 depends_on: [OPR.0.6.0.10, OPR.0.6.0.13, OPR.0.6.0.14]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.6.0/ACCEPTANCE_RESULT.json, README.md, spec/compiled/architecture.yml]
