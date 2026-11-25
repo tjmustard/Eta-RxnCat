@@ -6,7 +6,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+import acceptance_record_v060 as rec
 import pytest
+from acceptance_record_v050 import git_blob_id
 from acceptance_record_v060 import (
     FLEX,
     FLEX_GATES,
@@ -15,10 +17,13 @@ from acceptance_record_v060 import (
     HF1_SHA256,
     KNOWN_LIMITS,
     PAIRS,
+    PROMOTED_FILES,
     PROPOSAL_BOUNDS,
     RECIPES,
     check,
     command_problems,
+    compare_flexible,
+    compare_pair,
     ensemble_block,
     entry_states,
     fixture_states,
@@ -27,7 +32,9 @@ from acceptance_record_v060 import (
     merge_runs,
     outstanding,
     pair_entry,
+    promotion_evidence,
     proposed_bounds,
+    record_verdict,
     reproducibility_entry,
     transcriptions_block,
     unit_proof_block,
@@ -135,6 +142,11 @@ def flex_fragment(
         "inputs_sha256": {"fragment": "ab"},
         "reported": {
             "n_members": n_members,
+            "members": [
+                {"source": "seed" if i == 0 else f"perturb:{i}", "G_hartree": -100.0 - 0.001 * i}
+                for i in range(n_members)
+            ],
+            "G_pathway_hartree": -100.01,
             "exclusions_by_reason": {"outside_window": 1},
             "barrier": {"ensemble_dG_dagger_1M_kcal_mol": 14.0 + FLEX.index(r_group)},
             "max_pre_relax_wall_time_s": 20.0,
@@ -208,11 +220,25 @@ PENDING = (
 )
 
 
-def merged(runs: dict[str, dict[str, Any]] | None = None, commands: Any = None) -> dict[str, Any]:
-    """The merged record of synthetic runs."""
+NO_PROMOTION = Path("/nonexistent/promoted-fixtures")
+"""A directory with no promoted fixtures: the merge writes the pre-promotion record."""
+
+
+def merged(
+    runs: dict[str, dict[str, Any]] | None = None,
+    commands: Any = None,
+    promoted_dir: Path = NO_PROMOTION,
+    prior: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The merged record of synthetic runs (pre-promotion without promoted fixtures)."""
     runs = runs or {r: run_file(r) for r in RECIPES}
     return merge_runs(
-        runs, copy.deepcopy(commands or COMMANDS), copy.deepcopy(SUITE), copy.deepcopy(UNIT)
+        runs,
+        copy.deepcopy(commands or COMMANDS),
+        copy.deepcopy(SUITE),
+        copy.deepcopy(UNIT),
+        prior=prior,
+        promoted_dir=promoted_dir,
     )
 
 
@@ -594,52 +620,282 @@ def test_run_commits_and_the_resume_note_are_in_the_evidence() -> None:
     assert "1273070" in evidence["resume_note"] and "no src/" in evidence["resume_note"]
 
 
-# --- The committed record (slice 11) ----------------------------------------------------------
-
-COMMITTED = (
-    Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.6.0" / "ACCEPTANCE_RESULT.json"
-)
+# --- TJ's promotion, the regression comparison and the verdict (slice 12) ---------------------
 
 
-def committed() -> dict[str, Any]:
-    """The committed pre-promotion record."""
-    return dict(json.loads(COMMITTED.read_text(encoding="utf-8")))
-
-
-def test_the_committed_record_is_valid_and_only_tjs_checks_are_pending() -> None:
-    """US-012: check() passes, every gated check passes, and only TJ's checks are pending."""
-    record = committed()
-    assert check(record) == []
-    assert "verdict" not in record
-    assert outstanding(record) == PENDING
-    assert command_problems(record["commands"]) == []
-
-
-def test_the_committed_record_ran_with_the_acceptance_flag_and_the_xtb_path() -> None:
-    """R9: environment records ETA_RXNCAT_ACCEPTANCE=1 and, for xtb, ETA_RXNCAT_XTB."""
-    environment = committed()["environment"]
-    assert (
-        environment["xtb"]["ETA_RXNCAT_ACCEPTANCE"]
-        == "1"
-        == environment["uma"]["ETA_RXNCAT_ACCEPTANCE"]
-    )
-    assert environment["xtb"]["ETA_RXNCAT_XTB"].endswith("/xtb")
-
-
-def test_the_committed_record_holds_the_bounds_and_reproducibility_of_every_pair() -> None:
-    """Both recipes x both pairs are measured; every proposed bound is a number, never missing."""
-    record = committed()
+def promote(tmp_path: Path, runs: dict[str, dict[str, Any]], mutate: Any = None) -> dict[str, Any]:
+    """Write ten promoted fixtures (the runs' own fragments) and return R31-style prefixes."""
+    files: dict[str, Any] = {}
     for recipe in RECIPES:
         for pair in PAIRS:
-            assert record["reproducibility"][recipe][pair]["status"] == "measured"
-        block = record["proposed_regression_bounds"]["recipes"][recipe]
-        for quantity in PROPOSAL_BOUNDS[recipe]:
-            assert isinstance(block[quantity]["proposed"], float)
-            assert block[quantity]["basis"] in ("tj_bound", "ten_times_measured_max")
+            files[f"{pair}.{recipe}.json"] = copy.deepcopy(runs[recipe]["pairs"][pair])
+        for r in FLEX:
+            files[f"t4_flexible_{r}.{recipe}.json"] = copy.deepcopy(runs[recipe]["flexible"][r])
+    prefixes = {}
+    for name, data in files.items():
+        if mutate is not None:
+            mutate(name, data)
+        blob = json.dumps(data, sort_keys=True).encode("utf-8")
+        (tmp_path / name).write_bytes(blob)
+        prefixes[name] = (hashlib.sha256(blob).hexdigest()[:12], git_blob_id(blob)[:12])
+    return prefixes
 
 
-def test_the_committed_record_gives_slice_14_no_reproducibility_or_bounds() -> None:
-    """Replan 4: the flexible-ensemble entries have no repro runs and no proposed bounds."""
-    record = committed()
-    assert set(record["reproducibility"]["xtb"]) == set(PAIRS)
-    assert not any("flex" in k for k in record["proposed_regression_bounds"]["recipes"]["uma"])
+def verdict_record(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    runs: dict[str, dict[str, Any]] | None = None,
+    mutate: Any = None,
+) -> dict[str, Any]:
+    """Merge synthetic runs against promoted fixtures made of the runs' own results."""
+    runs = runs or {r: run_file(r) for r in RECIPES}
+    monkeypatch.setattr(rec, "PROMOTED_FILES", promote(tmp_path, runs, mutate))
+    return merged(runs, promoted_dir=tmp_path)
+
+
+def test_the_real_promoted_fixtures_are_the_ten_files_of_r31() -> None:
+    """Requirement 1: the committed fixtures equal R31's sha256 and blob-id prefixes."""
+    evidence = promotion_evidence()
+    assert evidence["status"] == "verified"
+    assert sorted(evidence["files"]) == sorted(PROMOTED_FILES)
+    assert evidence["commit"] == "6fce509"
+    for name, (sha, blob) in PROMOTED_FILES.items():
+        assert evidence["files"][name]["sha256"].startswith(sha)
+        assert evidence["files"][name]["blob_id"].startswith(blob)
+
+
+def test_promotion_is_absent_without_fixtures_and_refuses_a_foreign_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No promoted file: absent. A file that is not R31's, or an extra one: an error."""
+    assert promotion_evidence(NO_PROMOTION)["status"] == "absent"
+    runs = {r: run_file(r) for r in RECIPES}
+    monkeypatch.setattr(rec, "PROMOTED_FILES", promote(tmp_path, runs))
+    assert promotion_evidence(tmp_path)["status"] == "verified"
+    (tmp_path / "t4_mapped.uma.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="is not R31's"):
+        promotion_evidence(tmp_path)
+    promote(tmp_path, runs)
+    (tmp_path / "extra.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="are not R31's"):
+        promotion_evidence(tmp_path)
+
+
+def test_a_verdict_record_passes_when_every_result_matches_its_fixture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Requirement 2: regression passes everywhere, confirmation is settled, verdict pass."""
+    record = verdict_record(tmp_path, monkeypatch)
+    assert check(record) == []
+    assert record["verdict"] == "pass" and record["verdict_reasons"] == []
+    assert record["evidence"]["promotion"]["status"] == "verified"
+    assert record["fixtures"]["transcription_confirmation"]["status"] == "confirmed"
+    assert outstanding(record) == {}
+    assert record["regression_bounds"]["recipes"]["uma"] == PROPOSAL_BOUNDS["uma"]
+    assert record["fixtures"]["t4"]["t4_mapped"]["xtb"]["regression"]["status"] == "pass"
+    assert (
+        record["fixtures"]["flexible_ensemble"]["nbutyl"]["uma"]["regression"]["status"] == "pass"
+    )
+    assert "Q-RES1 was answered B" in record["known_limits"][-1]
+    assert "slice 14" in record["known_limits"][-1]
+
+
+def test_the_verdict_is_fail_when_a_result_leaves_its_bound(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """One out-of-bound energy fails that entry's regression and the verdict, with the reason."""
+
+    def shift(name: str, data: dict[str, Any]) -> None:
+        if name == "t4_unmapped.xtb.json":
+            data["pathways"]["endo"]["seed_ts"]["thermo"]["electronic_energy_hartree"] += 1e-3
+
+    record = verdict_record(tmp_path, monkeypatch, mutate=shift)
+    assert record["verdict"] == "fail"
+    assert record["verdict_reasons"] == ["t4.t4_unmapped.xtb.regression: fail"]
+    assert check(record) == []
+
+
+def test_the_record_is_pre_promotion_without_the_promoted_fixtures() -> None:
+    """Without TJ's files: regression pending, no verdict, confirmation pending."""
+    record = merged()
+    assert "verdict" not in record
+    assert record["evidence"]["promotion"]["status"] == "absent"
+    assert record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    assert "not yet TJ's fixtures" in record["reported_notes"]["promotion"]
+
+
+def test_reproducibility_is_carried_over_from_the_prior_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The verdict run reuses slice 11's measurement and names its source."""
+    prior = merged(runs={r: run_file(r, d_g=0.0003, d_y=1e-4) for r in RECIPES})
+    runs = {r: run_file(r) for r in RECIPES}
+    monkeypatch.setattr(rec, "PROMOTED_FILES", promote(tmp_path, runs))
+    carried = merged(runs, promoted_dir=tmp_path, prior=prior)
+    assert carried["reproducibility"] == prior["reproducibility"]
+    assert carried["proposed_regression_bounds"] == prior["proposed_regression_bounds"]
+    assert prior["commit_sha"] in carried["evidence"]["reproducibility_source"]
+    assert carried["verdict"] == "pass"
+
+
+def test_a_verdict_needs_a_verified_promotion_and_the_recomputed_value(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """check() refuses a verdict that is not the rule's, or one without a verified promotion."""
+    record = verdict_record(tmp_path, monkeypatch)
+    forged = copy.deepcopy(record)
+    forged["fixtures"]["t4"]["t4_mapped"]["uma"]["regression"]["status"] = "fail"
+    assert any("is not the record's verdict" in p for p in check(forged))
+    unpromoted = copy.deepcopy(record)
+    unpromoted["evidence"]["promotion"]["status"] = "absent"
+    assert any("evidence.promotion verified" in p for p in check(unpromoted))
+    bare = copy.deepcopy(record)
+    del bare["regression_bounds"]
+    assert any("missing regression_bounds" in p for p in check(bare))
+
+
+def test_a_verdict_record_without_the_acceptance_flag_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R9: a verdict record that lost ETA_RXNCAT_ACCEPTANCE=1 fails check()."""
+    record = verdict_record(tmp_path, monkeypatch)
+    del record["environment"]["uma"]["ETA_RXNCAT_ACCEPTANCE"]
+    assert any("ETA_RXNCAT_ACCEPTANCE=1" in p for p in check(record))
+
+
+def test_the_verdict_rule_fails_on_suite_commands_and_non_pass_states() -> None:
+    """Non-zero suite, failures, errors, a command exit or skip, no commands, any non-pass state."""
+    fixtures = merged()["fixtures"]
+    ok_states = {k: "pass" for k in fixture_states(fixtures)}
+    assert set(ok_states.values()) == {"pass"}
+    good = record_verdict(fixtures | {}, SUITE, COMMANDS)
+    assert good["verdict"] == "fail"  # regression is still pending in this record
+    assert "t4.t4_mapped.uma.regression: pending_promotion" in good["verdict_reasons"]
+    bad_suite = record_verdict(fixtures, SUITE | {"exit_code": 1, "failed": 2}, COMMANDS)
+    assert any("default_suite: exit_code 1, failed 2" in r for r in bad_suite["verdict_reasons"])
+    assert "default_suite: missing" in record_verdict(fixtures, None, COMMANDS)["verdict_reasons"]
+    assert "commands: none recorded" in record_verdict(fixtures, SUITE, [])["verdict_reasons"]
+    skipped = copy.deepcopy(COMMANDS)
+    skipped[0]["summary"] = "1 passed, 1 skipped in 2.0s"
+    assert any(
+        "1 skipped" in r for r in record_verdict(fixtures, SUITE, skipped)["verdict_reasons"]
+    )
+
+
+def pair_pair(
+    recipe: str = "uma", pair: str = "t4_unmapped"
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """The same fragment twice: the run and its fixture."""
+    return fragment(pair, recipe), fragment(pair, recipe)
+
+
+def test_compare_pair_bounds_are_tjs_per_recipe() -> None:
+    """|ΔΔG‡| 0.5 is inside UMA's 0.75 and outside GFN2's 0.01; |ΔE| 2e-5 is outside both."""
+    new, old = pair_pair("uma")
+    new["score"]["ddG_dagger_kcal_mol"] += 0.5
+    assert compare_pair(new, old, "uma", "n")["status"] == "pass"
+    assert compare_pair(new, old, "xtb", "n")["mismatches"] == ["abs_delta_ddG_dagger_kcal_mol"]
+    new, old = pair_pair("uma")
+    new["pathways"]["exo"]["seed_ts"]["thermo"]["electronic_energy_hartree"] += 2e-5
+    assert compare_pair(new, old, "uma", "n")["mismatches"] == ["abs_delta_ts_energy_hartree"]
+
+
+def test_compare_pair_heavy_rmsd_and_missing_values() -> None:
+    """A moved TS beyond 0.01 Å fails; a value one side lacks is a mismatch, never a pass."""
+    new, old = pair_pair("uma")
+    new["pathways"]["endo"]["seed_ts"]["state"] = moved(0.3)
+    result = compare_pair(new, old, "uma", "n")
+    assert "heavy_rmsd_angstrom" in result["mismatches"]
+    new, old = pair_pair("uma")
+    del new["pathways"]["endo"]["seed_ts"]["state"]
+    assert "heavy_rmsd_angstrom: missing" in compare_pair(new, old, "uma", "n")["mismatches"]
+    new, old = pair_pair("uma")
+    new["score"] = None
+    assert (
+        "abs_delta_ddG_dagger_kcal_mol: missing" in compare_pair(new, old, "uma", "n")["mismatches"]
+    )
+
+
+def test_compare_pair_member_count_differs_only_through_a_timeout() -> None:
+    """A different member count fails, unless a PreRelaxTimeout excluded a member on either side."""
+    new, old = pair_pair("uma")
+    new["pathways"]["exo"]["ensemble"] = ensemble(n_members=2)
+    assert compare_pair(new, old, "uma", "n")["mismatches"] == ["n_members.exo"]
+    new["pathways"]["exo"]["ensemble"] = ensemble(["pre_relax_failed:PreRelaxTimeout"], 2)
+    result = compare_pair(new, old, "uma", "n")
+    assert result["status"] == "pass"
+    assert result["per_pathway"]["exo"]["difference_explained_by_timeout"] is True
+    assert result["per_pathway"]["exo"]["n_members"] == [2, 1]
+
+
+def test_compare_pair_pruning_branch_must_match() -> None:
+    """The mapped pair's pruning decision must equal the fixture's."""
+    new, old = pair_pair("xtb", "t4_mapped")
+    assert compare_pair(new, old, "xtb", "n")["status"] == "pass"
+    new["checks"]["tier_gates"]["pruning_g6"]["branch"] = "computed"
+    result = compare_pair(new, old, "xtb", "n")
+    assert result["status"] == "fail" and "pruning_branch" in result["mismatches"]
+    assert result["pruning_branch"] == ["computed", "pruned"]
+
+
+def test_compare_flexible_judges_members_pathway_and_barrier() -> None:
+    """Per-member G and the pathway G within 1e-5 Eh; the ensemble dG‡ within the ddG bound."""
+    new, old = flex_fragment("ethyl", "uma"), flex_fragment("ethyl", "uma")
+    assert compare_flexible(new, old, "uma", "n")["status"] == "pass"
+    new["reported"]["members"][1]["G_hartree"] += 2e-5
+    assert compare_flexible(new, old, "uma", "n")["mismatches"] == [
+        "max_abs_delta_member_G_hartree"
+    ]
+    new, old = flex_fragment("ethyl", "uma"), flex_fragment("ethyl", "uma")
+    new["reported"]["barrier"]["ensemble_dG_dagger_1M_kcal_mol"] += 0.5
+    assert compare_flexible(new, old, "uma", "n")["status"] == "pass"
+    assert compare_flexible(new, old, "xtb", "n")["mismatches"] == [
+        "abs_delta_dG_dagger_1M_kcal_mol"
+    ]
+    new, old = flex_fragment("ethyl", "uma"), flex_fragment("ethyl", "uma")
+    new["reported"]["G_pathway_hartree"] = None
+    assert (
+        "abs_delta_G_pathway_hartree: missing"
+        in compare_flexible(new, old, "uma", "n")["mismatches"]
+    )
+
+
+def test_compare_flexible_member_count_differs_only_through_a_timeout() -> None:
+    """R28: a count difference fails, unless a PreRelaxTimeout explains it."""
+    old = flex_fragment("nbutyl", "uma", n_members=5)
+    new = flex_fragment("nbutyl", "uma", n_members=4)
+    assert compare_flexible(new, old, "uma", "n")["mismatches"] == ["n_members"]
+    new["reported"]["exclusions_by_reason"] = {"pre_relax_failed:PreRelaxTimeout": 1}
+    result = compare_flexible(new, old, "uma", "n")
+    assert result["status"] == "pass" and result["difference_explained_by_timeout"] is True
+    assert result["n_members"] == [4, 5] and result["pre_relax_timeouts"] == [1, 0]
+    assert result["unmatched_member_G_hartree_in_fixture"] == [
+        old["reported"]["members"][4]["G_hartree"]
+    ]
+    assert result["unmatched_member_G_hartree_in_run"] == []
+    assert result["heavy_rmsd_angstrom"] is None
+
+
+def test_compare_flexible_pairs_members_by_energy_not_by_source_label() -> None:
+    """Equal-energy copies may swap labels between runs; the energies still pair and pass."""
+    old = flex_fragment("ethyl", "uma", n_members=3)
+    new = flex_fragment("ethyl", "uma", n_members=3)
+    new["reported"]["members"][2]["source"] = "fragment_embed:7"
+    result = compare_flexible(new, old, "uma", "n")
+    assert result["status"] == "pass" and result["mismatches"] == []
+    assert result["sources_in_run"] != result["sources_in_fixture"]
+    new["reported"]["members"][2]["G_hartree"] += 3e-5  # an energy moved beyond the bound
+    assert compare_flexible(new, old, "uma", "n")["mismatches"] == [
+        "max_abs_delta_member_G_hartree"
+    ]
+
+
+def test_compare_flexible_pairs_the_nearest_energies_when_a_member_is_missing() -> None:
+    """With a timeout-explained missing member, each remaining member takes its nearest partner."""
+    old = flex_fragment("nbutyl", "uma", n_members=4)
+    new = flex_fragment("nbutyl", "uma", n_members=4)
+    new["reported"]["exclusions_by_reason"] = {"pre_relax_failed:PreRelaxTimeout": 1}
+    del new["reported"]["members"][1]  # the run lost the member at -100.001
+    result = compare_flexible(new, old, "uma", "n")
+    assert result["status"] == "pass" and result["max_abs_delta_member_G_hartree"] == 0.0
+    assert result["unmatched_member_G_hartree_in_fixture"] == [-100.001]

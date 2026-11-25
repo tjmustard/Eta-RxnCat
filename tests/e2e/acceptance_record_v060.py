@@ -7,14 +7,19 @@ Usage::
     python3 tests/e2e/acceptance_record_v060.py add-command <commands.json> <log> <exit_code> \\
         <wall_s> <env.json> -- <argv...>
     python3 tests/e2e/acceptance_record_v060.py merge <acceptance_xtb.json> <acceptance_uma.json> \\
-        <commands.json> <default_suite.json> <unit_proof.json> <out.json>
+        <commands.json> <default_suite.json> <unit_proof.json> <out.json> [<prior_record.json>]
 
 ``add-command`` appends one run (argv, env, exit code, wall time, the pytest summary and the max
 RSS read from its log) to ``commands.json``; ``suite`` derives ``default_suite`` from the pytest
 log and ``unit-proof`` the G1/G4 node outcomes from a ``-v`` log. None is typed by hand. This is
-the pre-promotion record: it has no ``verdict``, ``regression`` is ``pending_promotion`` and
-``transcription_confirmation`` is ``pending_confirmation`` (TJ's Phase 3). A gated check is
-``pass`` only when measured; anything else is a state, never a guess (R56).
+Without TJ's promoted fixtures the merge writes the pre-promotion record (slice 11): no
+``verdict``, ``regression`` ``pending_promotion``, ``transcription_confirmation``
+``pending_confirmation``. Once ``tests/fixtures/v0.6.0/`` holds TJ's ten files, equal to R31's
+sha256 and blob-id prefixes (``evidence.promotion``), the merge compares each in-process result with
+its promoted fixture under TJ's bounds and writes ``verdict`` from ``record_verdict`` (slice 12):
+``pass`` only with every gated check ``pass``, a clean default suite and every command at exit 0
+with no skip; anything ``fail``, ``pending_*``, ``skipped`` or ``missing`` gives ``fail`` (R56).
+The verdict run carries slice 11's reproducibility measurement over from the prior record.
 """
 
 import hashlib
@@ -26,7 +31,7 @@ from pathlib import Path
 from typing import Any
 
 from acceptance_record_v040 import pytest_counts
-from acceptance_record_v050 import command_entry, heavy_rmsd_angstrom
+from acceptance_record_v050 import command_entry, git_blob_id, heavy_rmsd_angstrom
 
 from eta_rxncat.engines import HARTREE_KCAL_MOL
 
@@ -39,6 +44,7 @@ FLEX = ("ethyl", "npropyl", "nbutyl")
 STATES = {"pass", "fail", "pending_promotion", "pending_confirmation", "skipped", "missing"}
 TEST_OUTCOMES = {"passed", "failed", "missing"}
 XYZ_DIR = REPO / "tests" / "e2e" / "data" / "e2e5" / "xyz"
+PROMOTED_V060 = REPO / "tests" / "fixtures" / "v0.6.0"
 TIMEOUT_REASON = "pre_relax_failed:PreRelaxTimeout"
 FLEX_GATES = (
     "graft_pre_relax_no_timeout",
@@ -117,6 +123,46 @@ MEASURED_KEYS = {
     "heavy_rmsd_angstrom": "max_heavy_rmsd_angstrom",
     "abs_delta_ddG_dagger_kcal_mol": "max_abs_delta_ddG_dagger_kcal_mol",
 }
+REGRESSION_BOUNDS = PROPOSAL_BOUNDS
+"""TJ's Phase 3 bounds (mission R31, "A"): |ΔE_TS| <= 1e-5 Eh, heavy-atom RMSD <= 0.01 Å and
+|ΔΔG‡| <= 0.01 kcal/mol on GFN2, <= 0.75 on UMA; they equal slice 11's proposed bounds."""
+PROMOTION = {
+    "source": "mission R31 (TJ's Phase 3; closes R6's pending bounds for v0.6.0)",
+    "commit": "6fce509",
+    "commit_subject": "Promote v0.6.0 Tier 4 fixtures (TJ's Phase 3 review)",
+    "tj_answer": (
+        "A (bounds, recommended); promote all 10; transcriptions + YAMLs confirmed "
+        "(as the lead recorded it in mission R31)"
+    ),
+    "relayed_by": (
+        "advisor-lead@kernel, qitem-20261125202058-42fe20c9cc89f35c, ~20:16Z, answering "
+        "qitem-20261125201152-c39bcf3269a5d868"
+    ),
+    "copied_by": (
+        'advisor-lead@kernel on TJ\'s instruction ("Advisor runs it for me") at 097fa2a; the lead '
+        "verified 10/10 git blob ids equal to the committed candidates and committed 6fce509"
+    ),
+    "transcriptions_confirmed": (
+        "TS1b_x (Liu S9/S10), P1b_x (Liu S20), the RDKit SMILES of P1b_x and TS1a_x, and the three "
+        "provisional Tier 4 YAMLs (unmapped, mapped-pruned at 1.5, flexible alkyl)"
+    ),
+}
+"""TJ's Phase 3 answer as the lead recorded it in mission R31 (never inferred from a status)."""
+PROMOTED_FILES = {
+    "t4_unmapped.xtb.json": ("ec7fdade2a58", "4c7e50ae1f1a"),
+    "t4_unmapped.uma.json": ("485cb6124e10", "ba24561e24e3"),
+    "t4_mapped.xtb.json": ("6fe221444682", "f11bcc380727"),
+    "t4_mapped.uma.json": ("b5aefb47e6f4", "4503fa006267"),
+    "t4_flexible_ethyl.xtb.json": ("3fe244c64527", "9a52dce1a093"),
+    "t4_flexible_ethyl.uma.json": ("af37d9d5995e", "febbbd3145da"),
+    "t4_flexible_npropyl.xtb.json": ("63dd6eb1f332", "3e64530495ee"),
+    "t4_flexible_npropyl.uma.json": ("e32b9ef6822f", "de1cfd70431a"),
+    "t4_flexible_nbutyl.xtb.json": ("ab412d6b4f46", "d9ffb8fe8bda"),
+    "t4_flexible_nbutyl.uma.json": ("ba3ce53cfa60", "d19f516dc9d6"),
+}
+"""Mission R31's promoted files: (sha256, git blob id), 12-character prefixes as R31 lists them."""
+VERDICT_KEYS = ("verdict", "verdict_reasons", "regression_bounds")
+"""Required once the record states a verdict (slice 12)."""
 RESUME_NOTE = (
     "slice 11 paused after C1 1273070 for slice 14 (R30); the GFN2 Tier 4 acceptance runs and the "
     "GFN2 reproducibility run were made at 1273070 and stand: slice 14 changed no src/ file and no "
@@ -129,18 +175,38 @@ KNOWN_LIMITS = (
     "(G1, G4) and ΔΔG‡ equals the seed difference only when every ensemble has one member",
     "a pre_relax_failed:PreRelaxTimeout exclusion (slice 13, R28) is reported, not gated; a change "
     "in member count or exclusions between runs is expected variation, not a failure",
-    "Q-RES1 is with TJ; no slice built under a Q-RES1 answer is part of this record",
+    "Q-RES1 was answered B by TJ: slice 14's flexible-ensemble checks (an alkyl R-group series on "
+    "TS1a_n, ethyl, n-propyl, n-butyl) are part of this record; they gate mechanics only and carry "
+    "no reproducibility runs and no proposed bounds",
 )
-REPORTED_NOTES = {
-    "promotion": (
-        "the v0.6.0 candidates are not yet TJ's fixtures: regression is pending_promotion until "
-        "TJ's Phase 3 review"
-    ),
-    "regression_endo_seed": (
-        "the endo seed is compared in process with TJ's promoted v0.5.0 fixture (mission R6); "
-        "that comparison is a gate, and distinct from the pending Tier 4 regression"
-    ),
-}
+
+
+def reported_notes(promoted: bool) -> dict[str, str]:
+    """The record's notes; the promotion line states which mode the record is in."""
+    notes = {
+        "regression_endo_seed": (
+            "the endo seed is compared in process with TJ's promoted v0.5.0 fixture (mission R6); "
+            "that comparison is a gate, distinct from the Tier 4 regression"
+        )
+    }
+    if promoted:
+        notes["promotion"] = (
+            "TJ promoted the ten v0.6.0 candidates at Phase 3 (mission R31); regression compares "
+            "each in-process result with its promoted fixture under TJ's bounds"
+        )
+        notes["flexible_member_counts"] = (
+            "a flexible case's member count may differ from its fixture only through a "
+            "pre_relax_failed:PreRelaxTimeout exclusion (R28); that is reported, and the remaining "
+            "members are judged against the bounds"
+        )
+    else:
+        notes["promotion"] = (
+            "the v0.6.0 candidates are not yet TJ's fixtures: regression is pending_promotion "
+            "until TJ's Phase 3 review"
+        )
+    return notes
+
+
 FIXTURE_KEYS = {
     "t4",
     "flexible_ensemble",
@@ -227,15 +293,46 @@ def fixture_states(fixtures: dict[str, Any]) -> dict[str, Any]:
     transcriptions = fixtures.get("transcriptions", {})
     for part in ("sha256", "header_ddG"):
         states[f"transcriptions.{part}"] = _status(transcriptions.get(part, {"status": "missing"}))
-    states["transcription_confirmation"] = _status(
-        fixtures.get("transcription_confirmation", {"status": "missing"})
-    )
+    confirmation = _status(fixtures.get("transcription_confirmation", {"status": "missing"}))
+    states["transcription_confirmation"] = "pass" if confirmation == "confirmed" else confirmation
     return states
 
 
 def outstanding(record: dict[str, Any]) -> dict[str, Any]:
     """Every gated state that is not ``pass`` (a pre-promotion record has only the pending ones)."""
     return {k: v for k, v in fixture_states(record["fixtures"]).items() if v != "pass"}
+
+
+def _suite_failures(block: dict[str, Any]) -> list[str]:
+    code, failed, errors = block.get("exit_code"), block.get("failed", 0), block.get("errors", 0)
+    if code != 0 or failed or errors:
+        return [f"default_suite: exit_code {code}, failed {failed}, errors {errors}"]
+    return []
+
+
+def record_verdict(
+    fixtures: dict[str, Any],
+    default_suite: dict[str, Any] | None = None,
+    commands: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """The verdict rule (R56, v0.4.0 R27): ``pass`` or ``fail`` with the reasons.
+
+    ``fail`` on a missing or failing default suite (non-zero exit, failures or errors), a command
+    with a non-zero exit or a skip, no commands, or any gated check that is not ``pass``
+    (``fail``, ``pending_*``, ``skipped``, ``missing`` or an unknown state).
+    """
+    reasons: list[str] = []
+    if default_suite is None:
+        reasons.append("default_suite: missing")
+    else:
+        reasons += _suite_failures(default_suite)
+    if not commands:
+        reasons.append("commands: none recorded")
+    reasons += command_problems(commands or [])
+    for name, state in fixture_states(fixtures).items():
+        if state != "pass":
+            reasons.append(f"{name}: {state}")
+    return {"verdict": "fail" if reasons else "pass", "verdict_reasons": reasons}
 
 
 def command_problems(commands: list[dict[str, Any]]) -> list[str]:
@@ -254,8 +351,12 @@ def command_problems(commands: list[dict[str, Any]]) -> list[str]:
 def check(record: dict[str, Any]) -> list[str]:
     """Schema problems of a record (empty when valid); a pre-promotion record has no verdict."""
     problems = [f"missing {key}" for key in TOP_KEYS if key not in record]
-    if "verdict" in record or "verdict_reasons" in record:
-        problems.append("a pre-promotion record states no verdict (slice 12 settles it)")
+    stated = "verdict" in record or "verdict_reasons" in record
+    if stated:
+        problems += [f"missing {key}" for key in VERDICT_KEYS if key not in record]
+        promotion = record.get("evidence", {}).get("promotion", {})
+        if promotion.get("status") != "verified":
+            problems.append("a verdict needs evidence.promotion verified")
     if record.get("record_schema") != 1:
         problems.append("record_schema is not 1")
     fixtures = record.get("fixtures", {})
@@ -296,6 +397,11 @@ def check(record: dict[str, Any]) -> list[str]:
     for command in record.get("commands", []):
         if command.get("env", {}).get("ETA_RXNCAT_ACCEPTANCE") not in (None, "1"):
             problems.append(f"a command ran with ETA_RXNCAT_ACCEPTANCE={command['env']!r}")
+    if stated:
+        expected = record_verdict(fixtures, record.get("default_suite"), record.get("commands"))
+        got = {k: record.get(k) for k in expected}
+        if got != expected:
+            problems.append(f"verdict {got} is not the record's verdict {expected}")
     return problems
 
 
@@ -325,7 +431,220 @@ def ensemble_block(ensemble: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def pair_entry(fragment: dict[str, Any]) -> dict[str, Any]:
+def _timeouts(ensemble: dict[str, Any]) -> int:
+    return sum(1 for e in ensemble.get("excluded", []) if e.get("reason") == TIMEOUT_REASON)
+
+
+def _heavy_rmsd(a: dict[str, Any] | None, b: dict[str, Any] | None) -> float | None:
+    if a is None or b is None or a["symbols"] != b["symbols"]:
+        return None
+    return heavy_rmsd_angstrom(a, b)
+
+
+def _judge(values: dict[str, float | None], bounds: dict[str, float]) -> list[str]:
+    problems = []
+    for key, value in values.items():
+        if value is None:
+            problems.append(f"{key}: missing")
+        elif value > bounds[key]:
+            problems.append(key)
+    return problems
+
+
+def compare_pair(
+    fragment: dict[str, Any], fixture: dict[str, Any], recipe: str, name: str
+) -> dict[str, Any]:
+    """An in-process Tier 4 pair against its promoted fixture under TJ's bounds (R31).
+
+    Per pathway: |ΔE_TS| of the seed TS, heavy-atom RMSD of the seed TS (Horn, same atom order) and
+    the member count; for the pair, |ΔΔG‡| and (mapped) the pruning branch. A member count may
+    differ only through a PreRelaxTimeout exclusion on either side (R28); that is reported and the
+    remaining quantities are still judged. ``search_history`` is never compared (N11).
+    """
+    bounds = REGRESSION_BOUNDS[recipe]
+    per_pathway: dict[str, Any] = {}
+    problems: list[str] = []
+    energies: list[float | None] = []
+    rmsds: list[float | None] = []
+    for pathway in sorted(set(fragment.get("pathways", {})) | set(fixture.get("pathways", {}))):
+        new = fragment.get("pathways", {}).get(pathway, {})
+        old = fixture.get("pathways", {}).get(pathway, {})
+        ts_new, ts_old = new.get("seed_ts") or {}, old.get("seed_ts") or {}
+        e_new = (ts_new.get("thermo") or {}).get("electronic_energy_hartree")
+        e_old = (ts_old.get("thermo") or {}).get("electronic_energy_hartree")
+        d_e = None if e_new is None or e_old is None else abs(float(e_new) - float(e_old))
+        d_rmsd = _heavy_rmsd(ts_new.get("state"), ts_old.get("state"))
+        counts = [
+            len(new.get("ensemble", {}).get("members", [])),
+            len(old.get("ensemble", {}).get("members", [])),
+        ]
+        timeouts = [_timeouts(new.get("ensemble", {})), _timeouts(old.get("ensemble", {}))]
+        per_pathway[pathway] = {
+            "abs_delta_ts_energy_hartree": d_e,
+            "heavy_rmsd_angstrom": d_rmsd,
+            "n_members": counts,
+            "pre_relax_timeouts": timeouts,
+            "member_count_differs": counts[0] != counts[1],
+            "difference_explained_by_timeout": counts[0] != counts[1] and any(timeouts),
+        }
+        if counts[0] != counts[1] and not any(timeouts):
+            problems.append(f"n_members.{pathway}")
+        energies.append(d_e)
+        rmsds.append(d_rmsd)
+    ddg_new = (fragment.get("score") or {}).get("ddG_dagger_kcal_mol")
+    ddg_old = (fixture.get("score") or {}).get("ddG_dagger_kcal_mol")
+    values: dict[str, float | None] = {
+        "abs_delta_ts_energy_hartree": None if None in energies or not energies else max(energies),  # type: ignore[type-var]
+        "heavy_rmsd_angstrom": None if None in rmsds or not rmsds else max(rmsds),  # type: ignore[type-var]
+        "abs_delta_ddG_dagger_kcal_mol": (
+            None if ddg_new is None or ddg_old is None else abs(float(ddg_new) - float(ddg_old))
+        ),
+    }
+    problems += _judge(values, bounds)
+    result: dict[str, Any] = {
+        "status": "fail" if problems else "pass",
+        "fixture": f"tests/fixtures/v0.6.0/{name}",
+        **values,
+        "per_pathway": per_pathway,
+        "bounds": dict(bounds),
+        "mismatches": problems,
+    }
+    gate_new = fragment.get("checks", {}).get("tier_gates", {}).get("pruning_g6", {})
+    gate_old = fixture.get("checks", {}).get("tier_gates", {}).get("pruning_g6", {})
+    if gate_new or gate_old:
+        result["pruning_branch"] = [gate_new.get("branch"), gate_old.get("branch")]
+        if gate_new.get("branch") != gate_old.get("branch") or gate_new.get("branch") is None:
+            result["mismatches"] = [*problems, "pruning_branch"]
+            result["status"] = "fail"
+    return result
+
+
+def _match_by_energy(
+    new: list[float], old: list[float]
+) -> tuple[list[float], list[float], list[float]]:
+    """Pair two lists of member free energies (Eh) in ascending order.
+
+    Equal counts pair rank by rank. Otherwise each member of the shorter list takes the nearest
+    unused member of the longer one (a count difference is only allowed through a PreRelaxTimeout,
+    R28). Returns the absolute differences of the pairs and the unmatched energies of each side.
+    """
+    a, b = sorted(new), sorted(old)
+    swap = len(a) > len(b)
+    short, long_ = (b, a) if swap else (a, b)
+    free = list(long_)
+    deltas: list[float] = []
+    for g in short:
+        j = min(range(len(free)), key=lambda k: abs(free[k] - g))
+        deltas.append(abs(free.pop(j) - g))
+    return deltas, (free if swap else []), ([] if swap else free)
+
+
+def compare_flexible(
+    fragment: dict[str, Any], fixture: dict[str, Any], recipe: str, name: str
+) -> dict[str, Any]:
+    """An in-process flexible case against its promoted fixture: counts and per-member energies.
+
+    Members are paired by free energy, in ascending order: the lowest-G copy of a merge group may
+    be a different one of two equal-energy copies from run to run, so ``source`` labels are
+    reported (``sources_*``) and never matched on. |ΔG| of each pair and of the pathway's free
+    energy are bounded by the energy bound, the ensemble ΔG‡ by the ΔΔG‡ bound (R31). The count may
+    differ only through a PreRelaxTimeout exclusion on either side (R28): that is reported and the
+    paired members are still judged. The candidates hold no geometry, so no heavy-atom RMSD exists.
+    """
+    bounds = REGRESSION_BOUNDS[recipe]
+    new, old = fragment.get("reported") or {}, fixture.get("reported") or {}
+    g_new = [float(m["G_hartree"]) for m in new.get("members", [])]
+    g_old = [float(m["G_hartree"]) for m in old.get("members", [])]
+    timeouts = [
+        (new.get("exclusions_by_reason") or {}).get(TIMEOUT_REASON, 0),
+        (old.get("exclusions_by_reason") or {}).get(TIMEOUT_REASON, 0),
+    ]
+    counts = [len(g_new), len(g_old)]
+    problems: list[str] = []
+    if counts[0] != counts[1] and not any(timeouts):
+        problems.append("n_members")
+    d_member, only_new, only_old = _match_by_energy(g_new, g_old)
+    p_new, p_old = new.get("G_pathway_hartree"), old.get("G_pathway_hartree")
+    b_new = (new.get("barrier") or {}).get("ensemble_dG_dagger_1M_kcal_mol")
+    b_old = (old.get("barrier") or {}).get("ensemble_dG_dagger_1M_kcal_mol")
+    values: dict[str, float | None] = {
+        "max_abs_delta_member_G_hartree": max(d_member) if d_member else None,
+        "abs_delta_G_pathway_hartree": (
+            None if p_new is None or p_old is None else abs(float(p_new) - float(p_old))
+        ),
+        "abs_delta_dG_dagger_1M_kcal_mol": (
+            None if b_new is None or b_old is None else abs(float(b_new) - float(b_old))
+        ),
+    }
+    keys = {
+        "max_abs_delta_member_G_hartree": "abs_delta_ts_energy_hartree",
+        "abs_delta_G_pathway_hartree": "abs_delta_ts_energy_hartree",
+        "abs_delta_dG_dagger_1M_kcal_mol": "abs_delta_ddG_dagger_kcal_mol",
+    }
+    problems += _judge(values, {k: bounds[v] for k, v in keys.items()})
+    return {
+        "status": "fail" if problems else "pass",
+        "fixture": f"tests/fixtures/v0.6.0/{name}",
+        **values,
+        "n_members": counts,
+        "pre_relax_timeouts": timeouts,
+        "member_count_differs": counts[0] != counts[1],
+        "difference_explained_by_timeout": counts[0] != counts[1] and any(timeouts),
+        "unmatched_member_G_hartree_in_run": only_new,
+        "unmatched_member_G_hartree_in_fixture": only_old,
+        "sources_in_run": sorted(m["source"] for m in new.get("members", [])),
+        "sources_in_fixture": sorted(m["source"] for m in old.get("members", [])),
+        "heavy_rmsd_angstrom": None,
+        "heavy_rmsd_note": "the candidates hold no geometry, so no heavy-atom RMSD is compared",
+        "bounds": {k: bounds[v] for k, v in keys.items()},
+        "mismatches": problems,
+    }
+
+
+def load_promoted(promoted_dir: Path, name: str) -> dict[str, Any] | None:
+    """A promoted fixture's JSON (a test fixture, readable), or ``None`` when absent."""
+    path = promoted_dir / name
+    return dict(json.loads(path.read_text(encoding="utf-8"))) if path.is_file() else None
+
+
+def promotion_evidence(promoted_dir: Path = PROMOTED_V060) -> dict[str, Any]:
+    """TJ's promotion (R31): each promoted file's sha256 and blob id against R31's prefixes.
+
+    ``absent`` when no promoted file exists (pre-promotion); ``verified`` when all ten equal R31;
+    anything else raises, since a fixture that is not TJ's must never feed a verdict.
+    """
+    present = sorted(p.name for p in promoted_dir.glob("*.json")) if promoted_dir.is_dir() else []
+    if not present:
+        return {"status": "absent", "directory": "tests/fixtures/v0.6.0/"}
+    files = {}
+    for name, (sha, blob) in sorted(PROMOTED_FILES.items()):
+        path = promoted_dir / name
+        data = path.read_bytes() if path.is_file() else b""
+        observed = (hashlib.sha256(data).hexdigest(), git_blob_id(data)) if data else ("", "")
+        if not (observed[0].startswith(sha) and observed[1].startswith(blob)):
+            raise ValueError(f"promoted {name} is not R31's: {observed} vs {(sha, blob)}")
+        files[name] = {
+            "sha256": observed[0],
+            "blob_id": observed[1],
+            "r31_sha256_prefix": sha,
+            "r31_blob_prefix": blob,
+        }
+    if present != sorted(PROMOTED_FILES):
+        raise ValueError(f"promoted files {present} are not R31's {sorted(PROMOTED_FILES)}")
+    return {
+        "status": "verified",
+        **PROMOTION,
+        "directory": "tests/fixtures/v0.6.0/",
+        "files": files,
+    }
+
+
+def pair_entry(
+    fragment: dict[str, Any],
+    fixture: dict[str, Any] | None = None,
+    recipe: str = "xtb",
+    name: str = "",
+) -> dict[str, Any]:
     """The record entry of one pair x recipe from its in-process fragment."""
     if fragment.get("test_outcome") == "missing":
         return {"test_outcome": "missing"}
@@ -353,10 +672,14 @@ def pair_entry(fragment: dict[str, Any]) -> dict[str, Any]:
         "reported": fragment.get("reported"),
         "second_run_cache": fragment.get("second_run_cache"),
         "run_commit_sha": fragment.get("commit_sha"),
-        "regression": {
-            "status": "pending_promotion",
-            "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
-        },
+        "regression": (
+            compare_pair(fragment, fixture, recipe, name)
+            if fixture is not None
+            else {
+                "status": "pending_promotion",
+                "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
+            }
+        ),
     }
     if "pruning" in fragment:
         entry["pruning"] = fragment["pruning"]
@@ -367,7 +690,12 @@ def pair_entry(fragment: dict[str, Any]) -> dict[str, Any]:
     return entry
 
 
-def flexible_entry(fragment: dict[str, Any]) -> dict[str, Any]:
+def flexible_entry(
+    fragment: dict[str, Any],
+    fixture: dict[str, Any] | None = None,
+    recipe: str = "xtb",
+    name: str = "",
+) -> dict[str, Any]:
     """The entry of one R x recipe from slice 14's E2E fragment (gated: its gates (a)-(f))."""
     if fragment.get("test_outcome") == "missing":
         return {"test_outcome": "missing"}
@@ -380,27 +708,33 @@ def flexible_entry(fragment: dict[str, Any]) -> dict[str, Any]:
         "graft": fragment.get("graft"),
         "inputs_sha256": fragment.get("inputs_sha256"),
         "run_commit_sha": fragment.get("commit_sha"),
-        "regression": {
-            "status": "pending_promotion",
-            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
-        },
+        "regression": (
+            compare_flexible(fragment, fixture, recipe, name)
+            if fixture is not None
+            else {
+                "status": "pending_promotion",
+                "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            }
+        ),
     }
 
 
-def flexible_block(runs: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def flexible_block(
+    runs: dict[str, dict[str, Any]], promoted_dir: Path | None = None
+) -> dict[str, Any]:
     """The six ``flexible_ensemble`` entries plus, per recipe, the reported chain-length order.
 
     Members per R, the order flag and ΔΔG‡ versus ethyl are reported, never gated; the entries'
     gated states are slice 14's gates (a)-(f).
     """
     gone = {"test_outcome": "missing"}
-    block: dict[str, Any] = {
-        r: {
-            recipe: flexible_entry(runs[recipe].get("flexible", {}).get(r, gone))
-            for recipe in RECIPES
-        }
-        for r in FLEX
-    }
+
+    def entry(r: str, recipe: str) -> dict[str, Any]:
+        name = f"t4_flexible_{r}.{recipe}.json"
+        fixture = load_promoted(promoted_dir, name) if promoted_dir else None
+        return flexible_entry(runs[recipe].get("flexible", {}).get(r, gone), fixture, recipe, name)
+
+    block: dict[str, Any] = {r: {recipe: entry(r, recipe) for recipe in RECIPES} for r in FLEX}
     for recipe in RECIPES:
         counts = {}
         barrier = {}
@@ -664,35 +998,72 @@ def merge_runs(
     default_suite: dict[str, Any],
     unit_proof: dict[str, Any],
     xyz_dir: Path = XYZ_DIR,
+    prior: dict[str, Any] | None = None,
+    promoted_dir: Path = PROMOTED_V060,
 ) -> dict[str, Any]:
-    """Build the pre-promotion record from the two per-recipe files and the command logs."""
+    """Build the record from the two per-recipe files and the command logs.
+
+    Without TJ's promoted fixtures: the pre-promotion record, no ``verdict`` (slice 11). With them
+    (verified against R31): regression from the in-process comparisons, the transcriptions
+    ``confirmed`` from TJ's recorded answer, TJ's bounds and the ``verdict`` (slice 12). ``prior``
+    is the slice 11 record, whose reproducibility measurement is carried over.
+    """
     shas = {r["commit_sha"] for r in runs.values()}
     if len(shas) != 1 or not all(r["tree_clean"] for r in runs.values()):
         raise ValueError(f"recipes ran at different or unclean commits: {shas}")
+    promotion = promotion_evidence(promoted_dir)
+    promoted = promotion["status"] == "verified"
     missing = {"test_outcome": "missing"}
-    t4 = {
-        pair: {recipe: pair_entry(runs[recipe]["pairs"].get(pair, missing)) for recipe in RECIPES}
-        for pair in PAIRS
-    }
-    reproducibility = {
-        recipe: {
-            pair: reproducibility_entry(
-                pair,
-                recipe,
-                runs[recipe]["pairs"].get(pair, missing),
-                runs[recipe]["reproducibility"].get(pair, missing),
-            )
-            for pair in PAIRS
+
+    def pair(pair_name: str, recipe: str) -> dict[str, Any]:
+        name = f"{pair_name}.{recipe}.json"
+        fixture = load_promoted(promoted_dir, name) if promoted else None
+        return pair_entry(runs[recipe]["pairs"].get(pair_name, missing), fixture, recipe, name)
+
+    t4 = {pair_name: {r: pair(pair_name, r) for r in RECIPES} for pair_name in PAIRS}
+    if prior is not None:
+        reproducibility = prior["reproducibility"]
+        proposed = prior["proposed_regression_bounds"]
+    else:
+        reproducibility = {
+            recipe: {
+                pair_name: reproducibility_entry(
+                    pair_name,
+                    recipe,
+                    runs[recipe]["pairs"].get(pair_name, missing),
+                    runs[recipe]["reproducibility"].get(pair_name, missing),
+                )
+                for pair_name in PAIRS
+            }
+            for recipe in RECIPES
         }
-        for recipe in RECIPES
-    }
-    flexible = flexible_block(runs)
+        proposed = proposed_bounds(reproducibility)
+    flexible = flexible_block(runs, promoted_dir if promoted else None)
     fixtures = {
         "t4": t4,
         "flexible_ensemble": flexible,
         "unit_proof": unit_proof,
-        **transcription_fixtures(xyz_dir),
+        **transcription_fixtures(xyz_dir, promoted),
     }
+    evidence: dict[str, Any] = {
+        "run_commits": run_commits(t4, flexible),
+        "resume_note": RESUME_NOTE,
+        "candidates_phase3_set": (
+            "tests/candidate_outputs/v0.6.0/ (slices 09-10, 14), committed for TJ's Phase 3 "
+            "review; never read by this record"
+        ),
+        "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+        "candidate_values": (
+            "the acceptance run reruns slice 09-10 and 14 code in process at this commit; its "
+            "values stand for the candidates' (no candidate file is read, firewall)"
+        ),
+        "promotion": promotion,
+    }
+    if prior is not None:
+        evidence["reproducibility_source"] = (
+            f"slice 11 record at {prior['commit_sha']}: three fresh-store runs per pair x recipe; "
+            "carried over, not rerun for the verdict"
+        )
     record: dict[str, Any] = {
         "record_schema": 1,
         "commit_sha": shas.pop(),
@@ -707,38 +1078,45 @@ def merge_runs(
         },
         "default_suite": default_suite,
         "known_limits": list(KNOWN_LIMITS),
-        "reported_notes": dict(REPORTED_NOTES),
-        "evidence": {
-            "run_commits": run_commits(t4, flexible),
-            "resume_note": RESUME_NOTE,
-            "candidates_phase3_set": (
-                "tests/candidate_outputs/v0.6.0/ (slices 09-10), committed for TJ's Phase 3 "
-                "review; never read by this record"
-            ),
-            "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
-            "candidate_values": (
-                "the acceptance run reruns slice 09-10 code in process at this commit; its values "
-                "stand for the candidates' (no candidate file is read, slice 11 firewall)"
-            ),
-        },
+        "reported_notes": reported_notes(promoted),
+        "evidence": evidence,
         "fixtures": fixtures,
         "reproducibility": reproducibility,
-        "proposed_regression_bounds": proposed_bounds(reproducibility),
+        "proposed_regression_bounds": proposed,
     }
+    if promoted:
+        record["regression_bounds"] = {
+            "source": "mission R31 (TJ at Phase 3)",
+            "recipes": {r: dict(b) for r, b in sorted(REGRESSION_BOUNDS.items())},
+            "excluded": "search_history (N11)",
+            "flexible_ensemble": (
+                "member counts and per-member G against the fixture; no heavy-atom RMSD (the "
+                "candidates hold no geometry); a PreRelaxTimeout may explain a count difference"
+            ),
+        }
+        record.update(record_verdict(fixtures, default_suite, record["commands"]))
     problems = check(record)
     if problems:
         raise ValueError(f"record invalid: {problems}")
     return record
 
 
-def transcription_fixtures(xyz_dir: Path) -> dict[str, Any]:
-    """The ``transcriptions`` block and TJ's pending confirmation (never settled here)."""
-    return {
-        "transcriptions": transcriptions_block(xyz_dir),
-        "transcription_confirmation": {
+def transcription_fixtures(xyz_dir: Path, promoted: bool = False) -> dict[str, Any]:
+    """The ``transcriptions`` block and TJ's confirmation (settled only by his recorded answer)."""
+    if promoted:
+        confirmation = {
+            "status": "confirmed",
+            "source": PROMOTION["source"],
+            "answer": PROMOTION["transcriptions_confirmed"],
+        }
+    else:
+        confirmation = {
             "status": "pending_confirmation",
             "note": "TJ confirms the three transcriptions at Phase 3",
-        },
+        }
+    return {
+        "transcriptions": transcriptions_block(xyz_dir),
+        "transcription_confirmation": confirmation,
     }
 
 
@@ -772,11 +1150,14 @@ def main(argv: list[str]) -> int:
         _dump(path, commands)
         print(f"{path}: {len(commands)} commands; last {commands[-1]['summary']!r}")
         return 0
-    if len(argv) == 7 and argv[0] == "merge":
+    if len(argv) in (7, 8) and argv[0] == "merge":
         runs = {"xtb": _load(argv[1]), "uma": _load(argv[2])}
-        record = merge_runs(runs, _load(argv[3]), _load(argv[4]), _load(argv[5]))
+        prior = _load(argv[7]) if len(argv) == 8 else None
+        record = merge_runs(runs, _load(argv[3]), _load(argv[4]), _load(argv[5]), prior=prior)
         _dump(Path(argv[6]), record)
-        print(f"wrote {argv[6]}; outstanding {outstanding(record)}")
+        stated = record.get("verdict", "none (pre-promotion)")
+        print(f"wrote {argv[6]}; verdict {stated}; reasons {record.get('verdict_reasons')}")
+        print(f"outstanding {outstanding(record)}")
         print(f"command problems: {command_problems(record['commands'])}")
         return 0
     print(__doc__)
