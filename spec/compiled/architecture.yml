@@ -75,7 +75,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -99,14 +99,14 @@ nodes:
     and typed PathwayPruningRule: ddG_dagger metric, two distinct pathways labelling
     priority-1 nodes, required threshold > 0, prune minor priority>=2; rule ids unique
     across both lists). selectivity_models.py (v0.6.0, R7/R8/R16-R19/R25): TSEnsembleOptions
-    (keyed sampler/dedup/window defaults); TSEnsembleMember (source seed|fragment_embed:k|perturb:k,
-    start sha256, G, degeneracy, face +-1, weight, pre-relax wall time); TSEnsembleExclusion
+    (keyed defaults); TSEnsembleMember (source seed|fragment_embed:k|perturb:k, start
+    sha256, G, degeneracy, face +-1, weight, pre-relax wall time); TSEnsembleExclusion
     (closed reason set); TSEnsembleMerge; TSEnsemble (pathway, T, reactant_key, recipe
     EngineIdentity; weights sum 1 within 1e-12; G_pathway xor failed_reason); PruningDecision
-    and SelectivityResult (signed ddG keyed '<b>_vs_<a>' = G_b - G_a; ratio >= 1;
-    percent 0-100; kind ee|de|regio; per_pathway PathwaySelectivity). io.py: YAML/JSON
-    load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml only (no numpy/RDKit,
-    G8).
+    and SelectivityResult (signed ddG keyed '<b>_vs_<a>' = G_b - G_a; ratio >= 1,
+    +inf only on overflow; percent 0-100; kind ee|de|regio; per_pathway PathwaySelectivity).
+    io.py: YAML/JSON load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml
+    only (no numpy/RDKit, G8).
   inputs:
   - data_type: reaction_graph_file_yaml_or_json
     external: graph_files
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: patched description
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,8 +177,8 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -274,12 +274,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -329,12 +329,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -342,27 +342,26 @@ nodes:
   description: >-
     eta_rxncat.thermo (v0.3.0; TS validation v0.5.0): ideal-gas thermochemistry derived
     from a stored Cartesian Hessian (never stored itself), in its own package so eta_rxncat.core
-    stays numpy-free. constants.py: CODATA 2018 constants and the Eh/(Bohr^2 amu)
-    -> cm^-1 conversion; a test derives engines.units HARTREE_KCAL_MOL and BOHR_ANGSTROM
-    from them. masses.py: RDKit most-common-isotope masses, masses_source, error on
-    a miss (no fallback). _geometry.py: shared helpers (centre of mass, moments, linearity,
-    proper-rotation Kabsch RMSD, permuted RMSD, capped graph automorphisms). modes.py:
-    normal_modes symmetrises and mass-weights the Hessian, projects rigid motions
-    (SVD rank 3/5/6), giving 0/3N-5/3N-6 ascending frequencies (imaginary negative)
-    and unit Cartesian mode vectors; |nu| < 1e-3 cm^-1 is an error. symmetry.py: rotational
-    symmetry number from automorphisms realised by a proper rotation within sym_tol
-    (linear: 2 if centrosymmetric, else 1; cap reached is an error), from a SMILES
-    or (v0.5.0) a given bond graph (unsanitised single bonds, no implicit H). rrho.py:
-    thermochemistry (sigma from SMILES) over _thermochemistry(sigma): Sackur-Tetrode
-    translation, rigid rotor with sigma, RRHO ZPE/thermal energy, Grimme quasi-RRHO
-    entropy with B_av, electronic R ln(2S+1), 1 M standard-state term; returns core
-    ThermoResult; imaginary modes excluded and listed, soft modes at |nu|. boltzmann.py:
-    log-sum-exp weights and ensemble G with degeneracies. errors.py: ThermoError,
-    ThermoInputError, NotAMinimumError, check_ground_state. ts.py (v0.5.0): validate_transition_state
-    -> core TSValidation (TJ A2: one mode below -imag_tol, below cutoff, mass-weighted
-    active-core KE fraction; R3 identity: forming-stretch overlap, in-phase bonds,
-    distance window; refusals TSValidationInputError); ts_thermochemistry (needs a
-    mode-count pass, sigma from bonds, exactly the validated imaginary excluded).
+    stays numpy-free. __init__ (v0.6.0 R26): masses/modes/rrho/symmetry/ts names load
+    lazily (PEP 562), so constants and boltzmann import without RDKit. constants.py:
+    CODATA 2018 constants and the Eh/(Bohr^2 amu) -> cm^-1 conversion; a test derives
+    engines.units HARTREE_KCAL_MOL and BOHR_ANGSTROM from them. masses.py: RDKit isotope
+    masses, masses_source, no fallback. _geometry.py: shared helpers (centre of mass,
+    moments, linearity, proper-rotation Kabsch RMSD, permuted RMSD, capped graph automorphisms).
+    modes.py: normal_modes mass-weights the Hessian, projects rigid motions (SVD),
+    ascending frequencies (imaginary negative) and unit Cartesian modes; |nu| < 1e-3
+    cm^-1 is an error. symmetry.py: rotational symmetry number from automorphisms
+    realised by a proper rotation within sym_tol (linear: 2 if centrosymmetric, else
+    1; cap reached is an error), from a SMILES or (v0.5.0) a given bond graph (unsanitised
+    single bonds, no implicit H). rrho.py: thermochemistry (sigma from SMILES): Sackur-Tetrode,
+    rigid rotor, RRHO ZPE, Grimme quasi-RRHO entropy, electronic R ln(2S+1), 1 M term;
+    returns core ThermoResult; imaginary modes excluded and listed, soft modes at
+    |nu|. boltzmann.py: log-sum-exp weights and ensemble G with degeneracies. errors.py:
+    ThermoError, ThermoInputError, NotAMinimumError, check_ground_state. ts.py (v0.5.0):
+    validate_transition_state -> core TSValidation (TJ A2: one mode below -imag_tol,
+    below cutoff, mass-weighted active-core KE fraction; R3 identity: forming-stretch
+    overlap, in-phase bonds, distance window; refusals TSValidationInputError); ts_thermochemistry
+    (needs a mode-count pass, sigma from bonds, exactly the validated imaginary excluded).
     Bonds are passed in; no mapping/orchestrator import. Tests: tests/unit/thermo.
   inputs:
   - data_type: molecular_state_thermo_config_and_analysis_options
@@ -388,12 +387,12 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
+    summary: patched description
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -444,14 +443,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.4
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -503,14 +502,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.4
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -519,28 +518,27 @@ nodes:
   - tests/candidate_outputs/v0.3.0/**
   - tests/candidate_outputs/v0.5.0/**
   description: >-
-    eta_rxncat.orchestrator (v0.3.0; TS runner v0.5.0): species stage runner (TJ Q4
-    C). counting.py: CountingEngine counts calls per stage kind. species.py: SpeciesSpec,
-    Recipe, SinglePoint; ENGINE_CLASSES registry; run_species caches every stage in
-    the ArtifactStore under build_stage_key: conformer_search (0 engine calls; keyed
-    on embedding, SMILES, rdkit, seed), geometry_opt per pre-dedup survivor (engine
-    + optimizer options, opt.name/version), dedup and energy window, frequency per
-    kept (energy + full Hessian; thermo recomputed), one imaginary-mode push then
-    not_a_minimum, re-dedup by G (R53), degeneracy, mirror-partner drop, build_ensemble,
-    incremental single points (R35). Opt/SCF failures cached; other errors propagate.
-    Per-kind metrics. run_constrained_point (R42): one keyed geometry_opt row, frozen
-    atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe,
-    store) -> TSRunResult: ts_opt (key = engine options + resolved opt. TS options,
-    identity, sorted opt.forming_bonds), frequency (species key and payload), validate_transition_state,
-    ts_thermochemistry, TransitionStateRecord (degeneracy 1); failures cached (ts_search_failed:<reason>,
-    scf_convergence, v0.6.0 engine_error from EngineRuntimeError with message/error_type;
-    EngineUnavailable/InputError raise, never cached), ts_validation_failed keeps
-    the validation; connectivity reported only; never the minimum path (N3). barrier.py
-    (v0.5.0): activation_free_energy(BarrierSpec, ensembles, TS) -> dE/dH/dG dagger
-    (1 M, 1 atm; delta_n); conservation from reactant SMILES vs TS atoms; configs
-    checked; degeneracy 1. reaction.py: ReactionSpec, reaction_free_energy (1 M, 1
-    atm). report.py: JSON schema 1. Tests: tests/unit/orchestrator; tests/e2e HF1/HF2,
-    T1/T2 on xtb and uma (e2e), T3 fixtures (tier D, R9 PySCF gpu), T3 E2E Diels-Alder,
+    eta_rxncat.orchestrator (v0.3.0; TS runner v0.5.0; selectivity v0.6.0): species
+    stage runner (TJ Q4 C); __init__ exports load lazily (R26). selectivity.py: score_selectivity(pathways,
+    kind, T) pure: degeneracy-weighted log-sum-exp G_p, ddG, ratio (inf on overflow),
+    100 tanh(x/2), softmax shares, signed '<b>_vs_<a>'; SelectivityInputError refusals
+    (R8 ee); no engine/RDKit/geomeTRIC (G8). counting.py: CountingEngine counts calls
+    per stage kind. species.py: SpeciesSpec, Recipe, SinglePoint; ENGINE_CLASSES registry;
+    run_species caches every stage in the ArtifactStore under build_stage_key: conformer_search
+    (0 engine calls), geometry_opt per survivor, dedup, window, frequency (thermo
+    recomputed), one imaginary push then not_a_minimum, re-dedup (R53), degeneracy,
+    ensemble, incremental single points (R35). Opt/SCF failures cached; other errors
+    propagate. Per-kind metrics. run_constrained_point (R42): one keyed geometry_opt
+    row, frozen atoms plus dihedrals refused. ts.py (v0.5.0): run_transition_state(TSSpec,
+    TSRecipe, store) -> TSRunResult: ts_opt (key: engine + TS options, identity, forming
+    bonds), frequency, validate_transition_state, ts_thermochemistry, TransitionStateRecord
+    (degeneracy 1); failures cached (ts_search_failed:<reason>, scf_convergence, v0.6.0
+    engine_error from EngineRuntimeError with message/error_type; EngineUnavailable/InputError
+    raise, never cached), ts_validation_failed keeps the validation; connectivity
+    reported only; never the minimum path (N3). barrier.py (v0.5.0): activation_free_energy
+    -> dE/dH/dG dagger (1 M, 1 atm); atom conservation and configs checked. reaction.py:
+    ReactionSpec, reaction_free_energy (1 M, 1 atm). report.py: JSON schema 1. Tests:
+    unit; e2e HF1/HF2, T1/T2 xtb/uma, T3 fixtures (R9 PySCF gpu), T3 E2E Diels-Alder,
     tetrazine, Paton N4 (t3.py gates R32), geomeTRIC TS cross-check (CLI subprocess,
     shim sole ase importer), candidates never read back; v050 record and verdict (R33).
   inputs:
@@ -564,6 +562,8 @@ nodes:
     source_id: eta_rxncat_thermo
   - data_type: ts_search_result
     source_id: eta_rxncat_optimize
+  - data_type: ts_ensembles_per_pathway
+    external: eta_rxncat_consumers
   outputs:
   - data_type: species_result_ensemble_dropped_metrics
     external: eta_rxncat_consumers
@@ -574,6 +574,8 @@ nodes:
   - data_type: ts_run_result_and_transition_state_record
     external: eta_rxncat_consumers
   - data_type: activation_barrier_energies
+    external: eta_rxncat_consumers
+  - data_type: selectivity_result
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -595,14 +597,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T07:23:24+00:00'
-    reviewed_by: audit:03-engine-error
-    summary: patched description
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
+    summary: patched description, inputs, outputs
   provenance:
     last_slice: OPR.0.6.0.4
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -655,8 +657,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-25T07:14:13+00:00'
-    reviewed_by: audit:02-core-contracts
+    reviewed_at: '2026-11-25T07:37:39+00:00'
+    reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.4
