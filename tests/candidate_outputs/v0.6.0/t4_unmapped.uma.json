@@ -1,0 +1,1563 @@
+{
+  "barriers": {
+    "endo": {
+      "dE_dagger_kcal_mol": 7.729803726492444,
+      "dG_dagger_1M_kcal_mol": 19.581990990480417,
+      "dG_dagger_1atm_kcal_mol": 21.476319435974695,
+      "dH_dagger_kcal_mol": 8.440810415617682,
+      "delta_n": -1
+    },
+    "exo": {
+      "dE_dagger_kcal_mol": 12.455251195730364,
+      "dG_dagger_1M_kcal_mol": 24.18431001098995,
+      "dG_dagger_1atm_kcal_mol": 26.078638456484228,
+      "dH_dagger_kcal_mol": 13.280422302628239,
+      "delta_n": -1
+    }
+  },
+  "case": "t4_unmapped",
+  "checks": {
+    "regression": {
+      "abs_delta_dG_dagger_1M_kcal_mol": 7.723599703979289e-05,
+      "abs_delta_ts_energy_hartree": 1.001285454549361e-08,
+      "abs_delta_ts_gibbs_kcal_mol": 3.182579394440472e-05,
+      "bounds": {
+        "abs_delta_dG_dagger_1M_kcal_mol": 0.75,
+        "abs_delta_ts_energy_hartree": 1e-05,
+        "abs_delta_ts_gibbs_kcal_mol": 0.75,
+        "heavy_rmsd_angstrom": 0.01
+      },
+      "fixture": "tests/fixtures/v0.5.0/t3_ts1a_n.uma.json",
+      "heavy_rmsd_angstrom": 1.1868898265646765e-07,
+      "mismatches": [],
+      "status": "pass"
+    },
+    "tier_gates": {
+      "ddG_dagger_above_0_5": {
+        "status": "pass",
+        "value_kcal_mol": 4.601970989358186
+      },
+      "endo_is_major": {
+        "major_pathway": "endo",
+        "status": "pass"
+      },
+      "no_engine_error_exclusions": {
+        "status": "pass"
+      },
+      "no_face_mismatch_exclusions": {
+        "status": "pass"
+      },
+      "per_pathway_dG_difference_equals_ddG": {
+        "ddG_dagger_kcal_mol": 4.601970989358186,
+        "per_pathway_difference_kcal_mol": 4.60197098935819,
+        "status": "pass"
+      },
+      "regression_endo_seed": {
+        "status": "pass"
+      },
+      "second_run_ensembles_all_hits": {
+        "status": "pass"
+      },
+      "second_run_equal_ensembles_and_score": {
+        "status": "pass"
+      },
+      "second_run_reactants_all_hits": {
+        "status": "pass"
+      },
+      "seeds_converge_and_pass_member_gates": {
+        "status": "pass"
+      },
+      "window_ddG_dagger": {
+        "status": "pass",
+        "value_kcal_mol": 4.601970989358186,
+        "window": {
+          "high": 6.3,
+          "high_inclusive": true,
+          "low": 2.3,
+          "low_inclusive": true
+        }
+      }
+    }
+  },
+  "commit_sha": "cc8438fcc084992cba83d983e2421cd64ada5ae8",
+  "ensemble_barriers": {
+    "endo": {
+      "dG_dagger_1M_kcal_mol": 19.581990990480417,
+      "dG_dagger_1atm_kcal_mol": 21.476319435974695,
+      "seed_to_ensemble_shift_kcal_mol": 0.0
+    },
+    "exo": {
+      "dG_dagger_1M_kcal_mol": 24.183961979838607,
+      "dG_dagger_1atm_kcal_mol": 26.078290425332884,
+      "seed_to_ensemble_shift_kcal_mol": -0.0003480311513452471
+    }
+  },
+  "ensemble_options": {
+    "energy_window_kcal_mol": 3.0,
+    "flag_dG_kcal_mol": 0.05,
+    "max_automorphisms": 100000,
+    "max_research": 10,
+    "n_embed": 10,
+    "n_perturb": 10,
+    "perturb_sigma_angstrom": 0.3,
+    "pre_dedup_rmsd_angstrom": 0.125,
+    "random_seed": 42,
+    "rmsd_dedup_angstrom": 0.125
+  },
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "failed_checks": [],
+  "fixture": "e2e5_t4_endo_exo_unmapped",
+  "pathways": {
+    "endo": {
+      "ensemble": {
+        "G_pathway_hartree": -310.54739920697165,
+        "excluded": [
+          {
+            "index": 5,
+            "pre_relax_wall_time_s": 62.43278846296016,
+            "reason": "ts_search_failed:no_reaction_mode",
+            "source": "perturb:3"
+          }
+        ],
+        "failed_reason": null,
+        "flagged_merges": [],
+        "members": [
+          {
+            "G_hartree": -310.54739920697165,
+            "degeneracy": 1,
+            "face": [
+              1,
+              1
+            ],
+            "index": 0,
+            "pre_relax_wall_time_s": null,
+            "rmsd_to_seed_angstrom": 0.0,
+            "source": "seed",
+            "start_sha256": "91f4fa07a584eb903eb381af1fe01756a3b060fd58c7e988b5d2e04532605097",
+            "validation_passed_bool": true,
+            "weight": 1.0
+          }
+        ],
+        "merges": [
+          {
+            "dG_kcal_mol": 0.00011018560319466376,
+            "kept_index": 0,
+            "merged_index": 7,
+            "rmsd_angstrom": 3.294686840081626e-05
+          },
+          {
+            "dG_kcal_mol": 0.00017974146772888408,
+            "kept_index": 0,
+            "merged_index": 3,
+            "rmsd_angstrom": 3.3015951975260586e-05
+          },
+          {
+            "dG_kcal_mol": 0.00019082596007686186,
+            "kept_index": 0,
+            "merged_index": 10,
+            "rmsd_angstrom": 3.2834772464680983e-05
+          },
+          {
+            "dG_kcal_mol": 0.00020144585348988998,
+            "kept_index": 0,
+            "merged_index": 9,
+            "rmsd_angstrom": 3.29206668836574e-05
+          },
+          {
+            "dG_kcal_mol": 0.00021676292239227284,
+            "kept_index": 0,
+            "merged_index": 1,
+            "rmsd_angstrom": 3.288311418232994e-05
+          },
+          {
+            "dG_kcal_mol": 0.00026487108093023947,
+            "kept_index": 0,
+            "merged_index": 6,
+            "rmsd_angstrom": 3.3025204792483376e-05
+          },
+          {
+            "dG_kcal_mol": 0.00037358348638115234,
+            "kept_index": 0,
+            "merged_index": 2,
+            "rmsd_angstrom": 3.295058239118966e-05
+          },
+          {
+            "dG_kcal_mol": 0.00040182275489666506,
+            "kept_index": 0,
+            "merged_index": 4,
+            "rmsd_angstrom": 3.279033241098726e-05
+          },
+          {
+            "dG_kcal_mol": 0.0005194493246957851,
+            "kept_index": 0,
+            "merged_index": 8,
+            "rmsd_angstrom": 3.299832380182248e-05
+          }
+        ],
+        "options": {
+          "energy_window_kcal_mol": 3.0,
+          "flag_dG_kcal_mol": 0.05,
+          "max_automorphisms": 100000,
+          "max_research": 10,
+          "n_embed": 10,
+          "n_perturb": 10,
+          "perturb_sigma_angstrom": 0.3,
+          "pre_dedup_rmsd_angstrom": 0.125,
+          "random_seed": 42,
+          "rmsd_dedup_angstrom": 0.125
+        },
+        "pathway": "endo",
+        "reactant_key": [
+          [
+            "C1=CC1",
+            1
+          ],
+          [
+            "C1=CCC=C1",
+            1
+          ]
+        ],
+        "recipe_identity": {
+          "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+          "name": "uma_direct",
+          "version": "2.26.0"
+        },
+        "temperature_k": 298.15
+      },
+      "seed_ts": {
+        "connectivity_equal_bool": true,
+        "degeneracy": 1,
+        "failed_reason": null,
+        "keys": {
+          "frequency": "b2057dcf610e76163658cd36fdb548147c6e7254484b5c2dbdfb88276d5c57c8",
+          "ts_opt": "ee49ff59c60d3b53b421c8d41deee3a7214ae64521159443e32a0dee56b8a9a7"
+        },
+        "metrics": {
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 1,
+            "rows_created": 1,
+            "wall_time_s": 0.8573254550574347
+          },
+          "ts_opt": {
+            "cache_hits": 0,
+            "engine_calls": 5,
+            "rows_created": 1,
+            "wall_time_s": 2.2647479369770736
+          }
+        },
+        "search": {
+          "converged": true,
+          "final_energy_hartree": -310.6723360244792,
+          "final_max_gradient_hartree_per_bohr": 6.290631148200231e-06,
+          "final_rigid_gradient_norm_hartree_per_bohr": 1.7722114012834208e-09,
+          "final_rms_gradient_hartree_per_bohr": 1.827883610280126e-06,
+          "final_state": {
+            "active_atom_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "charge": 0,
+            "coordinates": [
+              [
+                -0.9200541711654502,
+                1.1020248095614966,
+                0.707799574433677
+              ],
+              [
+                0.3496824502979388,
+                0.813579053587025,
+                1.153689783752799
+              ],
+              [
+                0.35005565022976765,
+                -1.4271450632685379,
+                0.66440358855373
+              ],
+              [
+                0.3490648958991556,
+                -1.4236559552393706,
+                -0.6700562331471457
+              ],
+              [
+                -0.9202595078274084,
+                1.0998950377643548,
+                -0.7052789773449818
+              ],
+              [
+                0.34989836131240226,
+                0.8064860008435559,
+                -1.150839336892248
+              ],
+              [
+                1.2959753301363093,
+                0.9965302928251725,
+                0.0019265436389652912
+              ],
+              [
+                -0.923120224215133,
+                -1.8039647787877173,
+                -0.0032877877282345134
+              ],
+              [
+                -1.7958023147028463,
+                1.2083855487147008,
+                1.3319684932200662
+              ],
+              [
+                0.6591531918218546,
+                0.8220677449727922,
+                2.1891688618488043
+              ],
+              [
+                0.9387974487652774,
+                -1.7022900397384082,
+                1.519665427478598
+              ],
+              [
+                0.9355938829202801,
+                -1.7091602844067453,
+                -1.5237478458941933
+              ],
+              [
+                -1.794811492965809,
+                1.205272602938266,
+                -1.3308523918401816
+              ],
+              [
+                0.657716425289493,
+                0.8072856759656422,
+                -2.1865779811070123
+              ],
+              [
+                1.632884297249431,
+                2.040600018090439,
+                0.002818749061257015
+              ],
+              [
+                2.171658846056846,
+                0.35088843578547185,
+                0.0017173281099705378
+              ],
+              [
+                -1.269716347014921,
+                -2.834500652162653,
+                -0.0078037113083705084
+              ],
+              [
+                -1.7309177220871883,
+                -1.062278447445485,
+                0.005285915164500943
+              ]
+            ],
+            "metadata": {},
+            "spin_multiplicity": 1,
+            "symbols": [
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H"
+            ]
+          },
+          "followed_eigenvalue_hartree_per_bohr2": -0.06793105032593749,
+          "forming_bonds": [
+            {
+              "i": 1,
+              "j": 2
+            },
+            {
+              "i": 3,
+              "j": 5
+            }
+          ],
+          "hessian_method": "finite_difference",
+          "n_gradient_calls": 5,
+          "n_hessian_calls": 1,
+          "n_hessian_refreshes": 0,
+          "n_rejected_steps": 0,
+          "n_steps": 4,
+          "optimizer": {
+            "name": "prfo",
+            "version": "src-897c4e19cb4e738a"
+          },
+          "options": {
+            "hessian_refresh_steps": 5,
+            "max_consecutive_rejections": 5,
+            "max_gradient_hartree_per_bohr": 0.00045,
+            "max_step_bohr": 0.0018,
+            "max_steps": 100,
+            "max_wall_time_s": 1800.0,
+            "min_initial_overlap": 0.6,
+            "min_mode_overlap": 0.5,
+            "ratio_floor_hartree": 1e-08,
+            "rms_gradient_hartree_per_bohr": 0.0003,
+            "rms_step_bohr": 0.0012,
+            "trust_max_bohr": 0.3,
+            "trust_min_bohr": 0.001,
+            "trust_radius_bohr": 0.1
+          }
+        },
+        "search_history": [
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.67232184368646,
+            "followed_eigenvalue_hartree_per_bohr2": -0.05030742021618306,
+            "hessian_source": "exact",
+            "max_gradient_hartree_per_bohr": 0.0028510785321618887,
+            "mode_overlap": null,
+            "ratio": 0.8836044873058208,
+            "step": 0,
+            "trust_radius_bohr": 0.1
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6723370256741,
+            "followed_eigenvalue_hartree_per_bohr2": -0.054327683538640016,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 0.0005138737167528933,
+            "mode_overlap": 0.999919872454555,
+            "ratio": 2.9662848083365243,
+            "step": 1,
+            "trust_radius_bohr": 0.2
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6723360115267,
+            "followed_eigenvalue_hartree_per_bohr2": -0.06116699091872528,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 5.238343020339428e-05,
+            "mode_overlap": 0.9997170405783549,
+            "ratio": 0.892121189956267,
+            "step": 2,
+            "trust_radius_bohr": 0.1
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6723360244792,
+            "followed_eigenvalue_hartree_per_bohr2": -0.06793105032593749,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 6.290631148200231e-06,
+            "mode_overlap": 0.9993950402544176,
+            "ratio": 1.0,
+            "step": 3,
+            "trust_radius_bohr": 0.1
+          }
+        ],
+        "state": {
+          "active_atom_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "charge": 0,
+          "coordinates": [
+            [
+              -0.9200541711654502,
+              1.1020248095614966,
+              0.707799574433677
+            ],
+            [
+              0.3496824502979388,
+              0.813579053587025,
+              1.153689783752799
+            ],
+            [
+              0.35005565022976765,
+              -1.4271450632685379,
+              0.66440358855373
+            ],
+            [
+              0.3490648958991556,
+              -1.4236559552393706,
+              -0.6700562331471457
+            ],
+            [
+              -0.9202595078274084,
+              1.0998950377643548,
+              -0.7052789773449818
+            ],
+            [
+              0.34989836131240226,
+              0.8064860008435559,
+              -1.150839336892248
+            ],
+            [
+              1.2959753301363093,
+              0.9965302928251725,
+              0.0019265436389652912
+            ],
+            [
+              -0.923120224215133,
+              -1.8039647787877173,
+              -0.0032877877282345134
+            ],
+            [
+              -1.7958023147028463,
+              1.2083855487147008,
+              1.3319684932200662
+            ],
+            [
+              0.6591531918218546,
+              0.8220677449727922,
+              2.1891688618488043
+            ],
+            [
+              0.9387974487652774,
+              -1.7022900397384082,
+              1.519665427478598
+            ],
+            [
+              0.9355938829202801,
+              -1.7091602844067453,
+              -1.5237478458941933
+            ],
+            [
+              -1.794811492965809,
+              1.205272602938266,
+              -1.3308523918401816
+            ],
+            [
+              0.657716425289493,
+              0.8072856759656422,
+              -2.1865779811070123
+            ],
+            [
+              1.632884297249431,
+              2.040600018090439,
+              0.002818749061257015
+            ],
+            [
+              2.171658846056846,
+              0.35088843578547185,
+              0.0017173281099705378
+            ],
+            [
+              -1.269716347014921,
+              -2.834500652162653,
+              -0.0078037113083705084
+            ],
+            [
+              -1.7309177220871883,
+              -1.062278447445485,
+              0.005285915164500943
+            ]
+          ],
+          "metadata": {},
+          "spin_multiplicity": 1,
+          "symbols": [
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H"
+          ]
+        },
+        "thermo": {
+          "analysis": {
+            "imag_tol_cm1": 20.0,
+            "linear_tol_angstrom": 0.001,
+            "max_automorphisms": 100000,
+            "sym_tol_angstrom": 0.05
+          },
+          "config": {
+            "entropy_model": "grimme_qrrho",
+            "pressure_atm": 1.0,
+            "qrrho_alpha": 4.0,
+            "qrrho_cutoff_cm1": 100.0,
+            "qrrho_rotor_moment_kg_m2": 1e-44,
+            "standard_state_mol_l": 1.0,
+            "temperature_k": 298.15
+          },
+          "electronic_energy_hartree": -310.6723360153849,
+          "energy_source": "optimization",
+          "entropy_components_hartree_per_k": {
+            "electronic": 0.0,
+            "rotational": 4.381353227353876e-05,
+            "translational": 6.357496710292277e-05,
+            "vibrational": 1.935774287141892e-05
+          },
+          "entropy_hartree_per_k": 0.00012674624224788046,
+          "frequencies_cm1": [
+            -453.2263010414315,
+            169.67901138990774,
+            247.87287562624155,
+            270.0560357780562,
+            340.7005813093237,
+            408.37801563178454,
+            455.8154978865348,
+            574.5410654490217,
+            673.1887245484743,
+            765.4446968674414,
+            780.2474829873395,
+            809.3220734583513,
+            812.7795973070944,
+            845.5438956479188,
+            866.2144885776368,
+            892.1090576286749,
+            913.9274623550672,
+            961.5915309311954,
+            969.1177055105967,
+            970.7822759952525,
+            983.2268728890738,
+            1033.9531695290223,
+            1050.778449555364,
+            1059.5438381209667,
+            1068.9861037923624,
+            1087.2241558046312,
+            1094.3438127059605,
+            1128.802407070589,
+            1135.841444530193,
+            1185.5472209699365,
+            1278.8909919291282,
+            1318.1378056629767,
+            1416.2908219531412,
+            1439.8230276527706,
+            1451.70997470071,
+            1477.5915909665446,
+            1556.4997248416782,
+            1579.5135460988067,
+            2978.422415027521,
+            3040.8876288104425,
+            3113.619700446575,
+            3133.7787591093997,
+            3206.8532473269056,
+            3216.7620496058585,
+            3228.9514550253384,
+            3237.8716869085924,
+            3258.9601888832626,
+            3287.731653850792
+          ],
+          "gibbs_free_energy_hartree": -310.54739920697165,
+          "imaginary_frequencies_cm1": [
+            -453.2263010414315
+          ],
+          "is_linear": false,
+          "masses_source": "rdkit 2026.09.2 most-common-isotope",
+          "n_atoms": 18,
+          "rotational_symmetry_number": 1,
+          "soft_modes_cm1": [],
+          "standard_state_correction_hartree": 0.0030188045341030057,
+          "thermal_correction_enthalpy_hartree": 0.1597073960053209,
+          "thermal_correction_gibbs_hartree": 0.12493680841321836,
+          "zpe_hartree": 0.15213114929020533
+        },
+        "ts_id": "TS1a_n",
+        "validation": {
+          "active_atom_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "active_core_ke_fraction": 0.9018016644898257,
+          "active_core_passed_bool": true,
+          "forming_bonds_in_phase_bool": true,
+          "forming_distances_angstrom": {
+            "1-2": 2.2935225501286687,
+            "3-5": 2.281378143095254
+          },
+          "forming_stretch_overlap": 0.7003796738739729,
+          "identity_passed_bool": true,
+          "imaginary_frequency_cm1": -453.2263010414315,
+          "mode_count_passed_bool": true,
+          "n_imaginary": 1,
+          "options": {
+            "cutoff_cm1": -50.0,
+            "forming_distance_max_angstrom": 2.9,
+            "forming_distance_min_angstrom": 1.9,
+            "imag_tol_cm1": 20.0,
+            "min_active_core_ke_fraction": 0.6,
+            "min_forming_stretch_overlap": 0.5
+          },
+          "passed_bool": true,
+          "reasons": []
+        }
+      }
+    },
+    "exo": {
+      "ensemble": {
+        "G_pathway_hartree": -310.540065499387,
+        "excluded": [],
+        "failed_reason": null,
+        "flagged_merges": [],
+        "members": [
+          {
+            "G_hartree": -310.540065499387,
+            "degeneracy": 1,
+            "face": [
+              -1,
+              -1
+            ],
+            "index": 4,
+            "pre_relax_wall_time_s": 1.2514527790481225,
+            "rmsd_to_seed_angstrom": 3.7695192971179706e-06,
+            "source": "perturb:2",
+            "start_sha256": "1455972afb627f1b9968d7edc85f0418e2176980e650d38d563f89edc0aa6f26",
+            "validation_passed_bool": true,
+            "weight": 1.0
+          }
+        ],
+        "merges": [
+          {
+            "dG_kcal_mol": 0.00010364390751143712,
+            "kept_index": 4,
+            "merged_index": 8,
+            "rmsd_angstrom": 4.899036091938795e-07
+          },
+          {
+            "dG_kcal_mol": 0.00011141613939872467,
+            "kept_index": 4,
+            "merged_index": 10,
+            "rmsd_angstrom": 2.4815392487837465e-07
+          },
+          {
+            "dG_kcal_mol": 0.0001442595209374667,
+            "kept_index": 4,
+            "merged_index": 2,
+            "rmsd_angstrom": 8.268615423315688e-07
+          },
+          {
+            "dG_kcal_mol": 0.00014817399435928976,
+            "kept_index": 4,
+            "merged_index": 3,
+            "rmsd_angstrom": 2.4495180459693976e-07
+          },
+          {
+            "dG_kcal_mol": 0.00015630103358676498,
+            "kept_index": 4,
+            "merged_index": 7,
+            "rmsd_angstrom": 4.2981520598697533e-07
+          },
+          {
+            "dG_kcal_mol": 0.0002578124230693372,
+            "kept_index": 4,
+            "merged_index": 5,
+            "rmsd_angstrom": 8.006668758237316e-07
+          },
+          {
+            "dG_kcal_mol": 0.00031101800774150084,
+            "kept_index": 4,
+            "merged_index": 9,
+            "rmsd_angstrom": 8.605483304543382e-07
+          },
+          {
+            "dG_kcal_mol": 0.0003241555458398738,
+            "kept_index": 4,
+            "merged_index": 1,
+            "rmsd_angstrom": 1.986821492513021e-07
+          },
+          {
+            "dG_kcal_mol": 0.0003480311513452471,
+            "kept_index": 4,
+            "merged_index": 0,
+            "rmsd_angstrom": 3.769309850289243e-06
+          },
+          {
+            "dG_kcal_mol": 0.0003874316022440652,
+            "kept_index": 4,
+            "merged_index": 6,
+            "rmsd_angstrom": 2.7815500895182293e-07
+          }
+        ],
+        "options": {
+          "energy_window_kcal_mol": 3.0,
+          "flag_dG_kcal_mol": 0.05,
+          "max_automorphisms": 100000,
+          "max_research": 10,
+          "n_embed": 10,
+          "n_perturb": 10,
+          "perturb_sigma_angstrom": 0.3,
+          "pre_dedup_rmsd_angstrom": 0.125,
+          "random_seed": 42,
+          "rmsd_dedup_angstrom": 0.125
+        },
+        "pathway": "exo",
+        "reactant_key": [
+          [
+            "C1=CC1",
+            1
+          ],
+          [
+            "C1=CCC=C1",
+            1
+          ]
+        ],
+        "recipe_identity": {
+          "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+          "name": "uma_direct",
+          "version": "2.26.0"
+        },
+        "temperature_k": 298.15
+      },
+      "seed_ts": {
+        "connectivity_equal_bool": true,
+        "degeneracy": 1,
+        "failed_reason": null,
+        "keys": {
+          "frequency": "acf1fb40c5a9fe4ae2ad87f386c6cf54d12016a103aef194762f98e265ad37b3",
+          "ts_opt": "67be152887b6d06485b75a60867eeffef467e24c867539414b260844e981e7d5"
+        },
+        "metrics": {
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 1,
+            "rows_created": 1,
+            "wall_time_s": 0.8873428670922294
+          },
+          "ts_opt": {
+            "cache_hits": 0,
+            "engine_calls": 5,
+            "rows_created": 1,
+            "wall_time_s": 2.0578512479551136
+          }
+        },
+        "search": {
+          "converged": true,
+          "final_energy_hartree": -310.6648055281555,
+          "final_max_gradient_hartree_per_bohr": 5.102193494094946e-07,
+          "final_rigid_gradient_norm_hartree_per_bohr": 1.1718765904051955e-09,
+          "final_rms_gradient_hartree_per_bohr": 1.6169570815111864e-07,
+          "final_state": {
+            "active_atom_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "charge": 0,
+            "coordinates": [
+              [
+                -1.5015833622657282,
+                -0.7027854703040362,
+                -0.6676092005247666
+              ],
+              [
+                -0.750928594311032,
+                -1.147457472484386,
+                0.3981617609716344
+              ],
+              [
+                1.2600104071972569,
+                -0.6690939053380647,
+                -0.6236758737302771
+              ],
+              [
+                1.2755274309530773,
+                0.6614515683247776,
+                -0.6298225485791757
+              ],
+              [
+                -1.5169944672425875,
+                0.7097295709631004,
+                -0.6627637659763589
+              ],
+              [
+                -0.7820440909419938,
+                1.1618849857835338,
+                0.4086749178628734
+              ],
+              [
+                -0.5574822882641692,
+                0.0061925254259690985,
+                1.330824416206409
+              ],
+              [
+                2.2783927141276,
+                -0.008901390620465837,
+                0.2573072057075659
+              ],
+              [
+                -1.9179619159344883,
+                -1.3299530468215695,
+                -1.4433463207192436
+              ],
+              [
+                -0.6234160624206329,
+                -2.1803827622918717,
+                0.6887564305309761
+              ],
+              [
+                1.2314050799229266,
+                -1.511190009062783,
+                -1.2902622679224915
+              ],
+              [
+                1.2427435882845064,
+                1.503198035814463,
+                -1.2968981602607776
+              ],
+              [
+                -1.9453200914997015,
+                1.3321914494004987,
+                -1.4354483486868312
+              ],
+              [
+                -0.6593643553158647,
+                2.195858812243961,
+                0.6971676072984043
+              ],
+              [
+                -1.3906468558505756,
+                -0.013651575960730845,
+                2.0460572533837347
+              ],
+              [
+                0.3602434844378223,
+                0.019705779730477782,
+                1.9106838973609255
+              ],
+              [
+                3.3309759679396658,
+                -0.01962126556015501,
+                -0.025205103086291623
+              ],
+              [
+                2.1361734111839183,
+                -0.007184829242718384,
+                1.3366041001636912
+              ]
+            ],
+            "metadata": {},
+            "spin_multiplicity": 1,
+            "symbols": [
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "C",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H",
+              "H"
+            ]
+          },
+          "followed_eigenvalue_hartree_per_bohr2": -0.06657033671766477,
+          "forming_bonds": [
+            {
+              "i": 1,
+              "j": 2
+            },
+            {
+              "i": 3,
+              "j": 5
+            }
+          ],
+          "hessian_method": "finite_difference",
+          "n_gradient_calls": 5,
+          "n_hessian_calls": 1,
+          "n_hessian_refreshes": 0,
+          "n_rejected_steps": 0,
+          "n_steps": 4,
+          "optimizer": {
+            "name": "prfo",
+            "version": "src-897c4e19cb4e738a"
+          },
+          "options": {
+            "hessian_refresh_steps": 5,
+            "max_consecutive_rejections": 5,
+            "max_gradient_hartree_per_bohr": 0.00045,
+            "max_step_bohr": 0.0018,
+            "max_steps": 100,
+            "max_wall_time_s": 1800.0,
+            "min_initial_overlap": 0.6,
+            "min_mode_overlap": 0.5,
+            "ratio_floor_hartree": 1e-08,
+            "rms_gradient_hartree_per_bohr": 0.0003,
+            "rms_step_bohr": 0.0012,
+            "trust_max_bohr": 0.3,
+            "trust_min_bohr": 0.001,
+            "trust_radius_bohr": 0.1
+          }
+        },
+        "search_history": [
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.66475691935756,
+            "followed_eigenvalue_hartree_per_bohr2": -0.06643785654253723,
+            "hessian_source": "exact",
+            "max_gradient_hartree_per_bohr": 0.0019464315619598413,
+            "mode_overlap": null,
+            "ratio": 1.0003414391656285,
+            "step": 0,
+            "trust_radius_bohr": 0.1
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6648054145233,
+            "followed_eigenvalue_hartree_per_bohr2": -0.06654814200634204,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 6.711173532121473e-05,
+            "mode_overlap": 0.9999961058411792,
+            "ratio": 1.0048651850637977,
+            "step": 1,
+            "trust_radius_bohr": 0.2
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6648055197962,
+            "followed_eigenvalue_hartree_per_bohr2": -0.0665709743729256,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 6.3217424693681855e-06,
+            "mode_overlap": 0.9999957325409514,
+            "ratio": 1.0402191974138562,
+            "step": 2,
+            "trust_radius_bohr": 0.2
+          },
+          {
+            "accepted_bool": true,
+            "energy_hartree": -310.6648055281555,
+            "followed_eigenvalue_hartree_per_bohr2": -0.06657033671766477,
+            "hessian_source": "bofill",
+            "max_gradient_hartree_per_bohr": 5.102193494094946e-07,
+            "mode_overlap": 0.9999995583365918,
+            "ratio": 1.0,
+            "step": 3,
+            "trust_radius_bohr": 0.2
+          }
+        ],
+        "state": {
+          "active_atom_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "charge": 0,
+          "coordinates": [
+            [
+              -1.5015833622657282,
+              -0.7027854703040362,
+              -0.6676092005247666
+            ],
+            [
+              -0.750928594311032,
+              -1.147457472484386,
+              0.3981617609716344
+            ],
+            [
+              1.2600104071972569,
+              -0.6690939053380647,
+              -0.6236758737302771
+            ],
+            [
+              1.2755274309530773,
+              0.6614515683247776,
+              -0.6298225485791757
+            ],
+            [
+              -1.5169944672425875,
+              0.7097295709631004,
+              -0.6627637659763589
+            ],
+            [
+              -0.7820440909419938,
+              1.1618849857835338,
+              0.4086749178628734
+            ],
+            [
+              -0.5574822882641692,
+              0.0061925254259690985,
+              1.330824416206409
+            ],
+            [
+              2.2783927141276,
+              -0.008901390620465837,
+              0.2573072057075659
+            ],
+            [
+              -1.9179619159344883,
+              -1.3299530468215695,
+              -1.4433463207192436
+            ],
+            [
+              -0.6234160624206329,
+              -2.1803827622918717,
+              0.6887564305309761
+            ],
+            [
+              1.2314050799229266,
+              -1.511190009062783,
+              -1.2902622679224915
+            ],
+            [
+              1.2427435882845064,
+              1.503198035814463,
+              -1.2968981602607776
+            ],
+            [
+              -1.9453200914997015,
+              1.3321914494004987,
+              -1.4354483486868312
+            ],
+            [
+              -0.6593643553158647,
+              2.195858812243961,
+              0.6971676072984043
+            ],
+            [
+              -1.3906468558505756,
+              -0.013651575960730845,
+              2.0460572533837347
+            ],
+            [
+              0.3602434844378223,
+              0.019705779730477782,
+              1.9106838973609255
+            ],
+            [
+              3.3309759679396658,
+              -0.01962126556015501,
+              -0.025205103086291623
+            ],
+            [
+              2.1361734111839183,
+              -0.007184829242718384,
+              1.3366041001636912
+            ]
+          ],
+          "metadata": {},
+          "spin_multiplicity": 1,
+          "symbols": [
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "C",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H",
+            "H"
+          ]
+        },
+        "thermo": {
+          "analysis": {
+            "imag_tol_cm1": 20.0,
+            "linear_tol_angstrom": 0.001,
+            "max_automorphisms": 100000,
+            "sym_tol_angstrom": 0.05
+          },
+          "config": {
+            "entropy_model": "grimme_qrrho",
+            "pressure_atm": 1.0,
+            "qrrho_alpha": 4.0,
+            "qrrho_cutoff_cm1": 100.0,
+            "qrrho_rotor_moment_kg_m2": 1e-44,
+            "standard_state_mol_l": 1.0,
+            "temperature_k": 298.15
+          },
+          "electronic_energy_hartree": -310.6648055355044,
+          "energy_source": "optimization",
+          "entropy_components_hartree_per_k": {
+            "electronic": 0.0,
+            "rotational": 4.400640494754469e-05,
+            "translational": 6.357496710292277e-05,
+            "vibrational": 2.0433192361502753e-05
+          },
+          "entropy_hartree_per_k": 0.0001280145644119702,
+          "frequencies_cm1": [
+            -444.14334214768706,
+            126.14518540894657,
+            239.4723011690141,
+            263.12189109211835,
+            318.07918128391054,
+            412.7101021618966,
+            466.0373692005916,
+            566.2254708145747,
+            686.414531101687,
+            748.5611101126025,
+            775.128307438949,
+            782.0002120697835,
+            813.3284272698136,
+            835.371551872153,
+            898.8749674649429,
+            905.2421714126716,
+            912.4652575469884,
+            965.0263378957419,
+            968.2007303301806,
+            973.6025528106358,
+            979.0567434065746,
+            1000.4477921519918,
+            1057.0905953523816,
+            1070.0990482441005,
+            1077.2185530737274,
+            1089.6730041726723,
+            1090.537852493452,
+            1116.3767192287723,
+            1132.3840462243395,
+            1163.8885250798628,
+            1274.0317605195,
+            1325.5990621131566,
+            1419.699272165005,
+            1433.2608130677054,
+            1456.7885144939148,
+            1503.3614279185654,
+            1563.5649579592173,
+            1592.4131371829667,
+            3038.486510417632,
+            3054.5631559196677,
+            3107.4560192960867,
+            3163.139586770885,
+            3208.598662927646,
+            3220.5514955143494,
+            3232.0580458005843,
+            3240.88877949274,
+            3254.1354477499876,
+            3282.686188183711
+          ],
+          "gibbs_free_energy_hartree": -310.5400649447641,
+          "imaginary_frequencies_cm1": [
+            -444.14334214768706
+          ],
+          "is_linear": false,
+          "masses_source": "rdkit 2026.09.2 most-common-isotope",
+          "n_atoms": 18,
+          "rotational_symmetry_number": 1,
+          "soft_modes_cm1": [],
+          "standard_state_correction_hartree": 0.0030188045341030057,
+          "thermal_correction_enthalpy_hartree": 0.1598893285856437,
+          "thermal_correction_gibbs_hartree": 0.1247405907403178,
+          "zpe_hartree": 0.15219085449750236
+        },
+        "ts_id": "TS1a_x",
+        "validation": {
+          "active_atom_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "active_core_ke_fraction": 0.8931343559584908,
+          "active_core_passed_bool": true,
+          "forming_bonds_in_phase_bool": true,
+          "forming_distances_angstrom": {
+            "1-2": 2.3058316334575046,
+            "3-5": 2.358497649104108
+          },
+          "forming_stretch_overlap": 0.710967125226116,
+          "identity_passed_bool": true,
+          "imaginary_frequency_cm1": -444.14334214768706,
+          "mode_count_passed_bool": true,
+          "n_imaginary": 1,
+          "options": {
+            "cutoff_cm1": -50.0,
+            "forming_distance_max_angstrom": 2.9,
+            "forming_distance_min_angstrom": 1.9,
+            "imag_tol_cm1": 20.0,
+            "min_active_core_ke_fraction": 0.6,
+            "min_forming_stretch_overlap": 0.5
+          },
+          "passed_bool": true,
+          "reasons": []
+        }
+      }
+    }
+  },
+  "reactants": {
+    "cyclopentadiene": {
+      "dropped": [],
+      "ensemble_gibbs_hartree": -194.01063831347201,
+      "lowest_gibbs_hartree": -194.01063831347201,
+      "n_kept": 1
+    },
+    "cyclopropene": {
+      "dropped": [],
+      "ensemble_gibbs_hartree": -116.56796678249394,
+      "lowest_gibbs_hartree": -116.56796678249394,
+      "n_kept": 1
+    }
+  },
+  "recipe": "uma",
+  "reported": {
+    "gfn2_gate_definition": {
+      "ddG_dagger_greater_than_kcal_mol": 0.5,
+      "endo_major": true
+    },
+    "kind": "de",
+    "liu_header_ddG_dagger_kcal_mol": 4.273,
+    "pathways": {
+      "endo": {
+        "G_pathway_hartree": -310.54739920697165,
+        "ensemble_dG_dagger": {
+          "dG_dagger_1M_kcal_mol": 19.581990990480417,
+          "dG_dagger_1atm_kcal_mol": 21.476319435974695,
+          "seed_to_ensemble_shift_kcal_mol": 0.0
+        },
+        "exclusions_by_reason": {
+          "ts_search_failed:no_reaction_mode": 1
+        },
+        "failed_reason": null,
+        "max_pre_relax_wall_time_s": 62.43278846296016,
+        "members": [
+          {
+            "G_hartree": -310.54739920697165,
+            "index": 0,
+            "pre_relax_wall_time_s": null,
+            "rmsd_to_seed_angstrom": 0.0,
+            "source": "seed",
+            "weight": 1.0
+          }
+        ],
+        "n_flagged_merges": 0,
+        "n_merges": 9,
+        "seed_dG_dagger_1M_kcal_mol": 19.581990990480417,
+        "seed_dG_dagger_1atm_kcal_mol": 21.476319435974695,
+        "seed_forming_core_rmsd_to_liu_angstrom": 0.024852717442655114,
+        "stage_metrics": {
+          "constrained_preopt": {
+            "cache_hits": 0,
+            "engine_calls": 308,
+            "rows_created": 10,
+            "wall_time_s": 95.82168078399263
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 10,
+            "rows_created": 10,
+            "wall_time_s": 8.702713647973724
+          },
+          "ts_opt": {
+            "cache_hits": 0,
+            "engine_calls": 28,
+            "rows_created": 11,
+            "wall_time_s": 14.769424537895247
+          }
+        },
+        "ts_id": "TS1a_n"
+      },
+      "exo": {
+        "G_pathway_hartree": -310.540065499387,
+        "ensemble_dG_dagger": {
+          "dG_dagger_1M_kcal_mol": 24.183961979838607,
+          "dG_dagger_1atm_kcal_mol": 26.078290425332884,
+          "seed_to_ensemble_shift_kcal_mol": -0.0003480311513452471
+        },
+        "exclusions_by_reason": {},
+        "failed_reason": null,
+        "max_pre_relax_wall_time_s": 8.183972159051336,
+        "members": [
+          {
+            "G_hartree": -310.540065499387,
+            "index": 4,
+            "pre_relax_wall_time_s": 1.2514527790481225,
+            "rmsd_to_seed_angstrom": 3.7695192971179706e-06,
+            "source": "perturb:2",
+            "weight": 1.0
+          }
+        ],
+        "n_flagged_merges": 0,
+        "n_merges": 10,
+        "seed_dG_dagger_1M_kcal_mol": 24.18431001098995,
+        "seed_dG_dagger_1atm_kcal_mol": 26.078638456484228,
+        "seed_forming_core_rmsd_to_liu_angstrom": 0.01791620959239694,
+        "stage_metrics": {
+          "constrained_preopt": {
+            "cache_hits": 0,
+            "engine_calls": 217,
+            "rows_created": 10,
+            "wall_time_s": 42.424301799968816
+          },
+          "frequency": {
+            "cache_hits": 0,
+            "engine_calls": 11,
+            "rows_created": 11,
+            "wall_time_s": 9.652986013214104
+          },
+          "ts_opt": {
+            "cache_hits": 0,
+            "engine_calls": 27,
+            "rows_created": 11,
+            "wall_time_s": 15.426218706765212
+          }
+        },
+        "ts_id": "TS1a_x"
+      }
+    },
+    "ratio": 2361.9360989711977,
+    "selectivity_percent": 99.91535953930914,
+    "temperature_k": 298.15,
+    "tj_reference_ddG_dagger_kcal_mol": 4.3
+  },
+  "schema": 1,
+  "score": {
+    "ddG_dagger_kcal_mol": 4.601970989358186,
+    "kind": "de",
+    "major_pathway": "endo",
+    "per_pathway": {
+      "endo": {
+        "G_pathway_hartree": -310.54739920697165,
+        "fraction": 0.9995767976965457,
+        "n_excluded": 1,
+        "n_members": 1
+      },
+      "exo": {
+        "G_pathway_hartree": -310.540065499387,
+        "fraction": 0.0004232023034543302,
+        "n_excluded": 0,
+        "n_members": 1
+      }
+    },
+    "pruning": null,
+    "ratio": 2361.9360989711977,
+    "selectivity_percent": 99.91535953930914,
+    "signed_ddG_dagger_kcal_mol": {
+      "exo_vs_endo": 4.601970989358186
+    },
+    "temperature_k": 298.15
+  },
+  "second_run_cache": {
+    "endo": {
+      "constrained_preopt": {
+        "cache_hits": 10,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 10,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.004840887850150466
+      },
+      "ts_opt": {
+        "cache_hits": 11,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0012356061488389969
+      }
+    },
+    "exo": {
+      "constrained_preopt": {
+        "cache_hits": 10,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 11,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.00546091771684587
+      },
+      "ts_opt": {
+        "cache_hits": 11,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.001284946221858263
+      }
+    },
+    "reactants": {
+      "cyclopentadiene": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 3,
+          "rows_created": 0
+        }
+      },
+      "cyclopropene": {
+        "conformer_search": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "frequency": {
+          "cache_hits": 1,
+          "rows_created": 0
+        },
+        "geometry_opt": {
+          "cache_hits": 1,
+          "rows_created": 0
+        }
+      }
+    }
+  },
+  "test_outcome": "passed",
+  "thermo_config": {
+    "entropy_model": "grimme_qrrho",
+    "pressure_atm": 1.0,
+    "qrrho_alpha": 4.0,
+    "qrrho_cutoff_cm1": 100.0,
+    "qrrho_rotor_moment_kg_m2": 1e-44,
+    "standard_state_mol_l": 1.0,
+    "temperature_k": 298.15
+  }
+}
