@@ -22,7 +22,16 @@ if TYPE_CHECKING:
         standard_state_shift_kcal_mol,
     )
     from eta_rxncat.orchestrator.report import ensemble_to_payload, report_text, write_report
-    from eta_rxncat.orchestrator.selectivity import SelectivityInputError, score_selectivity
+    from eta_rxncat.orchestrator.selectivity import (
+        DownstreamNode,
+        NodeOutcome,
+        PathwayInputs,
+        SelectivityInputError,
+        SelectivityRun,
+        evaluate_pathway_pruning,
+        run_selectivity,
+        score_selectivity,
+    )
     from eta_rxncat.orchestrator.species import (
         ENGINE_CLASSES,
         ConstrainedPoint,
@@ -44,6 +53,12 @@ if TYPE_CHECKING:
     )
 
 _LAZY: dict[str, str] = {
+    "DownstreamNode": "selectivity",
+    "NodeOutcome": "selectivity",
+    "PathwayInputs": "selectivity",
+    "SelectivityRun": "selectivity",
+    "evaluate_pathway_pruning": "selectivity",
+    "run_selectivity": "selectivity",
     "BarrierEnergies": "barrier",
     "BarrierSpec": "barrier",
     "ConstrainedPoint": "species",
@@ -90,6 +105,12 @@ def __getattr__(name: str) -> Any:
 
 
 __all__ = [
+    "DownstreamNode",
+    "NodeOutcome",
+    "PathwayInputs",
+    "SelectivityRun",
+    "evaluate_pathway_pruning",
+    "run_selectivity",
     "ENGINE_CLASSES",
     "BarrierEnergies",
     "BarrierSpec",
