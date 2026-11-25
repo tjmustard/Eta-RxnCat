@@ -208,7 +208,7 @@ def decision(**overrides: Any) -> dict[str, Any]:
         "rule_id": "endo_exo",
         "pathways": ["endo", "exo"],
         "ddG_dagger_kcal_mol": 2.0,
-        "signed_ddG_dagger_kcal_mol": {"endo": 0.0, "exo": 2.0},
+        "signed_ddG_dagger_kcal_mol": {"exo_vs_endo": 2.0},
         "threshold_kcal_mol": 1.5,
         "pruned_node_ids": ["P_exo"],
         "reason": "ddG exceeds threshold",
@@ -246,7 +246,7 @@ def result(**overrides: Any) -> dict[str, Any]:
     """Return a valid two-pathway result dict."""
     data: dict[str, Any] = {
         "ddG_dagger_kcal_mol": 1.7,
-        "signed_ddG_dagger_kcal_mol": {"endo": 0.0, "exo": 1.7},
+        "signed_ddG_dagger_kcal_mol": {"exo_vs_endo": 1.7},
         "ratio": 17.6,
         "selectivity_percent": 89.2,
         "kind": "de",
@@ -284,6 +284,38 @@ def test_result_round_trips() -> None:
     assert isinstance(parsed.per_pathway["endo"], PathwaySelectivity)
 
 
+def test_result_accepts_r7_keys_in_either_direction_and_three_pathways() -> None:
+    """R7: "<b>_vs_<a>" keys, any ordered pair; N > 2 pathways validate."""
+    both = result(signed_ddG_dagger_kcal_mol={"exo_vs_endo": 1.7, "endo_vs_exo": -1.7})
+    assert len(SelectivityResult.model_validate(both).signed_ddG_dagger_kcal_mol) == 2
+    third = {"G_pathway_hartree": -99.9, "n_members": 1, "n_excluded": 0, "fraction": 0.0}
+    three = result(
+        per_pathway={**result()["per_pathway"], "meta": third},
+        signed_ddG_dagger_kcal_mol={"exo_vs_endo": 1.7, "meta_vs_endo": 5.0},
+    )
+    assert "meta_vs_endo" in SelectivityResult.model_validate(three).signed_ddG_dagger_kcal_mol
+
+
+def test_pathway_names_containing_vs_are_unambiguous() -> None:
+    """A pathway called "a_vs_b" does not confuse the key check."""
+    entry = result()["per_pathway"]["endo"]
+    per = {"a_vs_b": entry, "c": entry}
+    ok = result(per_pathway=per, major_pathway="c", signed_ddG_dagger_kcal_mol={"a_vs_b_vs_c": 1.0})
+    assert SelectivityResult.model_validate(ok)
+    bad = result(per_pathway=per, major_pathway="c", signed_ddG_dagger_kcal_mol={"a_vs_b": 1.0})
+    with pytest.raises(ValidationError):
+        SelectivityResult.model_validate(bad)
+
+
+def test_decision_signed_keys_follow_rule_order() -> None:
+    """A decision's keys are "<b>_vs_<a>" over its two pathways, either direction."""
+    swapped = decision(signed_ddG_dagger_kcal_mol={"endo_vs_exo": -2.0})
+    assert PruningDecision.model_validate(swapped)
+    for keys in ({"endo": 0.0}, {"exo_vs_other": 2.0}, {"endo_vs_endo": 0.0}):
+        with pytest.raises(ValidationError):
+            PruningDecision.model_validate(decision(signed_ddG_dagger_kcal_mol=keys))
+
+
 def test_result_without_pruning_is_valid() -> None:
     """The decision is optional."""
     assert SelectivityResult.model_validate(result(pruning=None)).pruning is None
@@ -298,7 +330,11 @@ def test_result_without_pruning_is_valid() -> None:
         {"selectivity_percent": -1.0},
         {"ddG_dagger_kcal_mol": -1.0},
         {"major_pathway": "other"},
-        {"signed_ddG_dagger_kcal_mol": {"endo": 0.0}},
+        {"signed_ddG_dagger_kcal_mol": {}},
+        {"signed_ddG_dagger_kcal_mol": {"endo": 1.7}},
+        {"signed_ddG_dagger_kcal_mol": {"exo_vs_other": 1.7}},
+        {"signed_ddG_dagger_kcal_mol": {"endo_vs_endo": 0.0}},
+        {"signed_ddG_dagger_kcal_mol": {"exo_vs_endo": math.nan}},
         {"temperature_k": 0.0},
         {"ratio": math.inf},
         {"extra": 1},
@@ -315,7 +351,7 @@ def test_result_needs_two_pathways() -> None:
     one = {"endo": result()["per_pathway"]["endo"]}
     with pytest.raises(ValidationError):
         SelectivityResult.model_validate(
-            result(per_pathway=one, signed_ddG_dagger_kcal_mol={"endo": 0.0})
+            result(per_pathway=one, signed_ddG_dagger_kcal_mol={"endo_vs_endo": 0.0})
         )
 
 

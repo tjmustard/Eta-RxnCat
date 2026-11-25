@@ -6,6 +6,7 @@ weights and the closed reason sets (mission R7, R8, R16-R19, R25, §5 "Contracts
 """
 
 import re
+from collections.abc import Iterable
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, FiniteFloat, StrictInt, field_validator, model_validator
@@ -33,6 +34,20 @@ _EXCLUSION_REASON = re.compile(
 
 SelectivityKind = Literal["ee", "de", "regio"]
 """The selectivity quantity a result reports."""
+
+
+def _signed_key(b: str, a: str) -> str:
+    """Return the key of ``G_b - G_a`` in a signed-gap mapping: ``"<b>_vs_<a>"`` (mission R7)."""
+    return f"{b}_vs_{a}"
+
+
+def _check_signed_keys(keys: Iterable[str], pathways: Iterable[str]) -> None:
+    """Raise unless every key is ``"<b>_vs_<a>"`` for two distinct names in ``pathways``."""
+    names = list(pathways)
+    allowed = {_signed_key(b, a) for b in names for a in names if a != b}
+    unknown = sorted(set(keys) - allowed)
+    if unknown:
+        raise ValueError(f"signed_ddG_dagger_kcal_mol keys must be '<b>_vs_<a>' pairs: {unknown}")
 
 
 def _check_source(value: str) -> str:
@@ -216,7 +231,8 @@ class PruningDecision(CoreModel):
         pathways: The two compared pathways.
         ddG_dagger_kcal_mol: Unsigned gap between the pathways, ``None`` when it could not be
             computed (a pathway had no valid member).
-        signed_ddG_dagger_kcal_mol: Per-pathway ``G - G_major`` (kcal/mol), empty when uncomputed.
+        signed_ddG_dagger_kcal_mol: ``"<b>_vs_<a>"`` -> ``G_b - G_a`` (kcal/mol) with ``(a, b)``
+            in rule order (mission R7); empty when uncomputed.
         threshold_kcal_mol: The rule's threshold.
         pruned_node_ids: Ids of the pruned nodes, sorted and unique.
         reason: Why the decision came out this way.
@@ -236,6 +252,11 @@ class PruningDecision(CoreModel):
         if value != sorted(set(value)):
             raise ValueError(f"pruned_node_ids must be sorted and unique, got {value}")
         return value
+
+    @model_validator(mode="after")
+    def _check_signed(self) -> Self:
+        _check_signed_keys(self.signed_ddG_dagger_kcal_mol, self.pathways)
+        return self
 
 
 class PathwaySelectivity(CoreModel):
@@ -259,7 +280,8 @@ class SelectivityResult(CoreModel):
 
     Attributes:
         ddG_dagger_kcal_mol: Gap between the minor and the major pathway (>= 0).
-        signed_ddG_dagger_kcal_mol: Per-pathway ``G - G_major`` (kcal/mol).
+        signed_ddG_dagger_kcal_mol: ``"<b>_vs_<a>"`` -> ``G_b - G_a`` (kcal/mol), both names in
+            ``per_pathway`` (mission R7); never empty.
         ratio: ``exp(ddG/RT)``, major over minor (>= 1).
         selectivity_percent: ``100 (r - 1)/(r + 1)``, in [0, 100].
         kind: ``ee``, ``de`` or ``regio``.
@@ -283,6 +305,7 @@ class SelectivityResult(CoreModel):
     def _check_result(self) -> Self:
         if self.major_pathway not in self.per_pathway:
             raise ValueError(f"major_pathway {self.major_pathway!r} is not in per_pathway")
-        if set(self.signed_ddG_dagger_kcal_mol) != set(self.per_pathway):
-            raise ValueError("signed_ddG_dagger_kcal_mol and per_pathway name different pathways")
+        if not self.signed_ddG_dagger_kcal_mol:
+            raise ValueError("signed_ddG_dagger_kcal_mol must not be empty")
+        _check_signed_keys(self.signed_ddG_dagger_kcal_mol, self.per_pathway)
         return self
