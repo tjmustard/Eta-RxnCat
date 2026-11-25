@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Six audit reruns at 780b318 (src = C1 152666f), each host-gated, timeout 3600: all 1 passed exit 0; members 3/4/5 on GFN2 and UMA; gates (a)-(f) pass; fragments independently rebuilt exactly; oracles green (pytest 2175 passed).
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

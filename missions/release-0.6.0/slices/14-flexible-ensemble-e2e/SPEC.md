@@ -2,7 +2,7 @@
 id: OPR.0.6.0.14
 slice: 14-flexible-ensemble-e2e
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Graft an alkyl series (ethyl, n-propyl, n-butyl) onto TS1a_n, run guard
 depends_on: [OPR.0.6.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.6.0/**", spec/compiled/architecture.yml]
