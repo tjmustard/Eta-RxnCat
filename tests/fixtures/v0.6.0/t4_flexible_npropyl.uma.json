@@ -1,0 +1,236 @@
+{
+  "case": "t4_flexible_npropyl",
+  "checks": {
+    "tier_gates": {
+      "distinct_members_at_least_2": {
+        "n_members": 4,
+        "status": "pass"
+      },
+      "ensemble_no_failed_reason": {
+        "failed_reason": null,
+        "status": "pass"
+      },
+      "faces_equal_the_seeds_no_face_or_engine_error": {
+        "seed_face": [
+          1,
+          1
+        ],
+        "status": "pass"
+      },
+      "graft_pre_relax_no_timeout": {
+        "failed_reason": null,
+        "status": "pass"
+      },
+      "second_pass_all_hits_equal_ensemble": {
+        "status": "pass"
+      },
+      "weights_sum_to_one": {
+        "status": "pass",
+        "weights_sum": 1.0
+      }
+    }
+  },
+  "commit_sha": "152666f2fb2348c8011113ac419dd3f581025337",
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "run": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "eta_rxncat": "0.2.0",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "rdkit": "2026.09.2"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "failed_checks": [],
+  "fixture": "e2e5_t4_flexible_alkyl",
+  "graft": {
+    "alignment_rmsd_angstrom": 0.03328304843205721,
+    "close_contacts": [],
+    "n_atoms": 27,
+    "pre_relax": {
+      "budget_s": 600.0,
+      "core": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "failed_reason": null,
+      "final_energy_hartree": -428.58812167936986,
+      "maxiter": 200,
+      "n_engine_calls": 11,
+      "n_steps": 10,
+      "wall_time_s": 16.156814591027796
+    },
+    "sp2_order": [
+      5,
+      4
+    ],
+    "sp2_order_fits_angstrom": {
+      "4,5": 0.4912030009751042,
+      "5,4": 0.03328304843205721
+    }
+  },
+  "inputs_sha256": {
+    "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+    "fragment": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56",
+    "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+  },
+  "r_group": "npropyl",
+  "recipe": "uma",
+  "regression": {
+    "note": "no promoted fixture exists for this case (slice 14; Phase 3)",
+    "status": "pending_promotion"
+  },
+  "reported": {
+    "G_pathway_hartree": -428.3855670551443,
+    "barrier": {
+      "ensemble_correction_kcal_mol": -1.2306884799377267,
+      "ensemble_dG_dagger_1M_kcal_mol": 20.44436055717328,
+      "seed_dG_dagger_1M_kcal_mol": 21.675049037111005
+    },
+    "barrier_error": null,
+    "chain_length_order": {
+      "complete": false,
+      "counts_seen": {
+        "ethyl": 3,
+        "npropyl": 4
+      },
+      "non_decreasing": true,
+      "status": "reported"
+    },
+    "exclusions_by_reason": {
+      "outside_window": 3
+    },
+    "expected_members": 4,
+    "graft_pre_relax_wall_time_s": 16.156814591027796,
+    "max_pre_relax_wall_time_s": 10.058022238896228,
+    "members": [
+      {
+        "G_hartree": -428.3836058282134,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 0,
+        "pre_relax_wall_time_s": null,
+        "relative_G_kcal_mol": 0.6372520560717849,
+        "rmsd_to_seed_angstrom": 0.0,
+        "source": "seed",
+        "weight": 0.125285001960685
+      },
+      {
+        "G_hartree": -428.3846213540061,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 4,
+        "pre_relax_wall_time_s": 6.847982042003423,
+        "relative_G_kcal_mol": 0.0,
+        "rmsd_to_seed_angstrom": 1.0268166829344212,
+        "source": "fragment_embed:3",
+        "weight": 0.36728913608783964
+      },
+      {
+        "G_hartree": -428.38387971389744,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 5,
+        "pre_relax_wall_time_s": 9.651897733914666,
+        "relative_G_kcal_mol": 0.46538619450980356,
+        "rmsd_to_seed_angstrom": 1.4321539439573359,
+        "source": "fragment_embed:4",
+        "weight": 0.16744710170692195
+      },
+      {
+        "G_hartree": -428.384548400402,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 6,
+        "pre_relax_wall_time_s": 5.881793144042604,
+        "relative_G_kcal_mol": 0.045779077706345,
+        "rmsd_to_seed_angstrom": 1.02778904734257,
+        "source": "fragment_embed:5",
+        "weight": 0.33997876024455337
+      }
+    ],
+    "n_flagged_merges": 0,
+    "n_members": 4,
+    "n_merges": 4,
+    "r_group": "npropyl",
+    "second_pass_stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 10,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 11,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.011853074072860181
+      },
+      "ts_opt": {
+        "cache_hits": 11,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0013920397032052279
+      }
+    },
+    "stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 0,
+        "engine_calls": 324,
+        "rows_created": 10,
+        "wall_time_s": 64.84985055599827
+      },
+      "frequency": {
+        "cache_hits": 0,
+        "engine_calls": 11,
+        "rows_created": 11,
+        "wall_time_s": 14.477084605838172
+      },
+      "ts_opt": {
+        "cache_hits": 0,
+        "engine_calls": 48,
+        "rows_created": 11,
+        "wall_time_s": 21.295079548028298
+      }
+    },
+    "store_rows": {
+      "conformer_search": 2,
+      "constrained_preopt": 10,
+      "frequency": 20,
+      "ts_opt": 11
+    },
+    "wall_time_s": {
+      "first_pass": 170.03748611500487,
+      "second_pass": 50.119855648023076
+    }
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}
