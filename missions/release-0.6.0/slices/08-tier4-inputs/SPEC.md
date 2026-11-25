@@ -10,7 +10,7 @@ intent: "Land TS1a_x, TS1b_x and P1b_x byte-equal to resolve's checked transcrip
 depends_on: [OPR.0.6.0.2, OPR.0.6.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
@@ -90,12 +90,12 @@ procedure and lands them with tests.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start.
-- [ ] Task 2: re-run the transcription in TMPDIR; compare sha256; copy.
-- [ ] Task 3: `SOURCES.md`, both YAMLs (fixture loader extension only if the loader needs the
+- [x] Task 1: codegraph index → `index: ok`; record Start.
+- [x] Task 2: re-run the transcription in TMPDIR; compare sha256; copy.
+- [x] Task 3: `SOURCES.md`, both YAMLs (fixture loader extension only if the loader needs the
       `pathway`/rule keys — keep it in `tests/e2e/fixtures.py`).
-- [ ] Task 4: `tests/e2e/test_t4_inputs.py`; required checks.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 4: `tests/e2e/test_t4_inputs.py`; required checks.
+- [x] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 

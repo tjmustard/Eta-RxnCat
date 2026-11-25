@@ -515,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -618,7 +618,7 @@ nodes:
     reviewed_by: audit:07-selectivity-runner
     summary: patched description, inputs, outputs
   provenance:
-    last_slice: OPR.0.6.0.7
+    last_slice: OPR.0.6.0.8
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean
