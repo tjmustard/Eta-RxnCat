@@ -344,6 +344,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 | R24 | Draft P9 "new stage kind or reuse" | — | resolved | **No new stage kind.** Pre-relaxation is keyed as the existing `constrained_preopt` (R5, its `frozen_atom_indices` = the core); search and frequency are `run_transition_state`'s `ts_opt`/`frequency`. Sampling is pure and deterministic (≤ 0.02 s per seed, HF-5) and is not cached: G7 checks byte-equal resampling instead. |
 | R25 | HF-13: an injected pre-relax can stall past `maxiter` | — | resolved | Every Tier 4 E2E / acceptance / verdict command runs under `timeout 3600`; a timeout is a stop-and-report with the output (TJ Q3 amended: a failed run is a finding). `TSEnsembleMember`/`TSEnsembleExclusion` record `pre_relax_wall_time_s`; the candidate reports the maximum. No in-process watchdog in v0.6.0 (geomeTRIC runs in-process, ADR-0024). |
 | R26 | Replan 1 (slice 04, builder block at `808e50c`): G8 vs DV-03 — `import eta_rxncat.thermo.constants` loads RDKit because `thermo/__init__.py` imports `symmetry.py`/`masses.py` eagerly | — | resolved (lead ruling A) | Slice 04 makes `src/eta_rxncat/thermo/__init__.py`'s exports lazy (PEP 562 `__getattr__` + `TYPE_CHECKING` imports, `__all__` and every `from eta_rxncat.thermo import X` unchanged); the scorer uses the real `eta_rxncat.thermo.constants`. Not B (moving constants), never C/D. Blast radius of slice 04 gains `eta_rxncat_thermo` (already owns `src/eta_rxncat/thermo/**`; no ledger change). No thermo behaviour or constant changes. |
+| R27 | Replan 2 (slice 04): slice 04 requires `ratio = inf` on float overflow, but slice 02's `SelectivityResult.ratio` is `Field(ge=1.0, allow_inf_nan=False)` and refuses it | — | resolved (lead ruling) | Slice 04 changes that one field to accept `+inf` (`allow_inf_nan=True`, `ge=1.0` kept, so NaN, `-inf` and < 1 are still refused; tested), plus its docstring line and a core model test. Slice 04's touches gain `src/eta_rxncat/core/selectivity_models.py` and `tests/unit/core/test_selectivity_models.py`; its blast radius gains `eta_rxncat_core` (ratio field only; no ledger change). No other core change. |
 
 ### Seed deviations (from the draft)
 - Sampler: per-fragment ETKDGv3 + perturbation (R16), not ETKDG coordMap on the whole TS.
@@ -353,6 +354,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 - No new stage kind (R24); pre-relax keyed as `constrained_preopt`.
 - Slice 08 lands resolve's measured inputs instead of measuring.
 - Replan 1 (R26): slice 04 also makes `thermo/__init__.py` exports lazy.
+- Replan 2 (R27): slice 04 also lets `SelectivityResult.ratio` hold `+inf`.
 
 ### Face check (normative; slices 05, 06)
 - Input: a state, its forming bonds, its perceived bonds (`mapping.perceive_bonds`, which excludes
@@ -429,7 +431,7 @@ No exception escapes for a member; `OptimizerInputError` / `TSValidationInputErr
 `python3 .agents/scripts/hyper_ledger.py impact --nodes eta_rxncat_species_runner,eta_rxncat_core,eta_rxncat_conformers`
 → the draft's nine nodes (cli, conformers, core, engines, mapping, optimize, species_runner, store,
 thermo). **Written:** `eta_rxncat_core` (02), `eta_rxncat_species_runner` (03, 04, 06, 07, 08–11),
-`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26). **Read only:** thermo (otherwise), mapping
+`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26), `eta_rxncat_core` also in 04 (`SelectivityResult.ratio` accepts `+inf`, R27). **Read only:** thermo (otherwise), mapping
 (graft, `relax_constrained_core`, `perceive_bonds`, `core_rmsd_angstrom`), optimize (P-RFO,
 `GeometricOptimizer` via injection), engines, store. No new node.
 

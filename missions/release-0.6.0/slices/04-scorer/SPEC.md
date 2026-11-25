@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_species_runner
 parent: null
-hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", src/eta_rxncat/thermo/__init__.py, spec/compiled/architecture.yml]
+hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", src/eta_rxncat/thermo/__init__.py, src/eta_rxncat/core/selectivity_models.py, tests/unit/core/test_selectivity_models.py, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", .], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/orchestrator/test_selectivity_score.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -57,6 +57,11 @@ Context the builder needs:
   still works and the scorer imports the real constants from `eta_rxncat.thermo.constants`. Blast
   radius gains node `eta_rxncat_thermo` (it already owns `src/eta_rxncat/thermo/**`; no ledger
   write).
+- **Replan 2 (mission R27, lead ruling):** slice 02's `SelectivityResult.ratio` is
+  `Annotated[float, Field(ge=1.0, allow_inf_nan=False)]`, which refuses the `ratio = inf` this slice
+  requires on overflow. Change that one field to accept `+inf` (`allow_inf_nan=True`, `ge=1.0` kept,
+  docstring line updated) with a core model test. Blast radius gains node `eta_rxncat_core` (the
+  ratio field only; it already owns `src/eta_rxncat/core/**`; no ledger write).
 - **Seat rules (every slice):** `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp` (never /tmp); every
   framework script with `python3`; Task 1 is `python3 .agents/scripts/hyper_codegraph.py index`
   (must print `index: ok`); run `hypergraph_updater.py --from-diff <Start> --apply` **once** after
@@ -86,6 +91,8 @@ which the subprocess test settles.
 5. R26: every name in `eta_rxncat.thermo.__all__` still imports (`from eta_rxncat.thermo import X`
    for each, test), the existing thermo tests pass unchanged, and a subprocess test shows
    `import eta_rxncat.thermo.constants` leaves `rdkit` out of `sys.modules`.
+6. R27: `SelectivityResult.ratio` accepts `+inf` and still refuses NaN, `-inf` and values < 1
+   (tests in `tests/unit/core/test_selectivity_models.py`); every other slice 02 test passes unchanged.
 
 ## 3. Implementation Plan (Task List)
 
@@ -103,11 +110,13 @@ which the subprocess test settles.
 - **DO NOT** change thermo behaviour, any thermo constant or value, or any thermo submodule; R26
   touches only `thermo/__init__.py`'s import mechanics. **DO NOT** move the constants (lead ruling:
   not option B).
+- **DO NOT** change anything in `eta_rxncat.core` beyond the `SelectivityResult.ratio` field, its
+  docstring line and its tests (R27).
 
 ## Proof contract
 
 - [ ] `uv run pytest tests/unit/orchestrator/test_selectivity_score.py -q` passes.
-- [ ] The G8 subprocess test passes; the R26 thermo import tests pass; required checks exit 0.
+- [ ] The G8 subprocess test passes; the R26 thermo import tests and the R27 ratio tests pass; required checks exit 0.
 
 ## Source material
 
