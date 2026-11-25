@@ -10,7 +10,7 @@ intent: "Add a deterministic core-frozen TS conformer sampler (per-fragment ETKD
 depends_on: [OPR.0.6.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_conformers
 parent: null
 hacf_touches: ["src/eta_rxncat/conformers/**", "tests/unit/conformers/**", spec/compiled/architecture.yml]
@@ -97,12 +97,12 @@ packaging it cleanly with RDKit per-fragment molecules; the tests pin the behavi
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `conformers/generate.py`,
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `conformers/generate.py`,
       `thermo/_geometry.py`, `mapping/report.py` (`perceive_bonds`).
-- [ ] Task 2: `forming_bond_configuration` + tests.
-- [ ] Task 3: per-fragment embedding, Kabsch placement, perturbation, core reset, pre-dedup.
-- [ ] Task 4: `tests/unit/conformers/test_ts_sampler.py` (G4 sampler parts, G8); required checks.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_conformers`).
+- [x] Task 2: `forming_bond_configuration` + tests.
+- [x] Task 3: per-fragment embedding, Kabsch placement, perturbation, core reset, pre-dedup.
+- [x] Task 4: `tests/unit/conformers/test_ts_sampler.py` (G4 sampler parts, G8); required checks.
+- [x] Task 5: commit; updater once (node `eta_rxncat_conformers`).
 
 ## 4. The Negative Space (Constraints)
 

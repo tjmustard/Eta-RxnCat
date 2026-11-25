@@ -450,7 +450,7 @@ nodes:
     last_slice: OPR.0.6.0.4
 - id: eta_rxncat_conformers
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -506,10 +506,10 @@ nodes:
     reviewed_by: audit:04-scorer
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.6.0.4
+    last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -601,7 +601,7 @@ nodes:
     reviewed_by: audit:04-scorer
     summary: patched description, inputs, outputs
   provenance:
-    last_slice: OPR.0.6.0.4
+    last_slice: OPR.0.6.0.5
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean
