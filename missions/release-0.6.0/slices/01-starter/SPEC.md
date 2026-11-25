@@ -2,7 +2,7 @@
 id: OPR.0.6.0.1
 slice: 01-starter
 mission: release-0.6.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
@@ -10,7 +10,7 @@ intent: "Unpack the v0.6.0 starter zip byte-identical under docs/prd/v0.6.0/ as 
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["docs/prd/v0.6.0/**", docs/prd/PLAN_DISCREPANCIES.md, spec/compiled/architecture.yml]
