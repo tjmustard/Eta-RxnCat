@@ -6,9 +6,9 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: executed
-- status: active
-- last event: 2026-11-25T07:59:10+00:00 executed
+- hacf_status: audited
+- status: done
+- last event: 2026-11-25T08:03:09+00:00 audited
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
@@ -16,3 +16,4 @@
 - 2026-11-25T06:45:48+00:00 compiled - created by hyper_scope.py slice create
 - 2026-11-25T07:59:10+00:00 executing - escape_tracking: v1; 06-ts-ensemble build from 9d49c9f
 - 2026-11-25T07:59:10+00:00 executed
+- 2026-11-25T08:03:09+00:00 audited

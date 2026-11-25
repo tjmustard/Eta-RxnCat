@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: TS ensemble: two saddles kept, copies merged/flagged, all R19 reasons, G7 all hits; suite 1997 pass at 54f7ea9
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
