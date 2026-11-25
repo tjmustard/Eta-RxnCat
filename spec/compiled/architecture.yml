@@ -515,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -543,11 +543,10 @@ nodes:
     ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
     TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
     v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
-    keeps the validation; barrier.py (v0.5.0): activation_free_energy -> dE/dH/dG
-    dagger (1 M, 1 atm); atom conservation and configs checked. reaction.py: reaction_free_energy.
-    report.py: JSON schema 1. Tests: unit; e2e HF1-HF3 (xtb/uma/PySCF gpu; t3.py gates
-    R32; geomeTRIC CLI cross-check); candidates never read back; v050 record/verdict
-    (R33).
+    keeps the validation; barrier.py (v0.5.0): activation_free_energy (1 M, 1 atm).
+    reaction.py: reaction_free_energy. report.py: JSON schema 1. Tests: unit; e2e
+    HF1-HF3 (t3.py R32; geomeTRIC CLI check); T4 inputs (exo xyz, provisional t4 YAMLs,
+    load_t4_fixture); candidates never read back; v050 record (R33).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -614,9 +613,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T08:13:26+00:00'
-    reviewed_by: audit:07-selectivity-runner
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-25T08:24:56+00:00'
+    reviewed_by: audit:08-tier4-inputs
+    summary: patched description
   provenance:
     last_slice: OPR.0.6.0.8
 - id: eta_rxncat_mapping
