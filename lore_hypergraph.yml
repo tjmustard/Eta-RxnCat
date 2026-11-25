@@ -1700,8 +1700,8 @@ nodes:
   relates_to: []
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -1745,8 +1745,8 @@ nodes:
   - ADR-0032
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -1787,8 +1787,8 @@ nodes:
   - ADR-0036
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -1829,8 +1829,8 @@ nodes:
   - ADR-0038
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -1871,8 +1871,8 @@ nodes:
   relates_to: []
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -1912,8 +1912,8 @@ nodes:
   supersedes:
   - ADR-0037
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent

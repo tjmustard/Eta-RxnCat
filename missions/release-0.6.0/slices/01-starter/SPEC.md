@@ -10,7 +10,7 @@ intent: "Unpack the v0.6.0 starter zip byte-identical under docs/prd/v0.6.0/ as 
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["docs/prd/v0.6.0/**", docs/prd/PLAN_DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -72,11 +72,11 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start (`git rev-parse HEAD`).
-- [ ] Task 2: unzip into a TMPDIR scratch dir; copy the tree; per-file sha256 compare (script output
+- [x] Task 1: codegraph index → `index: ok`; record Start (`git rev-parse HEAD`).
+- [x] Task 2: unzip into a TMPDIR scratch dir; copy the tree; per-file sha256 compare (script output
       saved in the proof).
-- [ ] Task 3: `.ruff.toml` gate file.
-- [ ] Task 4: `DISCREPANCIES.md` DV-01…DV-09; PD-010 status.
+- [x] Task 3: `.ruff.toml` gate file.
+- [x] Task 4: `DISCREPANCIES.md` DV-01…DV-09; PD-010 status.
 - [ ] Task 5: commit; updater once (node `eta_rxncat_scaffold`).
 
 ## 4. The Negative Space (Constraints)
