@@ -282,7 +282,7 @@ class SelectivityResult(CoreModel):
         ddG_dagger_kcal_mol: Gap between the minor and the major pathway (>= 0).
         signed_ddG_dagger_kcal_mol: ``"<b>_vs_<a>"`` -> ``G_b - G_a`` (kcal/mol), both names in
             ``per_pathway`` (mission R7); never empty.
-        ratio: ``exp(ddG/RT)``, major over minor (>= 1).
+        ratio: ``exp(ddG/RT)``, major over minor (>= 1); ``inf`` only when that overflows a float.
         selectivity_percent: ``100 (r - 1)/(r + 1)``, in [0, 100].
         kind: ``ee``, ``de`` or ``regio``.
         major_pathway: The lowest-barrier pathway.
@@ -293,7 +293,7 @@ class SelectivityResult(CoreModel):
 
     ddG_dagger_kcal_mol: NonNegativeFiniteFloat
     signed_ddG_dagger_kcal_mol: dict[str, FiniteFloat]
-    ratio: Annotated[float, Field(ge=1.0, allow_inf_nan=False)]
+    ratio: Annotated[float, Field(ge=1.0, allow_inf_nan=True)]
     selectivity_percent: Annotated[float, Field(ge=0.0, le=100.0, allow_inf_nan=False)]
     kind: SelectivityKind
     major_pathway: str

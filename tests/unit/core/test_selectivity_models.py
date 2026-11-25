@@ -316,6 +316,11 @@ def test_decision_signed_keys_follow_rule_order() -> None:
             PruningDecision.model_validate(decision(signed_ddG_dagger_kcal_mol=keys))
 
 
+def test_result_accepts_an_overflowed_ratio() -> None:
+    """The scorer reports ``ratio = inf`` when exp(ddG/RT) overflows; nan stays refused."""
+    assert SelectivityResult.model_validate(result(ratio=math.inf)).ratio == math.inf
+
+
 def test_result_without_pruning_is_valid() -> None:
     """The decision is optional."""
     assert SelectivityResult.model_validate(result(pruning=None)).pruning is None
@@ -336,7 +341,9 @@ def test_result_without_pruning_is_valid() -> None:
         {"signed_ddG_dagger_kcal_mol": {"endo_vs_endo": 0.0}},
         {"signed_ddG_dagger_kcal_mol": {"exo_vs_endo": math.nan}},
         {"temperature_k": 0.0},
-        {"ratio": math.inf},
+        {"ratio": math.nan},
+        {"ratio": -math.inf},
+        {"ratio": 0.999999},
         {"extra": 1},
     ],
 )
