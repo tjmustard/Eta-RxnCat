@@ -6,11 +6,13 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: compiled
+- hacf_status: executed
 - status: active
-- last event: 2026-11-25T12:47:35+00:00 compiled
+- last event: 2026-11-25T13:07:45+00:00 executed
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
 
 - 2026-11-25T12:47:35+00:00 compiled - created by hyper_scope.py slice create
+- 2026-11-25T13:07:45+00:00 executing - escape_tracking: v1 slice 13 build at Start 2ba3148, C1 7e0ad07
+- 2026-11-25T13:07:45+00:00 executed - escape_tracking: v1 unit oracle green (2103 passed); UMA test_t4_mapped passed in 403 s, no PreRelaxTimeout fired

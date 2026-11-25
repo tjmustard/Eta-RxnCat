@@ -10,7 +10,7 @@ intent: "Bound each ensemble pre-relaxation by a wall-time budget so a stalled g
 depends_on: [OPR.0.6.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -142,18 +142,18 @@ call. Requirement 6 tests that the engine still evaluates after a timeout.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts_ensemble.py`,
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts_ensemble.py`,
       `mapping/relax.py`, `core/selectivity_models.py` (`_EXCLUSION_REASON`), this SPEC's evidence
       README.
-- [ ] Task 2: `orchestrator/_deadline.py` (`PreRelaxTimeout`, `deadline`) and
+- [x] Task 2: `orchestrator/_deadline.py` (`PreRelaxTimeout`, `deadline`) and
       `tests/unit/orchestrator/test_deadline.py` (requirements 3, 4, 7, 8).
-- [ ] Task 3: wire `pre_relax_budget_s` / `PRE_RELAX_BUDGET_S` through `run_ts_ensemble(_detailed)`
+- [x] Task 3: wire `pre_relax_budget_s` / `PRE_RELAX_BUDGET_S` through `run_ts_ensemble(_detailed)`
       and `_PreRelax`. Add requirements 1, 2, 5, 6 to `tests/unit/orchestrator/test_ts_ensemble.py`.
-- [ ] Task 4: required checks; then one UMA run of `tests/e2e/test_t4_mapped.py::test_t4_mapped[uma]`
+- [x] Task 4: required checks; then one UMA run of `tests/e2e/test_t4_mapped.py::test_t4_mapped[uma]`
       (behind a host check, `timeout 3600`, ACCEPTANCE=1, XTB set, `ETA_RXNCAT_CANDIDATE_DIR` under
       TMPDIR so no committed candidate changes). It must pass in < 1300 s (2 × the healthy ~400 s
       + one budget). Record wall time, exit and any `PreRelaxTimeout` exclusion.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
@@ -171,10 +171,10 @@ call. Requirement 6 tests that the engine still evaluates after a timeout.
 
 ## Proof contract
 
-- [ ] `uv run pytest tests/unit/orchestrator/test_deadline.py tests/unit/orchestrator/test_ts_ensemble.py -q`
+- [x] `uv run pytest tests/unit/orchestrator/test_deadline.py tests/unit/orchestrator/test_ts_ensemble.py -q`
       passes (requirements 1–9).
-- [ ] Required checks exit 0.
-- [ ] One UMA `test_t4_mapped[uma]` run passes under `timeout 3600` in < 1300 s, with wall and exit
+- [x] Required checks exit 0.
+- [x] One UMA `test_t4_mapped[uma]` run passes under `timeout 3600` in < 1300 s, with wall and exit
       recorded.
 
 ## Source material
