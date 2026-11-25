@@ -217,7 +217,7 @@
     },
     ".agents/scripts/hyper_firewall.py": {
       "owner": "hacf",
-      "sha256": "43b1354657bfedebd62df3fe81ac145930a3177a3688d54c48b081f38039f12b"
+      "sha256": "69039a1ee0621ac32621420fc38522569171da22ab75ec2aa537f79722727eee"
     },
     ".agents/scripts/hyper_gate_hook.py": {
       "owner": "hacf",
@@ -237,7 +237,7 @@
     },
     ".agents/scripts/hyper_migrate.py": {
       "owner": "hacf",
-      "sha256": "5e3c69d18afed4955c24eadf6b17c1c380995afd352d4f324f20fef70e459e2e"
+      "sha256": "02238e7340dac5ad98a29cf1501af3908872b135ffee559741d09f193dba2ab2"
     },
     ".agents/scripts/hyper_openrig.py": {
       "owner": "hacf",
@@ -689,7 +689,7 @@
     },
     "HACF-uninstall.sh": {
       "owner": "hacf",
-      "sha256": "80a375d193c44ca540efa14f200316527aeb50bf11baf01a306cf55b2b951472"
+      "sha256": "e732c6dc6582b5af8800e842bd1dcb389b36a694f10e0fea6a6320b3f0fadb56"
     }
   },
   "hooks": {
@@ -718,9 +718,9 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-24T23:31:38+00:00",
-  "installed_commit": "a215447dd24a6e54d13b461e798e842b809b9864",
-  "installer_sha256": "6bf0af3c54f795144118a6d9a4ce03d781acbaf5ac97f255d399f6021e6cbc2b",
+  "installed_at": "2026-11-25T05:35:57+00:00",
+  "installed_commit": "561f6b12d505468f9c684ef69bc7822a94bf6b20",
+  "installer_sha256": "5ae495fcdea50cffff706fd564a1fbc16e30c48d34abad173734c53817cc1e9a",
   "mcp_entries": {
     ".mcp.json": {
       "codebase-memory-mcp": {
@@ -765,8 +765,8 @@
     ]
   },
   "source": {
-    "commit": "a215447dd24a6e54d13b461e798e842b809b9864",
+    "commit": "561f6b12d505468f9c684ef69bc7822a94bf6b20",
     "kind": "local"
   },
-  "version": "0.6.5"
+  "version": "0.6.6"
 }
