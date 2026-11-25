@@ -24,23 +24,43 @@ from pathlib import Path
 from typing import Any
 
 from e2e_env import REPO
-from fixtures import T4Fixture
+from fixtures import T4Fixture, read_xyz
+from m1 import derive_map, forming_core_rmsd_angstrom
 from t3 import REACTANT_STAGES, all_hit, regression_ts, ts_payload, ts_recipe
 
-from eta_rxncat.core import SelectivityResult, TSEnsemble, TSEnsembleOptions
+from eta_rxncat.conformers import ConformerOptions
+from eta_rxncat.core import (
+    AtomMappingSpec,
+    Component,
+    GraftResult,
+    GraftSpec,
+    MolecularState,
+    ReactionGraph,
+    ReactionNode,
+    SelectivityResult,
+    TemplateGeometry,
+    TSEnsemble,
+    TSEnsembleOptions,
+)
 from eta_rxncat.engines import HARTREE_KCAL_MOL
-from eta_rxncat.mapping import core_rmsd_angstrom
+from eta_rxncat.mapping import core_rmsd_angstrom, graft, relax_constrained_core
 from eta_rxncat.optimize import GeometricOptimizer
 from eta_rxncat.orchestrator import (
     BarrierEnergies,
     BarrierSpec,
+    DownstreamNode,
+    PathwayInputs,
     Recipe,
+    SelectivityRun,
     SpeciesResult,
+    SpeciesSpec,
     StageMetrics,
     TSEnsembleRun,
     TSRunResult,
     TSSpec,
     activation_free_energy,
+    build_engine,
+    run_selectivity,
     run_species,
     run_ts_ensemble_detailed,
     score_selectivity,
@@ -110,6 +130,8 @@ class PairRun:
     barriers: dict[str, BarrierEnergies | None]
     barrier_errors: dict[str, str]
     ensemble_barriers: dict[str, dict[str, float] | None] = field(default_factory=dict)
+    selectivity: SelectivityRun | None = None
+    store_rows: dict[str, int] = field(default_factory=dict)
 
     @property
     def ensembles(self) -> dict[str, TSEnsemble]:
@@ -155,6 +177,17 @@ def run_pair(
         if len(valid) == len(fixture.pathways)
         else None
     )
+    barriers, errors = seed_barriers(fixture, recipe, reactants, runs)
+    return PairRun(reactants, runs, score, barriers, errors, ensemble_barriers(runs, barriers))
+
+
+def seed_barriers(
+    fixture: T4Fixture,
+    recipe: Recipe,
+    reactants: Mapping[str, SpeciesResult],
+    runs: Mapping[str, TSEnsembleRun],
+) -> tuple[dict[str, BarrierEnergies | None], dict[str, str]]:
+    """Each pathway's seed barrier (``activation_free_energy`` checks atom/charge conservation)."""
     smiles = {s.species_id: s.smiles for s in fixture.species}
     barriers: dict[str, BarrierEnergies | None] = {}
     errors: dict[str, str] = {}
@@ -177,7 +210,7 @@ def run_pair(
             )
         except ValueError as exc:
             errors[p.pathway] = str(exc)
-    return PairRun(reactants, runs, score, barriers, errors, ensemble_barriers(runs, barriers))
+    return barriers, errors
 
 
 def ensemble_barriers(
@@ -316,11 +349,13 @@ def gates(
 # --- The endo seed's regression against TJ's promoted v0.5.0 fixture (mission R6) -------------
 
 
-def seed_payload(run: PairRun, pathway: str, fixture: T4Fixture) -> dict[str, Any]:
+def seed_payload(
+    run: PairRun, pathway: str, fixture: T4Fixture, case: str = "ts1a_n"
+) -> dict[str, Any]:
     """The seed of one pathway in the v0.5.0 candidate shape (``ts`` and ``barrier`` blocks)."""
     barrier = run.barriers[pathway]
     return {
-        "case": "ts1a_n",
+        "case": case,
         "ts": ts_payload(run.runs[pathway].seed_result),
         "barrier": None if barrier is None else barrier.model_dump(mode="json"),
         "fixture": fixture.name,
@@ -445,4 +480,265 @@ def cache_summary(second: PairRun) -> dict[str, Any]:
             }
             for k, r in sorted(second.reactants.items())
         }
+    }
+
+
+# --- The mapped pair: grafted exo start, the real selectivity runner, G6 pruning ----------------
+
+
+def exo_graft(fixture: T4Fixture) -> tuple[GraftResult, list[int]]:
+    """Graft cyclobutene onto TS1a_x with the fixture's lists; check the R2 map equals the YAML's.
+
+    Liu's TS1b_x is the reference only (never a coordinate donor). The graft-to-reference map is
+    derived by the stated rule (lexicographically smallest element-preserving isomorphism, ADR-0031)
+    and must equal the ``start_to_reference_map`` that slice 08 wrote into the fixture.
+
+    Raises:
+        ValueError: The derived map differs from the YAML's.
+    """
+    exo = fixture.pathway("exo")
+    block = exo.start.grafts
+    if block is None:
+        raise ValueError(f"{fixture.name}: the exo pathway has no start_grafts")
+    (g,) = block["grafts"]
+    base = fixture.path.parent
+    template = read_xyz(base / block["template"], exo.charge, exo.spin_multiplicity)
+    template = MolecularState.model_validate(
+        {**template.model_dump(), "active_atom_indices": list(exo.active_atom_indices)}
+    )
+    fragment = read_xyz(base / block["fragment"], exo.charge, exo.spin_multiplicity)
+    spec = GraftSpec(
+        template=AtomMappingSpec(
+            keep=list(g["keep"]),
+            delete=list(g["delete"]),
+            alignment=[t for t, _ in g["alignment_pairs"]],
+        ),
+        fragment_alignment=[f for _, f in g["alignment_pairs"]],
+        fragment_delete=list(g["fragment_delete"]),
+        constrained_core=list(g["constrained_core"]),
+        product_charge=exo.charge,
+        product_multiplicity=exo.spin_multiplicity,
+    )
+    result = graft(template, fragment, spec)
+    derived = derive_map(result, exo.reference).graft_to_ts1b_n_map
+    if derived != list(exo.start_to_reference_map):
+        raise ValueError(f"derived map {derived} differs from the fixture's")
+    return result, derived
+
+
+def grafted_exo_start(fixture: T4Fixture, recipe: Recipe) -> tuple[MolecularState, dict[str, Any]]:
+    """The exo start for one recipe: the graft, then ``relax_constrained_core`` on its engine.
+
+    Run once per recipe; both E2E passes use the returned state (it keys ``ts_opt``).
+    """
+    result, mapping = exo_graft(fixture)
+    exo = fixture.pathway("exo")
+    block = exo.start.grafts
+    assert block is not None
+    pre = block["pre_relax"]
+    engine = build_engine(recipe.engine_stage, recipe.engine_runtime)
+    relaxed = relax_constrained_core(
+        result.product,
+        engine,
+        GeometricOptimizer(),
+        list(pre["core"]),
+        options={"maxiter": int(pre["maxiter"])},
+    )
+    start = MolecularState.model_validate(
+        {
+            **relaxed.final_state.model_dump(),
+            "active_atom_indices": list(exo.active_atom_indices),
+        }
+    )
+    core = list(pre["core"])
+    summary = {
+        "graft_to_reference_map": mapping,
+        "alignment_rmsd_angstrom": result.alignment_rmsd_angstrom,
+        "close_contacts": [c.model_dump(mode="json") for c in result.close_contacts],
+        "pure_graft_forming_core_rmsd_to_liu_angstrom": forming_core_rmsd_angstrom(
+            result.product.coordinates, exo.reference, core, mapping
+        ),
+        "pre_relaxed_start_forming_core_rmsd_to_liu_angstrom": forming_core_rmsd_angstrom(
+            start.coordinates, exo.reference, core, mapping
+        ),
+        "pre_relax": {
+            "core": core,
+            "maxiter": int(pre["maxiter"]),
+            "n_steps": relaxed.n_steps,
+            "n_engine_calls": relaxed.n_engine_calls,
+            "final_energy_hartree": relaxed.final_energy_hartree,
+        },
+    }
+    return start, summary
+
+
+def _template(state: MolecularState) -> list[TemplateGeometry]:
+    return [TemplateGeometry(id="t1", rank=1, components=[Component(state=state, count=1)])]
+
+
+def mapped_graph(fixture: T4Fixture, starts: Mapping[str, MolecularState]) -> ReactionGraph:
+    """The reaction graph of the mapped fixture: two priority-1 TS nodes, the rule, P1b_x."""
+    down = fixture.downstream
+    if down is None or fixture.pruning_rule is None:
+        raise ValueError(f"{fixture.name}: no pruning rule or downstream node")
+    nodes = [
+        ReactionNode(
+            id=p.ts_id,
+            label=p.ts_id,
+            kind="transition_state",
+            priority=1,
+            templates=_template(starts[p.pathway]),
+            pathway=p.pathway,
+        )
+        for p in fixture.pathways
+    ]
+    nodes.append(
+        ReactionNode(
+            id=down.node_id,
+            label=down.species_id,
+            kind="product",
+            priority=down.priority,
+            templates=_template(read_xyz(down.xyz, down.charge, down.spin_multiplicity)),
+            pathway=down.pathway,
+        )
+    )
+    return ReactionGraph(
+        schema_version=1,
+        name=fixture.name,
+        nodes=nodes,
+        pathway_pruning_rules=[fixture.pruning_rule],
+    )
+
+
+def run_mapped_pair(
+    fixture: T4Fixture,
+    recipe: Recipe,
+    recipe_name: str,
+    store_path: Path,
+    starts: Mapping[str, MolecularState],
+    options: TSEnsembleOptions | None = None,
+) -> PairRun:
+    """Run the mapped pair through the real selectivity runner (slice 07) once in ``store_path``."""
+    options = options or TSEnsembleOptions()
+    ts = ts_recipe(recipe)
+    down = fixture.downstream
+    assert down is not None
+    pathways = {
+        p.pathway: PathwayInputs(
+            seed=TSSpec(
+                ts_id=p.ts_id,
+                start=starts[p.pathway],
+                forming_bonds=p.forming_bonds,
+                reference=p.reference,
+                reference_map=p.start_to_reference_map,
+            ),
+            recipe=ts,
+            core_indices=p.active_atom_indices,
+            reactant_key=reactant_key(fixture),
+            member_gates=member_gates(recipe_name),
+        )
+        for p in fixture.pathways
+    }
+    downstream = {
+        down.node_id: DownstreamNode(
+            SpeciesSpec(
+                down.species_id,
+                down.smiles,
+                down.charge,
+                down.spin_multiplicity,
+                ConformerOptions(n_embed=10, seed=42),
+                (read_xyz(down.xyz, down.charge, down.spin_multiplicity),),
+            ),
+            recipe,
+        )
+    }
+    with ArtifactStore(store_path) as store:
+        reactants = {s.species_id: run_species(s, recipe, store) for s in fixture.species}
+        selectivity = run_selectivity(
+            mapped_graph(fixture, starts),
+            store,
+            pathways=pathways,
+            downstream=downstream,
+            optimizer=GeometricOptimizer(),
+            options=options,
+            kind="de",
+        )
+        rows = {k: len(store.query(k)) for k in ("conformer_search", "geometry_opt", "frequency")}
+    runs = selectivity.ensembles
+    barriers, errors = seed_barriers(fixture, recipe, reactants, runs)
+    return PairRun(
+        reactants,
+        runs,
+        selectivity.score,
+        barriers,
+        errors,
+        ensemble_barriers(runs, barriers),
+        selectivity,
+        rows,
+    )
+
+
+def pruning_gate(fixture: T4Fixture, first: PairRun, second: PairRun) -> dict[str, Any]:
+    """G6: the decision matches the measured ddG-dagger against the rule's threshold.
+
+    Above the threshold (strictly) the downstream node is ``pruned`` with no result and no species
+    row in the store; otherwise it is ``computed`` and its result is recorded. The second run must
+    give the same decision and node outcomes, and a computed node must hit every stage.
+    """
+    rule, down = fixture.pruning_rule, fixture.downstream
+    sel, sel2 = first.selectivity, second.selectivity
+    assert rule is not None and down is not None
+    if sel is None or sel2 is None or not sel.decisions:
+        return {"status": "fail", "reason": "no selectivity run or decision"}
+    decision, node, node2 = sel.decisions[0], sel.nodes[down.node_id], sel2.nodes[down.node_id]
+    ddg = decision.ddG_dagger_kcal_mol
+    expected = "pruned" if ddg is not None and ddg > rule.threshold_kcal_mol else "computed"
+    species_rows = first.store_rows.get("conformer_search", 0) - len(first.reactants)
+    if expected == "pruned":
+        branch_ok = node.status == "pruned" and node.result is None and species_rows == 0
+    else:
+        branch_ok = (
+            node.status == "computed"
+            and node.result is not None
+            and bool(node.result.ensemble.records)
+            and species_rows == 1
+        )
+    again = sel2.decisions == sel.decisions and node2.status == node.status
+    if node2.result is not None:
+        again = again and all(all_hit(node2.result, k) for k in REACTANT_STAGES)
+    return {
+        "status": "pass" if branch_ok and again else "fail",
+        "branch": node.status,
+        "expected_branch": expected,
+        "ddG_dagger_kcal_mol": ddg,
+        "threshold_kcal_mol": rule.threshold_kcal_mol,
+        "margin_to_threshold_kcal_mol": None if ddg is None else ddg - rule.threshold_kcal_mol,
+        "pruned_node_ids": decision.pruned_node_ids,
+        "reason": decision.reason,
+        "species_rows_created_for_downstream": species_rows,
+        "second_run_same_decision_and_outcome": again,
+    }
+
+
+def pruning_payload(first: PairRun) -> dict[str, Any]:
+    """The selectivity run's decision and node outcomes as JSON (a computed node's G summarised)."""
+    sel = first.selectivity
+    assert sel is not None
+    nodes: dict[str, Any] = {}
+    for node_id, node in sel.nodes.items():
+        entry: dict[str, Any] = {
+            "status": node.status,
+            "pathway": node.pathway,
+            "pruned_by": list(node.pruned_by),
+        }
+        if node.result is not None:
+            ens = node.result.ensemble
+            entry["n_kept"] = len(ens.records)
+            entry["ensemble_gibbs_hartree"] = ens.ensemble_gibbs_hartree
+            entry["dropped"] = [{"source_id": s, "reason": r} for s, r in node.result.dropped]
+        nodes[node_id] = entry
+    return {
+        "decisions": [d.model_dump(mode="json") for d in sel.decisions],
+        "nodes": nodes,
+        "store_rows": dict(first.store_rows),
     }
