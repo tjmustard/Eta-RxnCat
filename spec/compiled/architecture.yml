@@ -450,34 +450,34 @@ nodes:
     last_slice: OPR.0.6.0.4
 - id: eta_rxncat_conformers
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
   - tests/unit/conformers/**
   description: >-
-    eta_rxncat.conformers (v0.3.0): conformer pools, dedup, degeneracy and ensembles
-    from a SMILES with explicit charge and multiplicity; RDKit (BSD-3) and numpy,
-    no geomeTRIC/torch/PySCF/fairchem at import. options.py: ConformerOptions (frozen
-    pydantic: n_embed 50, seed 42, torsion_free_pass true, pre_dedup and dedup RMSD
-    0.125 A, energy window 6 kcal/mol, include_h_in_rmsd, max_automorphisms 100000;
-    as_stage_options sorted for the runner key). errors.py: ConformerError -> ConformerInputError,
-    EmbeddingFailedError(counts), EnsembleEmptyError(reasons); no function returns
-    its input as a fallback. generate.py: input checks (parse, isotope labels refused,
-    formal charge, electron parity); pass 1 ETKDGv3 (seed, pruneRmsThresh -1, one
-    thread, enforceChirality), pass 2 identical without experimental torsion preferences
-    (F21, ids n..2n-1); seeds bond-perceived, stereo assigned from 3D, canonical isomeric
-    SMILES and chirality-aware substructure match required, reordered to SMILES order
-    (ids 2n..), R28 seed hash; pre-dedup with H, seeds first, a seed never removed;
-    ConformerPool with members, per-pass RDKit failure counts and survivors. _rmsd.py:
-    least proper-rotation RMSD over graph automorphisms (reuses thermo._geometry,
-    explicit maxMatches). dedup.py: dedup into the lowest-energy member (ties lower
-    index), energy_window. degeneracy.py: graph_achiral (tetrahedral tags inverted;
-    E/Z ignored, R37), conformer_chiral (mirror image farther than the dedup RMSD),
-    assign_degeneracy (2 iff both), drop_mirror_partners (lower G stays). ensemble.py:
-    build_ensemble via thermo.boltzmann with degeneracies. geometry.py: dihedral_deg
-    for class labels. Tests in tests/unit/conformers (incl. test_e2e5_smiles_derivation:
-    TJ T1/T2 XYZ re-derive to the input SMILES).
+    eta_rxncat.conformers (v0.3.0; TS sampler v0.6.0): conformer pools, dedup, degeneracy
+    and ensembles from a SMILES with explicit charge and multiplicity; RDKit (BSD-3)
+    and numpy, no geomeTRIC/torch/PySCF/fairchem at import. options.py: ConformerOptions
+    (n_embed 50, seed 42, RMSD 0.125 A, window 6 kcal/mol; as_stage_options keyed).
+    errors.py: ConformerError -> ConformerInputError, EmbeddingFailedError(counts),
+    EnsembleEmptyError(reasons); no function returns its input as a fallback. generate.py:
+    input checks; ETKDGv3 pass 1 and torsion-free pass 2 (F21); seeds bond-perceived,
+    stereo from 3D, SMILES-matched and reordered (R28 hash); pre-dedup with H, seeds
+    kept; ConformerPool with failure counts. _rmsd.py: least proper-rotation RMSD
+    over graph automorphisms (reuses thermo._geometry, explicit maxMatches). dedup.py:
+    dedup into the lowest-energy member (ties lower index), energy_window. degeneracy.py:
+    graph_achiral (tetrahedral tags inverted; E/Z ignored, R37), conformer_chiral
+    (mirror image farther than the dedup RMSD), assign_degeneracy (2 iff both), drop_mirror_partners
+    (lower G stays). ensemble.py: build_ensemble via thermo.boltzmann with degeneracies.
+    geometry.py: dihedral_deg for class labels. ts_sampler.py (v0.6.0, R1/R11/R16):
+    forming_bond_configuration (sign V_i * sign V_j per sorted forming bond, (a, b)
+    lowest-index seed-graph neighbours; FaceDescriptorError); sample_ts_conformers
+    -> TSSample (source, state, face, start_sha256 of store geometry_payload, bond_orders):
+    per-fragment ETKDGv3 with coordMap on the anchor (core atoms, plus heavy neighbours
+    if < 3 or collinear), proper Kabsch placement, seeded non-core perturbation, core
+    reset to the seed exactly, pre-dedup seed first; seed not returned. Tests in tests/unit/conformers
+    (incl. test_e2e5_smiles_derivation: TJ T1/T2 XYZ re-derive to the input SMILES).
   inputs:
   - data_type: smiles_charge_multiplicity_and_seed_states
     external: eta_rxncat_consumers
@@ -487,10 +487,16 @@ nodes:
     source_id: eta_rxncat_thermo
   - data_type: kcal_mol_to_hartree_unit_conversion
     source_id: eta_rxncat_engines
+  - data_type: ts_seed_core_forming_and_perceived_bonds
+    external: eta_rxncat_consumers
+  - data_type: geometry_payload_digest
+    source_id: eta_rxncat_store
   outputs:
   - data_type: conformer_pool_dedup_degeneracy
     external: eta_rxncat_consumers
   - data_type: conformer_ensemble
+    external: eta_rxncat_consumers
+  - data_type: ts_samples_and_face_tuples
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -502,14 +508,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-25T07:37:39+00:00'
-    reviewed_by: audit:04-scorer
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-25T07:49:31+00:00'
+    reviewed_by: audit:05-ts-sampler
+    summary: patched description, inputs, outputs
   provenance:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -597,9 +603,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T07:37:39+00:00'
-    reviewed_by: audit:04-scorer
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-25T07:49:31+00:00'
+    reviewed_by: audit:05-ts-sampler
+    summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.5
 - id: eta_rxncat_mapping
