@@ -37,6 +37,11 @@ if TYPE_CHECKING:
         run_species,
     )
     from eta_rxncat.orchestrator.ts import TSRecipe, TSRunResult, TSSpec, run_transition_state
+    from eta_rxncat.orchestrator.ts_ensemble import (
+        TSEnsembleRun,
+        run_ts_ensemble,
+        run_ts_ensemble_detailed,
+    )
 
 _LAZY: dict[str, str] = {
     "BarrierEnergies": "barrier",
@@ -53,6 +58,7 @@ _LAZY: dict[str, str] = {
     "SpeciesResult": "species",
     "SpeciesSpec": "species",
     "StageMetrics": "species",
+    "TSEnsembleRun": "ts_ensemble",
     "TSRecipe": "ts",
     "TSRunResult": "ts",
     "TSSpec": "ts",
@@ -64,6 +70,8 @@ _LAZY: dict[str, str] = {
     "run_constrained_point": "species",
     "run_species": "species",
     "run_transition_state": "ts",
+    "run_ts_ensemble": "ts_ensemble",
+    "run_ts_ensemble_detailed": "ts_ensemble",
     "score_selectivity": "selectivity",
     "standard_state_shift_kcal_mol": "reaction",
     "write_report": "report",
@@ -96,6 +104,7 @@ __all__ = [
     "SpeciesResult",
     "SpeciesSpec",
     "StageMetrics",
+    "TSEnsembleRun",
     "TSRecipe",
     "TSRunResult",
     "TSSpec",
@@ -107,6 +116,8 @@ __all__ = [
     "run_constrained_point",
     "run_species",
     "run_transition_state",
+    "run_ts_ensemble",
+    "run_ts_ensemble_detailed",
     "score_selectivity",
     "standard_state_shift_kcal_mol",
     "write_report",
