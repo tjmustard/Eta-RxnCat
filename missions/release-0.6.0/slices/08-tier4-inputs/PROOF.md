@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: TS1a_x/TS1b_x/P1b_x byte-equal to independent re-transcription (HF-1 sha256); faces endo (+1,+1) exo (-1,-1); suite 2050 pass at c3b7788
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
