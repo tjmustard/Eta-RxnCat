@@ -7,7 +7,7 @@ stage: wip
 verified: "2026-11-25 against scaffold (hyper_scope slice create)"
 created: "2026-11-25"
 intent: "Assemble the v0.6.0 acceptance record from real per-check outcomes with pending states for TJ, measure run-to-run reproducibility for the Phase 3 bounds, and derive the README claims."
-depends_on: [OPR.0.6.0.10, OPR.0.6.0.13]
+depends_on: [OPR.0.6.0.10, OPR.0.6.0.13, OPR.0.6.0.14]
 hacf_schema: 1
 hacf_type: MiniPRD
 hacf_status: compiled
@@ -57,7 +57,33 @@ Context the builder needs:
   puts this block in TJ's Phase 3 row.
 - **README:** v0.6.0 "Features"/"Roadmap" lines derived from the record by the existing helper (a
   claim needs its check `pass`; pending → "pending TJ"). CHANGELOG is the scribe's.
-- If TJ picked Q-RES1 B, slice 13's checks join this record (replan names them).
+- **Slice 14's checks join this record (replan 4, R29/R30; TJ Q-RES1 B, amended to the alkyl
+  series).** Add a `flexible_ensemble` block per R (ethyl, n-propyl, n-butyl) × recipe, giving
+  six entries.
+  - **Gated:** slice 14's gates (a)–(f): no `failed_reason`, ≥ 2 distinct members,
+    |Σw − 1| ≤ 1e-12, every face the seed's, zero `face_mismatch`/`engine_error`, a second pass
+    with zero rows and zero calls and an equal ensemble, and no `graft_pre_relax_timeout`.
+  - **Reported:** members per R plus the non-decreasing flag, exclusions by reason, max
+    `pre_relax_wall_time_s`, ΔG‡_ensemble, ΔG‡_seed, the ensemble correction, and ΔΔG‡ vs ethyl.
+  - **State:** `regression` for these is `pending_promotion`, since no promoted fixture exists.
+  - **Sources:** the outcomes come from re-running slice 14's E2E (one R × recipe per command,
+    host-checked), never from reading its candidate files.
+  - **Reproducibility:** slice 14 gets no repro runs and no proposed bounds; it is mechanics-only
+    and TJ gates no number.
+  - **G1/G4:** the unit-level Boltzmann proof stays gated, and slice 14 adds the E2E evidence of
+    multi-member sums.
+- **Continuation after the replan-4 pause (R30).** The builder paused this slice after C1
+  `1273070` (record assembly and repro driver) to let slice 14 run.
+  - **Range:** it resumes as a continuation. Start stays `ca983a8`, so the range will contain
+    slice 14's commits.
+  - **Repro runs** completed at `1273070` stay valid, because slice 14 changes no `src/` (its
+    requirement 5) and does not change the Tier 4 helpers' behaviour. Re-run only a repro command
+    that had not finished. If slice 14's proof shows a non-empty `src` diff, all repro runs are
+    void and are redone.
+  - **Audit reading:** judge slice 11 on its own commits, listed in its PROOF by sha, i.e.
+    `git diff ca983a8..<end>` minus the files in slice 14's PROOF. Slice 14 was audited on its own
+    range. Check that the resumed C2+ commits touch only this slice's `hacf_touches`, plus the
+    record's use of slice 14's helpers.
 - **Heavy-run rules (TJ's memory rule, verbatim: "(3) Memory rule: swap full, both rigs build at
   once, NO overlapping heavy runs host-wide; clear seats between runs; recover stalled seats.")**:
   before **each** GPU/E2E command, run a blocking host check in its **own** call — `free -g`
@@ -116,7 +142,7 @@ counts, which slices 09/10 already serialise.
 
 ## Source material
 
-- Mission G1–G8, R1, R3, R6, R9, R10, HF-1, HF-10; v0.5.0 slice 12 and its code.
+- Mission G1–G8, R1, R3, R6, R9, R10, R29, R30, HF-1, HF-10, HF-14; v0.5.0 slice 12 and its code; slice 14.
 
 ## Intent visual
 
@@ -128,4 +154,4 @@ N/A (non-visual slice).
 
 ## Dependencies
 
-10 (and 13 if Q-RES1 B adds it).
+10, 13 (HF-13 guard), 14 (flexible-ensemble E2E; replan 4).

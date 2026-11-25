@@ -175,8 +175,8 @@ v0.8.0 (the scheduler adopts the pruning rule and the ensemble), v0.9.0 (the YAM
 **Score: 9/10.** Every red-team finding has a decision (R1–R15) and every architect OPEN item is
 decided by measurement (R16–R25). The blocker F1 is closed in the specs by a measured, general face
 check and a sampler that cannot cross faces by construction. The remaining point of uncertainty is
-OPEN question Q-RES1 to TJ (Tier 4 ensembles measured at one member each, HF-10); it gates no
-slice in 01–12 unless TJ picks option C (then resolve replans 05–06).
+question Q-RES1 to TJ (Tier 4 ensembles measured at one member each, HF-10). It is now CLOSED:
+TJ chose B, amended to an alkyl R-group series, which is slice 14 (R29, HF-14).
 
 ### Host facts measured by resolve (2026-11-25, before the build; TJ Q3 A "pre-build misses come back to TJ")
 
@@ -259,8 +259,10 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
   but is not the cause. The trigger is UMA run-to-run noise, since eta seeds geomeTRIC's RNG. The fix
   inside the black box is not cheap, so slice 13 bounds it (R28).
 
+- **HF-14 Flexible alkyl series (replan 4; evidence `~/.hacf/eta-rxncat-hacf/evidence/v060-replan4/`).** The graft of R onto TS1a_n at H16 is clean: alignment 0.033–0.035 Å, no contacts, 24/27/30 atoms. It needs the all-anti chain (the ETKDG n-propyl conformer clashes, 0.28 Å) and the lower-fit sp2 order (the mirror order fits at 0.49 Å). Ensemble with the R18 defaults, distinct members ethyl / n-propyl / n-butyl: GFN2 3/4/5 (wall 192/482/694 s), UMA 3/4/5 (223/206/819 s, RSS 8.1 GB). Every run: Σw = 1, all faces [1, 1], second pass 0 rows / 0 calls / equal ensemble, no `PreRelaxTimeout`. The gauche rotamers come as mirror-image pairs at equal G (ΔG ≤ 0.05 kcal/mol, equal RMSD to the seed), so they are genuinely distinct saddles. Longest member pre-relax: GFN2 282 s (n-propyl), UMA 387 s (n-butyl), inside the 600 s guard. n-Butyl loses one member to `connectivity_changed` and one to `ts_search_failed:no_reaction_mode` on both engines.
+
 ### OPEN for TJ (row ids in the handoff; the build does not wait unless noted)
-- **Q-RES1 (M2 → TJ, as the draft required; row `qitem-20261125064639-149cf207118abaab` to advisor-lead@kernel, OPEN).** Every Tier 4 ensemble is one member on GFN2
+- **Q-RES1 (M2 → TJ, as the draft required; row `qitem-20261125064639-149cf207118abaab` to advisor-lead@kernel) — CLOSED 2026-11-25: B, amended (R29).** TJ, verbatim (row `qitem-20261125134835-b68359c8b88aa4f6`): "B (the recommendation). Add one mechanics-only flexible-ensemble E2E as slice 13, before the acceptance record. Graft a rotor-bearing substituent (e.g. methoxymethyl) onto TS1a_n and run it on GFN2 and UMA. Gates: >= 2 distinct members, weights summing to 1, consistent faces, and a second run that is all cache hits. ddG dagger is reported only. Replan the details as needed." Amended (row `qitem-20261125135141-40dabb65dfb7a8a8`), verbatim: "Can we r-group enumerate a new TS from with a alkyl chain"; he chose R = ethyl, n-propyl, n-butyl on TS1a_n's cyclopropene CH2, with the HF-13 guard on the grafts. That is slice 14, because 13 was already the HF-13 guard. Original text follows. Every Tier 4 ensemble is one member on GFN2
   and on UMA (HF-10), so Tier 4 exercises the Boltzmann sum only as the identity. Options: A accept
   unit-level proof (G1, G4), B add one mechanics-only flexible E2E (slice 13), C drop the TS
   conformer search from v0.6.0. Recommendation B. **Gates:** nothing in slices 01–04, 07–12; slices
@@ -302,7 +304,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 - `kind="ee"` over multi-member ensembles (R8, DV-08); chirality assignment of mirror-image TS
   conformers.
 - Carry-forward (b): the v0.5.0 `reported.gated_on` text nit — TJ's call, outside this diff.
-- A flexible Tier 4b case — only if TJ picks Q-RES1 B (then a replan adds slice 14).
+- (Moved in scope by replan 4, R29:) the flexible alkyl-series E2E, slice 14.
 
 ## 4. User Stories (Atomic)
 
@@ -355,6 +357,8 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 | R26 | Replan 1 (slice 04, builder block at `808e50c`): G8 vs DV-03 — `import eta_rxncat.thermo.constants` loads RDKit because `thermo/__init__.py` imports `symmetry.py`/`masses.py` eagerly | — | resolved (lead ruling A) | Slice 04 makes `src/eta_rxncat/thermo/__init__.py`'s exports lazy (PEP 562 `__getattr__` + `TYPE_CHECKING` imports, `__all__` and every `from eta_rxncat.thermo import X` unchanged); the scorer uses the real `eta_rxncat.thermo.constants`. Not B (moving constants), never C/D. Blast radius of slice 04 gains `eta_rxncat_thermo` (already owns `src/eta_rxncat/thermo/**`; no ledger change). No thermo behaviour or constant changes. |
 | R27 | Replan 2 (slice 04): slice 04 requires `ratio = inf` on float overflow, but slice 02's `SelectivityResult.ratio` is `Field(ge=1.0, allow_inf_nan=False)` and refuses it | — | resolved (lead ruling) | Slice 04 changes that one field to accept `+inf` (`allow_inf_nan=True`, `ge=1.0` kept, so NaN, `-inf` and < 1 are still refused; tested), plus its docstring line and a core model test. Slice 04's touches gain `src/eta_rxncat/core/selectivity_models.py` and `tests/unit/core/test_selectivity_models.py`; its blast radius gains `eta_rxncat_core` (ratio field only; no ledger change). No other core change. |
 | R28 | Replan 3: HF-13 is recurrent (3 of 13 UMA TS1b_x(graft) runs; a stall would make the slice 11/12 verdict runs a coin flip). Measured as a live geomeTRIC-internal numpy loop between engine calls inside the ensemble pre-relax | — | resolved (lead ruling: measure, then bound or fix) | New slice 13 (OPR.0.6.0.13, before 11): `orchestrator/_deadline.py`, a watchdog thread raising `PreRelaxTimeout(BaseException)` into the calling thread via `PyThreadState_SetAsyncExc` after `pre_relax_budget_s` (default `PRE_RELAX_BUDGET_S = 600.0`, ~12× the healthy 49 s max), re-sent every 1 s, cleared on exit. `_PreRelax.run` excludes the member as `pre_relax_failed:PreRelaxTimeout` (fits the existing reason regex; no core change), records the wall time, caches the row with `budget_s`, and the ensemble continues. Budget not in the stage key. Not a cure: the cause is inside the black box. Optimizer stays in-process (ADR-0024 unchanged); new ADR-0048 PROPOSED. P-RFO and the E2E graft pre-relax are unguarded (no stall seen). Not N-consecutive-runs proof: the oracle is unit tests of the interrupt plus one UMA mapped run < 1300 s. Tier 4 G is unchanged by a timeout, since every member re-converges to the seed (HF-10). Blast radius: `eta_rxncat_species_runner` only (description 1967/2000; compress, no split). |
+| R29 | Replan 4: TJ Q-RES1 = B, amended to an alkyl R-group series (verbatim in §2) | — | resolved (TJ) | New slice 14 (OPR.0.6.0.14, order 106: after 13, before 11). R = ethyl, n-propyl, n-butyl replaces H16 (the cyclopropene CH2 H anti to Cp) of TS1a_n through eta's `graft`. Fragments: 3-R-cyclopropene, ETKDGv3 seed 42 + MMFF, chain all-anti (the plain ETKDG n-propyl conformer clashes). The sp2 pair order is the lower-RMSD fit. Core-frozen pre-relax under `deadline(PRE_RELAX_BUDGET_S)` (TJ: the guard applies to the grafts too). Ensemble with the library defaults (R18) on GFN2 and UMA. Gates per R × recipe: no `failed_reason`, ≥ 2 distinct members (ethyl too: anti + a mirror-image gauche pair, measured 3), \|Σw − 1\| ≤ 1e-12, every face the seed's, zero `face_mismatch`/`engine_error`, a second pass with 0 rows / 0 calls / equal ensemble, and no `graft_pre_relax_timeout`. Reported only: members per R (non-decreasing expected, measured 3/4/5 on both engines), ΔG‡, the ensemble correction, ΔΔG‡ vs ethyl, and max pre-relax wall. Tests and inputs only, no `src/` change. Six candidates go to `tests/candidate_outputs/v0.6.0/`. One slice, about 25 min per recipe (within TJ's 1–2 slices and ~3× GPU TS searches). Blast radius: `eta_rxncat_species_runner` (tests/e2e only; no ledger change). |
+| R30 | Replan 4: slice 11 was paused mid-build (C1 `1273070`) for slice 14 (lead sequencing option a) | — | resolved (lead) | Slice 11 resumes as a continuation with Start `ca983a8`; its range will contain slices 13–14's commits. Its repro runs at `1273070` stay valid because 14 changes no `src/` (14's requirement 5); a non-empty `src` diff voids them. Audit judges 11 on its own commits listed by sha in its PROOF (range minus 14's files). The record gains 14's six `flexible_ensemble` entries (gated as slice 14; regression `pending_promotion`; no repro bounds for 14). |
 
 ### Seed deviations (from the draft)
 - Sampler: per-fragment ETKDGv3 + perturbation (R16), not ETKDG coordMap on the whole TS.
@@ -366,6 +370,7 @@ engine run sat behind a blocking host check (`hostcheck_*.txt`), one heavy run a
 - Replan 1 (R26): slice 04 also makes `thermo/__init__.py` exports lazy.
 - Replan 2 (R27): slice 04 also lets `SelectivityResult.ratio` hold `+inf`.
 - Replan 3 (R28): new slice 13 (before 11) bounds the ensemble pre-relax by a wall-time budget; slice 11 depends on it.
+- Replan 4 (R29, R30): new slice 14 (after 13, before 11) is the flexible alkyl-series E2E (TJ Q-RES1 B, amended); slice 11 depends on it and records its checks.
 
 ### Face check (normative; slices 05, 06)
 - Input: a state, its forming bonds, its perceived bonds (`mapping.perceive_bonds`, which excludes
@@ -442,7 +447,7 @@ No exception escapes for a member; `OptimizerInputError` / `TSValidationInputErr
 `python3 .agents/scripts/hyper_ledger.py impact --nodes eta_rxncat_species_runner,eta_rxncat_core,eta_rxncat_conformers`
 → the draft's nine nodes (cli, conformers, core, engines, mapping, optimize, species_runner, store,
 thermo). **Written:** `eta_rxncat_core` (02), `eta_rxncat_species_runner` (03, 04, 06, 07, 08–11),
-`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26), `eta_rxncat_core` also in 04 (`SelectivityResult.ratio` accepts `+inf`, R27), `eta_rxncat_species_runner` also in 13 (`orchestrator/_deadline.py` + `ts_ensemble.py` pre-relax budget, R28). **Read only:** thermo (otherwise), mapping
+`eta_rxncat_conformers` (05), `eta_rxncat_scaffold` (01, 12), `eta_rxncat_thermo` (04, `thermo/__init__.py` import mechanics only, R26), `eta_rxncat_core` also in 04 (`SelectivityResult.ratio` accepts `+inf`, R27), `eta_rxncat_species_runner` also in 13 (`orchestrator/_deadline.py` + `ts_ensemble.py` pre-relax budget, R28) and 14 (tests/e2e flexible E2E + inputs only, R29). **Read only:** thermo (otherwise), mapping
 (graft, `relax_constrained_core`, `perceive_bonds`, `core_rmsd_angstrom`), optimize (P-RFO,
 `GeometricOptimizer` via injection), engines, store. No new node.
 
@@ -450,7 +455,7 @@ thermo). **Written:** `eta_rxncat_core` (02), `eta_rxncat_species_runner` (03, 0
 01 starter + DV rows · 02 core contracts · 03 EngineError · 04 scorer · 05 TS sampler + face ·
 06 TS ensemble runner · 07 selectivity runner + pruning · 08 Tier 4 inputs · 09 unmapped E2E ·
 10 mapped E2E + pruning · 13 HF-13 pre-relax guard (R28) · 11 acceptance record → **TJ Phase 3** →
-12 verdict + 0.6.0 bump. (Q-RES1 B would insert 14 before 11 by replan.)
+12 verdict + 0.6.0 bump. Replan 4 (R29) inserts 14 flexible-ensemble E2E after 13, before 11.
 
 ### Dependencies
 No new runtime dependency. RDKit (already the conformer engine) and numpy for the sampler; the
@@ -483,7 +488,7 @@ No new runtime dependency. RDKit (already the conformer engine) and numpy for th
 
 | Risk | Mitigation |
 |---|---|
-| Tier 4 ensembles are one member (measured, HF-10), so the sum is the identity in the E2E | G1/G4 prove the sum, weights, degeneracy and dedup on multi-member stubs; Q-RES1 to TJ (recommend a mechanics-only flexible E2E) |
+| Tier 4 ensembles are one member (measured, HF-10), so the sum is the identity in the E2E | Slice 14's alkyl series (3/4/5 members, HF-14) exercises the sum end to end; G1/G4 prove the sum, weights, degeneracy and dedup on multi-member stubs; Q-RES1 to TJ (recommend a mechanics-only flexible E2E) |
 | Diastereomer contamination (F1) | Face check gated on both engines; anchored sampler cannot cross (HF-5); unit test with a constructed crossover |
 | Duplicate double count (F2) | Merge on RMSD + face; noise floor 0.0021 kcal/mol (HF-11); flags at 0.05 |
 | Asymmetric exclusions from host failures (F3) | Unavailable/Input never cached; any `engine_error` exclusion fails G5 |
@@ -522,6 +527,7 @@ No new runtime dependency. RDKit (already the conformer engine) and numpy for th
 | OPR.0.6.0.11 | slices/11-acceptance-record | Assemble the v0.6.0 acceptance record from real per-check outcomes with pending states for TJ, measure run-to-run reproducibility for the Phase 3 bounds, and derive the README claims. |
 | OPR.0.6.0.12 | slices/12-acceptance-verdict | After TJ's Phase 3 promotion and bounds, run the verdict on both recipes against the promoted fixtures and bump the version to 0.6.0 only on pass. |
 | OPR.0.6.0.13 | slices/13-hf13-pre-relax-guard | Bound each ensemble pre-relaxation by a wall-time budget so a stalled geomeTRIC pre-relax (HF-13) becomes a cached, recorded pre_relax_failed:PreRelaxTimeout exclusion and the ensemble continues. |
+| OPR.0.6.0.14 | slices/14-flexible-ensemble-e2e | Graft an alkyl series (ethyl, n-propyl, n-butyl) onto TS1a_n, run guarded core-frozen pre-relax and the TS ensemble on GFN2 and UMA, and gate per R at least two distinct members, unit weights, the seed's face and an all-hit rerun, with ddG dagger reported only. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status

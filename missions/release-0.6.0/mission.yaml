@@ -43,6 +43,9 @@ composition:
     - ref: slices/13-hf13-pre-relax-guard/slice.yaml
       order: 105
       active: true
+    - ref: slices/14-flexible-ensemble-e2e/slice.yaml
+      order: 106
+      active: true
     - ref: slices/11-acceptance-record/slice.yaml
       order: 110
       active: true

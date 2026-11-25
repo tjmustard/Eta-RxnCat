@@ -26,4 +26,5 @@
 | OPR.0.6.0.11 | 11-acceptance-record | compiled | OPR.0.6.0.10, OPR.0.6.0.13 | 2026-11-25T06:45:55+00:00 compiled |
 | OPR.0.6.0.12 | 12-acceptance-verdict | compiled | OPR.0.6.0.11 | 2026-11-25T06:45:55+00:00 compiled |
 | OPR.0.6.0.13 | 13-hf13-pre-relax-guard | audited | OPR.0.6.0.10 | 2026-11-25T13:26:29+00:00 audited |
+| OPR.0.6.0.14 | 14-flexible-ensemble-e2e | compiled | OPR.0.6.0.13 | 2026-11-25T14:45:27+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->
