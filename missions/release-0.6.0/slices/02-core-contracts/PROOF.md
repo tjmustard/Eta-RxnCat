@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: core 480 pass; R7 <b>_vs_<a> keys validate; G8 clean; full suite 1899 pass at cd39656
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
