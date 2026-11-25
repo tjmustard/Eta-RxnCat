@@ -10,7 +10,7 @@ intent: "Graft an alkyl series (ethyl, n-propyl, n-butyl) onto TS1a_n, run guard
 depends_on: [OPR.0.6.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.6.0/**", spec/compiled/architecture.yml]
@@ -181,16 +181,16 @@ exclude a member, which the gates tolerate as long as ≥ 2 remain.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/t4.py`,
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `tests/e2e/t4.py`,
       `tests/e2e/fixtures.py` (T4 loader), slice 10's SPEC (graft pattern), and resolve's evidence
       README (`flex.py` is a scratch prototype: implement from this SPEC).
-- [ ] Task 2: fragment files, `SOURCES.md` rows, `t4_flexible_alkyl.yaml`, the loader, and offline
+- [x] Task 2: fragment files, `SOURCES.md` rows, `t4_flexible_alkyl.yaml`, the loader, and offline
       tests (requirements 2, 4).
-- [ ] Task 3: `tests/e2e/t4_flexible.py` helpers and `tests/e2e/test_t4_flexible.py`, parametrised
+- [x] Task 3: `tests/e2e/t4_flexible.py` helpers and `tests/e2e/test_t4_flexible.py`, parametrised
       R × recipe under the `e2e` + engine markers.
-- [ ] Task 4: host-checked runs: GFN2 then UMA, one R per command. Write the candidates, then the
+- [x] Task 4: host-checked runs: GFN2 then UMA, one R per command. Write the candidates, then the
       required checks.
-- [ ] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 5: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
@@ -204,8 +204,8 @@ exclude a member, which the gates tolerate as long as ≥ 2 remain.
 
 ## Proof contract
 
-- [ ] Six host-checked runs: exit 0, wall, RSS and gates per R × recipe; members per R reported.
-- [ ] Offline tests pass in the default suite; required checks exit 0; empty `src` diff recorded.
+- [x] Six host-checked runs: exit 0, wall, RSS and gates per R × recipe; members per R reported.
+- [x] Offline tests pass in the default suite; required checks exit 0; empty `src` diff recorded.
 
 ## Source material
 
