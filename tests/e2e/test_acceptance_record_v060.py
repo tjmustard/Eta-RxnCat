@@ -2,6 +2,7 @@
 
 import copy
 import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
@@ -591,3 +592,54 @@ def test_run_commits_and_the_resume_note_are_in_the_evidence() -> None:
     assert evidence["run_commits"]["t4.t4_mapped.xtb"] == "1273070"
     assert evidence["run_commits"]["flexible_ensemble.ethyl.uma"] == "feed001"
     assert "1273070" in evidence["resume_note"] and "no src/" in evidence["resume_note"]
+
+
+# --- The committed record (slice 11) ----------------------------------------------------------
+
+COMMITTED = (
+    Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.6.0" / "ACCEPTANCE_RESULT.json"
+)
+
+
+def committed() -> dict[str, Any]:
+    """The committed pre-promotion record."""
+    return dict(json.loads(COMMITTED.read_text(encoding="utf-8")))
+
+
+def test_the_committed_record_is_valid_and_only_tjs_checks_are_pending() -> None:
+    """US-012: check() passes, every gated check passes, and only TJ's checks are pending."""
+    record = committed()
+    assert check(record) == []
+    assert "verdict" not in record
+    assert outstanding(record) == PENDING
+    assert command_problems(record["commands"]) == []
+
+
+def test_the_committed_record_ran_with_the_acceptance_flag_and_the_xtb_path() -> None:
+    """R9: environment records ETA_RXNCAT_ACCEPTANCE=1 and, for xtb, ETA_RXNCAT_XTB."""
+    environment = committed()["environment"]
+    assert (
+        environment["xtb"]["ETA_RXNCAT_ACCEPTANCE"]
+        == "1"
+        == environment["uma"]["ETA_RXNCAT_ACCEPTANCE"]
+    )
+    assert environment["xtb"]["ETA_RXNCAT_XTB"].endswith("/xtb")
+
+
+def test_the_committed_record_holds_the_bounds_and_reproducibility_of_every_pair() -> None:
+    """Both recipes x both pairs are measured; every proposed bound is a number, never missing."""
+    record = committed()
+    for recipe in RECIPES:
+        for pair in PAIRS:
+            assert record["reproducibility"][recipe][pair]["status"] == "measured"
+        block = record["proposed_regression_bounds"]["recipes"][recipe]
+        for quantity in PROPOSAL_BOUNDS[recipe]:
+            assert isinstance(block[quantity]["proposed"], float)
+            assert block[quantity]["basis"] in ("tj_bound", "ten_times_measured_max")
+
+
+def test_the_committed_record_gives_slice_14_no_reproducibility_or_bounds() -> None:
+    """Replan 4: the flexible-ensemble entries have no repro runs and no proposed bounds."""
+    record = committed()
+    assert set(record["reproducibility"]["xtb"]) == set(PAIRS)
+    assert not any("flex" in k for k in record["proposed_regression_bounds"]["recipes"]["uma"])

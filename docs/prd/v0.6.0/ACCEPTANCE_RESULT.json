@@ -1,0 +1,3577 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_unmapped.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "xtb",
+        "-q"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 170400,
+      "summary": "1 passed, 1 deselected in 293.28s (0:04:53)",
+      "wall_s": 294.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_mapped.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "xtb"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 169704,
+      "summary": "1 passed, 1 deselected in 301.11s (0:05:01)",
+      "wall_s": 302.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_reproducibility.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "t4_unmapped-xtb"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 173016,
+      "summary": "1 passed, 3 deselected in 653.89s (0:10:53)",
+      "wall_s": 655.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_reproducibility.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "t4_mapped-xtb"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 173244,
+      "summary": "1 passed, 3 deselected in 728.53s (0:12:08)",
+      "wall_s": 729.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "xtb-ethyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 183476,
+      "summary": "1 passed, 5 deselected in 220.33s (0:03:40)",
+      "wall_s": 221.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "xtb-npropyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 201864,
+      "summary": "1 passed, 5 deselected in 606.63s (0:10:06)",
+      "wall_s": 607.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and xtb",
+        "-k",
+        "xtb-nbutyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 202040,
+      "summary": "1 passed, 5 deselected in 860.95s (0:14:20)",
+      "wall_s": 862.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_unmapped.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "uma"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7125260,
+      "summary": "1 passed, 1 deselected, 15 warnings in 935.53s (0:15:35)",
+      "wall_s": 941.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_mapped.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "uma"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 8191084,
+      "summary": "1 passed, 1 deselected, 15 warnings in 484.95s (0:08:04)",
+      "wall_s": 487.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_reproducibility.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "t4_unmapped-uma"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7023736,
+      "summary": "1 passed, 3 deselected, 15 warnings in 796.68s (0:13:16)",
+      "wall_s": 799.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_reproducibility.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "t4_mapped-uma"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 7038620,
+      "summary": "1 passed, 3 deselected, 15 warnings in 1313.02s (0:21:53)",
+      "wall_s": 1318.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "uma-ethyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 8212672,
+      "summary": "1 passed, 5 deselected, 15 warnings in 277.30s (0:04:37)",
+      "wall_s": 280.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "uma-npropyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 8235544,
+      "summary": "1 passed, 5 deselected, 15 warnings in 254.70s (0:04:14)",
+      "wall_s": 257.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_t4_flexible.py",
+        "-m",
+        "e2e and mlip_uma",
+        "-k",
+        "uma-nbutyl"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 8210520,
+      "summary": "1 passed, 5 deselected, 15 warnings in 1001.34s (0:16:41)",
+      "wall_s": 1004.0
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-v",
+        "tests/unit/orchestrator/test_selectivity_score.py",
+        "tests/unit/orchestrator/test_ts_ensemble.py",
+        "tests/unit/conformers/test_ts_sampler.py"
+      ],
+      "env": {
+        "recipe": "cpu"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 98036,
+      "summary": "77 passed in 8.46s",
+      "wall_s": 9.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_accept_v060.py",
+        "-m",
+        "e2e and xtb and acceptance",
+        "-k",
+        "xtb"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "xtb"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 977076,
+      "summary": "1 passed, 1 deselected, 1 warning in 1.66s",
+      "wall_s": 2.0
+    },
+    {
+      "argv": [
+        "timeout",
+        "3600",
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "tests/e2e/test_accept_v060.py",
+        "-m",
+        "e2e and mlip_uma and acceptance",
+        "-k",
+        "uma"
+      ],
+      "env": {
+        "ETA_RXNCAT_ACCEPTANCE": "1",
+        "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+        "recipe": "uma"
+      },
+      "exit_code": 0,
+      "max_rss_kbytes": 5404640,
+      "summary": "1 passed, 1 deselected, 2 warnings in 9.39s",
+      "wall_s": 11.0
+    }
+  ],
+  "commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+  "default_suite": {
+    "command": "uv run pytest",
+    "deselected": 180,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 2179,
+    "skipped": 0
+  },
+  "devices": {
+    "uma": "cuda",
+    "xtb": "cpu"
+  },
+  "engines": {
+    "uma": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "xtb": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    }
+  },
+  "environment": {
+    "uma": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+      "python": "3.12.16"
+    },
+    "xtb": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "ETA_RXNCAT_XTB": "/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+      "UV_PROJECT_ENVIRONMENT": ".venv-accept-uma",
+      "python": "3.12.16"
+    }
+  },
+  "evidence": {
+    "candidate_values": "the acceptance run reruns slice 09-10 code in process at this commit; its values stand for the candidates' (no candidate file is read, slice 11 firewall)",
+    "candidates_phase3_set": "tests/candidate_outputs/v0.6.0/ (slices 09-10), committed for TJ's Phase 3 review; never read by this record",
+    "record_run_candidates": "written to a scratch ETA_RXNCAT_CANDIDATE_DIR, not committed",
+    "resume_note": "slice 11 paused after C1 1273070 for slice 14 (R30); the GFN2 Tier 4 acceptance runs and the GFN2 reproducibility run were made at 1273070 and stand: slice 14 changed no src/ file and no Tier 4 helper (git diff --name-only 1273070..<resume HEAD> lists only its new fixture, helper and test files), so run_commits names the commit of each fragment",
+    "run_commits": {
+      "flexible_ensemble.ethyl.uma": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "flexible_ensemble.ethyl.xtb": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "flexible_ensemble.nbutyl.uma": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "flexible_ensemble.nbutyl.xtb": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "flexible_ensemble.npropyl.uma": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "flexible_ensemble.npropyl.xtb": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "t4.t4_mapped.uma": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "t4.t4_mapped.xtb": "12730703bbc5d0f72a8aba7a835327ad06f4229c",
+      "t4.t4_unmapped.uma": "1ce11b22abafe1479a0f00688b377034940c09ad",
+      "t4.t4_unmapped.xtb": "12730703bbc5d0f72a8aba7a835327ad06f4229c"
+    }
+  },
+  "fixtures": {
+    "flexible_ensemble": {
+      "ethyl": {
+        "uma": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.03541681731105909,
+            "close_contacts": [],
+            "n_atoms": 24,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -389.28382510698805,
+              "maxiter": 200,
+              "n_engine_calls": 9,
+              "n_steps": 8,
+              "wall_time_s": 14.983888490009122
+            },
+            "sp2_order": [
+              3,
+              4
+            ],
+            "sp2_order_fits_angstrom": {
+              "3,4": 0.03541681731105909,
+              "4,3": 0.4940270358994327
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -389.10761441057826,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.0692029453162302,
+              "ensemble_dG_dagger_1M_kcal_mol": 20.23523378059297,
+              "seed_dG_dagger_1M_kcal_mol": 21.304436725909202
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.0,
+            "exclusions_by_reason": {
+              "outside_window": 2
+            },
+            "expected_members": 3,
+            "graft_pre_relax_wall_time_s": 14.983888490009122,
+            "max_pre_relax_wall_time_s": 52.01902958296705,
+            "members": [
+              {
+                "G_hartree": -389.1059105272275,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 0,
+                "pre_relax_wall_time_s": null,
+                "relative_G_kcal_mol": 0.5560716753908738,
+                "rmsd_to_seed_angstrom": 0.0,
+                "source": "seed",
+                "weight": 0.16453898064573963
+              },
+              {
+                "G_hartree": -389.1067966838488,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 2,
+                "pre_relax_wall_time_s": 2.8114964510314167,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.0755466955651098,
+                "source": "fragment_embed:1",
+                "weight": 0.4206028092267398
+              },
+              {
+                "G_hartree": -389.10678369928365,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 5,
+                "pre_relax_wall_time_s": 2.575910811079666,
+                "relative_G_kcal_mol": 0.008147937654469598,
+                "rmsd_to_seed_angstrom": 1.0749943085912925,
+                "source": "fragment_embed:4",
+                "weight": 0.4148582101275205
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 3,
+            "n_merges": 6,
+            "r_group": "ethyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.010551707237027586
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.002316194004379213
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 318,
+                "rows_created": 10,
+                "wall_time_s": 85.00776712805964
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 11,
+                "rows_created": 11,
+                "wall_time_s": 13.221774476696737
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 112,
+                "rows_created": 11,
+                "wall_time_s": 37.714464427903295
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 15,
+              "ts_opt": 11
+            },
+            "wall_time_s": {
+              "first_pass": 199.04002292000223,
+              "second_pass": 50.362910429015756
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 3,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 1.0
+            }
+          }
+        },
+        "xtb": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.03541681731105909,
+            "close_contacts": [],
+            "n_atoms": 24,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -28.39166453399,
+              "maxiter": 200,
+              "n_engine_calls": 8,
+              "n_steps": 7,
+              "wall_time_s": 1.1689093339955434
+            },
+            "sp2_order": [
+              3,
+              4
+            ],
+            "sp2_order_fits_angstrom": {
+              "3,4": 0.03541681731105909,
+              "4,3": 0.4940270358994327
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -28.220848474293028,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.0625407479337157,
+              "ensemble_dG_dagger_1M_kcal_mol": 13.560206712571008,
+              "seed_dG_dagger_1M_kcal_mol": 14.622747460504723
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.0,
+            "exclusions_by_reason": {
+              "gate_failed:forming_overlap": 1,
+              "outside_window": 2
+            },
+            "expected_members": 3,
+            "graft_pre_relax_wall_time_s": 1.1689093339955434,
+            "max_pre_relax_wall_time_s": 15.159113490022719,
+            "members": [
+              {
+                "G_hartree": -28.219155626701827,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 1,
+                "pre_relax_wall_time_s": 6.857132783043198,
+                "relative_G_kcal_mol": 0.5437132355436759,
+                "rmsd_to_seed_angstrom": 4.525776137907331e-05,
+                "source": "fragment_embed:0",
+                "weight": 0.1664734173101002
+              },
+              {
+                "G_hartree": -28.220022088895654,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 2,
+                "pre_relax_wall_time_s": 6.573781678918749,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.0750552294757214,
+                "source": "fragment_embed:1",
+                "weight": 0.4167632940704261
+              },
+              {
+                "G_hartree": -28.220022088883304,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 5,
+                "pre_relax_wall_time_s": 8.557820655056275,
+                "relative_G_kcal_mol": 7.749260546473152e-09,
+                "rmsd_to_seed_angstrom": 1.0750563521341938,
+                "source": "fragment_embed:4",
+                "weight": 0.4167632886194736
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 3,
+            "n_merges": 5,
+            "r_group": "ethyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0071570269064977765
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0014179052086547017
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 265,
+                "rows_created": 10,
+                "wall_time_s": 97.04597054992337
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 11,
+                "rows_created": 11,
+                "wall_time_s": 28.333324575796723
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 99,
+                "rows_created": 11,
+                "wall_time_s": 64.02207268611528
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 15,
+              "ts_opt": 11
+            },
+            "wall_time_s": {
+              "first_pass": 218.30449793103617,
+              "second_pass": 0.5967833159957081
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 3,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 0.9999999999999999
+            }
+          }
+        }
+      },
+      "nbutyl": {
+        "uma": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.033281517318074674,
+            "close_contacts": [],
+            "n_atoms": 30,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -467.8925746141624,
+              "maxiter": 200,
+              "n_engine_calls": 13,
+              "n_steps": 12,
+              "wall_time_s": 19.90637801901903
+            },
+            "sp2_order": [
+              6,
+              5
+            ],
+            "sp2_order_fits_angstrom": {
+              "5,6": 0.4911972745047074,
+              "6,5": 0.033281517318074674
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "d9d00a49a4d892ce633da4f61ea86b9f205b4d6ce98ca844c92f4460c2a7af50",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -467.6634454879607,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.277379168098995,
+              "ensemble_dG_dagger_1M_kcal_mol": 20.478009936965087,
+              "seed_dG_dagger_1M_kcal_mol": 21.755389105064083
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.24277615637211625,
+            "exclusions_by_reason": {
+              "connectivity_changed": 1,
+              "outside_window": 1,
+              "pre_relax_failed:PreRelaxTimeout": 1
+            },
+            "expected_members": 5,
+            "graft_pre_relax_wall_time_s": 19.90637801901903,
+            "max_pre_relax_wall_time_s": 600.0012049820507,
+            "members": [
+              {
+                "G_hartree": -467.661409854682,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 0,
+                "pre_relax_wall_time_s": null,
+                "relative_G_kcal_mol": 0.6084763248861019,
+                "rmsd_to_seed_angstrom": 0.0,
+                "source": "seed",
+                "weight": 0.11579093803509183
+              },
+              {
+                "G_hartree": -467.66231771808043,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 1,
+                "pre_relax_wall_time_s": 7.924409552011639,
+                "relative_G_kcal_mol": 0.038783441219590035,
+                "rmsd_to_seed_angstrom": 1.411004112938602,
+                "source": "fragment_embed:0",
+                "weight": 0.302874251431975
+              },
+              {
+                "G_hartree": -467.66121583750765,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 6,
+                "pre_relax_wall_time_s": 8.881099173915572,
+                "relative_G_kcal_mol": 0.7302239399224962,
+                "rmsd_to_seed_angstrom": 0.9961402587793075,
+                "source": "fragment_embed:5",
+                "weight": 0.09428290408164755
+              },
+              {
+                "G_hartree": -467.6623795234281,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 9,
+                "pre_relax_wall_time_s": 7.248818342923187,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.4094124132247428,
+                "source": "fragment_embed:8",
+                "weight": 0.32336336342716415
+              },
+              {
+                "G_hartree": -467.66173671183236,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 10,
+                "pre_relax_wall_time_s": 5.425944510963745,
+                "relative_G_kcal_mol": 0.4033703663728159,
+                "rmsd_to_seed_angstrom": 1.6879574665017871,
+                "source": "fragment_embed:9",
+                "weight": 0.16368854302412147
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 5,
+            "n_merges": 3,
+            "r_group": "nbutyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.013343643979169428
+              },
+              "ts_opt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0013528059935197234
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 563,
+                "rows_created": 10,
+                "wall_time_s": 794.1903062717756
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 10,
+                "rows_created": 10,
+                "wall_time_s": 14.823677145992406
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 47,
+                "rows_created": 10,
+                "wall_time_s": 23.45859344105702
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 19,
+              "ts_opt": 10
+            },
+            "wall_time_s": {
+              "first_pass": 920.1845710988855,
+              "second_pass": 47.959788182983175
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 5,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 1.0
+            }
+          }
+        },
+        "xtb": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.033281517318074674,
+            "close_contacts": [],
+            "n_atoms": 30,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -34.72069312692,
+              "maxiter": 200,
+              "n_engine_calls": 12,
+              "n_steps": 11,
+              "wall_time_s": 3.810949843027629
+            },
+            "sp2_order": [
+              6,
+              5
+            ],
+            "sp2_order_fits_angstrom": {
+              "5,6": 0.4911972745047074,
+              "6,5": 0.033281517318074674
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "d9d00a49a4d892ce633da4f61ea86b9f205b4d6ce98ca844c92f4460c2a7af50",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -34.497330160447646,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.197974186704766,
+              "ensemble_dG_dagger_1M_kcal_mol": 13.851063942593791,
+              "seed_dG_dagger_1M_kcal_mol": 15.049038129298557
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.29085723002278385,
+            "exclusions_by_reason": {
+              "connectivity_changed": 1,
+              "outside_window": 1,
+              "ts_search_failed:no_reaction_mode": 1
+            },
+            "expected_members": 5,
+            "graft_pre_relax_wall_time_s": 3.810949843027629,
+            "max_pre_relax_wall_time_s": 285.5412503919797,
+            "members": [
+              {
+                "G_hartree": -34.49542106706146,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 0,
+                "pre_relax_wall_time_s": null,
+                "relative_G_kcal_mol": 0.5113836520988897,
+                "rmsd_to_seed_angstrom": 0.0,
+                "source": "seed",
+                "weight": 0.13239720821264778
+              },
+              {
+                "G_hartree": -34.495213367529765,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 1,
+                "pre_relax_wall_time_s": 14.338584126904607,
+                "relative_G_kcal_mol": 0.6417170759944905,
+                "rmsd_to_seed_angstrom": 0.9972260167503265,
+                "source": "fragment_embed:0",
+                "weight": 0.10625362725556327
+              },
+              {
+                "G_hartree": -34.49623600878463,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 3,
+                "pre_relax_wall_time_s": 11.347482342971489,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.416118088045452,
+                "source": "fragment_embed:2",
+                "weight": 0.31385253852137973
+              },
+              {
+                "G_hartree": -34.495430064102884,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 5,
+                "pre_relax_wall_time_s": 18.397570384084247,
+                "relative_G_kcal_mol": 0.5057379233651981,
+                "rmsd_to_seed_angstrom": 1.6571948549308113,
+                "source": "fragment_embed:4",
+                "weight": 0.13366483768773313
+              },
+              {
+                "G_hartree": -34.49623594635827,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 9,
+                "pre_relax_wall_time_s": 19.08138714300003,
+                "relative_G_kcal_mol": 3.9173131824916576e-05,
+                "rmsd_to_seed_angstrom": 1.4161154069727875,
+                "source": "fragment_embed:8",
+                "weight": 0.3138317883226761
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 5,
+            "n_merges": 3,
+            "r_group": "nbutyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.01021399104502052
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0015282138483598828
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 621,
+                "rows_created": 10,
+                "wall_time_s": 669.8987132559996
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 10,
+                "rows_created": 10,
+                "wall_time_s": 35.67181044188328
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 79,
+                "rows_created": 11,
+                "wall_time_s": 80.82337404682767
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 19,
+              "ts_opt": 11
+            },
+            "wall_time_s": {
+              "first_pass": 855.373922690982,
+              "second_pass": 1.4746028929948807
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 5,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 1.0
+            }
+          }
+        }
+      },
+      "npropyl": {
+        "uma": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.03328304843205721,
+            "close_contacts": [],
+            "n_atoms": 27,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -428.58812169278156,
+              "maxiter": 200,
+              "n_engine_calls": 11,
+              "n_steps": 10,
+              "wall_time_s": 17.616764291888103
+            },
+            "sp2_order": [
+              5,
+              4
+            ],
+            "sp2_order_fits_angstrom": {
+              "4,5": 0.4912030009751042,
+              "5,4": 0.03328304843205721
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -428.38556727249045,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.2309012882938601,
+              "ensemble_dG_dagger_1M_kcal_mol": 20.443970319464807,
+              "seed_dG_dagger_1M_kcal_mol": 21.674871607758668
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.20873653887183607,
+            "exclusions_by_reason": {
+              "outside_window": 3
+            },
+            "expected_members": 4,
+            "graft_pre_relax_wall_time_s": 17.616764291888103,
+            "max_pre_relax_wall_time_s": 12.770758292987011,
+            "members": [
+              {
+                "G_hartree": -428.38360570642783,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 0,
+                "pre_relax_wall_time_s": null,
+                "relative_G_kcal_mol": 0.6376965745235542,
+                "rmsd_to_seed_angstrom": 0.0,
+                "source": "seed",
+                "weight": 0.12524001025505382
+              },
+              {
+                "G_hartree": -428.38462194060577,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 4,
+                "pre_relax_wall_time_s": 5.797855103970505,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.026815398451716,
+                "source": "fragment_embed:3",
+                "weight": 0.36743280428120756
+              },
+              {
+                "G_hartree": -428.3838799499541,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 5,
+                "pre_relax_wall_time_s": 5.575245029991493,
+                "relative_G_kcal_mol": 0.46560616357504947,
+                "rmsd_to_seed_angstrom": 1.4321539446427456,
+                "source": "fragment_embed:4",
+                "weight": 0.16745041996845994
+              },
+              {
+                "G_hartree": -428.3845483344471,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 6,
+                "pre_relax_wall_time_s": 6.859220498939976,
+                "relative_G_kcal_mol": 0.04618856190278024,
+                "rmsd_to_seed_angstrom": 1.0277892809045186,
+                "source": "fragment_embed:5",
+                "weight": 0.33987676549527857
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 4,
+            "n_merges": 4,
+            "r_group": "npropyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.012003183015622199
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.001494260155595839
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 320,
+                "rows_created": 10,
+                "wall_time_s": 59.568738121772185
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 11,
+                "rows_created": 11,
+                "wall_time_s": 14.301039383048192
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 48,
+                "rows_created": 11,
+                "wall_time_s": 22.055433388915844
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 20,
+              "ts_opt": 11
+            },
+            "wall_time_s": {
+              "first_pass": 172.41841818601824,
+              "second_pass": 50.74552312097512
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 4,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 0.9999999999999999
+            }
+          }
+        },
+        "xtb": {
+          "failed_checks": [],
+          "graft": {
+            "alignment_rmsd_angstrom": 0.03328304843205721,
+            "close_contacts": [],
+            "n_atoms": 27,
+            "pre_relax": {
+              "budget_s": 600.0,
+              "core": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "failed_reason": null,
+              "final_energy_hartree": -31.55623692091,
+              "maxiter": 200,
+              "n_engine_calls": 12,
+              "n_steps": 11,
+              "wall_time_s": 4.0553017009515315
+            },
+            "sp2_order": [
+              5,
+              4
+            ],
+            "sp2_order_fits_angstrom": {
+              "4,5": 0.4912030009751042,
+              "5,4": 0.03328304843205721
+            }
+          },
+          "inputs_sha256": {
+            "fixture_yaml": "6d52538535a3ec4904fe2f3e8f9117ba0e4867ea84b03505d689d5cd02d1c836",
+            "fragment": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56",
+            "template": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267"
+          },
+          "regression": {
+            "note": "no promoted fixture exists for the flexible-ensemble cases (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "G_pathway_hartree": -31.359146969837035,
+            "barrier": {
+              "ensemble_correction_kcal_mol": -1.142752934254131,
+              "ensemble_dG_dagger_1M_kcal_mol": 13.860817763446128,
+              "seed_dG_dagger_1M_kcal_mol": 15.00357069770026
+            },
+            "barrier_error": null,
+            "chain_length_order": {
+              "complete": true,
+              "members_by_r": {
+                "ethyl": 3,
+                "nbutyl": 5,
+                "npropyl": 4
+              },
+              "non_decreasing": true,
+              "status": "reported"
+            },
+            "ddG_dagger_vs_ethyl_kcal_mol": 0.30061105087512097,
+            "exclusions_by_reason": {
+              "outside_window": 2
+            },
+            "expected_members": 4,
+            "graft_pre_relax_wall_time_s": 4.0553017009515315,
+            "max_pre_relax_wall_time_s": 321.22447835002095,
+            "members": [
+              {
+                "G_hartree": -31.357348882194973,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 1,
+                "pre_relax_wall_time_s": 15.842804924002849,
+                "relative_G_kcal_mol": 0.5111731688664714,
+                "rmsd_to_seed_angstrom": 1.4166520298554863,
+                "source": "fragment_embed:0",
+                "weight": 0.14891480503049917
+              },
+              {
+                "G_hartree": -31.358163456774783,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 2,
+                "pre_relax_wall_time_s": 10.15937533590477,
+                "relative_G_kcal_mol": 1.9902704977565803e-05,
+                "rmsd_to_seed_angstrom": 1.031687510500813,
+                "source": "fragment_embed:1",
+                "weight": 0.35287088070503736
+              },
+              {
+                "G_hartree": -31.358163488491762,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 4,
+                "pre_relax_wall_time_s": 9.312831767019816,
+                "relative_G_kcal_mol": 0.0,
+                "rmsd_to_seed_angstrom": 1.0316690808251399,
+                "source": "fragment_embed:3",
+                "weight": 0.3528827345133037
+              },
+              {
+                "G_hartree": -31.35732588517945,
+                "degeneracy": 1,
+                "face": [
+                  1,
+                  1
+                ],
+                "index": 10,
+                "pre_relax_wall_time_s": 28.969824864994735,
+                "relative_G_kcal_mol": 0.525604013982885,
+                "rmsd_to_seed_angstrom": 3.4130177618709114e-06,
+                "source": "perturb:0",
+                "weight": 0.1453315797511597
+              }
+            ],
+            "n_flagged_merges": 0,
+            "n_members": 4,
+            "n_merges": 5,
+            "r_group": "npropyl",
+            "second_pass_stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.008851773804053664
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.00127049395814538
+              }
+            },
+            "stage_metrics": {
+              "constrained_preopt": {
+                "cache_hits": 0,
+                "engine_calls": 988,
+                "rows_created": 10,
+                "wall_time_s": 454.8649347878527
+              },
+              "frequency": {
+                "cache_hits": 0,
+                "engine_calls": 11,
+                "rows_created": 11,
+                "wall_time_s": 33.26959078991786
+              },
+              "ts_opt": {
+                "cache_hits": 0,
+                "engine_calls": 62,
+                "rows_created": 11,
+                "wall_time_s": 57.98152584920172
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "constrained_preopt": 10,
+              "frequency": 18,
+              "ts_opt": 11
+            },
+            "wall_time_s": {
+              "first_pass": 600.8404265840072,
+              "second_pass": 1.478250532061793
+            }
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "test_outcome": "passed",
+          "tier_gates": {
+            "distinct_members_at_least_2": {
+              "n_members": 4,
+              "status": "pass"
+            },
+            "ensemble_no_failed_reason": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "faces_equal_the_seeds_no_face_or_engine_error": {
+              "seed_face": [
+                1,
+                1
+              ],
+              "status": "pass"
+            },
+            "graft_pre_relax_no_timeout": {
+              "failed_reason": null,
+              "status": "pass"
+            },
+            "second_pass_all_hits_equal_ensemble": {
+              "status": "pass"
+            },
+            "weights_sum_to_one": {
+              "status": "pass",
+              "weights_sum": 1.0
+            }
+          }
+        }
+      }
+    },
+    "t4": {
+      "t4_mapped": {
+        "uma": {
+          "ensembles": {
+            "endo": {
+              "G_pathway_hartree": -349.84668843983553,
+              "engine_error": 0,
+              "exclusions_by_reason": {},
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 1.4617304160492495,
+              "n_excluded": 0,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 10,
+              "pre_relax_timeouts": 0
+            },
+            "exo": {
+              "G_pathway_hartree": -349.8444411258704,
+              "engine_error": 0,
+              "exclusions_by_reason": {},
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 5.29903929901775,
+              "n_excluded": 0,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 10,
+              "pre_relax_timeouts": 0
+            }
+          },
+          "exo_graft": {
+            "alignment_rmsd_angstrom": 0.08982400052411212,
+            "close_contacts": [],
+            "graft_to_reference_map": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              7,
+              8,
+              17,
+              18,
+              19,
+              20
+            ],
+            "pre_relax": {
+              "core": [
+                1,
+                2,
+                3,
+                5
+              ],
+              "final_energy_hartree": -350.0009634054525,
+              "maxiter": 200,
+              "n_engine_calls": 13,
+              "n_steps": 12
+            },
+            "pre_relaxed_start_forming_core_rmsd_to_liu_angstrom": 0.045610243389790334,
+            "pure_graft_forming_core_rmsd_to_liu_angstrom": 0.045610249706273774
+          },
+          "failed_checks": [],
+          "pruning": {
+            "decisions": [
+              {
+                "ddG_dagger_kcal_mol": 1.4102108043211918,
+                "pathways": [
+                  "endo",
+                  "exo"
+                ],
+                "pruned_node_ids": [],
+                "reason": "ddG_dagger 1.41021 <= threshold 1.5 kcal/mol: nothing pruned",
+                "rule_id": "endo_exo_ddG",
+                "signed_ddG_dagger_kcal_mol": {
+                  "exo_vs_endo": 1.4102108043211918
+                },
+                "threshold_kcal_mol": 1.5
+              }
+            ],
+            "nodes": {
+              "downstream_exo_minor": {
+                "dropped": [],
+                "ensemble_gibbs_hartree": -349.92307828918024,
+                "n_kept": 1,
+                "pathway": "exo",
+                "pruned_by": [],
+                "status": "computed"
+              }
+            },
+            "store_rows": {
+              "conformer_search": 3,
+              "frequency": 25,
+              "geometry_opt": 11
+            }
+          },
+          "regression": {
+            "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "gfn2_gate_definition": {
+              "ddG_dagger_greater_than_kcal_mol": 0.5,
+              "endo_major": true
+            },
+            "kind": "de",
+            "liu_header_ddG_dagger_kcal_mol": 1.849,
+            "pathways": {
+              "endo": {
+                "G_pathway_hartree": -349.84668843983553,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 29.09430325617951,
+                  "dG_dagger_1atm_kcal_mol": 30.98863170167379,
+                  "seed_to_ensemble_shift_kcal_mol": -0.00034158480099431377
+                },
+                "exclusions_by_reason": {},
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 23.809452063054778,
+                "members": [
+                  {
+                    "G_hartree": -349.84668843983553,
+                    "index": 1,
+                    "pre_relax_wall_time_s": 1.4617304160492495,
+                    "rmsd_to_seed_angstrom": 4.894429568971877e-07,
+                    "source": "fragment_embed:0",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 10,
+                "seed_dG_dagger_1M_kcal_mol": 29.094644840980507,
+                "seed_dG_dagger_1atm_kcal_mol": 30.988973286474785,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.01716749522174336,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 245,
+                    "rows_created": 10,
+                    "wall_time_s": 78.33450126892421
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 11,
+                    "rows_created": 11,
+                    "wall_time_s": 12.053906618035398
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 36,
+                    "rows_created": 11,
+                    "wall_time_s": 19.336789799970575
+                  }
+                },
+                "ts_id": "TS1b_n"
+              },
+              "exo": {
+                "G_pathway_hartree": -349.8444411258704,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 30.504514060500703,
+                  "dG_dagger_1atm_kcal_mol": 32.398842505994985,
+                  "seed_to_ensemble_shift_kcal_mol": -0.0005358023154614161
+                },
+                "exclusions_by_reason": {},
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 32.70762029697653,
+                "members": [
+                  {
+                    "G_hartree": -349.8444411258704,
+                    "index": 7,
+                    "pre_relax_wall_time_s": 5.29903929901775,
+                    "rmsd_to_seed_angstrom": 5.722991925706664e-07,
+                    "source": "perturb:5",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 10,
+                "seed_dG_dagger_1M_kcal_mol": 30.505049862816165,
+                "seed_dG_dagger_1atm_kcal_mol": 32.399378308310446,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.022048533822078633,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 252,
+                    "rows_created": 10,
+                    "wall_time_s": 111.4561292087892
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 11,
+                    "rows_created": 11,
+                    "wall_time_s": 12.371934834867716
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 35,
+                    "rows_created": 11,
+                    "wall_time_s": 20.401263556908816
+                  }
+                },
+                "ts_id": "TS1b_x"
+              }
+            },
+            "ratio": 10.806665099570944,
+            "selectivity_percent": 83.06041559464002,
+            "temperature_k": 298.15,
+            "tj_reference_ddG_dagger_kcal_mol": 1.8
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "second_run_cache": {
+            "endo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.007933697197586298
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0017596847610548139
+              }
+            },
+            "exo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.01068833889439702
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.001362449023872614
+              }
+            },
+            "reactants": {
+              "cyclobutene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            }
+          },
+          "selectivity": {
+            "ddG_dagger_kcal_mol": 1.4102108043211918,
+            "kind": "de",
+            "major_pathway": "endo",
+            "ratio": 10.806665099570944,
+            "selectivity_percent": 83.06041559464002,
+            "temperature_k": 298.15
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "ddG_dagger_above_0_5": {
+              "status": "pass",
+              "value_kcal_mol": 1.4102108043211918
+            },
+            "endo_is_major": {
+              "major_pathway": "endo",
+              "status": "pass"
+            },
+            "no_engine_error_exclusions": {
+              "status": "pass"
+            },
+            "no_face_mismatch_exclusions": {
+              "status": "pass"
+            },
+            "per_pathway_dG_difference_equals_ddG": {
+              "ddG_dagger_kcal_mol": 1.4102108043211918,
+              "per_pathway_difference_kcal_mol": 1.410210804321192,
+              "status": "pass"
+            },
+            "pruning_g6": {
+              "branch": "computed",
+              "ddG_dagger_kcal_mol": 1.4102108043211918,
+              "expected_branch": "computed",
+              "margin_to_threshold_kcal_mol": -0.08978919567880816,
+              "pruned_node_ids": [],
+              "reason": "ddG_dagger 1.41021 <= threshold 1.5 kcal/mol: nothing pruned",
+              "second_run_same_decision_and_outcome": true,
+              "species_rows_created_for_downstream": 1,
+              "status": "pass",
+              "threshold_kcal_mol": 1.5
+            },
+            "regression_endo_seed": {
+              "status": "pass"
+            },
+            "second_run_ensembles_all_hits": {
+              "status": "pass"
+            },
+            "second_run_equal_ensembles_and_score": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "seeds_converge_and_pass_member_gates": {
+              "status": "pass"
+            },
+            "window_ddG_dagger": {
+              "status": "pass",
+              "value_kcal_mol": 1.4102108043211918,
+              "window": {
+                "high": 3.8,
+                "high_inclusive": true,
+                "low": 0.5,
+                "low_inclusive": false
+              }
+            }
+          }
+        },
+        "xtb": {
+          "ensembles": {
+            "endo": {
+              "G_pathway_hartree": -25.11208251621313,
+              "engine_error": 0,
+              "exclusions_by_reason": {},
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": null,
+              "n_excluded": 0,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 10,
+              "pre_relax_timeouts": 0
+            },
+            "exo": {
+              "G_pathway_hartree": -25.10928857585115,
+              "engine_error": 0,
+              "exclusions_by_reason": {},
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 29.185945985955186,
+              "n_excluded": 0,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 10,
+              "pre_relax_timeouts": 0
+            }
+          },
+          "exo_graft": {
+            "alignment_rmsd_angstrom": 0.08982400052411212,
+            "close_contacts": [],
+            "graft_to_reference_map": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              7,
+              8,
+              17,
+              18,
+              19,
+              20
+            ],
+            "pre_relax": {
+              "core": [
+                1,
+                2,
+                3,
+                5
+              ],
+              "final_energy_hartree": -25.25861029486,
+              "maxiter": 200,
+              "n_engine_calls": 12,
+              "n_steps": 11
+            },
+            "pre_relaxed_start_forming_core_rmsd_to_liu_angstrom": 0.04561024806987454,
+            "pure_graft_forming_core_rmsd_to_liu_angstrom": 0.045610249706273774
+          },
+          "failed_checks": [],
+          "pruning": {
+            "decisions": [
+              {
+                "ddG_dagger_kcal_mol": 1.7532240471091078,
+                "pathways": [
+                  "endo",
+                  "exo"
+                ],
+                "pruned_node_ids": [
+                  "downstream_exo_minor"
+                ],
+                "reason": "ddG_dagger 1.75322 > threshold 1.5 kcal/mol: pruned the 1 priority>=2 node(s) of minor pathway exo",
+                "rule_id": "endo_exo_ddG",
+                "signed_ddG_dagger_kcal_mol": {
+                  "exo_vs_endo": 1.7532240471091078
+                },
+                "threshold_kcal_mol": 1.5
+              }
+            ],
+            "nodes": {
+              "downstream_exo_minor": {
+                "pathway": "exo",
+                "pruned_by": [
+                  "endo_exo_ddG"
+                ],
+                "status": "pruned"
+              }
+            },
+            "store_rows": {
+              "conformer_search": 2,
+              "frequency": 24,
+              "geometry_opt": 6
+            }
+          },
+          "regression": {
+            "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "gfn2_gate_definition": {
+              "ddG_dagger_greater_than_kcal_mol": 0.5,
+              "endo_major": true
+            },
+            "kind": "de",
+            "liu_header_ddG_dagger_kcal_mol": 1.849,
+            "pathways": {
+              "endo": {
+                "G_pathway_hartree": -25.11208251621313,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 18.444842845435932,
+                  "dG_dagger_1atm_kcal_mol": 20.33917129093021,
+                  "seed_to_ensemble_shift_kcal_mol": 0.0
+                },
+                "exclusions_by_reason": {},
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 12.119480515015312,
+                "members": [
+                  {
+                    "G_hartree": -25.11208251621313,
+                    "index": 0,
+                    "pre_relax_wall_time_s": null,
+                    "rmsd_to_seed_angstrom": 0.0,
+                    "source": "seed",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 10,
+                "seed_dG_dagger_1M_kcal_mol": 18.444842845435932,
+                "seed_dG_dagger_1atm_kcal_mol": 20.33917129093021,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.03272205057291121,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 248,
+                    "rows_created": 10,
+                    "wall_time_s": 79.12927589879837
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 11,
+                    "rows_created": 11,
+                    "wall_time_s": 22.245758261997253
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 34,
+                    "rows_created": 11,
+                    "wall_time_s": 23.789191858144477
+                  }
+                },
+                "ts_id": "TS1b_n"
+              },
+              "exo": {
+                "G_pathway_hartree": -25.10928857585115,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 20.19806689254504,
+                  "dG_dagger_1atm_kcal_mol": 22.092395338039317,
+                  "seed_to_ensemble_shift_kcal_mol": -0.000887985630292049
+                },
+                "exclusions_by_reason": {},
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 29.185945985955186,
+                "members": [
+                  {
+                    "G_hartree": -25.10928857585115,
+                    "index": 9,
+                    "pre_relax_wall_time_s": 29.185945985955186,
+                    "rmsd_to_seed_angstrom": 0.00042302251026658306,
+                    "source": "perturb:7",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 10,
+                "seed_dG_dagger_1M_kcal_mol": 20.198954878175332,
+                "seed_dG_dagger_1atm_kcal_mol": 22.09328332366961,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.026900507130879634,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 260,
+                    "rows_created": 10,
+                    "wall_time_s": 116.53704059019219
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 11,
+                    "rows_created": 11,
+                    "wall_time_s": 22.41975316707976
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 29,
+                    "rows_created": 11,
+                    "wall_time_s": 23.416997218853794
+                  }
+                },
+                "ts_id": "TS1b_x"
+              }
+            },
+            "ratio": 19.280671024563038,
+            "selectivity_percent": 90.138393361947,
+            "temperature_k": 298.15,
+            "tj_reference_ddG_dagger_kcal_mol": 1.8
+          },
+          "run_commit_sha": "12730703bbc5d0f72a8aba7a835327ad06f4229c",
+          "second_run_cache": {
+            "endo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.006033580168150365
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0012583190109580755
+              }
+            },
+            "exo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.005718599073588848
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.001147588947787881
+              }
+            },
+            "reactants": {
+              "cyclobutene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              }
+            }
+          },
+          "selectivity": {
+            "ddG_dagger_kcal_mol": 1.7532240471091078,
+            "kind": "de",
+            "major_pathway": "endo",
+            "ratio": 19.280671024563038,
+            "selectivity_percent": 90.138393361947,
+            "temperature_k": 298.15
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "ddG_dagger_above_0_5": {
+              "status": "pass",
+              "value_kcal_mol": 1.7532240471091078
+            },
+            "endo_is_major": {
+              "major_pathway": "endo",
+              "status": "pass"
+            },
+            "no_engine_error_exclusions": {
+              "status": "pass"
+            },
+            "no_face_mismatch_exclusions": {
+              "status": "pass"
+            },
+            "per_pathway_dG_difference_equals_ddG": {
+              "ddG_dagger_kcal_mol": 1.7532240471091078,
+              "per_pathway_difference_kcal_mol": 1.7532240471091072,
+              "status": "pass"
+            },
+            "pruning_g6": {
+              "branch": "pruned",
+              "ddG_dagger_kcal_mol": 1.7532240471091078,
+              "expected_branch": "pruned",
+              "margin_to_threshold_kcal_mol": 0.25322404710910784,
+              "pruned_node_ids": [
+                "downstream_exo_minor"
+              ],
+              "reason": "ddG_dagger 1.75322 > threshold 1.5 kcal/mol: pruned the 1 priority>=2 node(s) of minor pathway exo",
+              "second_run_same_decision_and_outcome": true,
+              "species_rows_created_for_downstream": 0,
+              "status": "pass",
+              "threshold_kcal_mol": 1.5
+            },
+            "regression_endo_seed": {
+              "status": "pass"
+            },
+            "second_run_ensembles_all_hits": {
+              "status": "pass"
+            },
+            "second_run_equal_ensembles_and_score": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "seeds_converge_and_pass_member_gates": {
+              "status": "pass"
+            },
+            "window_ddG_dagger": {
+              "status": "reported",
+              "value_kcal_mol": 1.7532240471091078,
+              "window": {
+                "high": 3.8,
+                "high_inclusive": true,
+                "low": 0.5,
+                "low_inclusive": false
+              }
+            }
+          }
+        }
+      },
+      "t4_unmapped": {
+        "uma": {
+          "ensembles": {
+            "endo": {
+              "G_pathway_hartree": -310.5473991824847,
+              "engine_error": 0,
+              "exclusions_by_reason": {
+                "ts_search_failed:no_reaction_mode": 1
+              },
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 37.12029719306156,
+              "n_excluded": 1,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 9,
+              "pre_relax_timeouts": 0
+            },
+            "exo": {
+              "G_pathway_hartree": -310.5400655096715,
+              "engine_error": 0,
+              "exclusions_by_reason": {
+                "pre_relax_failed:PreRelaxTimeout": 1
+              },
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 600.0549759820569,
+              "n_excluded": 1,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 9,
+              "pre_relax_timeouts": 1
+            }
+          },
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "gfn2_gate_definition": {
+              "ddG_dagger_greater_than_kcal_mol": 0.5,
+              "endo_major": true
+            },
+            "kind": "de",
+            "liu_header_ddG_dagger_kcal_mol": 4.273,
+            "pathways": {
+              "endo": {
+                "G_pathway_hartree": -310.5473991824847,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 19.581834407084823,
+                  "dG_dagger_1atm_kcal_mol": 21.4761628525791,
+                  "seed_to_ensemble_shift_kcal_mol": -0.00021948445556223744
+                },
+                "exclusions_by_reason": {
+                  "ts_search_failed:no_reaction_mode": 1
+                },
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 37.12029719306156,
+                "members": [
+                  {
+                    "G_hartree": -310.5473991824847,
+                    "index": 10,
+                    "pre_relax_wall_time_s": 4.026391681982204,
+                    "rmsd_to_seed_angstrom": 3.2899004325992064e-05,
+                    "source": "perturb:8",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 9,
+                "seed_dG_dagger_1M_kcal_mol": 19.582053891540387,
+                "seed_dG_dagger_1atm_kcal_mol": 21.476382337034664,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.024852786694659616,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 252,
+                    "rows_created": 10,
+                    "wall_time_s": 68.04013176518492
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 10,
+                    "rows_created": 10,
+                    "wall_time_s": 8.905034166295081
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 26,
+                    "rows_created": 11,
+                    "wall_time_s": 13.306418769760057
+                  }
+                },
+                "ts_id": "TS1a_n"
+              },
+              "exo": {
+                "G_pathway_hartree": -310.5400655096715,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 24.183783577057866,
+                  "dG_dagger_1atm_kcal_mol": 26.078112022552144,
+                  "seed_to_ensemble_shift_kcal_mol": -0.00013546167575447033
+                },
+                "exclusions_by_reason": {
+                  "pre_relax_failed:PreRelaxTimeout": 1
+                },
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 600.0549759820569,
+                "members": [
+                  {
+                    "G_hartree": -310.5400655096715,
+                    "index": 1,
+                    "pre_relax_wall_time_s": 2.4082336330320686,
+                    "rmsd_to_seed_angstrom": 3.5434558883679635e-06,
+                    "source": "fragment_embed:0",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 9,
+                "seed_dG_dagger_1M_kcal_mol": 24.18391903873362,
+                "seed_dG_dagger_1atm_kcal_mol": 26.078247484227898,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.017916292826252716,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 279,
+                    "rows_created": 10,
+                    "wall_time_s": 630.4657855361002
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 10,
+                    "rows_created": 10,
+                    "wall_time_s": 8.990250251139514
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 24,
+                    "rows_created": 10,
+                    "wall_time_s": 13.633833472034894
+                  }
+                },
+                "ts_id": "TS1a_x"
+              }
+            },
+            "ratio": 2361.849117783725,
+            "selectivity_percent": 99.915356423525,
+            "temperature_k": 298.15,
+            "tj_reference_ddG_dagger_kcal_mol": 4.3
+          },
+          "run_commit_sha": "1ce11b22abafe1479a0f00688b377034940c09ad",
+          "second_run_cache": {
+            "endo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.005427466006949544
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0011983311269432306
+              }
+            },
+            "exo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.005044718971475959
+              },
+              "ts_opt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0012378720566630363
+              }
+            },
+            "reactants": {
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              }
+            }
+          },
+          "selectivity": {
+            "ddG_dagger_kcal_mol": 4.601949169973042,
+            "kind": "de",
+            "major_pathway": "endo",
+            "ratio": 2361.849117783725,
+            "selectivity_percent": 99.915356423525,
+            "temperature_k": 298.15
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "ddG_dagger_above_0_5": {
+              "status": "pass",
+              "value_kcal_mol": 4.601949169973042
+            },
+            "endo_is_major": {
+              "major_pathway": "endo",
+              "status": "pass"
+            },
+            "no_engine_error_exclusions": {
+              "status": "pass"
+            },
+            "no_face_mismatch_exclusions": {
+              "status": "pass"
+            },
+            "per_pathway_dG_difference_equals_ddG": {
+              "ddG_dagger_kcal_mol": 4.601949169973042,
+              "per_pathway_difference_kcal_mol": 4.601949169973043,
+              "status": "pass"
+            },
+            "regression_endo_seed": {
+              "status": "pass"
+            },
+            "second_run_ensembles_all_hits": {
+              "status": "pass"
+            },
+            "second_run_equal_ensembles_and_score": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "seeds_converge_and_pass_member_gates": {
+              "status": "pass"
+            },
+            "window_ddG_dagger": {
+              "status": "pass",
+              "value_kcal_mol": 4.601949169973042,
+              "window": {
+                "high": 6.3,
+                "high_inclusive": true,
+                "low": 2.3,
+                "low_inclusive": true
+              }
+            }
+          }
+        },
+        "xtb": {
+          "ensembles": {
+            "endo": {
+              "G_pathway_hartree": -21.9389858468651,
+              "engine_error": 0,
+              "exclusions_by_reason": {
+                "ts_search_failed:no_reaction_mode": 1
+              },
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 87.98878331494052,
+              "n_excluded": 1,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 9,
+              "pre_relax_timeouts": 0
+            },
+            "exo": {
+              "G_pathway_hartree": -21.93264763104728,
+              "engine_error": 0,
+              "exclusions_by_reason": {},
+              "face_mismatch": 0,
+              "failed_reason": null,
+              "max_pre_relax_wall_time_s": 9.971242611994967,
+              "n_excluded": 0,
+              "n_flagged_merges": 0,
+              "n_members": 1,
+              "n_merges": 10,
+              "pre_relax_timeouts": 0
+            }
+          },
+          "failed_checks": [],
+          "regression": {
+            "note": "the v0.6.0 candidates are not yet TJ's fixtures (Phase 3)",
+            "status": "pending_promotion"
+          },
+          "reported": {
+            "gfn2_gate_definition": {
+              "ddG_dagger_greater_than_kcal_mol": 0.5,
+              "endo_major": true
+            },
+            "kind": "de",
+            "liu_header_ddG_dagger_kcal_mol": 4.273,
+            "pathways": {
+              "endo": {
+                "G_pathway_hartree": -21.9389858468651,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 12.935007776443975,
+                  "dG_dagger_1atm_kcal_mol": 14.829336221938254,
+                  "seed_to_ensemble_shift_kcal_mol": -8.593006990381004e-07
+                },
+                "exclusions_by_reason": {
+                  "ts_search_failed:no_reaction_mode": 1
+                },
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 87.98878331494052,
+                "members": [
+                  {
+                    "G_hartree": -21.9389858468651,
+                    "index": 7,
+                    "pre_relax_wall_time_s": 12.574027393013239,
+                    "rmsd_to_seed_angstrom": 4.3144687613954725e-06,
+                    "source": "perturb:5",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 9,
+                "seed_dG_dagger_1M_kcal_mol": 12.935008635744673,
+                "seed_dG_dagger_1atm_kcal_mol": 14.829337081238952,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.03551014289955319,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 314,
+                    "rows_created": 10,
+                    "wall_time_s": 132.14328381675296
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 10,
+                    "rows_created": 10,
+                    "wall_time_s": 16.810680388007313
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 29,
+                    "rows_created": 11,
+                    "wall_time_s": 21.3776649920037
+                  }
+                },
+                "ts_id": "TS1a_n"
+              },
+              "exo": {
+                "G_pathway_hartree": -21.93264763104728,
+                "ensemble_dG_dagger": {
+                  "dG_dagger_1M_kcal_mol": 16.912298250782634,
+                  "dG_dagger_1atm_kcal_mol": 18.80662669627691,
+                  "seed_to_ensemble_shift_kcal_mol": -4.516392107238916e-06
+                },
+                "exclusions_by_reason": {},
+                "failed_reason": null,
+                "max_pre_relax_wall_time_s": 20.65063657204155,
+                "members": [
+                  {
+                    "G_hartree": -21.93264763104728,
+                    "index": 7,
+                    "pre_relax_wall_time_s": 9.971242611994967,
+                    "rmsd_to_seed_angstrom": 6.704514333495095e-06,
+                    "source": "perturb:5",
+                    "weight": 1.0
+                  }
+                ],
+                "n_flagged_merges": 0,
+                "n_merges": 10,
+                "seed_dG_dagger_1M_kcal_mol": 16.91230276717474,
+                "seed_dG_dagger_1atm_kcal_mol": 18.806631212669018,
+                "seed_forming_core_rmsd_to_liu_angstrom": 0.012837179817253156,
+                "stage_metrics": {
+                  "constrained_preopt": {
+                    "cache_hits": 0,
+                    "engine_calls": 221,
+                    "rows_created": 10,
+                    "wall_time_s": 76.98447743500583
+                  },
+                  "frequency": {
+                    "cache_hits": 0,
+                    "engine_calls": 11,
+                    "rows_created": 11,
+                    "wall_time_s": 18.4373635398224
+                  },
+                  "ts_opt": {
+                    "cache_hits": 0,
+                    "engine_calls": 35,
+                    "rows_created": 11,
+                    "wall_time_s": 21.68088260665536
+                  }
+                },
+                "ts_id": "TS1a_x"
+              }
+            },
+            "ratio": 822.9513249264901,
+            "selectivity_percent": 99.75726721476194,
+            "temperature_k": 298.15,
+            "tj_reference_ddG_dagger_kcal_mol": 4.3
+          },
+          "run_commit_sha": "12730703bbc5d0f72a8aba7a835327ad06f4229c",
+          "second_run_cache": {
+            "endo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.004457023227587342
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0009624480735510588
+              }
+            },
+            "exo": {
+              "constrained_preopt": {
+                "cache_hits": 10,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0
+              },
+              "frequency": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.007272170158103108
+              },
+              "ts_opt": {
+                "cache_hits": 11,
+                "engine_calls": 0,
+                "rows_created": 0,
+                "wall_time_s": 0.0011599044082686305
+              }
+            },
+            "reactants": {
+              "cyclopentadiene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 3,
+                  "rows_created": 0
+                }
+              },
+              "cyclopropene": {
+                "conformer_search": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "frequency": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                },
+                "geometry_opt": {
+                  "cache_hits": 1,
+                  "rows_created": 0
+                }
+              }
+            }
+          },
+          "selectivity": {
+            "ddG_dagger_kcal_mol": 3.9772904743386586,
+            "kind": "de",
+            "major_pathway": "endo",
+            "ratio": 822.9513249264901,
+            "selectivity_percent": 99.75726721476194,
+            "temperature_k": 298.15
+          },
+          "test_outcome": "passed",
+          "tier_gates": {
+            "ddG_dagger_above_0_5": {
+              "status": "pass",
+              "value_kcal_mol": 3.9772904743386586
+            },
+            "endo_is_major": {
+              "major_pathway": "endo",
+              "status": "pass"
+            },
+            "no_engine_error_exclusions": {
+              "status": "pass"
+            },
+            "no_face_mismatch_exclusions": {
+              "status": "pass"
+            },
+            "per_pathway_dG_difference_equals_ddG": {
+              "ddG_dagger_kcal_mol": 3.9772904743386586,
+              "per_pathway_difference_kcal_mol": 3.977290474338659,
+              "status": "pass"
+            },
+            "regression_endo_seed": {
+              "status": "pass"
+            },
+            "second_run_ensembles_all_hits": {
+              "status": "pass"
+            },
+            "second_run_equal_ensembles_and_score": {
+              "status": "pass"
+            },
+            "second_run_reactants_all_hits": {
+              "status": "pass"
+            },
+            "seeds_converge_and_pass_member_gates": {
+              "status": "pass"
+            },
+            "window_ddG_dagger": {
+              "status": "reported",
+              "value_kcal_mol": 3.9772904743386586,
+              "window": {
+                "high": 6.3,
+                "high_inclusive": true,
+                "low": 2.3,
+                "low_inclusive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "transcription_confirmation": {
+      "note": "TJ confirms the three transcriptions at Phase 3",
+      "status": "pending_confirmation"
+    },
+    "transcriptions": {
+      "header_ddG": {
+        "rows": {
+          "mapped": {
+            "expected_kcal_mol": 1.849,
+            "observed_kcal_mol": 1.8486429105952598,
+            "tolerance_kcal_mol": 0.005
+          },
+          "unmapped": {
+            "expected_kcal_mol": 4.273,
+            "observed_kcal_mol": 4.273339518352841,
+            "tolerance_kcal_mol": 0.005
+          }
+        },
+        "status": "pass"
+      },
+      "sha256": {
+        "files": {
+          "P1b_x.xyz": {
+            "expected": "ca8706431f6e8b57662a3f65196a9ca3cba3288a4eda68308f7bc3c9699b5eec",
+            "observed": "ca8706431f6e8b57662a3f65196a9ca3cba3288a4eda68308f7bc3c9699b5eec"
+          },
+          "TS1a_x.xyz": {
+            "expected": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+            "observed": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60"
+          },
+          "TS1b_x.xyz": {
+            "expected": "2a0b8362cdd36464c5f3f7a196927005c1cc933f3fdc6a693ae0d56ff365fd82",
+            "observed": "2a0b8362cdd36464c5f3f7a196927005c1cc933f3fdc6a693ae0d56ff365fd82"
+          }
+        },
+        "status": "pass"
+      }
+    },
+    "unit_proof": {
+      "G1": {
+        "nodes": {
+          "test_degeneracy_two_is_g_minus_rt_ln_two": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_degeneracy_two_is_g_minus_rt_ln_two PASSED"
+          ],
+          "test_ee_refused_over_multi_member_ensembles": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_ee_refused_over_multi_member_ensembles PASSED"
+          ],
+          "test_fewer_than_two_pathways": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_fewer_than_two_pathways PASSED"
+          ],
+          "test_large_gap_does_not_overflow_or_clamp": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_large_gap_does_not_overflow_or_clamp PASSED"
+          ],
+          "test_literature_checks": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_literature_checks[1.7-89.2-0.5] PASSED",
+            "tests/unit/orchestrator/test_selectivity_score.py::test_literature_checks[1.849-91.5-0.05] PASSED",
+            "tests/unit/orchestrator/test_selectivity_score.py::test_literature_checks[4.273-99.85-0.05] PASSED"
+          ],
+          "test_mixed_reactant_sets": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_mixed_reactant_sets PASSED"
+          ],
+          "test_mixed_recipe_identities": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_mixed_recipe_identities[identity0] PASSED",
+            "tests/unit/orchestrator/test_selectivity_score.py::test_mixed_recipe_identities[identity1] PASSED",
+            "tests/unit/orchestrator/test_selectivity_score.py::test_mixed_recipe_identities[identity2] PASSED"
+          ],
+          "test_multi_member_pathways_and_degeneracy": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_multi_member_pathways_and_degeneracy PASSED"
+          ],
+          "test_permutation_invariance_is_exact": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_permutation_invariance_is_exact PASSED"
+          ],
+          "test_temperature_350": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_temperature_350 PASSED"
+          ],
+          "test_tie_is_fifty_fifty": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_tie_is_fifty_fifty PASSED"
+          ],
+          "test_two_single_member_pathways_closed_form": [
+            "tests/unit/orchestrator/test_selectivity_score.py::test_two_single_member_pathways_closed_form PASSED"
+          ]
+        },
+        "status": "pass"
+      },
+      "G4": {
+        "nodes": {
+          "test_a_face_flip_is_the_descriptor_not_the_geometry_label": [
+            "tests/unit/orchestrator/test_ts_ensemble.py::test_a_face_flip_is_the_descriptor_not_the_geometry_label PASSED"
+          ],
+          "test_core_is_exactly_the_seeds_and_the_face_is_kept": [
+            "tests/unit/conformers/test_ts_sampler.py::test_core_is_exactly_the_seeds_and_the_face_is_kept[TS1a_n] PASSED",
+            "tests/unit/conformers/test_ts_sampler.py::test_core_is_exactly_the_seeds_and_the_face_is_kept[TS1b_n] PASSED"
+          ],
+          "test_deterministic_and_seed_dependent": [
+            "tests/unit/conformers/test_ts_sampler.py::test_deterministic_and_seed_dependent[TS1a_n] PASSED",
+            "tests/unit/conformers/test_ts_sampler.py::test_deterministic_and_seed_dependent[TS1b_n] PASSED"
+          ],
+          "test_endo_is_plus_plus_and_the_crossover_is_minus_minus": [
+            "tests/unit/conformers/test_ts_sampler.py::test_endo_is_plus_plus_and_the_crossover_is_minus_minus[TS1a_n] PASSED",
+            "tests/unit/conformers/test_ts_sampler.py::test_endo_is_plus_plus_and_the_crossover_is_minus_minus[TS1b_n] PASSED"
+          ],
+          "test_every_exclusion_reason_is_recorded": [
+            "tests/unit/orchestrator/test_ts_ensemble.py::test_every_exclusion_reason_is_recorded PASSED"
+          ],
+          "test_invariant_under_reflection_and_rigid_motion": [
+            "tests/unit/conformers/test_ts_sampler.py::test_invariant_under_reflection_and_rigid_motion PASSED"
+          ],
+          "test_pre_relax_freezes_the_core_within_the_bound": [
+            "tests/unit/orchestrator/test_ts_ensemble.py::test_pre_relax_freezes_the_core_within_the_bound PASSED"
+          ],
+          "test_two_saddles_merge_copies": [
+            "tests/unit/orchestrator/test_ts_ensemble.py::test_two_saddles_merge_copies PASSED"
+          ],
+          "test_weights_and_free_energy_closed_form": [
+            "tests/unit/orchestrator/test_ts_ensemble.py::test_weights_and_free_energy_closed_form PASSED"
+          ]
+        },
+        "status": "pass"
+      },
+      "command_exit_code": 0
+    }
+  },
+  "hardware": {
+    "flags": [],
+    "gpu": {
+      "compute_capability": "12.0",
+      "free_vram_bytes": 6394806272,
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "total_vram_bytes": 8073248768,
+      "total_vram_gib": 7.52
+    },
+    "gpu4pyscf": {
+      "installed": true,
+      "version": "1.9.2"
+    },
+    "notes": [],
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "python_version": "3.12.16",
+    "report_schema": 1,
+    "torch": {
+      "cuda_available": true,
+      "cuda_version": "12.9",
+      "installed": true,
+      "version": "2.13.0+cu129"
+    },
+    "vram_budget_bytes": 6979321856,
+    "vram_budget_gib": 6.5
+  },
+  "known_limits": [
+    "Tier 4 ensembles are reported as measured (member count, exclusions by reason, merges); HF-10 expects one distinct member per pathway, so the Boltzmann sum is gated at unit level (G1, G4) and ΔΔG‡ equals the seed difference only when every ensemble has one member",
+    "a pre_relax_failed:PreRelaxTimeout exclusion (slice 13, R28) is reported, not gated; a change in member count or exclusions between runs is expected variation, not a failure",
+    "Q-RES1 is with TJ; no slice built under a Q-RES1 answer is part of this record"
+  ],
+  "logs": {
+    "acc_mapped_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 15 warnings in 484.95s (0:08:04)"
+    },
+    "acc_mapped_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected in 301.11s (0:05:01)"
+    },
+    "acc_unmapped_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 15 warnings in 935.53s (0:15:35)"
+    },
+    "acc_unmapped_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected in 293.28s (0:04:53)"
+    },
+    "accept_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 2 warnings in 9.39s"
+    },
+    "accept_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 1 deselected, 1 warning in 1.66s"
+    },
+    "flex_ethyl_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected, 15 warnings in 277.30s (0:04:37)"
+    },
+    "flex_ethyl_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected in 220.33s (0:03:40)"
+    },
+    "flex_nbutyl_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected, 15 warnings in 1001.34s (0:16:41)"
+    },
+    "flex_nbutyl_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected in 860.95s (0:14:20)"
+    },
+    "flex_npropyl_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected, 15 warnings in 254.70s (0:04:14)"
+    },
+    "flex_npropyl_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 5 deselected in 606.63s (0:10:06)"
+    },
+    "repro_mapped_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected, 15 warnings in 1313.02s (0:21:53)"
+    },
+    "repro_mapped_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected in 728.53s (0:12:08)"
+    },
+    "repro_unmapped_uma.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected, 15 warnings in 796.68s (0:13:16)"
+    },
+    "repro_unmapped_xtb.log": {
+      "exit_code": 0,
+      "summary": "1 passed, 3 deselected in 653.89s (0:10:53)"
+    },
+    "unit_proof.log": {
+      "exit_code": 0,
+      "summary": "77 passed in 8.46s"
+    }
+  },
+  "proposed_regression_bounds": {
+    "decided_by": "TJ at Phase 3",
+    "recipes": {
+      "uma": {
+        "abs_delta_ddG_dagger_kcal_mol": {
+          "basis": "tj_bound",
+          "measured_max": 0.0002280384621025089,
+          "measured_max_pair": "t4_mapped",
+          "proposed": 0.75,
+          "statement": "measured max 0.000228 <= 1/10 of TJ's 0.75: TJ's bound",
+          "tj_bound": 0.75
+        },
+        "abs_delta_ts_energy_hartree": {
+          "basis": "tj_bound",
+          "measured_max": 4.418518528837012e-08,
+          "measured_max_pair": "t4_unmapped",
+          "proposed": 1e-05,
+          "statement": "measured max 4.42e-08 <= 1/10 of TJ's 1e-05: TJ's bound",
+          "tj_bound": 1e-05
+        },
+        "heavy_rmsd_angstrom": {
+          "basis": "tj_bound",
+          "measured_max": 1.937582884652396e-07,
+          "measured_max_pair": "t4_mapped",
+          "proposed": 0.01,
+          "statement": "measured max 1.94e-07 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        },
+        "pairs_measured": [
+          "t4_mapped",
+          "t4_unmapped"
+        ],
+        "pairs_not_measured": []
+      },
+      "xtb": {
+        "abs_delta_ddG_dagger_kcal_mol": {
+          "basis": "tj_bound",
+          "measured_max": 0.0,
+          "measured_max_pair": "t4_unmapped",
+          "proposed": 0.01,
+          "statement": "measured max 0 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        },
+        "abs_delta_ts_energy_hartree": {
+          "basis": "tj_bound",
+          "measured_max": 0.0,
+          "measured_max_pair": "t4_unmapped",
+          "proposed": 1e-05,
+          "statement": "measured max 0 <= 1/10 of TJ's 1e-05: TJ's bound",
+          "tj_bound": 1e-05
+        },
+        "heavy_rmsd_angstrom": {
+          "basis": "tj_bound",
+          "measured_max": 9.064933036736789e-17,
+          "measured_max_pair": "t4_mapped",
+          "proposed": 0.01,
+          "statement": "measured max 9.06e-17 <= 1/10 of TJ's 0.01: TJ's bound",
+          "tj_bound": 0.01
+        },
+        "pairs_measured": [
+          "t4_mapped",
+          "t4_unmapped"
+        ],
+        "pairs_not_measured": []
+      }
+    },
+    "rule": "propose TJ's bound only if every measured difference of that recipe is <= 1/10 of it; otherwise propose 10x the measured maximum (slice 11 SPEC; the numeric bounds are TJ's)"
+  },
+  "record_schema": 1,
+  "reported_notes": {
+    "promotion": "the v0.6.0 candidates are not yet TJ's fixtures: regression is pending_promotion until TJ's Phase 3 review",
+    "regression_endo_seed": "the endo seed is compared in process with TJ's promoted v0.5.0 fixture (mission R6); that comparison is a gate, and distinct from the pending Tier 4 regression"
+  },
+  "reproducibility": {
+    "uma": {
+      "t4_mapped": {
+        "branch_changed": false,
+        "exclusion_changes": [
+          {
+            "exclusions_by_reason": [
+              {},
+              {
+                "pre_relax_failed:PreRelaxTimeout": 1
+              }
+            ],
+            "pathway": "exo",
+            "runs": [
+              "acceptance_run",
+              "fresh_store_1"
+            ]
+          },
+          {
+            "exclusions_by_reason": [
+              {
+                "pre_relax_failed:PreRelaxTimeout": 1
+              },
+              {}
+            ],
+            "pathway": "exo",
+            "runs": [
+              "fresh_store_1",
+              "fresh_store_2"
+            ]
+          }
+        ],
+        "max_abs_delta_ddG_dagger_kcal_mol": 0.0002280384621025089,
+        "max_abs_delta_ts_energy_hartree": 4.078634674442583e-08,
+        "max_heavy_rmsd_angstrom": 1.937582884652396e-07,
+        "member_count_changes": [],
+        "n_runs": 3,
+        "pre_relax_timeouts_in_repro_runs": 1,
+        "runs": {
+          "acceptance_run": {
+            "branch": "computed",
+            "ddG_dagger_kcal_mol": 1.4102108043211918,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -350.0008501467835,
+              "exo": -349.99887393667734
+            }
+          },
+          "fresh_store_1": {
+            "branch": "computed",
+            "ddG_dagger_kcal_mol": 1.410282543176499,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -350.0008501102227,
+              "exo": -349.99887396607295
+            }
+          },
+          "fresh_store_2": {
+            "branch": "computed",
+            "ddG_dagger_kcal_mol": 1.4104388427832943,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -350.00085015100905,
+              "exo": -349.9988739465983
+            }
+          }
+        },
+        "status": "measured"
+      },
+      "t4_unmapped": {
+        "branch_changed": false,
+        "exclusion_changes": [
+          {
+            "exclusions_by_reason": [
+              {
+                "pre_relax_failed:PreRelaxTimeout": 1
+              },
+              {}
+            ],
+            "pathway": "exo",
+            "runs": [
+              "acceptance_run",
+              "fresh_store_1"
+            ]
+          },
+          {
+            "exclusions_by_reason": [
+              {
+                "pre_relax_failed:PreRelaxTimeout": 1
+              },
+              {}
+            ],
+            "pathway": "exo",
+            "runs": [
+              "acceptance_run",
+              "fresh_store_2"
+            ]
+          }
+        ],
+        "max_abs_delta_ddG_dagger_kcal_mol": 4.6220905942639945e-05,
+        "max_abs_delta_ts_energy_hartree": 4.418518528837012e-08,
+        "max_heavy_rmsd_angstrom": 1.8627246407671128e-07,
+        "member_count_changes": [],
+        "n_runs": 3,
+        "pre_relax_timeouts_in_repro_runs": 0,
+        "runs": {
+          "acceptance_run": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 4.601949169973042,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -310.672335984244,
+              "exo": -310.6648055383521
+            }
+          },
+          "fresh_store_1": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 4.6019029490670995,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -310.67233601299654,
+              "exo": -310.6648055286148
+            }
+          },
+          "fresh_store_2": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 4.6019150465813095,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -310.6723360284292,
+              "exo": -310.66480551997984
+            }
+          }
+        },
+        "status": "measured"
+      }
+    },
+    "xtb": {
+      "t4_mapped": {
+        "branch_changed": false,
+        "exclusion_changes": [],
+        "max_abs_delta_ddG_dagger_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 9.064933036736789e-17,
+        "member_count_changes": [],
+        "n_runs": 3,
+        "pre_relax_timeouts_in_repro_runs": 0,
+        "runs": {
+          "acceptance_run": {
+            "branch": "pruned",
+            "ddG_dagger_kcal_mol": 1.7532240471091078,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -25.26211766444,
+              "exo": -25.25921307653
+            }
+          },
+          "fresh_store_1": {
+            "branch": "pruned",
+            "ddG_dagger_kcal_mol": 1.7532240471091078,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -25.26211766444,
+              "exo": -25.25921307653
+            }
+          },
+          "fresh_store_2": {
+            "branch": "pruned",
+            "ddG_dagger_kcal_mol": 1.7532240471091078,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -25.26211766444,
+              "exo": -25.25921307653
+            }
+          }
+        },
+        "status": "measured"
+      },
+      "t4_unmapped": {
+        "branch_changed": false,
+        "exclusion_changes": [],
+        "max_abs_delta_ddG_dagger_kcal_mol": 0.0,
+        "max_abs_delta_ts_energy_hartree": 0.0,
+        "max_heavy_rmsd_angstrom": 6.869154507002634e-17,
+        "member_count_changes": [],
+        "n_runs": 3,
+        "pre_relax_timeouts_in_repro_runs": 0,
+        "runs": {
+          "acceptance_run": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 3.9772904743386586,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -22.05931044712,
+              "exo": -22.05276005189
+            }
+          },
+          "fresh_store_1": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 3.9772904743386586,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -22.05931044712,
+              "exo": -22.05276005189
+            }
+          },
+          "fresh_store_2": {
+            "branch": null,
+            "ddG_dagger_kcal_mol": 3.9772904743386586,
+            "n_members": {
+              "endo": 1,
+              "exo": 1
+            },
+            "ts_energy_hartree": {
+              "endo": -22.05931044712,
+              "exo": -22.05276005189
+            }
+          }
+        },
+        "status": "measured"
+      }
+    }
+  },
+  "run_at_utc": "2026-11-25T19:57:59+00:00"
+}

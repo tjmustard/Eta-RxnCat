@@ -1128,3 +1128,232 @@ def test_v050_claims_refused_on_fail_or_without_record() -> None:
     assert len(problems) == len(V050_CLAIMS) and all("has no verdict" in p for p in problems)
     assert len(check_v050_claims(readme(), None)) == len(V050_CLAIMS)
     assert check_v050_claims("no claims here", None) == []
+
+
+# v0.6.0 claims derived from the pre-promotion acceptance record (slice 11) ---------------------
+
+V060_RECORD = REPO / "docs" / "prd" / "v0.6.0" / "ACCEPTANCE_RESULT.json"
+V060_PAIRS = ("t4_unmapped", "t4_mapped")
+V060_FLEX = ("ethyl", "npropyl", "nbutyl")
+
+
+def _v060_entries(record: dict[str, Any]) -> list[dict[str, Any]]:
+    t4 = record["fixtures"]["t4"]
+    if set(t4) != set(V060_PAIRS) or any(set(t4[p]) != {"xtb", "uma"} for p in t4):
+        raise KeyError("fixtures.t4 is not every pair x recipe")
+    return [t4[p][r] for p in V060_PAIRS for r in ("xtb", "uma")]
+
+
+def _v060_gate(entry: dict[str, Any], name: str) -> bool:
+    return bool(entry["tier_gates"][name]["status"] == "pass")
+
+
+def _v060_flex(record: dict[str, Any]) -> list[dict[str, Any]]:
+    flex = record["fixtures"]["flexible_ensemble"]
+    if set(flex) != set(V060_FLEX) or any(set(flex[r]) != {"xtb", "uma"} for r in flex):
+        raise KeyError("fixtures.flexible_ensemble is not every R x recipe")
+    return [flex[r][x] for r in V060_FLEX for x in ("xtb", "uma")]
+
+
+def _v060_gates_pass(entry: dict[str, Any]) -> bool:
+    return entry["test_outcome"] == "passed" and all(
+        g["status"] in ("pass", "reported") for g in entry["tier_gates"].values()
+    )
+
+
+def _v060_pending_promotion(record: dict[str, Any]) -> bool:
+    """Every gate passes on both recipes; the regression and the transcriptions await TJ."""
+    entries = [*_v060_entries(record), *_v060_flex(record)]
+    unit = record["fixtures"]["unit_proof"]
+    return (
+        "verdict" not in record
+        and all(_v060_gates_pass(e) for e in entries)
+        and all(e["regression"]["status"] == "pending_promotion" for e in entries)
+        and unit["G1"]["status"] == "pass"
+        and unit["G4"]["status"] == "pass"
+        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    )
+
+
+def _v060_selectivity_gates(record: dict[str, Any]) -> bool:
+    return all(
+        _v060_gate(e, "endo_is_major")
+        and _v060_gate(e, "ddG_dagger_above_0_5")
+        and _v060_gate(e, "no_engine_error_exclusions")
+        and _v060_gate(e, "no_face_mismatch_exclusions")
+        and _v060_gate(e, "regression_endo_seed")
+        for e in _v060_entries(record)
+    )
+
+
+def _v060_uma_windows(record: dict[str, Any]) -> bool:
+    t4 = record["fixtures"]["t4"]
+    return all(_v060_gate(t4[p]["uma"], "window_ddG_dagger") for p in V060_PAIRS) and (
+        t4["t4_unmapped"]["uma"]["tier_gates"]["window_ddG_dagger"]["window"]["low"] == 2.3
+        and t4["t4_unmapped"]["uma"]["tier_gates"]["window_ddG_dagger"]["window"]["high"] == 6.3
+        and t4["t4_mapped"]["uma"]["tier_gates"]["window_ddG_dagger"]["window"]["low"] == 0.5
+        and t4["t4_mapped"]["uma"]["tier_gates"]["window_ddG_dagger"]["window"]["high"] == 3.8
+    )
+
+
+def _v060_pruning(record: dict[str, Any]) -> bool:
+    mapped = record["fixtures"]["t4"]["t4_mapped"]
+    xtb, uma = mapped["xtb"], mapped["uma"]
+    return bool(
+        xtb["tier_gates"]["pruning_g6"]["status"] == "pass"
+        and uma["tier_gates"]["pruning_g6"]["status"] == "pass"
+        and xtb["tier_gates"]["pruning_g6"]["threshold_kcal_mol"] == 1.5
+        and xtb["tier_gates"]["pruning_g6"]["branch"] == "pruned"
+        and uma["tier_gates"]["pruning_g6"]["branch"] == "computed"
+        and round(xtb["selectivity"]["ddG_dagger_kcal_mol"], 2) == 1.75
+        and round(uma["selectivity"]["ddG_dagger_kcal_mol"], 2) == 1.41
+    )
+
+
+def _v060_flexible(record: dict[str, Any]) -> bool:
+    return all(
+        _v060_gates_pass(e)
+        and e["tier_gates"]["distinct_members_at_least_2"]["status"] == "pass"
+        and e["tier_gates"]["weights_sum_to_one"]["status"] == "pass"
+        and e["tier_gates"]["second_pass_all_hits_equal_ensemble"]["status"] == "pass"
+        for e in _v060_flex(record)
+    )
+
+
+def _v060_transcriptions(record: dict[str, Any]) -> bool:
+    tr = record["fixtures"]["transcriptions"]
+    return (
+        tr["sha256"]["status"] == "pass"
+        and tr["header_ddG"]["status"] == "pass"
+        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    )
+
+
+V060_CLAIMS = (
+    (
+        "TS conformer ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and selectivity %) and "
+        "TJ's pathway-pruning rule ran on TJ's two Tier 4 endo/exo pairs with both the xtb (GFN2) "
+        "and UMA recipes; Tier 4 regression pending TJ promotion.",
+        _v060_pending_promotion,
+    ),
+    (
+        "On both recipes and both pairs, endo is the major pathway with a Boltzmann-summed ΔΔG‡ "
+        "above 0.5 kcal/mol, no ensemble excludes a sample as engine_error or face_mismatch, and "
+        "the endo seed reproduces TJ's promoted v0.5.0 fixture.",
+        _v060_selectivity_gates,
+    ),
+    (
+        "With UMA, ΔΔG‡ lies in TJ's windows: [2.3, 6.3] kcal/mol for the unmapped pair and "
+        "(0.5, 3.8] for the mapped pair.",
+        _v060_uma_windows,
+    ),
+    (
+        "TJ's 1.5 kcal/mol pruning rule prunes the minor exo branch with GFN2 (ΔΔG‡ +1.75 "
+        "kcal/mol) and computes it with UMA (+1.41 kcal/mol).",
+        _v060_pruning,
+    ),
+    (
+        "Flexible ensembles are real: R = ethyl, n-propyl and n-butyl grafted onto TS1a_n give at "
+        "least two distinct members on GFN2 and UMA, with unit weights, the seed's face and a "
+        "second pass of all cache hits.",
+        _v060_flexible,
+    ),
+    (
+        "The three new Tier 4 structures match their recorded sha256s and reproduce Liu's header "
+        "ΔΔG‡ (+4.273 and +1.849 kcal/mol); TJ's confirmation of the transcriptions is pending.",
+        _v060_transcriptions,
+    ),
+    (
+        "**v0.6.0**: selectivity branching and competing transition-state screening; Tier 4 "
+        "regression pending TJ promotion.",
+        _v060_pending_promotion,
+    ),
+)
+
+
+def check_v060_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
+    """Each v0.6.0 README claim is present and true of the record; none without a record.
+
+    A claim needs its checks ``pass``; a pending check needs the "pending TJ" wording, so a
+    settled promotion is drift too. A ``verdict`` of ``fail`` refuses every claim (R56).
+    """
+    text = " ".join(readme_text.split())
+    present = [phrase for phrase, _ in V060_CLAIMS if phrase in text]
+    if record is None:
+        return [f"README claims {p[:40]!r}… but there is no v0.6.0 record" for p in present]
+    if record.get("verdict") == "fail":
+        return [f"README claims {p[:40]!r}… but the record's verdict is fail" for p in present] or [
+            "the v0.6.0 record's verdict is fail"
+        ]
+    problems = []
+    for phrase, holds in V060_CLAIMS:
+        if phrase not in text:
+            problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
+        elif not _holds(holds, record):
+            problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
+    if "](docs/prd/v0.6.0/ACCEPTANCE_RESULT.json)" not in text:
+        problems.append(
+            "record present, but no Markdown link to docs/prd/v0.6.0/ACCEPTANCE_RESULT.json"
+        )
+    return problems
+
+
+def _v060_record() -> dict[str, Any]:
+    return dict(json.loads(V060_RECORD.read_text(encoding="utf-8")))
+
+
+def test_readme_v060_claims_match_record() -> None:
+    """Every README v0.6.0 claim is derived from (and true of) the v0.6.0 record."""
+    record = _v060_record() if V060_RECORD.is_file() else None
+    assert check_v060_claims(readme(), record) == []
+    assert project_version() == "0.5.0"
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda r: r["fixtures"]["t4"]["t4_unmapped"]["uma"]["tier_gates"]["endo_is_major"].update(
+            status="fail"
+        ),
+        lambda r: r["fixtures"]["t4"]["t4_mapped"]["xtb"]["tier_gates"][
+            "ddG_dagger_above_0_5"
+        ].update(status="missing"),
+        lambda r: r["fixtures"]["t4"]["t4_unmapped"]["xtb"]["tier_gates"][
+            "no_face_mismatch_exclusions"
+        ].update(status="fail"),
+        lambda r: r["fixtures"]["t4"]["t4_mapped"]["uma"]["tier_gates"]["window_ddG_dagger"].update(
+            status="fail"
+        ),
+        lambda r: r["fixtures"]["t4"]["t4_mapped"]["xtb"]["tier_gates"]["pruning_g6"].update(
+            branch="computed"
+        ),
+        lambda r: r["fixtures"]["t4"]["t4_mapped"]["uma"]["selectivity"].update(
+            ddG_dagger_kcal_mol=2.0
+        ),
+        lambda r: r["fixtures"]["t4"]["t4_unmapped"]["uma"]["regression"].update(status="pass"),
+        lambda r: r["fixtures"]["flexible_ensemble"]["nbutyl"]["uma"]["tier_gates"][
+            "distinct_members_at_least_2"
+        ].update(status="fail"),
+        lambda r: r["fixtures"]["flexible_ensemble"]["ethyl"]["xtb"].update(test_outcome="missing"),
+        lambda r: r["fixtures"]["flexible_ensemble"].pop("npropyl"),
+        lambda r: r["fixtures"]["unit_proof"]["G4"].update(status="fail"),
+        lambda r: r["fixtures"]["transcriptions"]["sha256"].update(status="fail"),
+        lambda r: r["fixtures"]["transcription_confirmation"].update(status="pass"),
+        lambda r: r["fixtures"]["t4"].pop("t4_mapped"),
+    ],
+)
+def test_v060_claim_check_catches_drift(change: Any) -> None:
+    """A failed, missing or settled check the README words otherwise is caught."""
+    record = _v060_record()
+    change(record)
+    assert any("not what the record shows" in p for p in check_v060_claims(readme(), record))
+
+
+def test_v060_claims_refused_on_fail_or_without_record() -> None:
+    """A fail verdict refuses every claim; no record refuses any claim present."""
+    record = _v060_record()
+    record["verdict"] = "fail"
+    problems = check_v060_claims(readme(), record)
+    assert len(problems) == len(V060_CLAIMS) and all("verdict is fail" in p for p in problems)
+    assert len(check_v060_claims(readme(), None)) == len(V060_CLAIMS)
+    assert check_v060_claims("no claims here", None) == []

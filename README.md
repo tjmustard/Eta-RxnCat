@@ -191,6 +191,28 @@ activation free energy. Everything beyond it is listed under [Roadmap](#-roadmap
 - The six new Tier 3 structures match their recorded sha256s and reproduce Liu's energies within
   1e-4 Eh where Liu prints one; TJ confirmed the transcriptions.
 
+### Selectivity branching and TS ensembles (v0.6.0, pre-release)
+
+Not released: the version is still 0.5.0 until TJ promotes the Tier 4 regression. The
+pre-promotion acceptance record ([ACCEPTANCE_RESULT.json](docs/prd/v0.6.0/ACCEPTANCE_RESULT.json))
+shows:
+
+- TS conformer ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and selectivity %) and TJ's
+  pathway-pruning rule ran on TJ's two Tier 4 endo/exo pairs with both the xtb (GFN2) and UMA
+  recipes; Tier 4 regression pending TJ promotion.
+- On both recipes and both pairs, endo is the major pathway with a Boltzmann-summed ΔΔG‡ above 0.5
+  kcal/mol, no ensemble excludes a sample as engine_error or face_mismatch, and the endo seed
+  reproduces TJ's promoted v0.5.0 fixture.
+- With UMA, ΔΔG‡ lies in TJ's windows: [2.3, 6.3] kcal/mol for the unmapped pair and (0.5, 3.8]
+  for the mapped pair.
+- TJ's 1.5 kcal/mol pruning rule prunes the minor exo branch with GFN2 (ΔΔG‡ +1.75 kcal/mol) and
+  computes it with UMA (+1.41 kcal/mol).
+- Flexible ensembles are real: R = ethyl, n-propyl and n-butyl grafted onto TS1a_n give at least
+  two distinct members on GFN2 and UMA, with unit weights, the seed's face and a second pass of
+  all cache hits.
+- The three new Tier 4 structures match their recorded sha256s and reproduce Liu's header ΔΔG‡
+  (+4.273 and +1.849 kcal/mol); TJ's confirmation of the transcriptions is pending.
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
@@ -336,7 +358,8 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.6.0**: selectivity branching and competing transition-state screening.
+- **v0.6.0**: selectivity branching and competing transition-state screening; Tier 4 regression
+  pending TJ promotion.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.
 - **v0.9.0**: covalent topology audit, summary reporting and an end-to-end fixture harness.
