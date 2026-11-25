@@ -10,7 +10,7 @@ intent: "Add run_selectivity and evaluate_pathway_pruning: ensembles per priorit
 depends_on: [OPR.0.6.0.4, OPR.0.6.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -80,10 +80,10 @@ and `run_species`.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read slices 02/04/06 code, `run_species`.
-- [ ] Task 2: `evaluate_pathway_pruning` + tests.
-- [ ] Task 3: `run_selectivity` + tests with stub engines.
-- [ ] Task 4: required checks; commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read slices 02/04/06 code, `run_species`.
+- [x] Task 2: `evaluate_pathway_pruning` + tests.
+- [x] Task 3: `run_selectivity` + tests with stub engines.
+- [x] Task 4: required checks; commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
