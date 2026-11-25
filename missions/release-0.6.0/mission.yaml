@@ -1,0 +1,49 @@
+schema: openrig.mission/v0alpha1
+kind: mission
+# The project proof rollup counts only missions whose status is active or
+# release-candidate. A new mission is planned, so it stays outside the rollup
+# until you change this to active (or release-candidate).
+metadata:
+  name: "release-0.6.0"
+  status: planned
+composition:
+  mission_markdown:
+    spec: SPEC.md
+  slices:
+    - ref: slices/01-starter/slice.yaml
+      order: 10
+      active: true
+    - ref: slices/02-core-contracts/slice.yaml
+      order: 20
+      active: true
+    - ref: slices/03-engine-error/slice.yaml
+      order: 30
+      active: true
+    - ref: slices/04-scorer/slice.yaml
+      order: 40
+      active: true
+    - ref: slices/05-ts-sampler/slice.yaml
+      order: 50
+      active: true
+    - ref: slices/06-ts-ensemble/slice.yaml
+      order: 60
+      active: true
+    - ref: slices/07-selectivity-runner/slice.yaml
+      order: 70
+      active: true
+    - ref: slices/08-tier4-inputs/slice.yaml
+      order: 80
+      active: true
+    - ref: slices/09-e2e-unmapped/slice.yaml
+      order: 90
+      active: true
+    - ref: slices/10-e2e-mapped-pruning/slice.yaml
+      order: 100
+      active: true
+    - ref: slices/11-acceptance-record/slice.yaml
+      order: 110
+      active: true
+    - ref: slices/12-acceptance-verdict/slice.yaml
+      order: 120
+      active: true
+# Optional team and SDLC sections are added here.

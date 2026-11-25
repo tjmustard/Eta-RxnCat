@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 41
+  ADR: 47
   STORY: 0
   CANON: 0
 nodes:
@@ -1675,3 +1675,257 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0.15
+- id: ADR-0042
+  type: decision
+  title: TS ensemble members must keep their seed's relative configuration across
+    every forming bond (face check)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0042-ts-ensemble-members-must-keep-their-seed-s-relative-configur.md
+  content_sha256: 40a6d455928b6a12fcea26fd9737599cb24f4157d7462180595f3ef5987406bc
+  anchors:
+    components:
+    - eta_rxncat_conformers
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/mapping/report.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/conformers/ts_sampler.py
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:07+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:07+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
+- id: ADR-0043
+  type: decision
+  title: TS conformer sampler is per-fragment ETKDGv3 anchored on the seed plus seeded
+    non-core perturbation; pre-relax cached as constrained_preopt
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0043-ts-conformer-sampler-is-per-fragment-etkdgv3-anchored-on-the.md
+  content_sha256: 7aa0a8d6ae3de7149f75faeec9da588e3748140f4ba3948fcaca0c1de9ee0cee
+  anchors:
+    components:
+    - eta_rxncat_conformers
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/conformers/generate.py
+    - src/eta_rxncat/mapping/relax.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/conformers/ts_sampler.py
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+  relates_to:
+  - ADR-0025
+  - ADR-0032
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:07+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:07+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
+- id: ADR-0044
+  type: decision
+  title: TS ensemble dedup merges on shape and face only; Boltzmann sum with degeneracy
+    inside a 3.0 kcal/mol window
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0044-ts-ensemble-dedup-merges-on-shape-and-face-only-boltzmann-su.md
+  content_sha256: 1e1c1d7fddb43a6c73c397deef969773317c27d8a679734d3e918a58cb2aed10
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files: []
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    - src/eta_rxncat/orchestrator/selectivity.py
+  relates_to:
+  - ADR-0025
+  - ADR-0036
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:07+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:07+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
+- id: ADR-0045
+  type: decision
+  title: run_transition_state caches EngineRuntimeError as engine_error; unavailable
+    and input errors re-raise uncached
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0045-run-transition-state-caches-engineruntimeerror-as-engine-err.md
+  content_sha256: f8105a5f99d17dd33bca35bb79d9608ffbd28a3caba2b11651d9567421ddf87b
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    - eta_rxncat_engines
+    files:
+    - src/eta_rxncat/orchestrator/ts.py
+    - src/eta_rxncat/engines/errors.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0038
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:07+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:07+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
+- id: ADR-0046
+  type: decision
+  title: Typed PathwayPruningRule prunes the computed minor pathway's priority>=2
+    nodes when ddG dagger exceeds a required threshold
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0046-typed-pathwaypruningrule-prunes-the-computed-minor-pathway-s.md
+  content_sha256: 2e699fb1d1a3eea414676a698e809adc7b095d698614cb0b192a4939db0e3526
+  anchors:
+    components:
+    - eta_rxncat_core
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/core/graph.py
+    symbols: []
+  planned:
+    components: []
+    files:
+    - src/eta_rxncat/core/selectivity_models.py
+    - src/eta_rxncat/orchestrator/selectivity.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:08+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:08+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
+- id: ADR-0047
+  type: decision
+  title: GFN2 gates convergence, mode count and the TS identity core; UMA gates all
+    plus windows (supersedes ADR-0037)
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0047-gfn2-gates-convergence-mode-count-and-the-ts-identity-core-u.md
+  content_sha256: 4d79e83dea212029dbed7a9dddd80320941a39393c06ca3e70b3cc9e8f0d8c9d
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    - eta_rxncat_thermo
+    files:
+    - tests/e2e/t3.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to: []
+  supersedes:
+  - ADR-0037
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-25T06:46:08+00:00'
+    source: OPR.0.6.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-25T06:46:08+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.6.0
