@@ -10,7 +10,7 @@ intent: "Make run_transition_state cache an EngineRuntimeError as failed_reason 
 depends_on: [OPR.0.6.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["src/eta_rxncat/orchestrator/**", "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -71,10 +71,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts.py`, `engines/errors.py`.
-- [ ] Task 2: the two `except EngineRuntimeError` clauses and the docstring.
-- [ ] Task 3: `tests/unit/orchestrator/test_ts_engine_error.py`; required checks.
-- [ ] Task 4: commit; updater once (node `eta_rxncat_species_runner`).
+- [x] Task 1: codegraph index → `index: ok`; record Start; read `orchestrator/ts.py`, `engines/errors.py`.
+- [x] Task 2: the two `except EngineRuntimeError` clauses and the docstring.
+- [x] Task 3: `tests/unit/orchestrator/test_ts_engine_error.py`; required checks.
+- [x] Task 4: commit; updater once (node `eta_rxncat_species_runner`).
 
 ## 4. The Negative Space (Constraints)
 
