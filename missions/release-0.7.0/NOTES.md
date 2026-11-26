@@ -29,6 +29,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.13) Slice 13: the literal network scan cannot pass on the vendored 3Dmol, its licence or eta-view.js (SVG namespace); lead ruling A qitem-20261126131940-8fe50cb7. All 325 real trajectories fit at stride 1; fallback rank-1 attempts appear only in the Fallbacks cell, with no trajectory in the bundle. M12 driver and evidence: slices/13-review-bundle-and-record/proof/m12. anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.15) With seed_checks on, the stub surface of test_ts_ensemble flags most perturbed samples bond_changed:pre_relax because the fake minimizer returns the noisy start unrelaxed; tests that need clean samples must restore the seed geometry in the minimizer. anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.16) read_run_data lenient twin made every field required; optional RunData keys need their defaults kept. UMA cached-row replay needs the mlip-uma extra (throwaway UV_PROJECT_ENVIRONMENT, _load stubbed). anchors: none
+- 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.17) Rerunning on a copied store: rows of samples that are now excluded before any engine call stay in the copy, so a record that re-derives per-sample stage keys from the store must skip them, or it reports keys and stalls the run never used (fixed in tests/e2e/v070.py, defd982). anchors: none
 
 ## Lore capture
 

@@ -10,7 +10,7 @@ intent: "Rerun all 11 v0.7.0 E2E units and the 4 score commands on copies of the
 depends_on: [OPR.0.7.0.16]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.7.0/**", spec/compiled/architecture.yml]
@@ -140,13 +140,13 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index; check the start gate (TJ's answer or the lead's go).
-- [ ] Create the state directory (refuse if present); back up the four stores; record their sha256
+- [x] Index; check the start gate (TJ's answer or the lead's go).
+- [x] Create the state directory (refuse if present); back up the four stores; record their sha256
   and row counts.
-- [ ] Candidate-only commit: `git rm` the old candidates and review tree.
-- [ ] Per unit: host check, then run; after all, row counts, the dG‡/ddG‡ table, and the
+- [x] Candidate-only commit: `git rm` the old candidates and review tree.
+- [x] Per unit: host check, then run; after all, row counts, the dG‡/ddG‡ table, and the
   `seed_clash` set against the measurement.
-- [ ] Candidate-only commit of the fresh records; progress commit; updater once.
+- [x] Candidate-only commit of the fresh records; progress commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -158,12 +158,12 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] The store copies: source and copy sha256, and row counts before and after.
-- [ ] Per unit: host check, env, wall time, exit code, rows added (0), gates, and the dG‡/ddG‡
+- [x] The store copies: source and copy sha256, and row counts before and after.
+- [x] Per unit: host check, env, wall time, exit code, rows added (0), gates, and the dG‡/ddG‡
   against 9fdba68.
-- [ ] The `seed_clash` set against `cov_margin.out`; the stall count.
-- [ ] `git show --stat` of both candidate-only commits.
-- [ ] Required checks exit 0.
+- [x] The `seed_clash` set against `cov_margin.out`; the stall count.
+- [x] `git show --stat` of both candidate-only commits.
+- [x] Required checks exit 0.
 
 ## Source material
 
