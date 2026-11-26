@@ -10,7 +10,7 @@ intent: "Graft every library entry onto every declared (node, template) with eta
 depends_on: [OPR.0.7.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: blocked
+hacf_status: executed
 node_id: eta_rxncat_enumerator
 parent: null
 hacf_touches: [src/eta_rxncat/mapping/enumerator.py, "tests/unit/mapping/test_enumerator*.py", src/eta_rxncat/core/enumeration_models.py, tests/unit/core/test_enumeration_models.py, spec/compiled/architecture.yml]
@@ -176,13 +176,13 @@ doublet on the real fragments); the frozen-index rule has no fixture user (no e2
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Core: `GraftRecord.whole_input_charge_sum_holds_bool` + docstrings + core unit test (R30.A).
-- [ ] `mapping/enumerator.py`: plan walk, per-order graft, eligibility, charge, records.
-- [ ] Cross-node invariant and candidate assembly (dropped-template detail, frozen-index remap).
-- [ ] `map_template_indices`, `projected_ts_searches`.
-- [ ] Tests `tests/unit/mapping/test_enumerator.py` (+ `_charge`, `_crossnode` files if large).
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] Core: `GraftRecord.whole_input_charge_sum_holds_bool` + docstrings + core unit test (R30.A).
+- [x] `mapping/enumerator.py`: plan walk, per-order graft, eligibility, charge, records.
+- [x] Cross-node invariant and candidate assembly (dropped-template detail, frozen-index remap).
+- [x] `map_template_indices`, `projected_ts_searches`.
+- [x] Tests `tests/unit/mapping/test_enumerator.py` (+ `_charge`, `_crossnode` files if large).
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 

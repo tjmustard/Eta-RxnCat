@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | OPR.0.7.0.1 | 01-starter-graph-split | audited |  | 2026-11-26T02:36:08+00:00 audited |
 | OPR.0.7.0.2 | 02-core-contracts | audited | OPR.0.7.0.1 | 2026-11-26T03:03:33+00:00 audited |
-| OPR.0.7.0.3 | 03-single-site-enumerator | blocked | OPR.0.7.0.2 | 2026-11-26T03:06:10+00:00 blocked |
+| OPR.0.7.0.3 | 03-single-site-enumerator | executed | OPR.0.7.0.2 | 2026-11-26T03:43:29+00:00 executed |
 | OPR.0.7.0.4 | 04-multi-site-product | compiled | OPR.0.7.0.3 | 2026-11-26T01:14:11+00:00 compiled |
 | OPR.0.7.0.5 | 05-ts-seed-fallback | compiled | OPR.0.7.0.3 | 2026-11-26T01:14:11+00:00 compiled |
 | OPR.0.7.0.6 | 06-frame-capture | compiled | OPR.0.7.0.2 | 2026-11-26T01:16:05+00:00 compiled |
