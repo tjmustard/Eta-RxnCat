@@ -1270,8 +1270,8 @@ V060_CLAIMS = (
     ),
     (
         "Flexible ensembles are real: R = ethyl, n-propyl and n-butyl grafted onto TS1a_n give at "
-        "least two distinct members on GFN2 and UMA, with unit weights, the seed's face and a "
-        "second pass of all cache hits.",
+        "least two distinct members on GFN2 and UMA, with weights summing to 1, the seed's face "
+        "and a second pass of all cache hits.",
         _v060_flexible,
     ),
     (

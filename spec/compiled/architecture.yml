@@ -83,30 +83,27 @@ nodes:
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
   description: >-
-    eta_rxncat.core: frozen, extra=forbid, strict Pydantic v2 contracts and the ReactionGraph
+    eta_rxncat.core: frozen, extra=forbid, strict Pydantic v2 contracts and ReactionGraph
     loader. elements.py: Z 1-118. models.py: MolecularState (symbols, finite Angstrom
     coords, charge, multiplicity parity, active atoms); Solvation; StageConfig (kind
     incl. ts_opt, constrained_preopt frozen atoms, basis iff pyscf); EngineIdentity;
     AtomMappingSpec; ThermoConfig. results.py: PotentialResult (atomic units: energy,
-    forces, symmetric Hessian, engine, device, wall time). thermo_models.py: ThermoAnalysisOptions;
+    forces, symmetric Hessian, engine, device, wall time). thermo_models.py: ThermoAnalysisOptions,
     ThermoResult (E, ZPE, H/G corrections, entropy parts, frequencies, G). optimization_models.py:
-    OptimizerIdentity (geometric|prfo); OptimizationResult. ensemble_models.py: ConformerRecord;
-    ConformerEnsemble (weights sum 1). mapping_models.py (v0.4.0): GraftSpec; GraftResult;
-    CloseContact; JunctionVolume. ts_models.py (v0.5.0): FormingBond; TSStep; TSSearchResult;
-    TSValidationOptions (A2 -20/-50/0.60); TSValidation (reasons from TS_VALIDATION_REASONS);
-    TransitionStateRecord (one imaginary, degeneracy 1). graph.py: ReactionGraph (nodes,
-    edges, templates, inert free-form PruningRule; v0.6.0 optional ReactionNode.pathway
-    and typed PathwayPruningRule: ddG_dagger metric, two distinct pathways labelling
-    priority-1 nodes, required threshold > 0, prune minor priority>=2; rule ids unique
-    across both lists). selectivity_models.py (v0.6.0, R7/R8/R16-R19/R25): TSEnsembleOptions
-    (keyed defaults); TSEnsembleMember (source seed|fragment_embed:k|perturb:k, start
-    sha256, G, degeneracy, face +-1, weight, pre-relax wall time); TSEnsembleExclusion
-    (closed reason set); TSEnsembleMerge; TSEnsemble (pathway, T, reactant_key, recipe
-    EngineIdentity; weights sum 1 within 1e-12; G_pathway xor failed_reason); PruningDecision
-    and SelectivityResult (signed ddG keyed '<b>_vs_<a>' = G_b - G_a; ratio >= 1,
-    +inf only on overflow; percent 0-100; kind ee|de|regio; per_pathway PathwaySelectivity).
-    io.py: YAML/JSON load (GraphValidationError), JSON dump. Stdlib, pydantic, yaml
-    only (no numpy/RDKit, G8).
+    OptimizerIdentity (geometric|prfo), OptimizationResult. ensemble_models.py: ConformerRecord,
+    ConformerEnsemble (weights sum 1). mapping_models.py: GraftSpec, GraftResult,
+    CloseContact, JunctionVolume. ts_models.py: FormingBond, TSStep, TSSearchResult,
+    TSValidationOptions (-20/-50/0.60), TSValidation (TS_VALIDATION_REASONS), TransitionStateRecord
+    (one imaginary, degeneracy 1). graph.py: ReactionGraph (nodes, edges, templates,
+    free-form PruningRule; optional pathway, typed PathwayPruningRule: ddG_dagger,
+    two distinct pathways on priority-1 nodes, threshold > 0, prune minor priority>=2;
+    rule ids unique across both lists). selectivity_models.py: TSEnsembleOptions (keyed
+    defaults), Member (source seed|fragment_embed:k|perturb:k, start sha256, G, degeneracy,
+    face +-1, weight, pre-relax time), Exclusion (closed reasons), Merge, TSEnsemble
+    (weights sum 1 within 1e-12; G_pathway xor failed_reason); PruningDecision, SelectivityResult
+    (signed ddG '<b>_vs_<a>' = G_b - G_a; ratio >= 1, +inf only on overflow; percent
+    0-100; kind ee|de|regio). io.py: YAML/JSON load (GraphValidationError), JSON dump.
+    Stdlib, pydantic, yaml only (no numpy/RDKit).
   inputs:
   - data_type: reaction_graph_file_yaml_or_json
     external: graph_files
@@ -269,6 +266,7 @@ nodes:
     depends_on:
     - eta_rxncat_core
     - eta_rxncat_hw_probe
+    - eta_rxncat_review
     implements: []
     member_of: []
   provenance:
@@ -518,37 +516,34 @@ nodes:
   status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
-  - src/eta_rxncat/orchestrator/**
+  - src/eta_rxncat/orchestrator/species.py
+  - src/eta_rxncat/orchestrator/ts.py
+  - src/eta_rxncat/orchestrator/reaction.py
+  - src/eta_rxncat/orchestrator/barrier.py
+  - src/eta_rxncat/orchestrator/report.py
+  - src/eta_rxncat/orchestrator/counting.py
   - tests/unit/orchestrator/**
   - tests/e2e/**
   - tests/candidate_outputs/v0.3.0/**
   - tests/candidate_outputs/v0.5.0/**
   - tests/candidate_outputs/v0.6.0/**
+  - tests/candidate_outputs/v0.7.0/**
   description: >-
-    eta_rxncat.orchestrator (v0.3.0; TS 0.5.0; selectivity, ensemble 0.6.0): species
-    stage runner (TJ Q4 C); __init__ exports load lazily (R26). selectivity.py: score_selectivity
-    pure (log-sum-exp G_p, ddG, ratio inf on overflow, 100 tanh(x/2), softmax, signed
-    '<b>_vs_<a>'; SelectivityInputError, R8 ee); evaluate_pathway_pruning pure (R7:
-    computed minor, strict > threshold, priority>=2 same pathway, never None, no_valid_member:<p>,
-    signed in rule order); run_selectivity: ensembles per priority-1 pathway, score,
-    each rule once, unpruned priority>=2 nodes via run_species, pruned get no call
-    -> SelectivityRun; import RDKit-free (G8). ts_ensemble.py: run_ts_ensemble(_detailed):
-    seed first (else seed:<reason>), samples, cached constrained_preopt (injected
-    optimizer), re-search, gate/connectivity/face exclusions (R19); pre-relax wall
-    budget 600 s (_deadline.py PreRelaxTimeout, cached; R28), dedup RMSD + face, window,
-    weights, log-sum-exp G; metrics, max pre-relax wall time. counting.py: CountingEngine.
-    species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES; run_species caches
-    each stage under build_stage_key: conformer_search, geometry_opt, dedup, window,
-    frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble, single
-    points (R35). Opt/SCF failures cached, others propagate. run_constrained_point
-    (R42). ts.py (v0.5.0): run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult:
-    ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
+    eta_rxncat.orchestrator, species side (v0.3.0; TS 0.5.0): species, TS, reaction
+    and barrier runners (TJ Q4 C). Package __init__, selectivity and TS ensembles
+    belong to eta_rxncat_selectivity (v0.7.0 split). species.py: SpeciesSpec, Recipe,
+    SinglePoint, ENGINE_CLASSES; run_species caches each stage under build_stage_key:
+    conformer_search, geometry_opt, dedup, window, frequency, imaginary push then
+    not_a_minimum, re-dedup (R53), ensemble, single points (R35). Opt/SCF failures
+    cached, others propagate. run_constrained_point (R42). counting.py: CountingEngine.
+    ts.py: run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult: ts_opt (key:
+    engine + TS options, identity, forming bonds), frequency, validate_transition_state,
     TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
-    v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
-    keeps the validation; barrier.py (v0.5.0): activation_free_energy (1 M, 1 atm).
-    reaction.py: reaction_free_energy. report.py: JSON v1. Tests: unit; e2e t3 (HF1-HF3,
-    R32), T4 inputs + t4/t4_flexible E2E (pairs, G6 pruning, alkyl series; slices
-    .8-.10, .14); never read candidates; v050/v060 record+verdict (R33, .11-.12).
+    engine_error; Unavailable/Input errors raise uncached); ts_validation_failed keeps
+    the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
+    reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator (glob shared
+    with selectivity); the shared tests/e2e harness: t3 (HF1-HF3, R32), T4 inputs
+    + t4/t4_flexible E2E, acceptance records and verdicts; E2E never reads candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -570,14 +565,6 @@ nodes:
     source_id: eta_rxncat_thermo
   - data_type: ts_search_result
     source_id: eta_rxncat_optimize
-  - data_type: ts_ensembles_per_pathway
-    external: eta_rxncat_consumers
-  - data_type: ts_samples_and_face_tuples
-    source_id: eta_rxncat_conformers
-  - data_type: injected_core_frozen_optimizer
-    external: eta_rxncat_consumers
-  - data_type: reaction_graph_pathway_labels_and_pruning_rules
-    source_id: eta_rxncat_core
   outputs:
   - data_type: species_result_ensemble_dropped_metrics
     external: eta_rxncat_consumers
@@ -588,12 +575,6 @@ nodes:
   - data_type: ts_run_result_and_transition_state_record
     external: eta_rxncat_consumers
   - data_type: activation_barrier_energies
-    external: eta_rxncat_consumers
-  - data_type: selectivity_result
-    external: eta_rxncat_consumers
-  - data_type: ts_ensemble_and_stage_metrics
-    external: eta_rxncat_consumers
-  - data_type: pruning_decisions_and_node_outcomes
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -615,9 +596,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T00:22:38+00:00'
-    reviewed_by: audit:OPR.0.6.0.12
-    summary: patched description
+    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched inputs, outputs
   provenance:
     last_slice: OPR.0.6.0.12
 - id: eta_rxncat_mapping
@@ -680,3 +661,152 @@ nodes:
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.6.0.11
+- id: eta_rxncat_selectivity
+  dimension: Module
+  status: clean
+  associated_file: src/eta_rxncat/orchestrator/selectivity.py
+  files:
+  - src/eta_rxncat/orchestrator/__init__.py
+  - src/eta_rxncat/orchestrator/selectivity.py
+  - src/eta_rxncat/orchestrator/ts_ensemble.py
+  - src/eta_rxncat/orchestrator/_deadline.py
+  - src/eta_rxncat/orchestrator/ts_fallback.py
+  - tests/unit/orchestrator/test_selectivity_*.py
+  - tests/unit/orchestrator/test_ts_ensemble.py
+  - tests/unit/orchestrator/test_deadline.py
+  - tests/unit/orchestrator/test_ts_fallback*.py
+  description: >-
+    eta_rxncat.orchestrator, selectivity side (v0.6.0; split in v0.7.0). __init__:
+    package exports load lazily (R26), species-side names included. selectivity.py:
+    score_selectivity pure (log-sum-exp G_p, ddG, ratio inf on overflow, 100 tanh(x/2),
+    softmax, signed '<b>_vs_<a>'; SelectivityInputError, R8 ee); evaluate_pathway_pruning
+    pure (R7: computed minor, strict > threshold, priority>=2 same pathway, never
+    None, no_valid_member:<p>, signed in rule order); run_selectivity: ensembles per
+    priority-1 pathway, score, each rule once, unpruned priority>=2 nodes via run_species,
+    pruned get no call -> SelectivityRun; import RDKit-free. ts_ensemble.py: run_ts_ensemble(_detailed):
+    seed first (else seed:<reason>), samples, cached constrained_preopt (injected
+    optimizer), re-search, gate/connectivity/face exclusions (R19), dedup RMSD + face,
+    window, weights, log-sum-exp G; metrics, max pre-relax wall time. _deadline.py:
+    pre-relax wall budget 600 s (PreRelaxTimeout, cached; R28). v0.7.0 adds ts_fallback.py:
+    run_ts_with_fallback and enumerated_pathway_inputs (rank-ordered template fallback
+    on TS-validation failures only, stall cap, pathway face; mission R2-R7). Tests:
+    unit/orchestrator selectivity, ts_ensemble, deadline, ts_fallback.
+  inputs:
+  - data_type: ts_ensembles_per_pathway
+    external: eta_rxncat_consumers
+  - data_type: ts_samples_and_face_tuples
+    source_id: eta_rxncat_conformers
+  - data_type: injected_core_frozen_optimizer
+    external: eta_rxncat_consumers
+  - data_type: reaction_graph_pathway_labels_and_pruning_rules
+    source_id: eta_rxncat_core
+  - data_type: species_result_and_ts_run_result
+    source_id: eta_rxncat_species_runner
+  - data_type: potential_result_energy_forces_hessian
+    source_id: eta_rxncat_engines
+  - data_type: constrained_relaxation_and_perceived_bonds
+    source_id: eta_rxncat_mapping
+  - data_type: optimizer_protocol_and_errors
+    source_id: eta_rxncat_optimize
+  - data_type: cached_stage_artifacts
+    source_id: eta_rxncat_store
+  - data_type: thermodynamic_constants
+    source_id: eta_rxncat_thermo
+  outputs:
+  - data_type: selectivity_result
+    external: eta_rxncat_consumers
+  - data_type: ts_ensemble_and_stage_metrics
+    external: eta_rxncat_consumers
+  - data_type: pruning_decisions_and_node_outcomes
+    external: eta_rxncat_consumers
+  - data_type: stage_artifact_rows
+    target_id: eta_rxncat_store
+  edges:
+    depends_on:
+    - eta_rxncat_species_runner
+    - eta_rxncat_core
+    - eta_rxncat_conformers
+    - eta_rxncat_optimize
+    - eta_rxncat_store
+    - eta_rxncat_mapping
+    - eta_rxncat_engines
+    - eta_rxncat_thermo
+    implements: []
+    member_of: []
+  review:
+    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched inputs, outputs
+- id: eta_rxncat_enumerator
+  dimension: Module
+  status: clean
+  files:
+  - src/eta_rxncat/mapping/enumerator.py
+  - tests/unit/mapping/test_enumerator*.py
+  description: >-
+    eta_rxncat.mapping.enumerator (v0.7.0): pure, deterministic combinatorial enumeration
+    of candidate ReactionGraphs from a reference graph, declared graft sites and an
+    R-group/ligand library (EnumerationPlan). enumerate_candidates grafts each declared
+    (entry, node, template) with eta's graft, tries every fragment order (lowest RMSD
+    wins, ties to declared order), records refusals from a closed set, keeps eligible
+    templates in declared rank order, takes a capped Cartesian product over sites
+    (refuses, never truncates), requires declared charge and multiplicity per template
+    and consistency across a selectivity set's nodes, and reports projected_ts_searches.
+    Pure Python/numpy; no engine. Not re-exported by mapping/__init__. Its file also
+    falls under mapping's glob (recorded overlap). Tests: tests/unit/mapping/test_enumerator*.py.
+  inputs:
+  - data_type: reaction_graph_and_enumeration_plan_models
+    source_id: eta_rxncat_core
+  - data_type: graft_result
+    source_id: eta_rxncat_mapping
+  outputs:
+  - data_type: enumerated_candidate_graphs_and_graft_records
+    external: eta_rxncat_consumers
+  edges:
+    depends_on:
+    - eta_rxncat_mapping
+    - eta_rxncat_core
+    implements: []
+    member_of: []
+  review:
+    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched inputs, outputs
+- id: eta_rxncat_review
+  dimension: Module
+  status: clean
+  files:
+  - src/eta_rxncat/review/**
+  - tests/unit/review/**
+  description: >-
+    eta_rxncat.review (v0.7.0): the run-data contract and static review bundle. export_run_data
+    builds versioned RunData (schema_version 1: strict writer, lenient reader, committed
+    JSON schema, codes not messages, no host data) from stored stage artifacts without
+    running an engine; canonical_run_data_json writes one byte-stable serialisation.
+    write_review_bundle writes an offline, serverless HTML bundle that only renders
+    that JSON: eta-view.js components (molecule viewer, mode animator, trajectory
+    player, energy plot, candidate table), a JS-free static summary, a restrictive
+    CSP and vendored 3Dmol.js 2.5.5 (BSD-3) as an output asset no Python module imports.
+    Used by the review-bundle CLI subcommand for the Phase 3 visual audit. Tests:
+    tests/unit/review/**.
+  inputs:
+  - data_type: run_record_models
+    source_id: eta_rxncat_core
+  - data_type: normal_modes_and_thermo_results
+    source_id: eta_rxncat_thermo
+  - data_type: cached_stage_artifacts
+    source_id: eta_rxncat_store
+  outputs:
+  - data_type: run_data_json_and_static_html_bundle
+    external: review_bundle_reader
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_thermo
+    - eta_rxncat_store
+    implements: []
+    member_of: []
+  review:
+    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched inputs, outputs
