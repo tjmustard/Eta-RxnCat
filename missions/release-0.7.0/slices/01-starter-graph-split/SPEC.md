@@ -2,7 +2,7 @@
 id: OPR.0.7.0.1
 slice: 01-starter-graph-split
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Unpack the v0.7.0 starter as reference with its DV register, fix the v0
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["docs/prd/v0.7.0/**", docs/prd/PLAN_DISCREPANCIES.md, README.md, tests/unit/test_identity.py, spec/compiled/architecture.yml]

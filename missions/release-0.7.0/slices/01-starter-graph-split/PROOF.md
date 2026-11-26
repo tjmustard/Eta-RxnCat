@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: starter sha256-identical to zip; hook ruff 0; union 562->602 nothing lost; validate ok; pytest 2218 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

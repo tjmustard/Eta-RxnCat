@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -49,8 +49,9 @@ nodes:
     Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
     GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
     v0.5.0/v0.6.0 only on their verdict pass. docs/prd/v<version>/: verbatim starters
-    (excluded from gates), DISCREPANCIES.md, acceptance record (v0.2.0 also evidence/,
-    calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
+    (excluded from gates; v0.7.0's has its own .ruff.toml exclude all), DISCREPANCIES.md,
+    acceptance record (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md
+    is the plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -64,8 +65,8 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-26T00:22:38+00:00'
-    reviewed_by: audit:OPR.0.6.0.12
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
@@ -75,7 +76,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -119,15 +120,15 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -174,14 +175,14 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -225,12 +226,12 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -252,6 +253,8 @@ nodes:
     becomes one 'error: <message>' stderr line with whitespace collapsed, empty stdout,
     exit 1, no traceback. validate imports no torch, pyscf, gpu4pyscf, cupy, rdkit,
     mace or fairchem; no store import; no dependency beyond the stdlib and the project.
+    Planned for v0.7.0 (not yet written): a review-bundle subcommand over eta_rxncat.review
+    (edge recorded ahead of the code).
   inputs:
   - data_type: reaction_graph_loader_and_models
     source_id: eta_rxncat_core
@@ -272,12 +275,12 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-26T00:22:38+00:00'
-    reviewed_by: audit:OPR.0.6.0.12
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched description
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -307,8 +310,20 @@ nodes:
     (R47), derived keyed atom_refs_sha256 / form_elem_refs_sha256 (R40), direct-force
     models refused, AtomicData with charge and spin, identity <method>@sha256:<hex>,
     FD Hessian. Tests: tests/unit/engines, tests/acceptance.
-  inputs: []
-  outputs: []
+  inputs:
+  - data_type: molecular_state_stage_config_engine_identity
+    source_id: eta_rxncat_core
+  - data_type: vram_budget_bytes
+    source_id: eta_rxncat_hw_probe
+  - data_type: xtb_executable
+    external: xtb_binary
+  - data_type: mlip_model_files_sha256_pinned
+    external: mlip_checkpoints
+  outputs:
+  - data_type: potential_result_energy_forces_hessian
+    external: eta_rxncat_consumers
+  - data_type: engine_identity_and_unit_conversions
+    external: eta_rxncat_consumers
   edges:
     depends_on:
     - eta_rxncat_core
@@ -327,12 +342,12 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched inputs, outputs
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -385,12 +400,12 @@ nodes:
   provenance:
     last_slice: 01-starter-graph-split
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -441,14 +456,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
     summary: reviewed; nothing patched
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -501,19 +516,20 @@ nodes:
     - eta_rxncat_core
     - eta_rxncat_engines
     - eta_rxncat_thermo
+    - eta_rxncat_store
     implements: []
     member_of: []
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched edges.depends_on
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -596,14 +612,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_at: '2026-11-26T02:35:43+00:00'
     reviewed_by: audit:01-starter-graph-split
-    summary: patched inputs, outputs
+    summary: reviewed; nothing patched
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -637,16 +653,23 @@ nodes:
     on fixtures, suite, vectors, commands, skips). Errors: MappingError with AlignmentError,
     GraftInputError, GraftClashError, CoreDisplacementError. numpy; RDKit lazily;
     no geometric/torch/pyscf/fairchem at import; never eta_rxncat.thermo. In: MolecularState
-    + GraftSpec; out: GraftResult. MIT/BSD-only, no ase.
+    + GraftSpec; out: GraftResult. MIT/BSD-only, no ase. v0.7.0 plans mapping/enumerator.py
+    (node eta_rxncat_enumerator; not yet written).
   inputs:
   - data_type: graft_spec_and_molecular_state_template_and_fragment
     source_id: eta_rxncat_core
   - data_type: ordered_pair_coordinates_angstrom
     external: eta_rxncat_consumers
+  - data_type: optimizer_minimize_with_frozen_atoms
+    source_id: eta_rxncat_optimize
+  - data_type: engine_for_constrained_relaxation
+    source_id: eta_rxncat_engines
   outputs:
   - data_type: superposition_rotation_centroids_rmsd_and_pair_shapes
     external: eta_rxncat_consumers
   - data_type: graft_result_product_index_map_contacts_junctions
+    external: eta_rxncat_consumers
+  - data_type: core_frozen_optimization_result_and_perceived_bonds
     external: eta_rxncat_consumers
   edges:
     depends_on:
@@ -656,14 +679,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T02:35:43+00:00'
+    reviewed_by: audit:01-starter-graph-split
+    summary: patched description, inputs, outputs
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -687,10 +710,11 @@ nodes:
     seed first (else seed:<reason>), samples, cached constrained_preopt (injected
     optimizer), re-search, gate/connectivity/face exclusions (R19), dedup RMSD + face,
     window, weights, log-sum-exp G; metrics, max pre-relax wall time. _deadline.py:
-    pre-relax wall budget 600 s (PreRelaxTimeout, cached; R28). v0.7.0 adds ts_fallback.py:
-    run_ts_with_fallback and enumerated_pathway_inputs (rank-ordered template fallback
-    on TS-validation failures only, stall cap, pathway face; mission R2-R7). Tests:
-    unit/orchestrator selectivity, ts_ensemble, deadline, ts_fallback.
+    pre-relax wall budget 600 s (PreRelaxTimeout, cached; R28). Planned for v0.7.0,
+    not yet written: ts_fallback.py with run_ts_with_fallback and enumerated_pathway_inputs
+    (rank-ordered template fallback on TS-validation failures only, stall cap, pathway
+    face; mission R2-R7) and its test_ts_fallback*.py. Tests: unit/orchestrator selectivity_*,
+    ts_ensemble, deadline.
   inputs:
   - data_type: ts_ensembles_per_pathway
     external: eta_rxncat_consumers
@@ -734,28 +758,29 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_at: '2026-11-26T02:35:43+00:00'
     reviewed_by: audit:01-starter-graph-split
-    summary: patched inputs, outputs
+    summary: patched description
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
   description: >-
-    eta_rxncat.mapping.enumerator (v0.7.0): pure, deterministic combinatorial enumeration
-    of candidate ReactionGraphs from a reference graph, declared graft sites and an
-    R-group/ligand library (EnumerationPlan). enumerate_candidates grafts each declared
-    (entry, node, template) with eta's graft, tries every fragment order (lowest RMSD
-    wins, ties to declared order), records refusals from a closed set, keeps eligible
-    templates in declared rank order, takes a capped Cartesian product over sites
-    (refuses, never truncates), requires declared charge and multiplicity per template
-    and consistency across a selectivity set's nodes, and reports projected_ts_searches.
-    Pure Python/numpy; no engine. Not re-exported by mapping/__init__. Its file also
-    falls under mapping's glob (recorded overlap). Tests: tests/unit/mapping/test_enumerator*.py.
+    eta_rxncat.mapping.enumerator: planned for v0.7.0, not yet written (no module
+    or tests exist). Intended as pure, deterministic combinatorial enumeration of
+    candidate ReactionGraphs from a reference graph, declared graft sites and an R-group/ligand
+    library (EnumerationPlan). enumerate_candidates is to graft each declared (entry,
+    node, template) with eta's graft, try every fragment order (lowest RMSD wins,
+    ties to declared order), record refusals from a closed set, keep eligible templates
+    in declared rank order, take a capped Cartesian product over sites (refuse, never
+    truncate), require declared charge and multiplicity per template and consistency
+    across a selectivity set's nodes, and report projected_ts_searches. Pure Python/numpy;
+    no engine. Not to be re-exported by mapping/__init__. Its file also falls under
+    mapping's glob (recorded overlap). Tests planned: tests/unit/mapping/test_enumerator*.py.
   inputs:
   - data_type: reaction_graph_and_enumeration_plan_models
     source_id: eta_rxncat_core
@@ -771,28 +796,29 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_at: '2026-11-26T02:35:43+00:00'
     reviewed_by: audit:01-starter-graph-split
-    summary: patched inputs, outputs
+    summary: patched description
   provenance:
     last_slice: 01-starter-graph-split
 - id: eta_rxncat_review
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
   description: >-
-    eta_rxncat.review (v0.7.0): the run-data contract and static review bundle. export_run_data
-    builds versioned RunData (schema_version 1: strict writer, lenient reader, committed
-    JSON schema, codes not messages, no host data) from stored stage artifacts without
-    running an engine; canonical_run_data_json writes one byte-stable serialisation.
-    write_review_bundle writes an offline, serverless HTML bundle that only renders
-    that JSON: eta-view.js components (molecule viewer, mode animator, trajectory
-    player, energy plot, candidate table), a JS-free static summary, a restrictive
-    CSP and vendored 3Dmol.js 2.5.5 (BSD-3) as an output asset no Python module imports.
-    Used by the review-bundle CLI subcommand for the Phase 3 visual audit. Tests:
-    tests/unit/review/**.
+    eta_rxncat.review: planned for v0.7.0, not yet written (no src/eta_rxncat/review
+    or tests/unit/review exists). Intended as the run-data contract and static review
+    bundle. export_run_data is to build versioned RunData (schema_version 1: strict
+    writer, lenient reader, committed JSON schema, codes not messages, no host data)
+    from stored stage artifacts without running an engine; canonical_run_data_json
+    to write one byte-stable serialisation. write_review_bundle is to write an offline,
+    serverless HTML bundle that only renders that JSON: eta-view.js components (molecule
+    viewer, mode animator, trajectory player, energy plot, candidate table), a JS-free
+    static summary, a restrictive CSP and vendored 3Dmol.js 2.5.5 (BSD-3) as an output
+    asset no Python module imports. To be used by the planned review-bundle CLI subcommand
+    for the Phase 3 visual audit. Tests planned: tests/unit/review/**.
   inputs:
   - data_type: run_record_models
     source_id: eta_rxncat_core
@@ -811,8 +837,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T02:17:51+00:00'
+    reviewed_at: '2026-11-26T02:35:43+00:00'
     reviewed_by: audit:01-starter-graph-split
-    summary: patched inputs, outputs
+    summary: patched description
   provenance:
     last_slice: 01-starter-graph-split
