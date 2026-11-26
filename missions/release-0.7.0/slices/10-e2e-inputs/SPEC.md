@@ -10,7 +10,7 @@ intent: "Write the v0.7.0 E2E inputs: the Tier 4 endo/exo reference graph, the e
 depends_on: [OPR.0.7.0.3, OPR.0.7.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
