@@ -5,9 +5,16 @@ record (mission R1): nothing here is added to ``OptimizationResult`` or ``Confor
 """
 
 import re
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
-from pydantic import Field, FiniteFloat, field_validator, model_validator
+from pydantic import (
+    Field,
+    FiniteFloat,
+    SerializerFunctionWrapHandler,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 
 from eta_rxncat.core.models import (
     CoreModel,
@@ -84,6 +91,8 @@ class TSStep(CoreModel):
             at step 0.
         hessian_source: Whether the step's Hessian was exact or a Bofill update.
         ratio: Actual over predicted energy change; ``None`` when not computed.
+        coordinates_angstrom: The step's geometry (v0.7.0); ``None`` when not captured, and then
+            left out of the serialised form.
     """
 
     step: NonNegativeInt
@@ -95,6 +104,15 @@ class TSStep(CoreModel):
     mode_overlap: UnitInterval | None
     hessian_source: Literal["exact", "bofill"]
     ratio: FiniteFloat | None
+    coordinates_angstrom: list[list[FiniteFloat]] | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_coordinates(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        # A step without coordinates must serialise exactly as in v0.6.0.
+        data: dict[str, Any] = handler(self)
+        if self.coordinates_angstrom is None:
+            data.pop("coordinates_angstrom", None)
+        return data
 
 
 class TSSearchResult(CoreModel):

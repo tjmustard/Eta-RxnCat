@@ -3,11 +3,18 @@
 Data only: pydantic and the standard library, no numpy and no optimizer imports.
 """
 
-from typing import Literal
+from typing import Any, Literal
 
-from pydantic import Field, FiniteFloat, field_validator
+from pydantic import (
+    Field,
+    FiniteFloat,
+    SerializerFunctionWrapHandler,
+    field_validator,
+    model_serializer,
+)
 
 from eta_rxncat.core.models import CoreModel, MolecularState, NonNegativeInt, ScalarValue
+from eta_rxncat.core.results import NonNegativeFiniteFloat
 
 
 class OptimizerIdentity(CoreModel):
@@ -25,6 +32,22 @@ class OptimizerIdentity(CoreModel):
     version: str = Field(min_length=1)
 
 
+class OptimizationFrame(CoreModel):
+    """One geometry the optimizer evaluated (v0.7.0).
+
+    Attributes:
+        coordinates_angstrom: The geometry.
+        energy_hartree: Energy there (Eh).
+        max_gradient_hartree_per_bohr: Largest gradient component there (Eh/Bohr).
+        ladder_step: The recovery-ladder step that produced it; ``None`` outside the ladder.
+    """
+
+    coordinates_angstrom: list[list[FiniteFloat]]
+    energy_hartree: FiniteFloat
+    max_gradient_hartree_per_bohr: NonNegativeFiniteFloat
+    ladder_step: str | None
+
+
 class OptimizationResult(CoreModel):
     """A converged geometry optimization; a failed one raises instead of returning.
 
@@ -38,6 +61,8 @@ class OptimizationResult(CoreModel):
         optimizer: The optimizer name and version.
         options: The resolved optimizer options (a constrained run records its constraints here
             under ``constraints``).
+        frames: The evaluated geometries in order (v0.7.0); ``None`` when not captured, and then
+            left out of the serialised form.
     """
 
     final_state: MolecularState
@@ -48,6 +73,15 @@ class OptimizationResult(CoreModel):
     recovery_steps: list[str]
     optimizer: OptimizerIdentity
     options: dict[str, ScalarValue]
+    frames: list[OptimizationFrame] | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_frames(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        # A result without frames must serialise exactly as in v0.6.0.
+        data: dict[str, Any] = handler(self)
+        if self.frames is None:
+            data.pop("frames", None)
+        return data
 
     @field_validator("converged", mode="before")
     @classmethod

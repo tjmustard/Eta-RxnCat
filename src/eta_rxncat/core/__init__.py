@@ -1,7 +1,21 @@
-"""Core contracts, graph loader, PotentialResult; records, graft, TS and selectivity models."""
+"""Core contracts, graph loader, PotentialResult; records, graft, TS and enumeration models."""
 
 from eta_rxncat.core.elements import ATOMIC_NUMBERS, ELEMENT_SYMBOLS
 from eta_rxncat.core.ensemble_models import ConformerEnsemble, ConformerRecord
+from eta_rxncat.core.enumeration_models import (
+    EnumeratedCandidate,
+    EnumerationPlan,
+    EnumerationResult,
+    EnumerationSite,
+    FallbackAttempt,
+    FallbackRecord,
+    GraftRecord,
+    GraftRefusalReason,
+    LibraryEntry,
+    PathwaySpec,
+    SelectivitySet,
+    SiteTemplateMap,
+)
 from eta_rxncat.core.graph import (
     Component,
     NodeKind,
@@ -31,7 +45,11 @@ from eta_rxncat.core.models import (
     StageKind,
     ThermoConfig,
 )
-from eta_rxncat.core.optimization_models import OptimizationResult, OptimizerIdentity
+from eta_rxncat.core.optimization_models import (
+    OptimizationFrame,
+    OptimizationResult,
+    OptimizerIdentity,
+)
 from eta_rxncat.core.results import Device, HessianMethod, PotentialResult
 from eta_rxncat.core.selectivity_models import (
     PathwaySelectivity,
@@ -67,19 +85,30 @@ __all__ = [
     "Device",
     "EngineIdentity",
     "EngineTag",
+    "EnumeratedCandidate",
+    "EnumerationPlan",
+    "EnumerationResult",
+    "EnumerationSite",
+    "FallbackAttempt",
+    "FallbackRecord",
     "FormingBond",
+    "GraftRecord",
+    "GraftRefusalReason",
     "GraftResult",
     "GraftSpec",
     "GraphValidationError",
     "HessianMethod",
     "JunctionVolume",
+    "LibraryEntry",
     "MolecularState",
     "NodeKind",
     "NonNegativeFiniteFloat",
+    "OptimizationFrame",
     "OptimizationResult",
     "OptimizerIdentity",
     "PathwayPruningRule",
     "PathwaySelectivity",
+    "PathwaySpec",
     "PotentialResult",
     "PruningDecision",
     "PruningRule",
@@ -88,6 +117,8 @@ __all__ = [
     "ReactionNode",
     "SelectivityKind",
     "SelectivityResult",
+    "SelectivitySet",
+    "SiteTemplateMap",
     "Solvation",
     "SolvationModel",
     "StageConfig",

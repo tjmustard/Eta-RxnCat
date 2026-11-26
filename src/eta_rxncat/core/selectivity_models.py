@@ -29,7 +29,7 @@ _SOURCE = re.compile(r"^(seed|fragment_embed:(0|[1-9][0-9]*)|perturb:(0|[1-9][0-
 _EXCLUSION_REASON = re.compile(
     r"^(ts_search_failed:\S.*|scf_convergence|engine_error|ts_validation_failed"
     r"|gate_failed:\S.*|face_mismatch|pre_relax_failed:\S.*|outside_window"
-    r"|face_undetermined|connectivity_changed)$"
+    r"|face_undetermined|connectivity_changed|orientation_mismatch)$"
 )
 
 SelectivityKind = Literal["ee", "de", "regio"]
@@ -132,8 +132,8 @@ class TSEnsembleExclusion(CoreModel):
         source: ``seed``, ``fragment_embed:<k>`` or ``perturb:<k>``.
         reason: ``ts_search_failed:<reason>``, ``scf_convergence``, ``engine_error``,
             ``ts_validation_failed``, ``gate_failed:<check>``, ``face_mismatch``,
-            ``pre_relax_failed:<error>``, ``outside_window``, ``face_undetermined`` or
-            ``connectivity_changed``.
+            ``pre_relax_failed:<error>``, ``outside_window``, ``face_undetermined``,
+            ``connectivity_changed`` or ``orientation_mismatch``.
         pre_relax_wall_time_s: Wall time of the pre-relaxation, if one ran (mission R25).
     """
 
