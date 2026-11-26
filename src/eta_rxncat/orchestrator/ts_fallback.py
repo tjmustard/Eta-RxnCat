@@ -23,6 +23,7 @@ from eta_rxncat.core import (
     PathwaySpec,
     ReactionGraph,
     ReactionNode,
+    SeedCheckDetail,
     TemplateGeometry,
     TSEnsembleOptions,
 )
@@ -37,6 +38,7 @@ from eta_rxncat.orchestrator.ts_ensemble import (
     MemberGates,
     TSEnsembleRun,
     _PreRelax,
+    bond_changes,
     run_ts_ensemble_detailed,
 )
 from eta_rxncat.store import ArtifactStore
@@ -55,6 +57,7 @@ STOP_TS_SEARCH: frozenset[TSSearchFailureReason] = frozenset({"wall_time_exceede
 _FALL_THROUGH_REASONS = frozenset(
     {f"seed:ts_search_failed:{r}" for r in FALL_THROUGH_TS_SEARCH}
     | {"seed:ts_validation_failed", "seed:face_undetermined", "seed:face_mismatch_pathway"}
+    | {"seed:seed_clash", "seed:bond_changed:pre_relax", "seed:bond_changed:ts"}
 )
 _GATE_PREFIX = "seed:gate_failed:"
 
@@ -270,12 +273,14 @@ def run_ts_with_fallback(
 ) -> tuple[FallbackRecord, TSEnsembleRun | None]:
     """Try a node's templates in rank order until one seeds a TS ensemble.
 
-    Per template: the cached core-frozen pre-relaxation (a timeout stops the node with
-    ``graft_pre_relax_timeout``); the pre-relaxed start's face against the pathway's; then the
-    ensemble, with the stall cap. A reason on the R4 allow-list falls through to the next
-    template; every other reason stops the node (``stopped:<reason>``). An attempt's
-    ``wall_time_s`` is the sum of its pre-relaxation wall times as stored in the cache, so a rerun
-    gives the same record.
+    Per template: a graft record with close contacts is ``seed:seed_clash`` with no engine call;
+    then the cached core-frozen pre-relaxation (a timeout stops the node with
+    ``graft_pre_relax_timeout``); a bond made or broken by it outside the forming bonds is
+    ``seed:bond_changed:pre_relax``; the pre-relaxed start's face against the pathway's; then the
+    ensemble, with the stall cap and ``seed_checks`` on. A reason on the R4 allow-list falls
+    through to the next template; every other reason stops the node (``stopped:<reason>``). An
+    attempt's ``wall_time_s`` is the sum of its pre-relaxation wall times as stored in the cache,
+    so a rerun gives the same record.
 
     Args:
         candidate: An ``ok`` candidate.
@@ -315,7 +320,12 @@ def run_ts_with_fallback(
 
     for template, inputs in derived:
 
-        def note(outcome: str, reason: str | None, wall: float) -> None:
+        def note(
+            outcome: str,
+            reason: str | None,
+            wall: float,
+            detail: SeedCheckDetail | None = None,
+        ) -> None:
             attempts.append(
                 FallbackAttempt.model_validate(
                     {
@@ -324,10 +334,21 @@ def run_ts_with_fallback(
                         "outcome": outcome,
                         "reason": reason,
                         "wall_time_s": wall,
+                        "detail": detail,
                     }
                 )
             )
 
+        ref = template.id.removesuffix(f"__{candidate.candidate_id}")
+        contacts = sum(
+            r.close_contact_count or 0
+            for r in candidate.records
+            if r.status == "ok" and r.node_id == node_id and r.template_id == ref
+        )
+        if contacts > 0:
+            clash = SeedCheckDetail(check="clash", close_contact_count=contacts)
+            note("fell_through", "seed:seed_clash", 0.0, clash)
+            continue
         pre_relax = _PreRelax(recipe, store, optimizer, inputs.core_indices)
         relaxed, reason, wall = pre_relax.run(inputs.seed.start)
         if relaxed is None:
@@ -342,6 +363,10 @@ def run_ts_with_fallback(
             {**relaxed.model_dump(), "active_atom_indices": list(inputs.core_indices)}
         )
         pairs = _sorted_pairs(inputs.seed.forming_bonds)
+        changed = bond_changes(start, perceive_bonds(inputs.seed.start), pairs)
+        if changed is not None:
+            note("fell_through", "seed:bond_changed:pre_relax", wall, changed)
+            continue
         try:
             face = forming_bond_configuration(start, pairs, perceive_bonds(start))
         except FaceDescriptorError:
@@ -363,6 +388,7 @@ def run_ts_with_fallback(
             expected_face=pathway.expected_face,
             max_pre_relax_timeouts=FALLBACK_MAX_PRE_RELAX_TIMEOUTS,
             orientation_centers=orientation_centers,
+            seed_checks=True,
         )
         wall += run.total_pre_relax_wall_time_s
         failed = run.ensemble.failed_reason
@@ -374,7 +400,7 @@ def run_ts_with_fallback(
             return record, run
         reason = failed or "no_member"
         if falls_through(reason):
-            note("fell_through", reason, wall)
+            note("fell_through", reason, wall, run.ensemble.failed_detail)
             continue
         note("stopped", reason, wall)
         return stopped(reason)

@@ -30,6 +30,7 @@ from eta_rxncat.conformers.ts_sampler import (
 from eta_rxncat.core import (
     EngineIdentity,
     MolecularState,
+    SeedCheckDetail,
     StageConfig,
     TSEnsemble,
     TSEnsembleExclusion,
@@ -43,8 +44,9 @@ from eta_rxncat.engines import (
     EngineRuntimeError,
     ScfConvergenceError,
 )
-from eta_rxncat.mapping import perceive_bonds
+from eta_rxncat.mapping import covalent_radius_angstrom, perceive_bonds
 from eta_rxncat.mapping.errors import CoreDisplacementError
+from eta_rxncat.mapping.graft import CONTACT_FACTOR
 from eta_rxncat.mapping.relax import relax_constrained_core
 from eta_rxncat.optimize import OptimizationFailedError, Optimizer, capture_frames
 from eta_rxncat.orchestrator._deadline import (
@@ -84,6 +86,9 @@ The healthy maximum measured on UMA is 49 s, so this is about 12 times that. A p
 passes it is interrupted and excluded as ``pre_relax_failed:PreRelaxTimeout``. It is not an
 optimizer option and is not part of the stage key.
 """
+
+SEED_CLASH_FACTOR = CONTACT_FACTOR
+"""A non-bonded pair closer than this times its covalent radii sum clashes (v0.7.0, R35)."""
 
 PRE_RELAX_KIND = "constrained_preopt"
 STAGE_KINDS = (PRE_RELAX_KIND, "ts_opt", "frequency")
@@ -128,6 +133,72 @@ class _Candidate:
     coords: FloatArray
 
 
+def _unordered(pairs: Sequence[tuple[int, int]]) -> set[tuple[int, int]]:
+    return {(min(i, j), max(i, j)) for i, j in pairs}
+
+
+def find_clash(
+    state: MolecularState, topology: Sequence[tuple[int, int]]
+) -> SeedCheckDetail | None:
+    """Return the worst clash of ``state``, or ``None``.
+
+    A pair clashes when it is at least 3 bonds apart in ``topology`` (or unconnected) and closer
+    than ``SEED_CLASH_FACTOR`` times the sum of its covalent radii. The detail names the clashing
+    pair with the lowest distance over that sum.
+
+    Args:
+        state: The geometry.
+        topology: The bonds, forming bonds included.
+    """
+    n_atoms = len(state.symbols)
+    neighbours: list[set[int]] = [set() for _ in range(n_atoms)]
+    for i, j in topology:
+        neighbours[i].add(j)
+        neighbours[j].add(i)
+    coords = np.asarray(state.coordinates, dtype=np.float64)
+    radius = {s: covalent_radius_angstrom(s) for s in set(state.symbols)}
+    worst: tuple[float, int, int, float] | None = None
+    for i in range(n_atoms):
+        # Atoms within two bonds of i (1-2 and 1-3 pairs).
+        near = neighbours[i].union(*(neighbours[k] for k in neighbours[i]))
+        for j in range(i + 1, n_atoms):
+            if j in near:
+                continue
+            distance = float(np.linalg.norm(coords[i] - coords[j]))
+            ratio = distance / (radius[state.symbols[i]] + radius[state.symbols[j]])
+            if ratio < SEED_CLASH_FACTOR and (worst is None or ratio < worst[0]):
+                worst = (ratio, i, j, distance)
+    if worst is None:
+        return None
+    ratio, i, j, distance = worst
+    return SeedCheckDetail(
+        check="clash", pair=(i, j), distance_angstrom=distance, ratio_to_covalent_sum=ratio
+    )
+
+
+def bond_changes(
+    state: MolecularState,
+    intended: Sequence[tuple[int, int]],
+    forming: Sequence[tuple[int, int]],
+) -> SeedCheckDetail | None:
+    """Return the bonds ``state`` made or broke against ``intended``, or ``None`` if neither.
+
+    The ``forming`` pairs are ignored on both sides.
+
+    Args:
+        state: The geometry, whose bonds are perceived.
+        intended: The bonds it should have.
+        forming: The template's forming bonds.
+    """
+    ignored = _unordered(forming)
+    found = _unordered(perceive_bonds(state)) - ignored
+    wanted = _unordered(intended) - ignored
+    formed, broken = sorted(found - wanted), sorted(wanted - found)
+    if not formed and not broken:
+        return None
+    return SeedCheckDetail(check="bond_changed", bonds_formed=formed, bonds_broken=broken)
+
+
 def _failed(
     *,
     pathway: str,
@@ -136,6 +207,7 @@ def _failed(
     identity: EngineIdentity,
     options: TSEnsembleOptions,
     reason: str,
+    detail: SeedCheckDetail | None = None,
 ) -> TSEnsemble:
     return TSEnsemble(
         pathway=pathway,
@@ -144,6 +216,7 @@ def _failed(
         recipe_identity=identity,
         options=options,
         failed_reason=reason,
+        failed_detail=detail,
     )
 
 
@@ -284,6 +357,7 @@ def run_ts_ensemble_detailed(
     expected_face: tuple[int, ...] | None = None,
     max_pre_relax_timeouts: int | None = None,
     orientation_centers: Sequence[int] = (),
+    seed_checks: bool = False,
 ) -> TSEnsembleRun:
     """Run ``run_ts_ensemble`` and also return the per-stage metrics and the seed's run.
 
@@ -304,7 +378,9 @@ def run_ts_ensemble_detailed(
     rt = R_GAS * temperature_k * J_PER_MOL_TO_HARTREE
     metrics = {kind: StageMetrics() for kind in STAGE_KINDS}
 
-    def fail(reason: str, seed_result: TSRunResult) -> TSEnsembleRun:
+    def fail(
+        reason: str, seed_result: TSRunResult, detail: SeedCheckDetail | None = None
+    ) -> TSEnsembleRun:
         ensemble = _failed(
             pathway=pathway,
             temperature_k=temperature_k,
@@ -312,6 +388,7 @@ def run_ts_ensemble_detailed(
             identity=engine_identity,
             options=options,
             reason=reason,
+            detail=detail,
         )
         return TSEnsembleRun(ensemble, metrics, seed_result)
 
@@ -320,12 +397,16 @@ def run_ts_ensemble_detailed(
         _add(metrics[kind], seed_result.metrics[kind])
     if seed_result.record is None:
         return fail(f"seed:{seed_result.failed_reason}", seed_result)
+    pairs = _sorted_pairs(seed.forming_bonds)
+    if seed_checks:
+        changed = bond_changes(seed_result.record.state, perceive_bonds(seed.start), pairs)
+        if changed is not None:
+            return fail("seed:bond_changed:ts", seed_result, changed)
     failed_gate = _first_failed_gate(member_gates(seed_result))
     if failed_gate is not None:
         return fail(f"seed:gate_failed:{failed_gate}", seed_result)
     seed_final = seed_result.record.state
     seed_bonds = perceive_bonds(seed_final)
-    pairs = _sorted_pairs(seed.forming_bonds)
     try:
         seed_face = forming_bond_configuration(seed_final, pairs, seed_bonds)
     except FaceDescriptorError:
@@ -358,10 +439,20 @@ def run_ts_ensemble_detailed(
     ]
     excluded: list[TSEnsembleExclusion] = []
 
-    def exclude(index: int, source: str, reason: str, wall: float | None) -> None:
+    def exclude(
+        index: int,
+        source: str,
+        reason: str,
+        wall: float | None,
+        detail: SeedCheckDetail | None = None,
+    ) -> None:
         excluded.append(
             TSEnsembleExclusion(
-                index=index, source=source, reason=reason, pre_relax_wall_time_s=wall
+                index=index,
+                source=source,
+                reason=reason,
+                pre_relax_wall_time_s=wall,
+                detail=detail,
             )
         )
 
@@ -371,6 +462,11 @@ def run_ts_ensemble_detailed(
     timeouts = 0
     stall_cap_reached = False
     for index, sample in enumerate(samples[: options.max_research], start=1):
+        if seed_checks:
+            clash = find_clash(sample.state, [*seed_bonds, *pairs])
+            if clash is not None:
+                exclude(index, sample.source, "seed_clash", None, clash)
+                continue
         relaxed, reason, wall = pre_relax.run(sample.state)
         wall_times.append(wall)
         if relaxed is None:
@@ -381,6 +477,11 @@ def run_ts_ensemble_detailed(
                     stall_cap_reached = True
                     break
             continue
+        if seed_checks:
+            changed = bond_changes(relaxed, seed_bonds, pairs)
+            if changed is not None:
+                exclude(index, sample.source, "bond_changed:pre_relax", wall, changed)
+                continue
         result = run_transition_state(
             TSSpec(
                 ts_id=f"{seed.ts_id}:{sample.source}",
@@ -395,6 +496,11 @@ def run_ts_ensemble_detailed(
         if result.record is None:
             exclude(index, sample.source, str(result.failed_reason), wall)
             continue
+        if seed_checks:
+            changed = bond_changes(result.record.state, seed_bonds, pairs)
+            if changed is not None:
+                exclude(index, sample.source, "bond_changed:ts", wall, changed)
+                continue
         failed_gate = _first_failed_gate(member_gates(result))
         if failed_gate is not None:
             exclude(index, sample.source, f"gate_failed:{failed_gate}", wall)
@@ -519,6 +625,7 @@ def run_ts_ensemble(
     expected_face: tuple[int, ...] | None = None,
     max_pre_relax_timeouts: int | None = None,
     orientation_centers: Sequence[int] = (),
+    seed_checks: bool = False,
 ) -> TSEnsemble:
     """Build one pathway's TS ensemble from a seed TS.
 
@@ -552,6 +659,11 @@ def run_ts_ensemble(
             the members (``stall_cap_reached_bool``). ``None`` samples them all (v0.7.0, R6).
         orientation_centers: Atoms whose signed volume over their three lowest-index seed
             neighbours must keep the seed's sign, else ``orientation_mismatch`` (v0.7.0, R24).
+        seed_checks: Check geometries against the template's bonds (v0.7.0, R35): a sample whose
+            start clashes is excluded ``seed_clash`` before any engine call, and a bond made or
+            broken outside the forming bonds excludes a sample ``bond_changed:pre_relax`` or
+            ``bond_changed:ts`` (the seed fails ``seed:bond_changed:ts``). Each carries its
+            detail. ``False`` is v0.6.0 behaviour. Not part of any stage key.
 
     Returns:
         The ensemble.
@@ -582,13 +694,17 @@ def run_ts_ensemble(
         expected_face=expected_face,
         max_pre_relax_timeouts=max_pre_relax_timeouts,
         orientation_centers=orientation_centers,
+        seed_checks=seed_checks,
     ).ensemble
 
 
 __all__ = [
     "PRE_RELAX_BUDGET_S",
     "PRE_RELAX_OPTIONS",
+    "SEED_CLASH_FACTOR",
     "TSEnsembleRun",
+    "bond_changes",
+    "find_clash",
     "run_ts_ensemble",
     "run_ts_ensemble_detailed",
 ]

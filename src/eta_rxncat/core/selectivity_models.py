@@ -7,9 +7,17 @@ weights and the closed reason sets (mission R7, R8, R16-R19, R25, §5 "Contracts
 
 import re
 from collections.abc import Iterable
-from typing import Annotated, Literal, Self
+from typing import Annotated, Any, Literal, Self
 
-from pydantic import Field, FiniteFloat, StrictInt, field_validator, model_validator
+from pydantic import (
+    Field,
+    FiniteFloat,
+    SerializerFunctionWrapHandler,
+    StrictInt,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 
 from eta_rxncat.core.models import (
     CoreModel,
@@ -29,7 +37,8 @@ _SOURCE = re.compile(r"^(seed|fragment_embed:(0|[1-9][0-9]*)|perturb:(0|[1-9][0-
 _EXCLUSION_REASON = re.compile(
     r"^(ts_search_failed:\S.*|scf_convergence|engine_error|ts_validation_failed"
     r"|gate_failed:\S.*|face_mismatch|pre_relax_failed:\S.*|outside_window"
-    r"|face_undetermined|connectivity_changed|orientation_mismatch)$"
+    r"|face_undetermined|connectivity_changed|orientation_mismatch"
+    r"|seed_clash|bond_changed:(pre_relax|ts))$"
 )
 
 SelectivityKind = Literal["ee", "de", "regio"]
@@ -54,6 +63,31 @@ def _check_source(value: str) -> str:
     if not _SOURCE.match(value):
         raise ValueError(f"source must be 'seed', 'fragment_embed:<k>' or 'perturb:<k>': {value!r}")
     return value
+
+
+class SeedCheckDetail(CoreModel):
+    """What a seed geometry check found (v0.7.0, slice 15).
+
+    A ``clash`` sets the pair, its distance and its ratio (a graft's recorded contacts set only
+    ``close_contact_count``); a ``bond_changed`` sets both bond lists.
+
+    Attributes:
+        check: ``clash`` or ``bond_changed``.
+        pair: The clashing atom pair ``(i, j)`` with ``i < j``.
+        distance_angstrom: Its distance.
+        ratio_to_covalent_sum: The distance over the sum of the two covalent radii.
+        bonds_formed: Bonds the geometry has that were not intended, sorted ``(i, j)`` pairs.
+        bonds_broken: Intended bonds the geometry lacks, sorted ``(i, j)`` pairs.
+        close_contact_count: Close contacts the graft recorded.
+    """
+
+    check: Literal["clash", "bond_changed"]
+    pair: tuple[NonNegativeInt, NonNegativeInt] | None = None
+    distance_angstrom: NonNegativeFiniteFloat | None = None
+    ratio_to_covalent_sum: NonNegativeFiniteFloat | None = None
+    bonds_formed: list[tuple[NonNegativeInt, NonNegativeInt]] | None = None
+    bonds_broken: list[tuple[NonNegativeInt, NonNegativeInt]] | None = None
+    close_contact_count: NonNegativeInt | None = None
 
 
 class TSEnsembleOptions(CoreModel):
@@ -133,14 +167,24 @@ class TSEnsembleExclusion(CoreModel):
         reason: ``ts_search_failed:<reason>``, ``scf_convergence``, ``engine_error``,
             ``ts_validation_failed``, ``gate_failed:<check>``, ``face_mismatch``,
             ``pre_relax_failed:<error>``, ``outside_window``, ``face_undetermined``,
-            ``connectivity_changed`` or ``orientation_mismatch``.
+            ``connectivity_changed``, ``orientation_mismatch``, ``seed_clash`` or
+            ``bond_changed:<stage>`` (``pre_relax`` or ``ts``).
         pre_relax_wall_time_s: Wall time of the pre-relaxation, if one ran (mission R25).
+        detail: What a seed check found; left out of the serialised form when ``None``.
     """
 
     index: NonNegativeInt
     source: str
     reason: str
     pre_relax_wall_time_s: NonNegativeFiniteFloat | None = None
+    detail: SeedCheckDetail | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_detail(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.detail is None:
+            data.pop("detail", None)
+        return data
 
     @field_validator("source")
     @classmethod
@@ -193,6 +237,8 @@ class TSEnsemble(CoreModel):
         G_pathway_hartree: Pathway free energy ``-RT ln sum g_i exp(-G_i/RT)`` (Eh); ``None``
             when the pathway failed.
         failed_reason: Why the pathway failed; ``None`` when it did not.
+        failed_detail: What a seed check found on a failed seed; left out of the serialised form
+            when ``None``.
     """
 
     pathway: str = Field(pattern=_PATHWAY)
@@ -206,6 +252,14 @@ class TSEnsemble(CoreModel):
     options: TSEnsembleOptions = Field(default_factory=TSEnsembleOptions)
     G_pathway_hartree: FiniteFloat | None = None
     failed_reason: str | None = Field(default=None, min_length=1)
+    failed_detail: SeedCheckDetail | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_detail(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.failed_detail is None:
+            data.pop("failed_detail", None)
+        return data
 
     @model_validator(mode="after")
     def _check_ensemble(self) -> Self:

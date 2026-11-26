@@ -10,7 +10,7 @@ intent: "Refuse a clashing start geometry before any engine call and exclude any
 depends_on: [OPR.0.7.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/ts_fallback.py, src/eta_rxncat/orchestrator/__init__.py, src/eta_rxncat/core/selectivity_models.py, src/eta_rxncat/core/enumeration_models.py, src/eta_rxncat/core/__init__.py, "tests/unit/orchestrator/**", "tests/unit/core/**", spec/compiled/architecture.yml]
@@ -173,12 +173,12 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Core: `SeedCheckDetail`, the three optional fields with the omit-when-None serializer, the
+- [x] Index.
+- [x] Core: `SeedCheckDetail`, the three optional fields with the omit-when-None serializer, the
   reason regex; round-trip tests on the v0.6.0/v0.7.0 fixtures.
-- [ ] `find_clash`, `bond_changes` and `SEED_CLASH_FACTOR` in `ts_ensemble.py`; the known-answer
+- [x] `find_clash`, `bond_changes` and `SEED_CLASH_FACTOR` in `ts_ensemble.py`; the known-answer
   geometry test.
-- [ ] `seed_checks` in the ensemble (four hooks) and in the fallback (close contacts, pre-relax
+- [x] `seed_checks` in the ensemble (four hooks) and in the fallback (close contacts, pre-relax
   bonds, allow-list); fake-engine tests.
 - [ ] Required checks; commit; updater once.
 

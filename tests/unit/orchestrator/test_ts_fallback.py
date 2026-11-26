@@ -346,6 +346,21 @@ def test_every_search_failure_reason_is_classified() -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "reason, expected",
+    [
+        ("seed:seed_clash", True),
+        ("seed:bond_changed:pre_relax", True),
+        ("seed:bond_changed:ts", True),
+        ("seed:bond_changed:frequency", False),
+        ("seed_clash", False),
+    ],
+)
+def test_the_seed_check_reasons_are_on_the_allow_list(reason: str, expected: bool) -> None:
+    """R35: a geometry fault of a template's seed falls through."""
+    assert module.falls_through(reason) is expected
+
+
 def test_the_face_mismatch_precedes_the_search(tmp_path: Path) -> None:
     """The pre-relaxed start's face is checked first: no TS search runs at all."""
     SpyTS.calls = 0

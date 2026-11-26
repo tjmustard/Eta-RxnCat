@@ -7,9 +7,16 @@ cross-references that need no chemistry.
 
 from collections import Counter
 from collections.abc import Iterable
-from typing import Literal, Self
+from typing import Any, Literal, Self
 
-from pydantic import Field, StrictInt, field_validator, model_validator
+from pydantic import (
+    Field,
+    SerializerFunctionWrapHandler,
+    StrictInt,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
 
 from eta_rxncat.core.graph import ReactionGraph
 from eta_rxncat.core.mapping_models import IndexSource
@@ -22,6 +29,7 @@ from eta_rxncat.core.models import (
     PositiveInt,
 )
 from eta_rxncat.core.results import NonNegativeFiniteFloat
+from eta_rxncat.core.selectivity_models import SeedCheckDetail
 
 GraftRefusalReason = Literal[
     "graft_input",
@@ -307,6 +315,7 @@ class FallbackAttempt(CoreModel):
         outcome: ``chosen``, ``fell_through`` or ``stopped``.
         reason: Why it was not chosen; ``None`` otherwise.
         wall_time_s: Wall time of the attempt.
+        detail: What a seed check found; left out of the serialised form when ``None``.
     """
 
     template_id: str = Field(min_length=1)
@@ -314,6 +323,14 @@ class FallbackAttempt(CoreModel):
     outcome: Literal["chosen", "fell_through", "stopped"]
     reason: str | None = Field(default=None, min_length=1)
     wall_time_s: NonNegativeFiniteFloat
+    detail: SeedCheckDetail | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_detail(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.detail is None:
+            data.pop("detail", None)
+        return data
 
 
 class FallbackRecord(CoreModel):

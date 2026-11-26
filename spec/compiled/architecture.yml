@@ -730,13 +730,15 @@ nodes:
     seed, samples, cached constrained_preopt (injected optimizer; every failure row
     carries the capture_frames frames, v0.7.0), re-search, exclusions (R19), dedup,
     window, weights; v0.7.0 keywords expected_face (seed:face_mismatch_pathway), max_pre_relax_timeouts
-    (stall_cap_reached_bool), orientation_centers (orientation_mismatch). _deadline.py:
-    PreRelaxTimeout guard; effective_budget_s scales the 600 s base by load1/n_cpu,
-    cap 1200 (R7). ts_fallback.py: enumerated_pathway_inputs (multi-site seed composed
-    via map_template_indices, derived reactant_key, refuses charged/open-shell, multi_site_seed_atom_deleted)
-    and run_ts_with_fallback (templates in rank order; falls through only on the R4
-    allow-list; stall cap 2; no own cache rows). Tests: unit/orchestrator selectivity_*,
-    ts_ensemble*, deadline, ts_fallback.
+    (stall_cap_reached_bool), orientation_centers (orientation_mismatch). seed_checks
+    (v0.7.0, on in the fallback): find_clash (seed_clash, no engine call) and bond_changes
+    (bond_changed:pre_relax|ts; seed:*), each with SeedCheckDetail; graft close contacts
+    give seed:seed_clash. _deadline.py: PreRelaxTimeout guard; effective_budget_s
+    scales the 600 s base by load1/n_cpu, cap 1200 (R7). ts_fallback.py: enumerated_pathway_inputs
+    (multi-site seed composed via map_template_indices, derived reactant_key, refuses
+    charged/open-shell, multi_site_seed_atom_deleted) and run_ts_with_fallback (templates
+    in rank order; falls through only on the R4 allow-list; stall cap 2; no own cache
+    rows). Tests: unit/orchestrator selectivity_*, ts_ensemble*, deadline, ts_fallback.
   inputs:
   - data_type: ts_ensembles_per_pathway
     external: eta_rxncat_consumers

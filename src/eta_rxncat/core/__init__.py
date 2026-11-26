@@ -54,6 +54,7 @@ from eta_rxncat.core.results import Device, HessianMethod, PotentialResult
 from eta_rxncat.core.selectivity_models import (
     PathwaySelectivity,
     PruningDecision,
+    SeedCheckDetail,
     SelectivityKind,
     SelectivityResult,
     TSEnsemble,
@@ -115,6 +116,7 @@ __all__ = [
     "ReactionEdge",
     "ReactionGraph",
     "ReactionNode",
+    "SeedCheckDetail",
     "SelectivityKind",
     "SelectivityResult",
     "SelectivitySet",
