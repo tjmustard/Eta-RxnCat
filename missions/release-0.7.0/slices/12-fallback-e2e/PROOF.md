@@ -6,10 +6,14 @@
 
 ## What this proves
 
-[Each Proof contract item, mapped to the artifact that demonstrates it]
+- Per unit host check, env, `FallbackRecord`, gates, second-pass counts: proof/12-execute.md "Per unit", "Commands" (graft_time gates per lead ruling A, row qitem-20261126124248-0826c9cd).
+- `git show --stat` of the candidate-only commit (243b619): proof/12-execute.md.
+- Required checks exit 0: proof/12-execute.md "Required checks".
 
 ## Artifacts
 
+- proof/12-execute.md - guard CLEAR: 3/3 fallback units pass 9 gates (GFN2 gated, UMA reported); rank-1 TS-search calls 0; second passes 0 calls; full pytest 2563 passed
+
 ## Residue / caveats
 
-[What is not covered, and where it is tracked]
+Chemistry is reported only; no barrier in fallback units; TJ's Phase 3 follows slice 13. Host load during a unit was not monitored.
