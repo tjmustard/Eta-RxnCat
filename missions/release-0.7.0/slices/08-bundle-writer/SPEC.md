@@ -10,7 +10,7 @@ intent: "Write the static offline review bundle from RunData with a JS-free stat
 depends_on: [OPR.0.7.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", src/eta_rxncat/cli.py, "tests/unit/cli/**", pyproject.toml, uv.lock, spec/compiled/architecture.yml]
@@ -109,7 +109,7 @@ risk: bundle size, measured in M10 with a stop-and-report gate.
 - [x] Tests `tests/unit/review/test_bundle.py`, `test_bundle_scans.py`, `test_assets.py`,
       `tests/unit/cli/test_review_bundle_cli.py`.
 - [x] M10 dry export; proof.
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
