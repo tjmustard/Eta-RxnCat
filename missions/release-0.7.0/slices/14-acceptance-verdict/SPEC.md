@@ -62,7 +62,8 @@ Context the builder needs:
   blocking host check in its own call or an exiting loop (never echo-then-run), output kept in the
   proof: `nvidia-smi` no compute process; `MemAvailable` >= 12 GiB; `ps`: no other eta
   E2E/pytest/xtb and no non-niced (nice < 10) process of any rig using >= 100 % CPU or >= 2 GiB RSS.
-  One engine and one unit per command, `timeout 3600`, from a scratch cwd (never the repo root:
+  One engine and one unit per command, `timeout 5400` for a G7/G8 unit command (R7, HF3-BOUND) and
+  `timeout 3600` for every other command, from a scratch cwd (never the repo root:
   geomeTRIC writes `HT.v_*.txt` into the cwd until slice 06 lands). Env asserted in the proof:
   `ETA_RXNCAT_XTB=~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb`, `ETA_RXNCAT_ACCEPTANCE=1`,
   `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp`. Honour any quiet-host hold the lead announces.
