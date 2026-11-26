@@ -13,12 +13,8 @@ from test_push_rededup import classify, mirrored, shifted
 
 import eta_rxncat.orchestrator.species as species
 from eta_rxncat.core import MolecularState
-from eta_rxncat.orchestrator import (
-    ENGINE_CLASSES,
-    FrequencyDisposition,
-    SpeciesResult,
-    run_species,
-)
+from eta_rxncat.orchestrator import ENGINE_CLASSES, SpeciesResult, run_species
+from eta_rxncat.orchestrator.species import FrequencyDisposition
 from eta_rxncat.store import ArtifactStore
 
 
@@ -72,19 +68,30 @@ def test_a_clean_run_keeps_every_row(baseline: SpeciesResult) -> None:
 def test_push_chain_superseded_then_duplicate_after_push(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, baseline: SpeciesResult
 ) -> None:
-    """Gauche pushed onto anti: its first row is superseded, the pushed row is dropped."""
+    """Gauche pushed beside anti: its first row is superseded, the pushed row is a duplicate.
+
+    The push returns anti's optimization shifted 0.01 A and not relaxed, so the pushed row has its
+    own stage key while the re-dedup still matches it to anti.
+    """
     anti = next(r for r in baseline.ensemble.records if classify(r.state) == "anti")
-    result = faked(tmp_path, monkeypatch, {2}, anti.state)
+    near = anti.optimization.model_copy(
+        update={
+            "final_state": shifted(anti.state, 0.01),
+            # slightly higher, so the re-dedup (lowest G first) keeps anti
+            "final_energy_hartree": anti.optimization.final_energy_hartree + 1e-4,
+        }
+    )
+    monkeypatch.setattr(species, "_push", lambda *args: near)
+    result = faked(tmp_path, monkeypatch, {2})
     assert_one_per_row_in_visit_order(result)
     (old,) = of_kind(result, "superseded_by_push")
+    assert old.reason is None
     by_key = {d.frequency_key: d for d in result.frequency_dispositions}
     new = by_key[str(old.superseded_by_key)]
-    # The pushed row's geometry grid may equal the kept anti row's, which then keeps it.
-    if new.kind == "dropped":
-        assert new.reason == "duplicate_after_push"
-    else:
-        assert new.kind == "kept"
-    assert old.reason is None
+    assert new.kind == "dropped"
+    assert new.reason == "duplicate_after_push"
+    (kept,) = of_kind(result, "kept")
+    assert kept.frequency_key not in (old.frequency_key, new.frequency_key)
 
 
 def test_push_onto_a_new_minimum_keeps_the_pushed_row(
