@@ -374,6 +374,45 @@ def _strides_cell(run_data: Mapping[str, Any]) -> str:
     )
 
 
+def decimation_statement(documents: Iterable[Mapping[str, Any]]) -> str:
+    """The root page's sentence about decimation, derived from the strides of every trajectory."""
+    strides: dict[str, set[int]] = {}
+    for data in documents:
+        for kind, row in stride_table(data).items():
+            strides.setdefault(kind, set()).update(s for s in row["strides"] if s > 1)
+    decimated = {kind: sorted(found) for kind, found in sorted(strides.items()) if found}
+    if not decimated:
+        return (
+            "No trajectory is decimated: every trajectory is at decimation_stride 1, so a viewer "
+            "shows all of its n_frames_total frames."
+        )
+    listed = "; ".join(
+        f"{kind} at decimation_stride {', '.join(str(s) for s in found)}"
+        for kind, found in decimated.items()
+    )
+    return (
+        f"Some trajectories are decimated ({listed}): a viewer shows every decimation_stride-th "
+        "frame and the last of n_frames_total; the full trajectory stays in the store."
+    )
+
+
+def intro_gate(root: Path, names: Sequence[str]) -> str:
+    """The root page states what the strides in the ``run_data.json`` files say (R17, R18).
+
+    Returns:
+        The statement.
+
+    Raises:
+        ReviewError: The page does not carry it.
+    """
+    statement = decimation_statement(
+        json.loads((root / n / "run_data.json").read_bytes()) for n in names
+    )
+    if _text(statement) not in (root / "index.html").read_text(encoding="utf-8"):
+        raise ReviewError(f"the root page does not state the decimation: {statement}")
+    return statement
+
+
 def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
     """Write ``<root>/index.html``: static, no script, one row per sub-bundle, file names only.
 
@@ -382,8 +421,10 @@ def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
     rows = []
     total = 0
     totals = {"gated": [0, 0], "reported": [0, 0], "record": [0, 0]}
+    documents = []
     for sub in subs:
         data = json.loads((root / sub["name"] / "run_data.json").read_bytes())
+        documents.append(data)
         counts = gate_counts(data)
         for kind in totals:
             totals[kind] = [totals[kind][i] + counts[kind][i] for i in (0, 1)]
@@ -414,9 +455,8 @@ def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
         "table{border-collapse:collapse;margin:0.5em 0}"
         "th,td{border:1px solid #999;padding:0.25em 0.6em;text-align:left;vertical-align:top}"
         "</style>\n</head>\n<body>\n<h1>eta-rxncat v0.7.0 review bundle</h1>\n"
-        "<p>One row per sub-bundle; open a link to review its runs. Trajectories are decimated "
-        "to fit the byte budget: a viewer shows every decimation_stride-th frame and the last of "
-        "n_frames_total; the full trajectory stays in the store.</p>\n"
+        "<p>One row per sub-bundle; open a link to review its runs. "
+        f"{_text(decimation_statement(documents))}</p>\n"
         "<p><b>Gates:</b> the mechanics gates count for gating on the GFN2 runs only. UMA gates "
         "are <b>reported, not gated</b>.</p>\n"
         "<table><thead><tr><th>Sub-bundle</th><th>Source slice</th><th>Run record</th>"
@@ -653,6 +693,7 @@ def run_gates(root: Path, names: Sequence[str], extra_forbidden: Sequence[str]) 
     listed["<root>"] = manifest_gate(root)
     sizes = size_gate(root, names)
     data_gate(root, names)
+    statement = intro_gate(root, names)
     files = {p.relative_to(root).as_posix(): p.read_bytes() for p in _files(root)}
     host_data_gate(files, host_strings(extra_forbidden))
     vendored = network_gate(files)
@@ -666,6 +707,7 @@ def run_gates(root: Path, names: Sequence[str], extra_forbidden: Sequence[str]) 
         "vendored_network_literals": vendored,
         "html_pages_with_csp": pages,
         "strides": strides,
+        "decimation_statement": statement,
         "root_manifest_sha256": sha256_of(root / "MANIFEST.sha256"),
     }
 

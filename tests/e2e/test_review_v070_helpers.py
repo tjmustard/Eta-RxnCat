@@ -26,6 +26,7 @@ from review_v070 import (  # noqa: E402
     gate_counts,
     host_data_gate,
     host_strings,
+    intro_gate,
     m10_gate,
     manifest_gate,
     network_gate,
@@ -253,6 +254,54 @@ def test_root_index_is_static_linked_and_names_files_only(tmp_path: Path) -> Non
     assert "decimation_stride" in html and "n_frames_total" in html
     assert "reported, not gated" in html
     assert str(tmp_path) not in html
+
+
+def set_stride(root: Path, name: str, kind: str, stride: int) -> None:
+    """Set the stride of every trajectory of one kind in a sub-bundle's data."""
+
+    def change(data: dict[str, Any]) -> None:
+        for t in data["trajectories"]:
+            if t["kind"] == kind:
+                t["decimation_stride"] = stride
+
+    edit_data(root, name, change)
+
+
+def reindex(root: Path, names: list[str]) -> str:
+    """Rewrite the root page from the files and return it."""
+    subs = [
+        {"name": n, "slice": "s", "record": "ok.runrecord.json", "store": "stub.sqlite"}
+        for n in names
+    ]
+    write_root_index(root, subs)
+    return (root / "index.html").read_text(encoding="utf-8")
+
+
+def test_intro_says_no_decimation_when_every_stride_is_one(tmp_path: Path) -> None:
+    """All strides 1: the page says none is decimated; a later stride above 1 fails the gate."""
+    root, names = clean_root(tmp_path)
+    html = (root / "index.html").read_text(encoding="utf-8")
+    assert "No trajectory is decimated" in html and "Some trajectories are decimated" not in html
+    assert intro_gate(root, names).startswith("No trajectory is decimated")
+    set_stride(root, names[0], "pre_relax", 2)
+    with pytest.raises(ReviewError, match="does not state the decimation"):
+        intro_gate(root, names)
+
+
+def test_intro_states_the_kinds_and_strides_above_one(tmp_path: Path) -> None:
+    """A stride above 1 is named by kind; the page then fails once the data is at stride 1."""
+    root, names = clean_root(tmp_path)
+    set_stride(root, names[0], "pre_relax", 4)
+    set_stride(root, names[0], "ts_search", 2)
+    html = reindex(root, names)
+    assert "No trajectory is decimated" not in html
+    assert "pre_relax at decimation_stride 4; ts_search at decimation_stride 2" in html
+    assert "endpoint_opt at" not in html
+    assert intro_gate(root, names).startswith("Some trajectories are decimated")
+    set_stride(root, names[0], "pre_relax", 1)
+    set_stride(root, names[0], "ts_search", 1)
+    with pytest.raises(ReviewError, match="does not state the decimation"):
+        intro_gate(root, names)
 
 
 def test_uma_gates_are_counted_as_reported() -> None:
