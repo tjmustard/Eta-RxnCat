@@ -12,6 +12,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 ## Notes
 
 - 2026-11-26 - mission scaffolded.
+- 2026-11-26 [field-note] (agent:hyper-execute, slice 01-starter-graph-split) A ruff gate under docs/prd/vX/ does not stop the hook: ruff uses the config nearest each file (here the starter pyproject.toml), and only a --force-exclude check on explicit paths shows it; a whole-tree ruff check passes either way. anchors: none
 
 ## Lore capture
 

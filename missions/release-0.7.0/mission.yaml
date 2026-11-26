@@ -5,7 +5,7 @@ kind: mission
 # until you change this to active (or release-candidate).
 metadata:
   name: "release-0.7.0"
-  status: planned
+  status: active
 composition:
   mission_markdown:
     spec: SPEC.md

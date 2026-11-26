@@ -13,7 +13,7 @@
 <!-- BEGIN HACF GENERATED: slice-table -->
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
-| OPR.0.7.0.1 | 01-starter-graph-split | compiled |  | 2026-11-26T01:14:11+00:00 compiled |
+| OPR.0.7.0.1 | 01-starter-graph-split | executed |  | 2026-11-26T02:23:48+00:00 executed |
 | OPR.0.7.0.2 | 02-core-contracts | compiled | OPR.0.7.0.1 | 2026-11-26T01:14:11+00:00 compiled |
 | OPR.0.7.0.3 | 03-single-site-enumerator | compiled | OPR.0.7.0.2 | 2026-11-26T01:14:11+00:00 compiled |
 | OPR.0.7.0.4 | 04-multi-site-product | compiled | OPR.0.7.0.3 | 2026-11-26T01:14:11+00:00 compiled |

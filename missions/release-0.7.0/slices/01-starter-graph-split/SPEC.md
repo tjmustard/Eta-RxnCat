@@ -10,7 +10,7 @@ intent: "Unpack the v0.7.0 starter as reference with its DV register, fix the v0
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["docs/prd/v0.7.0/**", docs/prd/PLAN_DISCREPANCIES.md, README.md, tests/unit/test_identity.py, spec/compiled/architecture.yml]
@@ -124,15 +124,15 @@ loss, and a refusal is stop-and-report, not a workaround.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
-- [ ] Unpack the zip to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`; write `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml`; run the
+- [x] `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
+- [x] Unpack the zip to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`; write `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml`; run the
       two hook-style ruff commands (exit 0); sha256 listing.
-- [ ] Write `DISCREPANCIES.md` (DV-01…DV-10) and the "Plan-vs-code (v0.7.0)" section.
-- [ ] Change the README sentence and the `test_identity.py` claim together; run that test.
-- [ ] Graph split steps 1-5 (counts before, narrow species_runner, three ensure-node).
-- [ ] Step 6: import scan, then set-edges.
-- [ ] Steps 7-8: descriptions, apply-review.
-- [ ] Commit; step 9: index + updater once; step 10: counts after, validate.
+- [x] Write `DISCREPANCIES.md` (DV-01…DV-10) and the "Plan-vs-code (v0.7.0)" section.
+- [x] Change the README sentence and the `test_identity.py` claim together; run that test.
+- [x] Graph split steps 1-5 (counts before, narrow species_runner, three ensure-node).
+- [x] Step 6: import scan, then set-edges.
+- [x] Steps 7-8: descriptions, apply-review.
+- [x] Commit; step 9: index + updater once; step 10: counts after, validate.
 
 ## 4. The Negative Space (Constraints)
 
