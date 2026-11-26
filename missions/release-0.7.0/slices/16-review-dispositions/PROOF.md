@@ -6,10 +6,12 @@
 
 ## What this proves
 
-[Each Proof contract item, mapped to the artifact that demonstrates it]
+- Each Proof contract item is mapped in proof/16-execute.md "Proof contract".
 
 ## Artifacts
 
+- proof/16-execute.md - guard CLEAR: sample 6 excluded overlap 0.131 with banner; 071c superseded; 0 engine calls; M12 0 failed; pytest 2660 passed
+
 ## Residue / caveats
 
-[What is not covered, and where it is tracked]
+No engine run and no bundle in tests/candidate_outputs/ (slice 18).
