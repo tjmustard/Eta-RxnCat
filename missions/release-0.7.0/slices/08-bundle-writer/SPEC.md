@@ -10,7 +10,7 @@ intent: "Write the static offline review bundle from RunData with a JS-free stat
 depends_on: [OPR.0.7.0.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", src/eta_rxncat/cli.py, "tests/unit/cli/**", pyproject.toml, uv.lock, spec/compiled/architecture.yml]
@@ -102,13 +102,13 @@ risk: bundle size, measured in M10 with a stop-and-report gate.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Vendor 3Dmol (verify, hashes, SOURCES.md, licence).
-- [ ] `review/bundle.py` (layout, embedded JSON, static summary, CSP, manifest).
-- [ ] `cli.py` `review-bundle`; `pyproject.toml` package data.
-- [ ] Tests `tests/unit/review/test_bundle.py`, `test_bundle_scans.py`, `test_assets.py`,
+- [x] Index.
+- [x] Vendor 3Dmol (verify, hashes, SOURCES.md, licence).
+- [x] `review/bundle.py` (layout, embedded JSON, static summary, CSP, manifest).
+- [x] `cli.py` `review-bundle`; `pyproject.toml` package data.
+- [x] Tests `tests/unit/review/test_bundle.py`, `test_bundle_scans.py`, `test_assets.py`,
       `tests/unit/cli/test_review_bundle_cli.py`.
-- [ ] M10 dry export; proof.
+- [x] M10 dry export; proof.
 - [ ] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)

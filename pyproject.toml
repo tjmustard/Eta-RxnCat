@@ -52,6 +52,8 @@ torch = [{ index = "pytorch-cu129" }]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/eta_rxncat"]
+# The review bundle's assets and the committed run-data schema ship in the wheel.
+artifacts = ["src/eta_rxncat/review/assets/*", "src/eta_rxncat/review/schema/*.json"]
 
 [tool.ruff]
 line-length = 100

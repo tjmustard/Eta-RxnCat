@@ -1,5 +1,10 @@
-"""Run-data contract and exporter of the offline review bundle (v0.7.0)."""
+"""Run-data contract, exporter and writer of the offline review bundle (v0.7.0)."""
 
+from eta_rxncat.review.bundle import (
+    TRAJECTORY_BYTE_BUDGET,
+    BundleError,
+    write_review_bundle,
+)
 from eta_rxncat.review.export import (
     ExportBudgetError,
     ExportError,
@@ -18,6 +23,8 @@ from eta_rxncat.review.run_data import (
 __all__ = [
     "CHANGES",
     "SCHEMA_VERSION",
+    "TRAJECTORY_BYTE_BUDGET",
+    "BundleError",
     "ExportBudgetError",
     "ExportError",
     "RunData",
@@ -26,4 +33,5 @@ __all__ = [
     "canonical_run_data_json",
     "export_run_data",
     "read_run_data",
+    "write_review_bundle",
 ]
