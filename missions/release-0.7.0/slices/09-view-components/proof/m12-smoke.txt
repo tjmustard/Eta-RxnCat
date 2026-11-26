@@ -1,0 +1,47 @@
+M12 recorded browser smoke, slice 09 (stub run-data), from file://. Builder evidence.
+
+Tool (throwaway, under TMPDIR; not in pyproject.toml or uv.lock):
+  Playwright for Python 1.65.2 (greenlet 3.5.6), CPython 3.12.16, bypass_csp never set.
+  Chrome: the installed Google Chrome 158.0.8127.36 (channel "chrome"), headless, with
+    --use-angle=swiftshader --enable-unsafe-swiftshader (software WebGL).
+  Firefox: Playwright's Firefox build 159.0 (playwright firefox v1572, downloaded to TMPDIR),
+    headless, pref webgl.force-enabled. The host's /usr/bin/firefox is a snap shim and the snap
+    is not installed, so no distribution Firefox was available. Playwright's build is patched
+    for automation: it is not a Mozilla release binary.
+
+Input: tests/unit/review/data/m12_stub_run_data.json
+  sha256 c50bde093639cac633509a3a3f18a2632f8dfc4e5ce2cb2e2bb673482ac5782f
+Component: src/eta_rxncat/review/assets/eta-view.js
+  sha256 a13e2f9a006304d4b7cc7658185f88121e1b80ccae65335200f5bda8b96a86d2
+
+Command: (cd repo) uv run python make_bundles.py <stub.json> <scratch>
+         <venv>/bin/python m12_driver.py <scratch>/bundle <scratch>/unsupported <evidence>
+  (the two scripts: m12/*.py.txt). Exit 0; "total failed: 0".
+
+Per browser, m12/<browser>/: checks.txt (every check and its measured values), console.txt
+(every console message and page error), network.txt (every request, failed request and
+websocket), control-logs.txt, and screenshots. Scratch paths read <bundle>, <unsupported>,
+<control> in the logs.
+
+Results, both browsers:
+  - Named-bond mode: over 20 frames only atoms 0 and 1 move, in opposite directions along x,
+    peak 0.4 A each (read from 3Dmol's atoms; the mounted viewer's screenshots differ in time).
+  - 3-frame trajectory: Play and slider show frames 1, 2, 3; 3Dmol atom 1 x = 1.4, 1.9, 2.4;
+    the plot marker follows, and a plot point drives the player.
+  - Two imaginary modes: banner in the static summary and in the component; both modes selectable.
+  - Hostile label, entry id and provenance string appear as text; 0 images, 3 scripts; no dialog.
+  - schema_version 2 shows "unsupported run-data version 2" and mounts nothing.
+  - Console: no message at all, no page error. Network: only file: loads of index.html and the
+    two assets. No CSP violation.
+  - Controls: the same listeners catch a console.error and a remote request on a control page,
+    and the bundle page's policy blocks an injected remote image, reported by the listener.
+
+CSP: NO addition. 3Dmol 2.5.5 needed nothing beyond slice 08's policy for these components
+(no surfaces are drawn, so its blob: worker is never started). CONTENT_SECURITY_POLICY is
+unchanged.
+
+Found by the smoke and fixed: Firefox raised "OffscreenCanvas.transferToImageBitmap: Failed to
+create ImageBitmap from OffscreenCanvas" when 3Dmol's observers redrew a destroyed viewer at
+size zero; destroy() now disconnects them and stops the viewer drawing.
+
+Not covered: real data (slice 13 repeats M12); headed browsers and hardware WebGL; Safari.
