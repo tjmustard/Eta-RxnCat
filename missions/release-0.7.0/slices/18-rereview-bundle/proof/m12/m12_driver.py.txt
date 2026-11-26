@@ -1,0 +1,353 @@
+"""M12 on the real v0.7.0 review bundle (slice 13, extended in slice 18 for dispositions):
+Chrome and Playwright Firefox from file://.
+
+Usage: python m12_driver_v070.py <bundle_root> <evidence_dir>
+Starts at the root index.html, opens every sub-bundle by its link, and for every candidate checks
+that each TS frequency's mode animates and each trajectory plays. Throwaway Playwright; bypass_csp
+is never set. Reads only the scratch tree.
+"""
+
+import json
+import sys
+import time
+from collections import Counter
+from pathlib import Path
+
+from playwright.sync_api import sync_playwright
+
+ROOT = Path(sys.argv[1]).resolve()
+OUT = Path(sys.argv[2]).resolve()
+CONTROL = OUT / "control.html"
+
+INIT = """
+window.__csp = [];
+document.addEventListener("securitypolicyviolation", function (e) {
+  window.__csp.push(e.violatedDirective + " " + e.blockedURI);
+});
+"""
+
+
+USED = "Used in the result"
+NOT_USED = "Not used (rejected, merged or superseded)"
+KNOWN_SAMPLE = "Sample 6 (fragment_embed:6"
+SUPERSEDED, SUCCESSOR = "071c077d750a", "ee86975197d1"
+
+
+def prefix(d, sample):
+    k = d["kind"]
+    if sample:
+        if k == "member":
+            return "member"
+        if k == "merged":
+            return f"merged into sample {d['merged_into_index']}"
+        return ("excluded: " if k == "excluded" else "fell through: ") + d["reason_code"]
+    if k == "superseded_by_push":
+        return "superseded by push"
+    if k == "dropped":
+        return f"dropped: {d['reason_code']}"
+    return k
+
+
+def unit_rows(data, candidate_id):
+    """(frequency_id, group, label prefix, identity, is_ts) per option; rowless samples apart."""
+    rows, unrun = [], []
+    for c in data["candidates"]:
+        if c["candidate_id"] != candidate_id:
+            continue
+        for d in c.get("sample_dispositions", []):
+            group = USED if d["kind"] == "member" else NOT_USED
+            if d["frequency_id"] is None:
+                unrun.append((d["sample_index"], prefix(d, True)))
+            else:
+                rows.append((d["frequency_id"], group, prefix(d, True), d["identity"], True))
+        for d in c.get("endpoint_dispositions", []):
+            group = USED if d["kind"] == "kept" else NOT_USED
+            rows.append((d["frequency_id"], group, prefix(d, False), None, False))
+    return rows, unrun
+
+
+def at_viewport(page, locator, path):
+    locator.evaluate("e => e.scrollIntoView({block: 'center'})")
+    page.wait_for_timeout(300)
+    page.screenshot(path=str(path))
+
+
+class Check:
+    def __init__(self):
+        self.log, self.failed, self.passed = [], 0, 0
+
+    def __call__(self, name, ok, detail=""):
+        self.failed += not ok
+        self.passed += bool(ok)
+        self.log.append(f"{'PASS' if ok else 'FAIL'}  {name}" + (f"  [{detail}]" if detail else ""))
+
+
+def clean(text):
+    text = text.replace(ROOT.as_uri(), "<bundle>").replace(str(ROOT), "<bundle>")
+    text = text.replace(CONTROL.as_uri(), "<control>").replace(str(OUT), "<evidence>")
+    return text.replace(str(Path.home()), "<home>")
+
+
+def watch(page, console, network, dialogs):
+    page.on("console", lambda m: console.append(f"console.{m.type}: {m.text[:300]} @ {m.location.get('url', '')}"))
+    page.on("pageerror", lambda e: console.append(f"pageerror: {e}"))
+    page.on("crash", lambda p: console.append("crash"))
+    page.on("request", lambda r: network.append(f"request {r.resource_type} {r.method} {r.url}"))
+    page.on("requestfailed", lambda r: network.append(f"requestfailed {r.url} {r.failure}"))
+    page.on("websocket", lambda w: network.append(f"websocket {w.url}"))
+    page.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
+
+
+def shots_differ(page, box, n=4):
+    images = set()
+    for _ in range(n):
+        images.add(box.screenshot())
+        if len(images) > 1:
+            return True, len(images)
+        page.wait_for_timeout(240)
+    return False, len(images)
+
+
+def check_candidate(page, check, sub, data, candidate_id, shots, counts):
+    section = page.locator(f'.eta-panels[data-candidate="{candidate_id}"]')
+    frequencies = {f["frequency_id"]: f for f in data["frequencies"]}
+    trajectories = {t["trajectory_id"]: t for t in data["trajectories"]}
+    rows, unrun = unit_rows(data, candidate_id)
+    name = f"{sub} {candidate_id}"
+    left = section.locator(".eta-left select")
+    shown = left.locator("optgroup").evaluate_all(
+        "gs => gs.flatMap(g => Array.from(g.children).map(o => [g.label, o.value, o.textContent]))")
+    labels = left.locator("optgroup").evaluate_all("gs => gs.map(g => g.label)")
+    wanted = Counter((f, g) for f, g, *_ in rows)
+    check(f"{name}: frequency options are the record's rows, each in its group",
+          Counter((v, g) for g, v, _ in shown) == wanted, f"{len(shown)} vs {len(rows)}")
+    check(f"{name}: groups are Used then Not used", labels == [g for g in (USED, NOT_USED) if any(r[1] == g for r in rows)], str(labels))
+    pending = list(rows)
+    bad = []
+    for group, value, text in shown:
+        found = next((r for r in pending if r[0] == value and r[1] == group and f"\u2014 {r[2]}" in text), None)
+        if found is None:
+            bad.append(text[:200])
+        else:
+            pending.remove(found)
+    check(f"{name}: every option names its disposition", bad == [] and pending == [], str(bad[:3]))
+    items = section.locator(".eta-unrun li").all_text_contents()
+    check(f"{name}: samples without frequencies listed with their disposition",
+          len(items) == len(unrun) and all(any(f"sample {i} (" in x and p in x for x in items) for i, p in unrun),
+          f"{len(items)} vs {len(unrun)}")
+    animated = set()
+    kept = set()
+    for index, (group, option, text) in enumerate(shown):
+        entry = frequencies[option]
+        left.select_option(index=index)
+        page.wait_for_timeout(250)
+        mine = [r for r in rows if r[0] == option]
+        panel = section.locator(".eta-left").inner_text()
+        label = f"{sub} {entry['species_id']} {entry['stage_key'][:12]} [{group[:8]}]"
+        check(f"{label}: panel shows every disposition", all(f"Disposition: {r[2]}" in panel for r in mine), text[:80])
+        counts["dispositions"] += 1
+        identities = [r[3] for r in mine if r[3] is not None]
+        if identities:
+            check(f"{label}: identity numbers shown", "Identity: imaginary frequency" in panel)
+        failed = any(not i["passed_bool"] for i in identities)
+        banners = section.locator(".eta-left .banner").all_text_contents()
+        check(f"{label}: identity banner iff an identity fails", any("Identity check failed" in b for b in banners) == failed, str(banners))
+        counts["identity_banners"] += failed
+        if not mine[0][4] or option in animated:
+            continue
+        animated.add(option)
+        tsname = f"{sub} TS {entry['species_id']} {entry['stage_key'][:12]}"
+        if entry["status"] != "completed":
+            check(f"{tsname}: frequencies not completed, warning shown",
+                  section.locator(".eta-left .warn").count() > 0, entry["status"])
+            counts["ts_not_completed"] += 1
+            continue
+        counts["ts"] += 1
+        readout = section.locator(".eta-left .eta-mode").inner_text()
+        if entry["n_imaginary"] == 0:
+            check(f"{tsname}: no imaginary mode stated", "No imaginary mode." in readout)
+            continue
+        box = section.locator(".eta-left .eta-3d")
+        box.scroll_into_view_if_needed()
+        ok, n = shots_differ(page, box)
+        counts["animated"] += ok
+        mode = entry["imaginary_modes"][0]["frequency_cm1"]
+        check(f"{tsname}: mode animates ({entry['n_imaginary']} imaginary, {mode:.1f} cm-1)",
+              ok and f"{mode:.1f}" in readout, f"{n} distinct")
+        unit = entry["species_id"]
+        if unit not in kept:
+            kept.add(unit)
+            box.screenshot(path=str(shots / f"{sub}-ts-{unit}.png"))
+    static = page.locator(f'section[id="c/{candidate_id}"] div.notused')
+    if candidate_id == "ethyl" and any(i == 6 and p.startswith("excluded: seed_clash") for i, p in unrun) and "uma" not in sub:
+        line = static.locator("p", has_text=KNOWN_SAMPLE).filter(has_text="seed_clash")
+        check(f"{name}: known answer sample 6 seed_clash 0.438 in the static Not used group",
+              line.count() == 1 and "C4\u2013H21 0.438" in line.first.inner_text())
+        at_viewport(page, line.first, shots / f"known-sample6-static-{sub}.png")
+        li = section.locator(".eta-unrun li", has_text="sample 6 (").filter(has_text="seed_clash").filter(has_text="0.438")
+        check(f"{name}: known answer sample 6 in the JS list", li.count() == 1)
+        at_viewport(page, li.first, shots / f"known-sample6-js-{sub}.png")
+        counts["known"] += 1
+    if candidate_id == "npropyl" and "uma" in sub:
+        old = static.locator("h5", has_text=f"{SUPERSEDED})")
+        check(f"{name}: {SUPERSEDED} headed superseded by push in the static Not used group",
+              old.count() >= 1 and "superseded by push" in old.first.inner_text())
+        at_viewport(page, old.first, shots / f"known-{SUPERSEDED}-static.png")
+        new = static.locator("h5", has_text=f"{SUCCESSOR})")
+        check(f"{name}: successor {SUCCESSOR} headed dropped: duplicate_after_push",
+              new.count() >= 1 and "dropped: duplicate_after_push" in new.first.inner_text())
+        at_viewport(page, new.first, shots / f"known-{SUCCESSOR}-static.png")
+        for key, want in ((SUPERSEDED, "superseded by push"), (SUCCESSOR, "dropped: duplicate_after_push")):
+            hits = [i for i, (_, _, t) in enumerate(shown) if f"sample {key})" in t]
+            check(f"{name}: {key} is a JS option in Not used", hits and all(shown[i][0] == NOT_USED for i in hits))
+            left.select_option(index=hits[0])
+            page.wait_for_timeout(500)
+            check(f"{name}: {key} panel states {want}", f"Disposition: {want}" in section.locator(".eta-left").inner_text())
+            at_viewport(page, section.locator(".eta-left .eta-disposition").first, shots / f"known-{key}-js.png")
+        counts["known"] += 1
+    right = section.locator(".eta-right select")
+    options = right.locator("option").evaluate_all("els => els.map(e => e.value)")
+    expected_options = [
+        i for c in data["candidates"] if c["candidate_id"] == candidate_id
+        for i in [*c["trajectory_ids"], *c["endpoint_trajectory_ids"]]
+    ]
+    check(f"{sub} {candidate_id}: trajectory options are the record's", options == expected_options,
+          f"{len(options)} vs {len(expected_options)}")
+    for option in options:
+        entry = trajectories[option]
+        frames = len(entry["frames"])
+        right.select_option(option)
+        player = section.locator(".eta-player")
+        name = f"{sub} {entry['kind']} {entry['species_id']} {entry['stage_key'][:12]} ({frames} frames, stride {entry['decimation_stride']})"
+        readout = player.locator(".eta-readout")
+        first = readout.inner_text()
+        moved = True
+        if frames > 1:
+            player.get_by_role("button", name="Play").click()
+            try:
+                page.wait_for_function(
+                    "([s, t]) => document.querySelector(s).textContent.trim() !== t.trim()",
+                    arg=[f'.eta-panels[data-candidate="{candidate_id}"] .eta-player .eta-readout', first],
+                    timeout=4000,
+                )
+            except Exception as exc:  # noqa: BLE001
+                moved = False
+                console_note = str(exc)[:100]
+        slider = player.locator("input[type=range]")
+        slider.fill(str(frames - 1))
+        last = readout.inner_text()
+        marker = section.locator(".eta-current").get_attribute("data-step")
+        ok = moved and f"frame {frames} of {frames}" in last and marker == str(frames - 1)
+        stated = entry["decimation_stride"] == 1 or "decimated: every" in player.inner_text()
+        counts["played"] += ok
+        counts["trajectories"] += 1
+        check(f"{name}: plays and reaches the last frame, marker follows", ok and stated, last.strip()[:60])
+    page.screenshot(path=str(shots / f"{sub}-panels.png"))
+
+
+def run(browser_name, browser):
+    shots = OUT / browser_name
+    shots.mkdir(parents=True, exist_ok=True)
+    check = Check()
+    console, network, dialogs = [], [], []
+    counts = {"ts": 0, "animated": 0, "ts_not_completed": 0, "trajectories": 0, "played": 0, "pages": 0,
+              "dispositions": 0, "identity_banners": 0, "known": 0}
+    context = browser.new_context(viewport={"width": 1400, "height": 1000})
+    context.add_init_script(INIT)
+    page = context.new_page()
+    watch(page, console, network, dialogs)
+    start = time.time()
+    page.goto((ROOT / "index.html").as_uri(), wait_until="load")
+    page.wait_for_timeout(500)
+    check("root opened from file://", page.url.startswith("file://"))
+    check("root has no script", page.evaluate("document.scripts.length") == 0)
+    check("root states UMA gates apart", "reported, not gated" in page.locator("body").inner_text())
+    page.screenshot(path=str(shots / "00-root-index.png"), full_page=True)
+    links = page.locator("tbody a[href$='/index.html']").evaluate_all("els => els.map(e => e.getAttribute('href'))")
+    subs = sorted(p.name for p in ROOT.iterdir() if p.is_dir())
+    check("one root link per sub-bundle", sorted(h.split("/")[0] for h in links) == subs, f"{len(links)} links")
+    violations = []
+    for href in links:
+        sub = href.split("/")[0]
+        page.goto((ROOT / "index.html").as_uri(), wait_until="load")
+        page.locator(f'a[href="{href}"]').click()
+        page.wait_for_load_state("load")
+        page.wait_for_timeout(2000)
+        counts["pages"] += 1
+        data = json.loads((ROOT / sub / "run_data.json").read_bytes())
+        check(f"{sub}: link opens the sub-bundle", page.url.endswith(f"{sub}/index.html"))
+        check(f"{sub}: no load error", page.locator("#eta-load-error").count() == 0)
+        check(f"{sub}: candidate table lists every entry",
+              page.locator(".eta-candidates tbody tr").count() == len(data["candidates"]))
+        page.screenshot(path=str(shots / f"{sub}-page.png"))
+        for candidate_id in dict.fromkeys(c["candidate_id"] for c in data["candidates"]):
+            page.locator(".eta-candidates a", has_text=candidate_id).first.click()
+            page.wait_for_timeout(1000)
+            check(f"{sub} {candidate_id}: index link mounts the panels",
+                  page.locator(f'.eta-panels[data-candidate="{candidate_id}"] canvas').count() == 2)
+            check_candidate(page, check, sub, data, candidate_id, shots, counts)
+        violations += page.evaluate("window.__csp")
+        print(f"{browser_name} {sub} done at {time.time() - start:.0f}s, failed so far {check.failed}", flush=True)
+    check("known answers shown (3 sample-6 pages, 1 superseded page)", counts["known"] == 4, str(counts["known"]))
+    check("no CSP violation", violations == [], str(violations[:5]))
+    check("no dialog", dialogs == [], str(dialogs))
+    context.close()
+
+    context = browser.new_context()
+    context.add_init_script(INIT)
+    page = context.new_page()
+    page.goto((ROOT / subs[0] / "index.html").as_uri(), wait_until="load")
+    page.evaluate("""() => {
+      var img = document.createElement("img"); img.src = "http://127.0.0.1:59999/m12-csp-control";
+      document.body.appendChild(img);
+    }""")
+    page.wait_for_timeout(700)
+    blocked = page.evaluate("window.__csp")
+    check("control: the page's policy blocks a remote image and the listener reports it",
+          any(v.startswith("img-src ") for v in blocked), str(blocked))
+    context.close()
+
+    c_console, c_network = [], []
+    context = browser.new_context()
+    page = context.new_page()
+    watch(page, c_console, c_network, [])
+    CONTROL.write_text(
+        '<!DOCTYPE html><title>control</title><img src="http://127.0.0.1:59999/m12-control">'
+        '<script>console.error("m12-control-error")</script>'
+    )
+    page.goto(CONTROL.as_uri(), wait_until="load")
+    page.wait_for_timeout(1500)
+    context.close()
+
+    bad_console = [c for c in console if c.startswith(("console.error", "pageerror", "crash"))]
+    remote = [
+        n for n in network
+        if not (n.startswith("request ") and n.split(" ", 3)[3].startswith(("file:", "blob:", "data:")))
+    ]
+    check("no console error", bad_console == [], str(bad_console[:5]))
+    check("no network request (nothing but file:, blob:, data:; no failure)", remote == [], str(remote[:5]))
+    check("control: the console log catches an error", any("m12-control-error" in c for c in c_console))
+    check("control: the network log catches a request", any("http://127.0.0.1:59999/m12-control" in n for n in c_network))
+
+    (shots / "console.txt").write_text(clean("\n".join(console) + "\n" if console else "(no console message, no page error)\n"))
+    (shots / "network.txt").write_text(clean("\n".join(network) + "\n" if network else "(no request event)\n"))
+    (shots / "control-logs.txt").write_text(clean("\n".join(c_console + c_network) + "\n"))
+    summary = f"{browser_name} {browser.version}\ncounts: {counts}\npassed: {check.passed} failed: {check.failed} in {time.time() - start:.0f}s\n"
+    (shots / "checks.txt").write_text(clean(summary + "\n".join(check.log) + "\n"))
+    print(summary)
+    for line in check.log:
+        if line.startswith("FAIL"):
+            print(clean(line))
+    return check.failed
+
+
+with sync_playwright() as p:
+    failed = 0
+    chrome = p.chromium.launch(channel="chrome", args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
+    failed += run("chrome", chrome)
+    chrome.close()
+    firefox = p.firefox.launch(firefox_user_prefs={"webgl.force-enabled": True})
+    failed += run("firefox", firefox)
+    firefox.close()
+print("total failed:", failed)
+sys.exit(1 if failed else 0)
