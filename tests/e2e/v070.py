@@ -434,7 +434,20 @@ def derive_samples(
         seed_final, inputs.core_indices, _sorted_pairs(inputs.seed.forming_bonds), bonds, options
     )
     digests: dict[int, str] = {}
+    # A clashing start (R35) made no engine call, so it has no rows of this run; a store copied from
+    # an earlier run still holds that run's rows for it, which must not enter this record.
+    clashed = {e.index for e in run.ensemble.excluded if e.reason == "seed_clash"}
     for index, sample in enumerate(drawn[: options.max_research], start=1):
+        if index in clashed:
+            samples.append(
+                RecordSample(
+                    template_id=template_id,
+                    sample_index=index,
+                    source=sample.source,
+                    species_id=species_id,
+                )
+            )
+            continue
         row = row_of(sample.state)
         if row is None:
             break  # sampling stopped at the stall cap
