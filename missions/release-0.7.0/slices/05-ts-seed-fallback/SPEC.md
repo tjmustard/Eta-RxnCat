@@ -56,13 +56,32 @@ Context the builder needs:
   face check, before dedup). An empty tuple = v0.6.0.
 - **`orchestrator/ts_fallback.py` (new, selectivity node):**
   - `enumerated_pathway_inputs(candidate, node_id, template_id, recipe, member_gates) ->
-    PathwayInputs`: seed `TSSpec` from the grafted template (forming bonds = the record's
-    `mapped_forming_bonds`, active core = `constrained_core_product_indices`), `reactant_key`
+    PathwayInputs`: seed `TSSpec` from the grafted template (forming bonds and active core
+    composed by R32, below), `reactant_key`
     **derived** from the candidate's reactant nodes (R3: canonical SMILES by RDKit `DetermineBonds`
     at the declared charge on each reactant node's rank-1 eligible template, with counts) — no
     `reactant_key` argument. Refuses (`FallbackInputError`) a candidate that is not `ok`, or whose
     selectivity-set TSs disagree on composition/charge/multiplicity, and any node at charge != 0 or
     multiplicity != 1 (`charged_run_not_supported_v070`, R5).
+  - **R32, multi-site seed composition (no core or enumerator change):** `template_id` is a
+    template of the candidate graph's node, `f"{ref}__{candidate.candidate_id}"` as the enumerator
+    writes it; strip that exact suffix to get the reference id `ref`. The node's *records* are the
+    `status == "ok"` entries of `candidate.records` with `node_id == node_id` and
+    `template_id == ref`, in list order (= site order; the enumerator appends one per covering
+    site and an eligible template has every site `ok`). None → `FallbackInputError`. Record `k`'s
+    `mapped_forming_bonds` and `constrained_core_product_indices` are in record `k`'s product
+    space; compose each index into the final product (the last record's product = the candidate
+    template's geometry) by calling `map_template_indices(records[j], ·)` (public, slice 04) for
+    `j = k+1 … n-1` in order, not by reading `index_map` directly. If any call raises
+    `EnumerationError` (a later site deleted the atom), raise `FallbackInputError` whose message
+    begins `multi_site_seed_atom_deleted` and names node, `ref`, the earlier record's `site_id`,
+    the deleting record's `site_id` and the lost index. Seed: **one record** → its two lists
+    verbatim (no sort, no dedup; exactly today's seed and stage keys). **Several** → forming bonds
+    = concatenation in site order of each record's composed pairs, dropping a pair whose unordered
+    form is already present; active core = `sorted(set(...))` of the composed cores.
+    `run_ts_with_fallback` derives the inputs of every eligible template **before its first engine
+    call**, so this refusal (like R5's) propagates as `FallbackInputError` with 0 engine calls; it
+    is not on the R4 allow-list and never falls through.
   - `run_ts_with_fallback(candidate, node_id, pathway: PathwaySpec, recipe, store, *, optimizer,
     options, member_gates, orientation_centers=()) -> tuple[FallbackRecord, TSEnsembleRun | None]`.
     For each eligible template in rank order: (1) guarded pre-relax through the **cached**
@@ -115,7 +134,10 @@ Context the builder needs:
 ## 1. The Confidence Mandate
 
 **Score: 9/10.** The strings are read at the base (HF-4), the guards are optional keywords that leave
-v0.6.0 calls byte-identical, and the face separation is measured (HF-2). Residual risk: R7's
+v0.6.0 calls byte-identical, and the face separation is measured (HF-2). R32's composition uses
+only slice 04's public `map_template_indices` and the record fields as built (read at 45ffa04:
+records appended in site order, each record's lists in its own product space), so it needs no
+core or enumerator change, and one site keeps today's seed verbatim. Residual risk: R7's
 constants under real load, which M13 measures first with a stop-and-report gate.
 
 ## Mini-requirements
@@ -135,7 +157,18 @@ constants under real load, which M13 measures first with a stop-and-report gate.
 9. Orientation: a member with swapped R/H at a centre is excluded `orientation_mismatch`.
 10. Charged and open-shell candidates refused; `reactant_key` derived (no argument).
 11. Rerun: identical `FallbackRecord`, 0 engine calls.
-12. One GFN2 smoke: `run_ts_with_fallback` on the enumerated ethyl/TS1a_n candidate (slice 03
+12. R32 single site: for a one-site `ok` candidate, the seed's forming bonds and active core
+    equal the record's `mapped_forming_bonds` and `constrained_core_product_indices` verbatim
+    (pinned, with the TS stage key unchanged).
+13. R32 refusal: a two-site plan on one TS template whose second site's `template.delete` names an
+    atom of the first site's `forming_bonds` enumerates `ok`, and `enumerated_pathway_inputs`
+    raises `FallbackInputError` beginning `multi_site_seed_atom_deleted` (naming both sites);
+    `run_ts_with_fallback` on it raises the same with 0 engine calls (spy).
+14. R32 composed: a two-site plan whose sites each declare one forming bond and core atoms, none
+    deleted by the other, gives forming bonds = site 1's pair mapped through site 2's record via
+    `map_template_indices`, then site 2's pair, and active core = the sorted union; each composed
+    pair indexes the final product (asserted by element symbols at those indices).
+15. One GFN2 smoke: `run_ts_with_fallback` on the enumerated ethyl/TS1a_n candidate (slice 03
     plan) chooses rank 1 with members, behind the host check.
 
 ## 3. Implementation Plan (Task List)
@@ -143,7 +176,7 @@ constants under real load, which M13 measures first with a stop-and-report gate.
 - [ ] Index.
 - [ ] M13 measurement (scratch instrument; host check per run); proof table.
 - [ ] `_deadline.py`/`ts_ensemble.py`: R7, R6, R2, R24 keywords.
-- [ ] `ts_fallback.py`: inputs, fallback loop, allow-list, refusals; lazy exports.
+- [ ] `ts_fallback.py`: inputs (R32 composition), fallback loop, allow-list, refusals; lazy exports.
 - [ ] Tests `tests/unit/orchestrator/test_ts_fallback.py`, `test_ts_ensemble_guards.py`,
       `test_deadline.py` additions.
 - [ ] GFN2 smoke behind the host check.
@@ -155,17 +188,20 @@ constants under real load, which M13 measures first with a stop-and-report gate.
 - **DO NOT** change ADR-0024 (the optimizer stays in-process), or add a stage kind or key field.
 - **DO NOT** make the stall cap a `TSEnsembleOptions` field or change any default v0.6.0 behaviour.
 - **DO NOT** use a process-CPU budget (HF-6).
+- **DO NOT** edit `mapping/enumerator.py` or core for R32, or seed a multi-site template from one
+  record's lists uncomposed.
 
 ## Proof contract
 
 - [ ] M13 table with host checks.
-- [ ] `uv run pytest tests/unit/orchestrator -q` passes (requirements 2-11).
+- [ ] `uv run pytest tests/unit/orchestrator -q` passes (requirements 2-11, 12-14).
 - [ ] GFN2 smoke result with its host check and env.
 - [ ] Required checks exit 0.
 
 ## Source material
 
-- Mission G6, R2, R4-R7, R24, HF-2, HF-4, HF-6; ADR-0045, ADR-0048.
+- Mission G6, R2, R4-R7, R24, R32, HF-2, HF-4, HF-6; ADR-0045, ADR-0048.
+- Slice 04 audit `proof/04-qa.md`, observed item (b) (R32).
 
 ## Intent visual
 
