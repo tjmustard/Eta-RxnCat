@@ -2,7 +2,7 @@
 id: OPR.0.7.0.9
 slice: 09-view-components
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Write eta-view.js, five reusable framework-free components that render 
 depends_on: [OPR.0.7.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", spec/compiled/architecture.yml]

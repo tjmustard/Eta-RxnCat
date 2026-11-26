@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -287,9 +287,9 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.9
   review:
-    reviewed_at: '2026-11-26T10:21:08+00:00'
-    reviewed_by: audit:OPR.0.7.0.8
-    summary: patched description, inputs, outputs, edges.depends_on
+    reviewed_at: '2026-11-26T10:50:28+00:00'
+    reviewed_by: audit:OPR.0.7.0.9
+    summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
   status: clean
@@ -839,35 +839,35 @@ nodes:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_review
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
   description: >-
-    eta_rxncat.review (v0.7.0 slices 07-08). run_data.py: RunRecord, the exporter
-    input (species with MolecularState; candidates with GraftRecords; runs per candidate
-    x pathway x engine with FallbackRecord, TSEnsemble, ThermoAnalysisOptions, samples/endpoints
-    as key hex; SelectivityResult per candidate x engine; gates); frozen. RunData
-    v1, strict: schema_version Literal[1], extra=forbid, no inf/nan, units in keys;
-    sections provenance (eta version, engines, optimizers, thermo options, stage keys,
-    store file name only), species, frequencies (completed|failed|missing), trajectories
-    (stored|missing; frames, decimation_stride, n_frames_total, convergence), candidates
-    (codes, ids by ref), gates; unique ids/references validated. read_run_data: lenient
-    twin then strict; > 1 raises UnsupportedRunDataVersion. CHANGES; version rule
-    = RunData docstring. schema/run_data.v1.schema.json = model_json_schema() (validation
-    mode), python3 -m eta_rxncat.review.schema; drift test. export.py: export_run_data(record,
-    store, *, trajectory_byte_budget) reads rows by stage key, never runs an engine;
-    missing rows as missing; modes from the stored Hessian via thermo.normal_modes
-    at the opt row's geometry if grids match; unit-norm, sign-fixed imaginary modes;
-    one common decimation stride (first/last kept, ExportBudgetError). canonical_run_data_json:
-    sorted, compact, floats rounded per unit family, <>& and U+2028/9 escaped. RunRecord
-    JSON does not round-trip ratio=inf. bundle.py: write_review_bundle(run_data, out_dir)
-    refuses a file or non-empty dir (BundleError); writes index.html (CSP meta; JS-free
-    summary, text html.escape'd: index table, gates, TS/minimum frequencies, imaginary
-    in red, banner when n_imaginary != expected, warn box if failed/missing; sections
-    #c/<id>; embedded JSON = run_data.json bytes; classic local scripts), run_data.json,
-    assets/ (3Dmol-min.js 2.5.5 + LICENSE-3Dmol.txt sha-pinned, SOURCES.md; placeholder
-    eta-view.js), sorted MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6.
+    eta_rxncat.review (v0.7.0 slices 07-09). run_data.py: RunRecord, the exporter
+    input (species; candidates with GraftRecords; runs per candidate x pathway x engine:
+    FallbackRecord, TSEnsemble, thermo options, key hex; SelectivityResult; gates);
+    frozen. RunData v1, strict: schema_version Literal[1], extra=forbid, no inf/nan,
+    units in keys; provenance (versions, engines, stage keys, store file name only),
+    species, frequencies (completed|failed|missing), trajectories (stored|missing;
+    frames, decimation_stride, n_frames_total, convergence), candidates, gates; ids/references
+    validated. read_run_data: lenient twin then strict; > 1 raises UnsupportedRunDataVersion.
+    CHANGES. schema/run_data.v1.schema.json = model_json_schema() (validation mode);
+    drift test. export.py: export_run_data(record, store, *, trajectory_byte_budget)
+    reads rows by stage key, runs no engine; missing rows as missing; modes from the
+    stored Hessian (thermo.normal_modes) if grids match; unit-norm, sign-fixed imaginary
+    modes; one decimation stride (first/last kept, ExportBudgetError). canonical_run_data_json:
+    sorted, compact, floats rounded per unit, <>& U+2028/9 escaped. RunRecord ratio=inf
+    does not round-trip. bundle.py: write_review_bundle(run_data, out_dir) refuses
+    a file or non-empty dir (BundleError); writes index.html (CSP meta; JS-free escaped
+    summary: index, gates, frequencies, imaginary red, banner if n_imaginary != expected,
+    warn if failed/missing; sections #c/<id>; embedded JSON = run_data.json bytes),
+    run_data.json, assets/ (3Dmol-min.js 2.5.5 + licence sha-pinned, SOURCES.md, eta-view.js),
+    MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6. assets/eta-view.js (slice 09, MIT,
+    window.EtaView): load() refuses schema_version != 1 as text; moleculeViewer, modeAnimator
+    (20 frames, 0.4 A peak), trajectoryPlayer, energyPlot (SVG), candidateTable (sortable,
+    gate badges, #c/<id>), each (element, runData, id) -> {update, destroy}; text
+    nodes/attributes only; one candidate's 3D views mounted at a time.
   inputs:
   - data_type: run_record_models
     source_id: eta_rxncat_core
@@ -888,8 +888,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T10:21:08+00:00'
-    reviewed_by: audit:OPR.0.7.0.8
-    summary: patched description, outputs
+    reviewed_at: '2026-11-26T10:50:28+00:00'
+    reviewed_by: audit:OPR.0.7.0.9
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.9

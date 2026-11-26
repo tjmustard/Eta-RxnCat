@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/09-qa.md - qa PASS: M12 rerun by audit on committed bytes: 47/47 checks in Chrome 158 and Playwright Firefox 159 from file://, no console error, no request; pytest 2545 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
