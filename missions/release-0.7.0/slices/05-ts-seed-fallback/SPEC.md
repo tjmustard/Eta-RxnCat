@@ -2,7 +2,7 @@
 id: OPR.0.7.0.5
 slice: 05-ts-seed-fallback
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Add run_ts_with_fallback and enumerated_pathway_inputs, falling through
 depends_on: [OPR.0.7.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_fallback.py, src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/_deadline.py, src/eta_rxncat/orchestrator/__init__.py, "tests/unit/orchestrator/**", spec/compiled/architecture.yml]

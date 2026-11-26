@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/05-qa.md - qa PASS: GFN2 smoke rerun at C1 eaf9caa: rank-1 t1__ethyl chosen with 3 members, rerun 0 engine calls; pytest 2410 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
