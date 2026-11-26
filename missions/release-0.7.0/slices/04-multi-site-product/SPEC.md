@@ -4,7 +4,7 @@ slice: 04-multi-site-product
 mission: release-0.7.0
 status: active
 stage: wip
-verified: "2026-11-26 against scaffold (hyper_scope slice create)"
+verified: "2026-11-26 replan 3 (R31) against 960d63a mapping/enumerator.py"
 created: "2026-11-26"
 intent: "Enumerate multi-site plans as a deterministic Cartesian product, refusing above max_candidates before any graft, remapping later sites per template through index_map, and refusing a site whose atoms an earlier graft deleted."
 depends_on: [OPR.0.7.0.3]
@@ -38,9 +38,37 @@ Context the builder needs:
   (each fallback template has its own map, so each remaps through its own record). A later-site
   atom (keep, delete, alignment, core, forming bond) that an earlier graft deleted → refusal
   `site_atom_deleted` for that (node, template).
+- **Frozen atoms compose per template (R31; R30.D at every site):** a covered node's effective
+  stages (node `stages`, else the graph's `default_stages`) start in the reference template's index
+  space. For template T, in site order:
+  - before site k's graft on T, each current frozen index must be in site k's remapped `keep`;
+    otherwise that (node, T) is refused `graft_input` before `graft` (spy: `graft` not called for
+    site k). `site_atom_deleted` is decided first, since this check needs the remapped `keep`;
+  - after site k's graft on T, each frozen index is remapped through that graft's own `index_map`
+    (each record's `index_map` is in its graft input's index space: the reference template for the
+    first site, else the previous site's product on T), exactly as later-site atoms are.
+  - The composed lists, in stage and list order, are written to the node as in slice 03. Eligible
+    templates whose composed images differ → `inconsistent`, `frozen_index_mismatch:<node>`.
+    Uncovered nodes and the graph's `default_stages` are unchanged. No new reason or status.
 - **Charge:** Σ `charge_delta` over all entries applied to the template; multiplicity declared by at
   most one value across them (else `multiplicity_conflict`).
-- **Cross-node invariant** (slice 03) applies to the full entry multiset.
+- **Cross-node invariant** (slice 03) applies to the full entry multiset. Slice 03 carry-forward
+  (audit `slices/03-single-site-enumerator/proof/03-qa.md`, builder reading 2): slice 03 has no
+  entry-multiset branch, because with one site it held whenever pathway coverage passed. That
+  branch gets its code and its test here, under the **union reading** (R31.4): for each selectivity
+  set, the entry multiset on its TS/pathway nodes must equal the union (multiset sum) of the entries
+  carried by its covered reactant nodes. Split reactants (site A on the diene, site B on the
+  dienophile) pass. Otherwise → `inconsistent` with a `detail` naming the check. No new status.
+- **Site sequencing per template (R31.5):**
+  - After site k refuses (node, T), later sites skip that (node, T) and record nothing; the site-k
+    `GraftRecord` is that template's record.
+  - A template is eligible only if **every** site that covers its node lists it. A template of a
+    covered node that some covering site does not list is dropped, with no record or reason, and is
+    named on the `ok` candidate's `detail` as `dropped_unlisted:<node>/<template>,…` (R30 reading 3
+    applied per site; sorted, no duplicates). No new reason or status.
+- **Ledger:** the `eta_rxncat_enumerator` description is 1989/2000 after slice 03's audit. This
+  slice's description change must stay <= 2000 characters (compress as needed), written by
+  `--description-file` / `apply-review`.
 - **Toys:** a two-site plan on TS1a_n replacing H16 (site A, ethyl) and an H on C6 (site B, methyl
   as a 3-methylcyclopropene-free toy fragment you build in the test from RDKit with a fixed seed)
   with hand-computed product indices; a deleted-site toy where site B targets H16.
@@ -66,7 +94,9 @@ Context the builder needs:
 
 ## 1. The Confidence Mandate
 
-**Score: 9/10.** Small extension with exact rules; the remap is hand-checked on a toy.
+**Score: 9/10.** Small extension with exact rules; the remap is hand-checked on a toy. Replan 3
+(R31) states the frozen-index composition against slice 03's code (`_remap_stages`, the
+`keep` check in `_graft_template`): it needs no contract change.
 
 ## Mini-requirements
 
@@ -76,6 +106,18 @@ Context the builder needs:
 4. A site atom deleted earlier → `site_atom_deleted`.
 5. Σ charge and the multiplicity conflict across sites.
 6. Two runs byte-equal; slice 03's tests still pass.
+7. Frozen atoms compose through both sites (R31). Test: on the two-site toy, a node stage freezing
+   a template atom kept by both sites gives its hand-computed product index after site B on the
+   `ok` candidate's node; freezing the H that site B replaces gives a `graft_input` record for
+   site B on that (node, template) with `graft` never called for it; two eligible templates whose
+   composed images differ give `inconsistent`, `frozen_index_mismatch:<node>`.
+8. The full-entry-multiset branch (union reading) has its code and two tests: a set whose
+   covered reactant nodes' entry union differs from the TS multiset (e.g. a site covering both TS
+   nodes and no reactant node, or two reactant nodes) → `inconsistent`; a split-reactant plan
+   (site A on one reactant node, site B on the other, both on every TS node) passes the check.
+9. Site sequencing: a template refused at site A has exactly one record (site A's) and none from
+   site B; a template that site A lists and site B (covering the same node) does not is dropped,
+   with no record, and named once in `dropped_unlisted:` on the `ok` candidate's `detail`.
 
 ## 3. Implementation Plan (Task List)
 
@@ -91,12 +133,13 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] `uv run pytest tests/unit/mapping -q` passes (requirements 1-6).
+- [ ] `uv run pytest tests/unit/mapping -q` passes (requirements 1-9).
 - [ ] Required checks exit 0.
 
 ## Source material
 
-- Mission G4, R11, R19 (enumerator node).
+- Mission G4, R11, R19 (enumerator node), R30.D, R31 (replan 3).
+- Slice 03 audit `slices/03-single-site-enumerator/proof/03-qa.md` (builder reading 2).
 
 ## Intent visual
 
