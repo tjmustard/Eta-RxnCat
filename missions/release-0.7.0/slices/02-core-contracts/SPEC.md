@@ -10,7 +10,7 @@ intent: "Add the enumeration, selectivity-set and fallback contracts, the optimi
 depends_on: [OPR.0.7.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", spec/compiled/architecture.yml]
@@ -95,12 +95,12 @@ v0.6.0 row.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index (`hyper_codegraph.py index`).
-- [ ] Write `enumeration_models.py` and export it from `core/__init__.py`.
-- [ ] Add the frame fields and the exclusion reason.
-- [ ] Tests in `tests/unit/core/test_enumeration_models.py`, `test_frame_fields.py`,
+- [x] Index (`hyper_codegraph.py index`).
+- [x] Write `enumeration_models.py` and export it from `core/__init__.py`.
+- [x] Add the frame fields and the exclusion reason.
+- [x] Tests in `tests/unit/core/test_enumeration_models.py`, `test_frame_fields.py`,
       `test_core_import_isolation.py`.
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
