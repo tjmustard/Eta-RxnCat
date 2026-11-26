@@ -339,6 +339,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 | R27 | README wording | lead (v0.6.0 docs) | accept | Slice 01 changes "unit weights" to "weights summing to 1" in `README.md` and in the matching claim in `tests/unit/test_identity.py`, together (the claims helper compares them). |
 | R28 | UI track ADR | Placement A | accept | A PROPOSED ADR records the UI track and run-data contract plus the six proposed master-plan edits for TJ's edit. `PRDs/` is untouched. |
 | R29 | Replan 1: slice 01 stopped on three plan points (builder stop report `qitem-20261126021113-a7828cef`) | — | resolved (lead) | **1. Ruff gate path.** A gate at `docs/prd/v0.7.0/.ruff.toml` does not stop the hook (the starter's `pyproject.toml` `[tool.ruff]` is nearer its files): the hook's command (`.agents/scripts/pre-commit:54`) `find docs/prd/v0.7.0 -name '*.py' -print0 \| xargs -0 .venv/bin/ruff check --force-exclude --` gave 69 errors and `format --check` 13 files; with the gate at `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` both and `ruff check .` exit 0. v0.1.0–v0.6.0 all keep it at `docs/prd/vX/Eta-RxnCat-vX/.ruff.toml`. The gate lives there only; slice 01's done-when adds the two hook-style commands. **2. Import scan scope.** `tests/e2e/**` (species_runner) imports selectivity modules (`tests/e2e/t4_flexible.py:45,55-56`, `test_t4_helpers.py:22`, `test_t4_mapped_helpers.py:12`) and `tests/unit/orchestrator/**` holds selectivity tests: the edge rule and stop-and-report apply to `src/` imports; test-file imports are listed in the proof and add no edge; globs unchanged. **3. Plan-vs-code rows.** PLAN_DISCREPANCIES is one row per plan-vs-zip hunk and the v0.7.0 zip row already reads "identical to PRDs/": the four "Plan-vs-code rows" bullets are appended verbatim as a "Plan-vs-code (v0.7.0)" section under its table; table, hashes and PD ids unchanged. HACF-Replan-Of: OPR.0.7.0.1. |
+| R30 | Replan 2: slice 03 halted before code on a record-field contradiction (builder halt report `qitem-20261126030623-2ded8910`) | R10, Q5 A | resolved (lead rulings A-D) | **A.** `GraftRecord` gains `whole_input_charge_sum_holds_bool: bool \| None = None` (additive, reported, never used); slice 03 touches `core/enumeration_models.py` and its unit test; the core ledger description (1973/2000) is not changed. **1.** `multiplicity_conflict` is unreachable with one site: a private helper over the declared values, tested directly; public reach in slice 04. **2.** `site_atom_deleted` is emitted from slice 04; no slice-03 test. **3.** "Templates no site lists are copied unchanged" means templates of uncovered nodes; an unlisted template of a covered node is dropped (equal-composition rule), with no record or reason, and named on the `ok` candidate's `detail` as `dropped_unlisted:<node>/<template>,…`; no new refusal reason. **4.** `max_research` is a keyword on `enumerate_candidates` and `projected_ts_searches` (default `TSEnsembleOptions().max_research`); a TS node in several selectivity sets counts once. **5.** `max_candidates` is enforced from slice 04. **7.** `AlignmentError` and a wrong-length fragment order → `graft_input`; every order raising → the first listed order's reason. **D.** Frozen atoms: on a covered node, every stage's `frozen_atom_indices` (node `stages`, else the graph's `default_stages`, then written to the node) is remapped per eligible template through `index_map`; a frozen index in `template.delete` (no image) refuses that graft `graft_input` before `graft` (graft's own rule for deleted active/core atoms); eligible templates with different images → `inconsistent`, `frozen_index_mismatch:<node>`; uncovered nodes and `default_stages` unchanged. HACF-Replan-Of: OPR.0.7.0.3. |
 
 ### PROPOSED lore (this mission; TJ approves with `/hyper-lore-approve`)
 
@@ -361,6 +362,8 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 - Replan 1 (R29): slice 01's ruff gate moves to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` with
   hook-style checks; its import scan's edge rule covers `src/` imports only; the plan-vs-code
   bullets go in a section under the PLAN_DISCREPANCIES table.
+- Replan 2 (R30): slice 03 also touches core for one additive `GraftRecord` field; its builder
+  readings, the dropped-template detail and the frozen-index remap are written into the slice.
 
 ### Graph split (slice 01; after the base only; never hand-edit `architecture.yml`)
 
@@ -427,7 +430,9 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
     - `order_rmsds_angstrom`, `chosen_order_index`, `alignment_rmsd_angstrom`;
     - `min_interatomic_distance_angstrom`, `close_contact_count`;
     - `index_map`, `product_charge`, `product_multiplicity`;
-    - `mapped_forming_bonds`, `constrained_core_product_indices`.
+    - `mapped_forming_bonds`, `constrained_core_product_indices`;
+    - `whole_input_charge_sum_holds_bool: bool | None = None` (added in slice 03 by R30; reported,
+      never used, per R10).
   - `EnumeratedCandidate(candidate_id, entry_ids_by_site, status: Literal["ok", "unmappable",
     "inconsistent"], detail, graph | None, records)`.
   - `EnumerationResult(candidates, max_alignment_rmsd_angstrom, projected_ts_searches)`.
