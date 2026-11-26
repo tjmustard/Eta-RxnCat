@@ -10,7 +10,7 @@ intent: "Add run_ts_with_fallback and enumerated_pathway_inputs, falling through
 depends_on: [OPR.0.7.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_fallback.py, src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/_deadline.py, src/eta_rxncat/orchestrator/__init__.py, "tests/unit/orchestrator/**", spec/compiled/architecture.yml]
@@ -173,14 +173,14 @@ constants under real load, which M13 measures first with a stop-and-report gate.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] M13 measurement (scratch instrument; host check per run); proof table.
-- [ ] `_deadline.py`/`ts_ensemble.py`: R7, R6, R2, R24 keywords.
-- [ ] `ts_fallback.py`: inputs (R32 composition), fallback loop, allow-list, refusals; lazy exports.
-- [ ] Tests `tests/unit/orchestrator/test_ts_fallback.py`, `test_ts_ensemble_guards.py`,
+- [x] Index.
+- [x] M13 measurement (scratch instrument; host check per run); proof table.
+- [x] `_deadline.py`/`ts_ensemble.py`: R7, R6, R2, R24 keywords.
+- [x] `ts_fallback.py`: inputs (R32 composition), fallback loop, allow-list, refusals; lazy exports.
+- [x] Tests `tests/unit/orchestrator/test_ts_fallback.py`, `test_ts_ensemble_guards.py`,
       `test_deadline.py` additions.
-- [ ] GFN2 smoke behind the host check.
-- [ ] Required checks; commit; updater once.
+- [x] GFN2 smoke behind the host check.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 

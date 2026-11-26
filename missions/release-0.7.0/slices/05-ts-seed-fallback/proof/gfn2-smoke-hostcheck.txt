@@ -1,0 +1,30 @@
+== hostcheck run 2026-11-26T08:33:03Z  nproc=20  loadavg=10.83 17.02 10.96
+               total        used        free      shared  buff/cache   available
+Mem:              30          17           4           0           8          12
+Swap:             15           9           6
+-- nvidia compute apps
+4106, /usr/libexec/gnome-remote-desktop-daemon
+5895, /usr/bin/ptyxis
+3924909, /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-override=/dev/dri/renderD128 --crashpad-handler-pid=3924866 --enable-crash-reporter=9359cb3a-41be-411d-b0e8-17d8549bbacb? --change-stack-guard-on-fork=enable --gpu-preferences=YAAAAAAAAACgAACBAAAAAAAAAAAAAGAASAAAAAAAAAABAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAQAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --metrics-shmem-handle=4?i?18086672211529097724?5938554240928878235?262144 --field-trial-handle=3?i?8836366789592426436?126720873444387574?262144 --variations-seed-version=20261123-111201.931000-production --pseudonymization-salt-handle=7?i?2000139876429664027?1425284623922201227?4 --trace-process-track-uuid=3190708988185955192
+463244, handy
+2956539, /usr/bin/nautilus
+MemAvailable 12 GiB
+-- top processes (pid user ni %cpu rss_kB cmd)
+    PID USER      NI %CPU   RSS COMMAND
+1882382 tjmusta+   0  6.0 328836 /home/tjmustard/.nvm/versions/node/v22.23.5/bin/node /home/tjmustard/.nvm/versions/node/v22.23.5/lib/node_modules/@openrig/cli/
+2883899 tjmusta+   0  3.6 20624 htop
+1509809 tjmusta+   0  3.6 116168 /home/tjmustard/.nvm/versions/node/v22.23.5/bin/node /home/tjmustard/.nvm/versions/node/v22.23.5/lib/node_modules/@openrig/cli/
+3925935 tjmusta+   0  2.7 575580 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3924866 --enable-crash-reporter=9359cb3a-41be-411d-b0e8-17d854
+1853043 tjmusta+   0  2.7 85748 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))
+1853046 tjmusta+   0  2.6 89500 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))
+1853049 tjmusta+   0  2.5 86884 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))
+1886644 tjmusta+   0  2.4 325644 /home/tjmustard/.local/bin/claude --permission-mode acceptEdits --settings {"permissions":{"allow":["Skill","Read","Edit","Writ
+1853052 tjmusta+   0  2.3 86496 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))
+2884586 tjmusta+   0  2.0  9800 abtop
+3564861 tjmusta+   0  1.6 36476 /home/tjmustard/.local/bin/herdr server
+3924850 tjmusta+   0  1.2 488328 /opt/google/chrome/chrome
+   4148 tjmusta+   0  1.1 386720 /usr/bin/gnome-shell --mode=ubuntu
+1709297 tjmusta+   0  1.1 380612 /home/tjmustard/.local/bin/claude --dangerously-skip-permissions --settings {"skipDangerousModePermissionPrompt":true,"permissi
+3924909 tjmusta+   0  1.1 188676 /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-override=/dev/dr
+hostcheck exit 0
+== after 2026-11-26T08:38:50Z loadavg=22.85 19.77 13.98 exit=0

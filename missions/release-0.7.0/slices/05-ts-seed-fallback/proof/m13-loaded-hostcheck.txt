@@ -1,0 +1,30 @@
+== hostcheck run 2026-11-26T04:46:27Z  nproc=20  loadavg=30.54 18.04 16.52
+               total        used        free      shared  buff/cache   available
+Mem:              30          16           2           0          11          13
+Swap:             15          10           5
+-- nvidia compute apps
+4106, /usr/libexec/gnome-remote-desktop-daemon
+5895, /usr/bin/ptyxis
+3924909, /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-override=/dev/dri/renderD128 --crashpad-handler-pid=3924866 --enable-crash-reporter=9359cb3a-41be-411d-b0e8-17d8549bbacb? --change-stack-guard-on-fork=enable --gpu-preferences=YAAAAAAAAACgAACBAAAAAAAAAAAAAGAASAAAAAAAAAABAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAQAAAAAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --metrics-shmem-handle=4?i?18086672211529097724?5938554240928878235?262144 --field-trial-handle=3?i?8836366789592426436?126720873444387574?262144 --variations-seed-version=20261123-111201.931000-production --pseudonymization-salt-handle=7?i?2000139876429664027?1425284623922201227?4 --trace-process-track-uuid=3190708988185955192
+463244, handy
+2956539, /usr/bin/nautilus
+MemAvailable 13 GiB
+-- top processes (pid user ni %cpu rss_kB cmd)
+    PID USER      NI %CPU   RSS COMMAND
+1250853 tjmusta+  19 96.4 77456 /home/tjmustard/PROJECTS/hakf/.venv/bin/python /home/tjmustard/PROJECTS/hakf/.venv/bin/pytest -q -s -p no:cacheprovider tests/in
+1239179 tjmusta+  19 91.6 10040 python3 -c while True: pass
+1239176 tjmusta+  19 91.0 10004 python3 -c while True: pass
+1239185 tjmusta+  19 90.9 10000 python3 -c while True: pass
+1239183 tjmusta+  19 90.5 10028 python3 -c while True: pass
+1239174 tjmusta+  19 90.4  9944 python3 -c while True: pass
+1239175 tjmusta+  19 90.4  9980 python3 -c while True: pass
+1239181 tjmusta+  19 90.1 10060 python3 -c while True: pass
+1239186 tjmusta+  19 90.1 10040 python3 -c while True: pass
+1239177 tjmusta+  19 90.0  9980 python3 -c while True: pass
+1239173 tjmusta+  19 89.9  9980 python3 -c while True: pass
+1239184 tjmusta+  19 89.8 10064 python3 -c while True: pass
+1239182 tjmusta+  19 89.3 10028 python3 -c while True: pass
+1239180 tjmusta+  19 89.2 10032 python3 -c while True: pass
+1239191 tjmusta+  19 89.0  9976 python3 -c while True: pass
+hostcheck exit 0
+== after 2026-11-26T04:51:53Z loadavg=20.64 23.74 20.00

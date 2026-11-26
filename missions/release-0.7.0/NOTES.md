@@ -18,6 +18,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.3) ensure-node --from-spec skips touches owned by another node (core files, ledger) and the test glob, so it was a no-op here; the enumerator node already held both entries from slice 01. anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.4) A later-site map is in template indices and cannot name atoms an earlier graft appended; the enumerator keeps them after the remapped keep. A selectivity-set entry-multiset miss is reachable on its own only with a composition-preserving entry, because the composition checks run first. anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.6) M11: geomeTRIC calls Bridge.calc_new also for tight-trust (hessian=first) displacements: 148 evaluations vs 4 xyzout frames on 24 atoms; the PRFO identity hashes prfo.py, so any edit there changes ts_opt keys. anchors: none
+- 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.5) M13: a GFN2 TS1a_n ensemble used about 18 CPU-seconds per wall-second (process plus children) and pushed load1 to about 23 on 20 CPUs by itself, so the R7 budget scales above 600 s even on an otherwise idle host; an EnumeratedCandidate carries no selectivity sets, so ts_fallback compares TS nodes of the same priority. anchors: none
 
 ## Lore capture
 
