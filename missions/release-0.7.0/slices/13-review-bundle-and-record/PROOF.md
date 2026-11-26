@@ -17,6 +17,7 @@
 ## Artifacts
 
 - proof/13-execute.md - guard CLEAR: Fix round: root page states no decimation; rebuilt bundle gates clean, 0 engine calls; M12 581/581 in Chrome and Playwright Firefox; full pytest 2593 passed
+- proof/13-qa.md - qa PASS: Rebuilt bundle (root aa923c94) gates clean with a true no-decimation intro; audit M12 581/581 Chrome and Firefox; full pytest 2593 passed
 
 ## Residue / caveats
 

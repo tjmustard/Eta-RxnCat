@@ -25,6 +25,6 @@
 | OPR.0.7.0.10 | 10-e2e-inputs | audited | OPR.0.7.0.3, OPR.0.7.0.5 | 2026-11-26T11:04:30+00:00 audited |
 | OPR.0.7.0.11 | 11-enumeration-e2e | audited | OPR.0.7.0.4, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T12:39:31+00:00 audited |
 | OPR.0.7.0.12 | 12-fallback-e2e | audited | OPR.0.7.0.5, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T13:16:55+00:00 audited |
-| OPR.0.7.0.13 | 13-review-bundle-and-record | executed | OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12 | 2026-11-26T14:29:06+00:00 executed |
+| OPR.0.7.0.13 | 13-review-bundle-and-record | audited | OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12 | 2026-11-26T14:45:48+00:00 audited |
 | OPR.0.7.0.14 | 14-acceptance-verdict | compiled | OPR.0.7.0.13 | 2026-11-26T01:17:14+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->

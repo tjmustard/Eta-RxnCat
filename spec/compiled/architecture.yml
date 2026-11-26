@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -65,9 +65,9 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.13
   review:
-    reviewed_at: '2026-11-26T10:21:08+00:00'
-    reviewed_by: audit:OPR.0.7.0.8
-    summary: patched description
+    reviewed_at: '2026-11-26T14:45:17+00:00'
+    reviewed_by: audit:OPR.0.7.0.13
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -541,7 +541,7 @@ nodes:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -568,19 +568,20 @@ nodes:
     ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
     TransitionStateRecord; _RecordingEngine fills each TSStep's coordinates from the
     k-th hessian=False evaluation, exactness-checked (_StepRecordError, uncached;
-    R33, prfo.py unedited); failures cached with frames (ts_search_failed:<reason>,
-    scf_convergence, engine_error; Unavailable/Input errors raise uncached); ts_validation_failed
+    R33); failures cached with frames (ts_search_failed:<reason>, scf_convergence,
+    engine_error; Unavailable/Input errors raise, uncached); ts_validation_failed
     keeps the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
-    reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator (glob shared);
-    tests/e2e harness: t3 (HF1-HF3, R32), T4 inputs + t4/t4_flexible E2E, v0.7.0 (v070.py:
-    load_enumeration/load_fallback -> V070Inputs from v070_*.yaml; TS nodes priority
-    2; slice 11: run_unit -> shared _run_candidate (run_ts_with_fallback + run_species
-    twice in one store, calls via patched Engine.evaluate, per-sample keys re-derived
-    from private ts_* names); unit_gates (G7) + shared ensemble_gates; unit_record(gate_prefix)/score_pair
-    -> RunRecord, finite ratio asserted; test_v070_enumeration.py 8 units + 4 scores.
-    slice 12: run_fallback_unit (no reactants; barrier not_computed), attributed_engine_calls
-    (per template x stage), fallback_gates (G8); test_v070_fallback.py 3 units), acceptance
-    records/verdicts; never reads candidates.
+    reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator; tests/e2e:
+    t3 (HF1-HF3, R32), T4/t4_flexible; v0.7.0 v070.py (load_enumeration/load_fallback
+    -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate: run_ts_with_fallback
+    + run_species twice in one store, patched Engine.evaluate counts, private ts_*
+    sample keys; unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord,
+    finite ratio; run_fallback_unit, attributed_engine_calls, fallback_gates G8);
+    slice 13 review_v070.py: one bundle over 4 stores (sub-bundle per record via in-process
+    cli, 0 engine calls, root index + MANIFEST, coverage, fresh roots refused, M10,
+    intro decimation_statement, scans, copy to candidates); acceptance_record_v070.py
+    -> ACCEPTANCE_RESULT.json from evidence; acceptance records/verdicts; never reads
+    candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -633,8 +634,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T13:16:25+00:00'
-    reviewed_by: audit:OPR.0.7.0.12
+    reviewed_at: '2026-11-26T14:45:17+00:00'
+    reviewed_by: audit:OPR.0.7.0.13
     summary: patched description
   provenance:
     last_slice: OPR.0.7.0.13
@@ -707,7 +708,7 @@ nodes:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -786,8 +787,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T13:16:25+00:00'
-    reviewed_by: audit:OPR.0.7.0.12
+    reviewed_at: '2026-11-26T14:45:17+00:00'
+    reviewed_by: audit:OPR.0.7.0.13
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.13
