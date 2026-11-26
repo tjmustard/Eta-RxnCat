@@ -8,8 +8,12 @@ rest and refuse unknown keys.
 Units (mission G7): ``run_unit`` runs one (R x pathway) unit of one recipe through
 ``run_ts_with_fallback`` and the species runner twice in one store, derives the per-sample stage
 keys ``TSEnsembleRun`` does not expose, and ``unit_gates``/``unit_record`` judge it and build its
-``RunRecord``. ``score_pair`` scores the two pathways of one (R, engine). Loading the inputs runs
-no engine; nothing here changes ``src/``.
+``RunRecord``. ``score_pair`` scores the two pathways of one (R, engine).
+
+Fallback units (slice 12, mission G8): ``run_fallback_unit`` does the same for one construct of
+``v070_fallback.yaml`` (no reactants, so no barrier), with the first pass's engine calls
+attributed per template and stage by ``attributed_engine_calls``; ``fallback_gates`` judges it.
+Loading the inputs runs no engine; nothing here changes ``src/``.
 """
 
 import math
@@ -18,7 +22,7 @@ import resource
 import time
 from collections import Counter
 from collections.abc import Iterator, Mapping
-from contextlib import contextmanager
+from contextlib import AbstractContextManager, contextmanager, nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -510,8 +514,6 @@ def run_unit(
     r_group: str, pathway: str, recipe: Recipe, recipe_name: str, store_path: Path
 ) -> Unit:
     """Enumerate, then run the unit twice in ``store_path`` and derive its sample keys."""
-    before = _usage()
-    start = time.perf_counter()
     inputs, candidate = enumerate_one(r_group)
     spec = pathway_spec(inputs, pathway)
     assert candidate.graph is not None
@@ -521,8 +523,31 @@ def run_unit(
         candidate, spec.node_id, template.id, ts_recipe(recipe), member_gates(recipe_name)
     )
     specs = reactant_specs(candidate, tuple(seed_inputs.reactant_key))
+    return _run_candidate(
+        r_group, inputs, candidate, spec, specs, recipe, recipe_name, store_path, nullcontext()
+    )
+
+
+def _run_candidate(
+    r_group: str,
+    inputs: V070Inputs,
+    candidate: EnumeratedCandidate,
+    spec: PathwaySpec,
+    specs: Mapping[str, SpeciesSpec],
+    recipe: Recipe,
+    recipe_name: str,
+    store_path: Path,
+    first_context: AbstractContextManager[object],
+) -> Unit:
+    """Two passes (the first inside ``first_context``) and the derivation of the sample keys.
+
+    With no reactant ``specs`` no species is run and the barrier is not computed.
+    """
+    before = _usage()
+    start = time.perf_counter()
     args = (candidate, spec, recipe, recipe_name, inputs.orientation_centers, specs, store_path)
-    first = _one_pass(*args)
+    with first_context:
+        first = _one_pass(*args)
     second = _one_pass(*args)
     samples: list[RecordSample] = []
     timeouts: list[dict[str, Any]] = []
@@ -534,7 +559,9 @@ def run_unit(
                 candidate, spec, first.run, chosen, recipe, recipe_name, store
             )
         derivation_calls, derivation_rows = calls["evaluate"], _rows(store) - rows
-    barrier, barrier_error = _barrier(specs, first.reactants, first.run, recipe)
+    barrier, barrier_error = (
+        _barrier(specs, first.reactants, first.run, recipe) if specs else (None, "not_computed")
+    )
     after = _usage()
     resources = {
         "wall_time_s": time.perf_counter() - start,
@@ -602,14 +629,7 @@ def second_pass_hits(unit: Unit) -> bool:
 
 def unit_gates(unit: Unit) -> dict[str, dict[str, Any]]:
     """The G7 gates of one unit, each ``pass`` or ``fail``."""
-
-    def gate(ok: bool, **extra: Any) -> dict[str, Any]:
-        return {"status": "pass" if ok else "fail", **extra}
-
-    candidate, record, run = unit.candidate, unit.first.record, unit.first.run
-    ensemble = None if run is None else run.ensemble
-    members = [] if ensemble is None else ensemble.members
-    reasons = {} if ensemble is None else exclusions_by_reason(ensemble)
+    candidate, record = unit.candidate, unit.first.record
     assert candidate.graph is not None
     charges = sorted(
         {
@@ -623,8 +643,6 @@ def unit_gates(unit: Unit) -> dict[str, dict[str, Any]]:
     rmsds = [r.alignment_rmsd_angstrom for r in candidate.records]
     max_rmsd = max((x for x in rmsds if x is not None), default=math.inf)
     contacts = [r.close_contact_count for r in candidate.records]
-    weights = sum(m.weight for m in members)
-    expected = list(unit.pathway.expected_face)
     chosen = [a for a in record.attempts if a.outcome == "chosen"]
     return {
         "candidate_ok": gate(candidate.status == "ok", candidate_status=candidate.status),
@@ -642,6 +660,24 @@ def unit_gates(unit: Unit) -> dict[str, dict[str, Any]]:
             len(chosen) == 1 and chosen[0].rank == 1 and len(record.attempts) == 1,
             stop_reason=record.stop_reason,
         ),
+        **ensemble_gates(unit),
+    }
+
+
+def gate(ok: bool, **extra: Any) -> dict[str, Any]:
+    """One gate entry."""
+    return {"status": "pass" if ok else "fail", **extra}
+
+
+def ensemble_gates(unit: Unit) -> dict[str, dict[str, Any]]:
+    """G7's gates on the chosen ensemble, and the all-hit second pass (shared with G8)."""
+    run = unit.first.run
+    ensemble = None if run is None else run.ensemble
+    members = [] if ensemble is None else ensemble.members
+    reasons = {} if ensemble is None else exclusions_by_reason(ensemble)
+    weights = sum(m.weight for m in members)
+    expected = list(unit.pathway.expected_face)
+    return {
         "weights_sum_to_one": gate(
             bool(members) and abs(weights - 1.0) <= WEIGHT_TOLERANCE, weights_sum=weights
         ),
@@ -724,7 +760,12 @@ def reported_unit(unit: Unit) -> dict[str, Any]:
 # --- Run records ---------------------------------------------------------------------------------
 
 
-def unit_record(unit: Unit, recipe: Recipe, gates: Mapping[str, Mapping[str, Any]]) -> RunRecord:
+def unit_record(
+    unit: Unit,
+    recipe: Recipe,
+    gates: Mapping[str, Mapping[str, Any]],
+    gate_prefix: str = "G7",
+) -> RunRecord:
     """The unit's ``RunRecord``: one run, its candidate, species and gates (no selectivity)."""
     candidate, run = unit.candidate, unit.first.run
     assert candidate.graph is not None
@@ -775,7 +816,9 @@ def unit_record(unit: Unit, recipe: Recipe, gates: Mapping[str, Mapping[str, Any
         ],
         runs=[record_run],
         gates=[
-            RecordGate(gate_id=f"G7.{name}", unit_ref=ref, pass_bool=g["status"] == "pass")
+            RecordGate(
+                gate_id=f"{gate_prefix}.{name}", unit_ref=ref, pass_bool=g["status"] == "pass"
+            )
             for name, g in sorted(gates.items())
         ],
     )
@@ -858,3 +901,169 @@ def score_pair(
         gates=[g for p in PATHWAYS for g in records[p].gates],
     )
     return result, ensembles, merged
+
+
+# --- Slice 12: one (construct x engine) fallback unit (mission G8, HF-2) -------------------------
+
+FALLBACK_R_GROUP = "ethyl"
+FALLBACK_SELECTIVITY_ID = "endo_only"
+TS_SEARCH_STAGES = ("ts_opt", "frequency")
+GRAFT_REFUSED_TEMPLATE = "TS1a_n_cp_h"
+
+
+def fallback_name(construct: str, recipe_name: str) -> str:
+    """``v070_fallback_<construct>_<engine>``."""
+    return f"v070_fallback_{construct}_{recipe_name}"
+
+
+@contextmanager
+def attributed_engine_calls(
+    seed_digests: Mapping[str, str], calls: Counter[tuple[str | None, str]]
+) -> Iterator[None]:
+    """Count ``CountingEngine`` evaluations into ``calls``, per (template id, stage kind).
+
+    The fallback's attempt at a template opens with the pre-relaxation of that template's grafted
+    seed; ``seed_digests`` maps the seed start's digest to the template id, and every later call
+    belongs to that template until the next seed's pre-relaxation.
+    """
+    current: list[str | None] = [None]
+    original_evaluate = CountingEngine.evaluate
+    original_run = _PreRelax.run
+
+    def evaluate(self: CountingEngine, state: MolecularState, **kwargs: Any) -> Any:
+        calls[(current[0], self.kind)] += 1
+        return original_evaluate(self, state, **kwargs)
+
+    def run(self: _PreRelax, state: MolecularState) -> Any:
+        current[0] = seed_digests.get(_digest(state), current[0])
+        return original_run(self, state)
+
+    CountingEngine.evaluate = evaluate  # type: ignore[method-assign]
+    _PreRelax.run = run  # type: ignore[method-assign]
+    try:
+        yield
+    finally:
+        CountingEngine.evaluate = original_evaluate  # type: ignore[method-assign]
+        _PreRelax.run = original_run  # type: ignore[method-assign]
+
+
+@dataclass(frozen=True)
+class FallbackUnit:
+    """A fallback unit: the shared ``Unit`` plus the first pass's attributed engine calls."""
+
+    construct: str
+    unit: Unit
+    templates: tuple[tuple[str, int], ...]
+    calls: Mapping[tuple[str | None, str], int]
+
+    def calls_of(self, template_id: str, stages: tuple[str, ...]) -> int:
+        """First-pass calls of one template in the given stages."""
+        return sum(self.calls.get((template_id, s), 0) for s in stages)
+
+    def calls_table(self) -> dict[str, dict[str, int]]:
+        """``{template id: {stage kind: calls}}`` for every template of the node."""
+        table: dict[str, dict[str, int]] = {t: {} for t, _ in self.templates}
+        for (template_id, stage), count in sorted(self.calls.items(), key=str):
+            table.setdefault(str(template_id), {})[stage] = count
+        return table
+
+
+def run_fallback_unit(
+    construct: str, recipe: Recipe, recipe_name: str, store_path: Path
+) -> FallbackUnit:
+    """Enumerate one construct, then run its TS node twice in ``store_path`` (no reactants)."""
+    inputs = load_fallback()[construct]
+    result = enumerate_candidates(
+        inputs.plan, max_alignment_rmsd_angstrom=inputs.max_alignment_rmsd_angstrom
+    )
+    (candidate,) = result.candidates
+    (selectivity,) = [s for s in inputs.plan.selectivity_sets if s.id == FALLBACK_SELECTIVITY_ID]
+    (spec,) = selectivity.pathways
+    assert candidate.graph is not None
+    (node,) = [n for n in candidate.graph.nodes if n.id == spec.node_id]
+    templates = tuple((t.id, t.rank) for t in sorted(node.templates, key=lambda t: t.rank))
+    digests = {
+        _digest(
+            enumerated_pathway_inputs(
+                candidate, spec.node_id, t, ts_recipe(recipe), member_gates(recipe_name)
+            ).seed.start
+        ): t
+        for t, _ in templates
+    }
+    assert len(digests) == len(templates), "two templates share one grafted seed"
+    calls: Counter[tuple[str | None, str]] = Counter()
+    unit = _run_candidate(
+        FALLBACK_R_GROUP,
+        inputs,
+        candidate,
+        spec,
+        {},
+        recipe,
+        recipe_name,
+        store_path,
+        attributed_engine_calls(digests, calls),
+    )
+    return FallbackUnit(construct, unit, templates, dict(calls))
+
+
+def _attempts(record: FallbackRecord) -> list[tuple[str, int, str, str | None]]:
+    return [(a.template_id, a.rank, a.outcome, a.reason) for a in record.attempts]
+
+
+def fallback_gates(fallback: FallbackUnit) -> dict[str, dict[str, Any]]:
+    """The G8 gates of one unit.
+
+    A graft-time refusal never reaches the runner (mission G5 renumbers the eligible templates
+    1..k), so the ``graft_time`` construct's rank-1 reason is judged on the candidate's graft
+    records and its ``FallbackRecord`` holds the declared rank 2 alone, chosen at rank 1.
+    """
+    unit = fallback.unit
+    candidate, record = unit.candidate, unit.first.record
+    chosen = f"TS1a_n__{FALLBACK_R_GROUP}"
+    grafts = {
+        r.template_id: (r.status, r.reason) for r in candidate.records if r.node_id == "TS1a_n"
+    }
+    if fallback.construct == "graft_time":
+        expected = [(chosen, 1, "chosen", None)]
+        graft_expected = {
+            GRAFT_REFUSED_TEMPLATE: ("refused", "alignment_rmsd"),
+            "TS1a_n": ("ok", None),
+        }
+        refused_id = f"{GRAFT_REFUSED_TEMPLATE}__{FALLBACK_R_GROUP}"
+        rank_1_search = fallback.calls_of(refused_id, TS_SEARCH_STAGES)
+        rank_1_all = sum(v for (t, _), v in fallback.calls.items() if t == refused_id)
+        in_graph = refused_id in {t for t, _ in fallback.templates}
+        rank_1_ok = not in_graph and rank_1_all == 0
+    else:
+        first = f"TS1a_x__{FALLBACK_R_GROUP}"
+        expected = [
+            (first, 1, "fell_through", "seed:face_mismatch_pathway"),
+            (chosen, 2, "chosen", None),
+        ]
+        graft_expected = {"TS1a_x": ("ok", None), "TS1a_n": ("ok", None)}
+        rank_1_search = fallback.calls_of(first, TS_SEARCH_STAGES)
+        rank_1_all = sum(v for (t, _), v in fallback.calls.items() if t == first)
+        rank_1_ok = rank_1_search == 0
+    attributed = sum(fallback.calls.values())
+    known = all(t is not None for t, _ in fallback.calls)
+    return {
+        "candidate_ok": gate(candidate.status == "ok", candidate_status=candidate.status),
+        "graft_records": gate(
+            grafts == graft_expected, found={k: list(v) for k, v in grafts.items()}
+        ),
+        "fallback_record": gate(
+            _attempts(record) == expected and record.chosen_template_id == chosen,
+            attempts=[list(a) for a in _attempts(record)],
+            chosen_template_id=record.chosen_template_id,
+            stop_reason=record.stop_reason,
+        ),
+        "rank_1_no_ts_search_calls": gate(
+            rank_1_ok, ts_search_calls=rank_1_search, all_calls=rank_1_all
+        ),
+        "engine_calls_attributed": gate(
+            known and attributed == unit.first.engine_calls,
+            attributed=attributed,
+            first_pass=unit.first.engine_calls,
+        ),
+        **ensemble_gates(unit),
+    }
