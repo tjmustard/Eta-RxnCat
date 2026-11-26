@@ -15,6 +15,7 @@
 ## Artifacts
 
 - proof/18-execute.md - guard CLEAR: bundle 7 sub-bundles, 0 engine calls, G15 and 3 known answers pass; M12 759/0 both browsers; record re-derived, values unchanged; full pytest 2674 passed
+- proof/18-qa.md - qa PASS: record re-derived byte-identical; 15/15 dG/ddG == 9fdba68 fixtures; G15 + both known answers verified on scratch pages; 0 engine calls; pytest 2674 passed
 
 ## Residue / caveats
 

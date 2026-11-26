@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -65,8 +65,8 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.18
   review:
-    reviewed_at: '2026-11-26T18:46:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.16
+    reviewed_at: '2026-11-26T23:25:20+00:00'
+    reviewed_by: audit:OPR.0.7.0.18
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
@@ -541,7 +541,7 @@ nodes:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -557,30 +557,30 @@ nodes:
   - tests/candidate_outputs/v0.6.0/**
   - tests/candidate_outputs/v0.7.0/**
   description: >-
-    eta_rxncat.orchestrator: species/TS/reaction/barrier runners. __init__, selectivity,
-    ensembles: eta_rxncat_selectivity (v0.7.0 split). species.py: SpeciesSpec, Recipe,
-    SinglePoint, ENGINE_CLASSES; run_species caches each stage (build_stage_key):
-    conformer_search, geometry_opt, dedup, window, frequency, imaginary push then
-    not_a_minimum, re-dedup (R53), ensemble, single points (R35); SpeciesResult.frequency_dispositions
-    (FrequencyDisposition): one per frequency row, visit order, hits and misses (kept|superseded_by_push->key|dropped:reason).
-    Opt/SCF failures cached, others propagate; geometry_opt rows (failures too) may
-    carry frames. run_constrained_point (R42). counting.py: CountingEngine. ts.py:
-    run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult: ts_opt (key: engine
-    + TS options, identity, forming bonds), frequency, validate_transition_state,
-    TransitionStateRecord; _RecordingEngine fills TSStep coordinates (_StepRecordError;
-    R33); failures cached with frames (ts_search_failed:<reason>, scf_convergence,
-    engine_error; Unavailable/Input errors raise uncached); ts_validation_failed keeps
-    the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
-    reaction_free_energy. report.py: JSON v1. tests/e2e: t3 (HF1-HF3, R32), T4/t4_flexible;
-    v070.py (load_enumeration/load_fallback -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate:
+    eta_rxncat.orchestrator runners. Selectivity, ensembles, __init__: eta_rxncat_selectivity.
+    species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES; run_species caches
+    stages (build_stage_key): conformer_search, geometry_opt, dedup, window, frequency,
+    imaginary push then not_a_minimum, re-dedup (R53), ensemble, single points (R35);
+    SpeciesResult.frequency_dispositions: one per frequency row, visit order, hits+misses
+    (kept|superseded_by_push->key|dropped:reason). Opt/SCF failures cached; geometry_opt
+    rows may carry frames. run_constrained_point (R42). counting.py: CountingEngine.
+    ts.py: run_transition_state -> TSRunResult: ts_opt (key: engine + TS options,
+    identity, forming bonds), frequency, validate_transition_state, TransitionStateRecord;
+    _RecordingEngine fills TSStep coordinates (R33); failures cached with frames (ts_search_failed:<reason>,
+    scf_convergence, engine_error; Unavailable/Input raise uncached); ts_validation_failed
+    keeps validation. barrier.py, reaction.py: activation/reaction free energy (1
+    M, 1 atm). report.py: JSON v1. tests/e2e: t3 (HF1-HF3, R32), T4/t4_flexible; v070.py
+    (load_enumeration/load_fallback -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate:
     run_ts_with_fallback + run_species twice in one store, patched Engine.evaluate
     counts, private ts_* sample keys (seed_clash: none); unit_gates G7, ensemble_gates,
     unit_record/score_pair -> RunRecord (endpoint dispositions, validation), finite
     ratio; run_fallback_unit, attributed_engine_calls, fallback_gates G8); review_v070.py:
-    one bundle over 4 stores (sub-bundle per record via in-process cli, 0 engine calls,
-    root index + MANIFEST, coverage, fresh roots refused, M10, intro decimation_statement,
-    scans, copy to candidates); acceptance_record_v070.py -> ACCEPTANCE_RESULT.json
-    from evidence; never reads candidates.
+    one bundle over 4 replan-7 stores in SOURCE_ROOT (G7/G8 groups; sub-bundle per
+    record via cli, 0 engine calls, root index + MANIFEST, coverage, fresh roots refused,
+    M10, scans; review_g15.py G15 gates: dispositions, Used/Not used groups, TSIdentity
+    + banner, known answers; copy to candidates); acceptance_record_v070.py -> ACCEPTANCE_RESULT.json
+    from SOURCE_ROOT + slice 17 proof, replan_7 block vs slice 13's record; never
+    reads candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -633,8 +633,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T20:45:43+00:00'
-    reviewed_by: audit:OPR.0.7.0.17
+    reviewed_at: '2026-11-26T23:25:20+00:00'
+    reviewed_by: audit:OPR.0.7.0.18
     summary: patched description
   provenance:
     last_slice: OPR.0.7.0.18
@@ -707,7 +707,7 @@ nodes:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -788,8 +788,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T20:45:43+00:00'
-    reviewed_by: audit:OPR.0.7.0.17
+    reviewed_at: '2026-11-26T23:25:20+00:00'
+    reviewed_by: audit:OPR.0.7.0.18
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.18
