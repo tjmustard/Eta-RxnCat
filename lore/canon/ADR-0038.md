@@ -1,0 +1,1 @@
+Context: reusing geometry_opt for TS searches would mix saddles with minima for any reader filtering by stage kind. Decision: StageKind gains "ts_opt" (additive Literal); the final TS Hessian reuses the frequency kind (keyed by geometry and engine). Store KEY_SCHEMA unchanged. Mission release-0.5.0 R10.

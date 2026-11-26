@@ -7,7 +7,7 @@ nodes:
 - id: ADR-0001
   type: decision
   title: 'Cache key: canonical versioned per-stage payload (key_schema 1)'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -35,7 +35,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:12:06+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 195cde0d27e912c88b72a777084ef72ad71488804e18581f2bd8f5521d1c460c
+    nonce: fa85dfd1b0a1b4aadf899932e5d3b556
   history:
   - at: '2026-11-22T08:10:13+00:00'
     from: null
@@ -43,11 +51,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:12:06+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce fa85dfd1b0a1b4aadf899932e5d3b556
 - id: ADR-0002
   type: decision
   title: 'Artifact store: completed rows immutable, WAL, schema version 1, caller-supplied
     path'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -74,7 +89,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:12:31+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: f313e46a32d8eecee52869aeef3e225c07b794b5a14c553230634835584bba73
+    nonce: 0718725c33635009cdbac87f5f900489
   history:
   - at: '2026-11-22T08:10:13+00:00'
     from: null
@@ -82,11 +105,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:12:31+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0718725c33635009cdbac87f5f900489
 - id: ADR-0003
   type: decision
   title: 'Core models are strict: StrictInt chemistry ints, extra=forbid, element
     table, electron parity, duplicate-key rejection'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -113,7 +143,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:12:48+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 9d397e383798f2461b5b24554902d1a87f9bb211e5f9f395d96f724495d99df6
+    nonce: 4f082bc05f51d9a4ac5be80793fa4d18
   history:
   - at: '2026-11-22T08:10:13+00:00'
     from: null
@@ -121,11 +159,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:12:48+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 4f082bc05f51d9a4ac5be80793fa4d18
 - id: ADR-0004
   type: decision
   title: 'ReactionGraph: templates are ranked alternatives; components are a separated
     state''s species; cycles allowed'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -152,7 +197,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:13:02+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: d0b29786b0f860f887a2e925066ee96d3fb70b977399aa0a7b17445e6e48a353
+    nonce: 5c6504d9730d314e7c6d010d5eb0985e
   history:
   - at: '2026-11-22T08:10:13+00:00'
     from: null
@@ -160,11 +213,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:13:02+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 5c6504d9730d314e7c6d010d5eb0985e
 - id: ADR-0005
   type: decision
   title: 'AtomMappingSpec: full invariant list, including keep/delete partition of
     template atoms'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -191,7 +251,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:13:34+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: d1d31014bd2694d342a2bf6725d14f39fc778ee08cbecca4d9bb75d6f5c2b0a4
+    nonce: d01155366188570d3a08cb81448e4b60
   history:
   - at: '2026-11-22T08:10:13+00:00'
     from: null
@@ -199,10 +267,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:13:34+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce d01155366188570d3a08cb81448e4b60
 - id: ADR-0006
   type: decision
   title: 'Licence gate: runtime-only allow-list with partial match'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -230,7 +305,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:14:17+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 55cee2532de2497697a4dc7f6296d98169d12ad2cd89364fe9f6fc73c5c05798
+    nonce: b307b867aba0c331966a3f13241fd500
   history:
   - at: '2026-11-22T08:10:14+00:00'
     from: null
@@ -238,11 +321,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:14:17+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce b307b867aba0c331966a3f13241fd500
 - id: ADR-0007
   type: decision
   title: Reference starter under docs/prd is excluded from all gates; registers use
     closed inventory and a pinned diff
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -270,7 +360,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:14:34+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 2c50a00ed5153a00cda293e1bd0221fd967e3080e225c25b6920b4e69c2ef72a
+    nonce: ad6a90fe4b0b020c48df198f23972593
   history:
   - at: '2026-11-22T08:10:14+00:00'
     from: null
@@ -278,11 +376,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:14:34+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce ad6a90fe4b0b020c48df198f23972593
 - id: ADR-0008
   type: decision
   title: 'Hardware: 6.5 GiB budget of total VRAM; smoke pass is GPU-vs-CPU agreement;
     one seat runs acceptance'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -310,7 +415,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:14:48+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: fa55635ad9a6bd48a5021500416378bbbd6353f0ee645eac71f2518acd607bf9
+    nonce: 963b4a6e63742259e3e1df30d8db3e13
   history:
   - at: '2026-11-22T08:10:14+00:00'
     from: null
@@ -318,11 +431,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:14:48+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 963b4a6e63742259e3e1df30d8db3e13
 - id: ADR-0009
   type: decision
   title: 'Project rules live in AGENTS.md after the HACF block; core scope is PR #3
     only'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -351,7 +471,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:20:00+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 70d2544dac2a778f33198ea1fc97341c56328a3d4c771c0ac3af27690ce1ff34
+    nonce: 3eec659a50515cf878577a674872c673
   history:
   - at: '2026-11-22T08:10:14+00:00'
     from: null
@@ -359,11 +487,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:20:00+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 3eec659a50515cf878577a674872c673
 - id: ADR-0010
   type: decision
   title: 'Optional extras: gpu, mlip-mace ⟂ mlip-uma; per-extra licence gate (LGPL
     transitive-only, NVIDIA exempt)'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -393,7 +528,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:20:17+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 6313d2a0b96776d1dffd10f81baecebbfeaa0a44e60bb3331e5da93059cd930e
+    nonce: 0cac9b0ae3623114ac788127d2da660b
   history:
   - at: '2026-11-22T12:30:33+00:00'
     from: null
@@ -401,11 +544,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:20:17+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0cac9b0ae3623114ac788127d2da660b
 - id: ADR-0011
   type: decision
   title: 'Licence-gate exception: geomeTRIC 1.1.1 (BSD 3-clause Non-AI, metadata UNKNOWN),
     version-pinned in [tool.pip-licenses]'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -435,7 +585,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:21:01+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 4f94862c33932c6a24b90b3a5d2c565d95637a1f6294aac834a0fed1a96c7782
+    nonce: c1bdcd504fd0f399a68cfc1b02453d89
   history:
   - at: '2026-11-22T12:50:54+00:00'
     from: null
@@ -443,11 +601,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:21:01+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce c1bdcd504fd0f399a68cfc1b02453d89
 - id: ADR-0012
   type: decision
   title: 'Store open order: version check before WAL; bounded WAL retry with StoreBusyError
     (amends ADR-0002)'
-  status: PROPOSED
+  status: RETIRED
   origin: agent
   context: null
   pointer:
@@ -475,7 +640,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:22:42+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: ee8f880783dac64b0df0ac83d2bd1e33931431f641daec0239ea5e11dd136f59
+    nonce: bf58c0d8491aa5c1ec296b47bab0b114
   history:
   - at: '2026-11-22T13:24:17+00:00'
     from: null
@@ -483,11 +656,26 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:22:42+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce bf58c0d8491aa5c1ec296b47bab0b114
+  - at: '2026-11-26T21:10:48+00:00'
+    from: CANON
+    to: RETIRED
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: 'Superseded in whole by ADR-0015: one open deadline over the version
+      read, WAL switch and schema transaction, which artifact_store.py implements;
+      ADR-0012''s narrower retry no longer describes the code.'
+    ref: retire nonce ea049ee02ead1c8df901b9755fc80612
 - id: ADR-0013
   type: decision
   title: 'Licence gate: exact SPDX/classifier/name evaluation in tools/licence_gate.py
     replaces pip-licenses partial matching'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -519,7 +707,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:23:14+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 7410c0e5bae22e10b56e6c6120ee4f61ffdb82b95db599e79d9b5b2685f1a9f2
+    nonce: cad620b78bf00f5d7d185b2d1550eb9b
   history:
   - at: '2026-11-22T13:57:36+00:00'
     from: null
@@ -527,11 +723,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:23:14+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce cad620b78bf00f5d7d185b2d1550eb9b
 - id: ADR-0014
   type: decision
   title: Copyleft/off-list licences allowed only as unmodified transitive deps of
     optional MLIP extras; project code stays MIT (TJ A)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -560,7 +763,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:23:32+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 91c01c9598a9caca0aa7b6ed4f2a0d08b335cd55bb86b531c60075506c9186f6
+    nonce: 7185652047cf1b3dc5585e3a078f5820
   history:
   - at: '2026-11-22T14:51:29+00:00'
     from: null
@@ -568,11 +779,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:23:32+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 7185652047cf1b3dc5585e3a078f5820
 - id: ADR-0015
   type: decision
   title: 'Store open: one open_timeout_s deadline for version read, WAL switch and
     schema txn; busy mapped to StoreBusyError (proposed to supersede ADR-0012)'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -600,7 +818,15 @@ nodes:
     source: OPR.0.1.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:23:47+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: fb1239f22cc032e943ac6521bb2200aa56093ec3200a8795a7f653b78ca58fb7
+    nonce: 6116203c6109dcd6b98c5d06a747ddac
   history:
   - at: '2026-11-22T15:19:09+00:00'
     from: null
@@ -608,11 +834,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.1.0
+  - at: '2026-11-26T19:23:47+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6116203c6109dcd6b98c5d06a747ddac
 - id: ADR-0016
   type: decision
   title: 'Cache key stage = engine''s resolved stage: keyed option tables, runtime
     args unkeyed, engine_impl'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -640,7 +873,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:24:06+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 5a83640ab5ab7bfe82fa900a9ffb7c0dbc174da912a53591fe372937e1445fbf
+    nonce: 8f5f26d6a4b92b5e6e213e6fa3230953
   history:
   - at: '2026-11-22T16:48:55+00:00'
     from: null
@@ -648,11 +889,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:24:06+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 8f5f26d6a4b92b5e6e213e6fa3230953
 - id: ADR-0017
   type: decision
   title: MLIP model identity is <name>@sha256:<hex> of the weights file; MACE-MP-0
     medium pinned
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -681,7 +929,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:24:21+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 12157eee510bfb20ea59d51401537761dc2fc5a789b8b4bcf90962cb9bfc3a0f
+    nonce: 321b234ec31dc906f258f4a4bf150ced
   history:
   - at: '2026-11-22T16:48:55+00:00'
     from: null
@@ -689,11 +945,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:24:21+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 321b234ec31dc906f258f4a4bf150ced
 - id: ADR-0018
   type: decision
   title: 'PySCF: one resolved stage for CPU and GPU; keyed DF/auxbasis/ECP/guess;
     mandatory stability; ddCOSMO on CPU'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -721,7 +984,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:24:39+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 34da17ecad5bbba5513d96ddf438c0529733814c7958c359b67850f32428c665
+    nonce: 3aa8dd8273c7f4882f672c2a23c45529
   history:
   - at: '2026-11-22T16:48:55+00:00'
     from: null
@@ -729,11 +1000,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:24:39+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 3aa8dd8273c7f4882f672c2a23c45529
 - id: ADR-0019
   type: decision
   title: 'Engine test policy: markers, named acceptance envs, skip-to-fail switch,
     offline unit tests'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -761,7 +1039,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:25:45+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 90d745dfce99b6f3a099cfaa5b9aed9cef3a7d7a2ae4debd45237040b22b54bb
+    nonce: 0446639d98216a5e7daf84d90cba9708
   history:
   - at: '2026-11-22T16:48:55+00:00'
     from: null
@@ -769,11 +1055,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:25:45+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0446639d98216a5e7daf84d90cba9708
 - id: ADR-0020
   type: decision
   title: GPU/MLIP stack on torch 2.13+cu129 with fairchem>=2.22 for native uma-s-1p2p1
     (TJ F1 A)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -804,7 +1097,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:26:01+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c99cb230b2c82606ee98295a3529a245a5a46446554fe6908b10d9db20c4acaa
+    nonce: 3270d8e1b7efac5819f394bbea6b8085
   history:
   - at: '2026-11-22T16:48:56+00:00'
     from: null
@@ -812,11 +1113,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:26:01+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 3270d8e1b7efac5819f394bbea6b8085
 - id: ADR-0021
   type: decision
   title: xtb 6.8.0 binary (LGPL-3.0 + bundled MKL/ifx) accepted as a user-downloaded
     subprocess engine (TJ F12 A)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -844,7 +1152,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:26:16+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 310ac80f256e0f998b4c808d8a7d56e43f462252ef187fc367e9c0bf9d52021f
+    nonce: e2c35e2e833627a8b9d0c56107a1557b
   history:
   - at: '2026-11-22T16:48:56+00:00'
     from: null
@@ -852,11 +1168,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:26:16+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce e2c35e2e833627a8b9d0c56107a1557b
 - id: ADR-0022
   type: decision
   title: 'Engine tags are one per model family: add esen_omol25 over a shared fairchem
     bridge; refuse direct-force checkpoints (amends ADR-0001)'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -886,7 +1209,15 @@ nodes:
     source: OPR.0.2.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:26:30+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: bcfd29897e7d3e888c2e4c4eea91fb4362d7e7f7cf40d7d50e81bc2b30212cc1
+    nonce: e56c0649f1f0d09b4d017137702241a3
   history:
   - at: '2026-11-22T16:57:07+00:00'
     from: null
@@ -894,11 +1225,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.2.0
+  - at: '2026-11-26T19:26:30+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce e56c0649f1f0d09b4d017137702241a3
 - id: ADR-0023
   type: decision
   title: geomeTRIC moves behind an Optimizer interface into the opt-geometric extra
     (TJ Q3 A), amending ADR-0011's scope
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -930,7 +1268,15 @@ nodes:
     source: OPR.0.3.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:28:13+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 4085752745c0257d9c4a0247c5b7315ba1abd81c119f823b0f5afcf79bfd0cb6
+    nonce: dbb3e2e18b37bfef09e46c5e21c3fd2f
   history:
   - at: '2026-11-23T03:40:47+00:00'
     from: null
@@ -938,11 +1284,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+  - at: '2026-11-26T19:28:13+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce dbb3e2e18b37bfef09e46c5e21c3fd2f
 - id: ADR-0024
   type: decision
   title: GeometricOptimizer uses geomeTRIC's lower-level API, never run_optimizer,
     to keep host logging intact
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -969,7 +1322,15 @@ nodes:
     source: OPR.0.3.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:28:29+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c311f519d3eb9f1b72a848bdb57900db9138ceeeb7d65243ec7a8d301b493a9a
+    nonce: f44df8c6b0ce1b09984023eea999c08c
   history:
   - at: '2026-11-23T03:40:47+00:00'
     from: null
@@ -977,10 +1338,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+  - at: '2026-11-26T19:28:29+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce f44df8c6b0ce1b09984023eea999c08c
 - id: ADR-0025
   type: decision
   title: Two-pass ETKDGv3, own proper-rotation dedup and per-conformer mirror degeneracy
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1007,7 +1375,15 @@ nodes:
     source: OPR.0.3.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:28:45+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c4cfb794cf05a4157d593ae43a65b6de5054337292111a13b1cc8a1bde81e494
+    nonce: a2e0b3917549d6e78b2420d58d80cf21
   history:
   - at: '2026-11-23T03:40:47+00:00'
     from: null
@@ -1015,11 +1391,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+  - at: '2026-11-26T19:28:45+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce a2e0b3917549d6e78b2420d58d80cf21
 - id: ADR-0026
   type: decision
   title: Thermochemistry is derived from stored Hessians in eta_rxncat.thermo with
     its own CODATA constants
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1050,7 +1433,15 @@ nodes:
     source: OPR.0.3.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:29:00+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 555147288fde053b05330e6eec642a9d31fb70b1a28a29407931c5bc790a5731
+    nonce: 41feef1d1a24ff8f9c2a164bdcbf2cf9
   history:
   - at: '2026-11-23T03:40:47+00:00'
     from: null
@@ -1058,11 +1449,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+  - at: '2026-11-26T19:29:00+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 41feef1d1a24ff8f9c2a164bdcbf2cf9
 - id: ADR-0027
   type: decision
   title: Candidate outputs committed in candidates-only commits read by no seat; acceptance
     split around TJ's Phase 3 gate
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1090,7 +1488,15 @@ nodes:
     source: OPR.0.3.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:29:42+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: ed91fafd8bf0b4cd5bdd31d891df5a531a4cde5a5a3179ab486ad514c4b92794
+    nonce: e8334f4f3455eed45fe7a7e8257a544e
   history:
   - at: '2026-11-23T03:40:47+00:00'
     from: null
@@ -1098,11 +1504,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.3.0
+  - at: '2026-11-26T19:29:42+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce e8334f4f3455eed45fe7a7e8257a544e
 - id: ADR-0028
   type: decision
   title: 'Graft input: template AtomMappingSpec plus ordered fragment pairs; paired
     fragment atoms always dropped, optional fragment_delete, explicit charge and spin'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1132,7 +1545,15 @@ nodes:
     source: OPR.0.4.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:38:16+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 7ef5c974c9fa8de203de1c91895850238d142e179eae0aeef3c7d7254c85cdb7
+    nonce: 6d7a4d381e56da6d3e9fcdffdb9204c4
   history:
   - at: '2026-11-23T19:01:52+00:00'
     from: null
@@ -1140,11 +1561,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+  - at: '2026-11-26T19:38:16+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6d7a4d381e56da6d3e9fcdffdb9204c4
 - id: ADR-0029
   type: decision
   title: Mapping alignment is Horn quaternion superposition with shape-based degeneracy
     refusal and a planar-pair flag; thermo Kabsch untouched
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1173,7 +1601,15 @@ nodes:
     source: OPR.0.4.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:40:08+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: aa2ebcc2ae17ea5ab4da1f805d406b5747da0291835000e798369b8201c6b1c4
+    nonce: 4e65d0b59b2b227c3d4bb4afcaba0d3b
   history:
   - at: '2026-11-23T19:01:52+00:00'
     from: null
@@ -1181,12 +1617,19 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+  - at: '2026-11-26T19:40:08+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 4e65d0b59b2b227c3d4bb4afcaba0d3b
 - id: ADR-0030
   type: decision
   title: Grafts raise only on overlap below 0.5 A; close contacts and junction signed
     volumes are recorded; TS fixtures gate the pre-relaxed product on connectivity
     and junction signs
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1216,7 +1659,15 @@ nodes:
     source: OPR.0.4.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:40:23+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 198e69a5be39b49882ddb83232acc73b2aade537b8354184b2ba5490ed6ea694
+    nonce: ced7f1c2402e50cf77ff846babd98518
   history:
   - at: '2026-11-23T19:01:52+00:00'
     from: null
@@ -1224,11 +1675,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+  - at: '2026-11-26T19:40:23+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce ced7f1c2402e50cf77ff846babd98518
 - id: ADR-0031
   type: decision
   title: Graft-to-reference atom maps come from a coordinate-free stated rule (lexicographically
     smallest isomorphism), never from minimising a gated RMSD; TJ confirms by promotion
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1258,7 +1716,15 @@ nodes:
     source: OPR.0.4.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:41:03+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: da5599ba0b89e40d5a715d4e6f4b254334c6829aedce4eaa941c6888ab521f02
+    nonce: 6ce20df68f300773ea6e2573077d9e97
   history:
   - at: '2026-11-23T19:01:52+00:00'
     from: null
@@ -1266,12 +1732,19 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+  - at: '2026-11-26T19:41:03+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6ce20df68f300773ea6e2573077d9e97
 - id: ADR-0032
   type: decision
   title: Constrained-core pre-relaxation freezes the core via frozen_atom_indices,
     never with a dihedral constraint, and raises CoreDisplacementError above 1e-8
     A
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1300,7 +1773,15 @@ nodes:
     source: OPR.0.4.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:41:18+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 821e8cf70e089824696462c6ecd4d583e22eeabe4b249fa55b19a2f365491330
+    nonce: f98ffa0287d920da50d906f33f2c7d80
   history:
   - at: '2026-11-23T19:01:52+00:00'
     from: null
@@ -1308,11 +1789,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.4.0
+  - at: '2026-11-26T19:41:18+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce f98ffa0287d920da50d906f33f2c7d80
 - id: ADR-0033
   type: decision
   title: TS search is a separate TransitionStateOptimizer ABC with a clean-room Cartesian
     P-RFO
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1341,7 +1829,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:41:32+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 4d248fda26cad041167f6c116b939a3d49f5e5827fafeb4402cb53145c551533
+    nonce: 40e7bab43a5084f09c86e9c5b8bd0e2e
   history:
   - at: '2026-11-24T03:50:32+00:00'
     from: null
@@ -1349,11 +1845,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:41:32+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 40e7bab43a5084f09c86e9c5b8bd0e2e
 - id: ADR-0034
   type: decision
   title: Initial TS mode is the maximum overlap with the forming-bond stretch, refused
     below 0.60
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1381,7 +1884,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:42:14+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: f526813904f5b14e5e1fe62f696797b9e5837f672f75c35a82efa003e7ea8dff
+    nonce: bfd0fb87ab1a17771482d5d3d8728068
   history:
   - at: '2026-11-24T03:50:42+00:00'
     from: null
@@ -1389,11 +1900,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:42:14+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce bfd0fb87ab1a17771482d5d3d8728068
 - id: ADR-0035
   type: decision
   title: TS identity is gated on the imaginary mode's forming-bond overlap, phase
     and distances, not on perceived connectivity
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1421,7 +1939,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:42:29+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 7807d0e40b02061df9a035a20a646610a7ae9b191b3138d3f5c481531add0f61
+    nonce: 79b96ae36d88947ad0b1d86167421615
   history:
   - at: '2026-11-24T03:50:42+00:00'
     from: null
@@ -1429,10 +1955,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:42:29+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 79b96ae36d88947ad0b1d86167421615
 - id: ADR-0036
   type: decision
   title: TS sigma from the perceived bond graph of the geometry; TS degeneracy 1
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1462,7 +1995,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:42:46+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c7fcc8f999b4c1563b301f69d0870a2c969c0c6bc8ddb31555f877da44433a0b
+    nonce: 6a81beabda77f069b0b87673d43d99ba
   history:
   - at: '2026-11-24T03:50:43+00:00'
     from: null
@@ -1470,10 +2011,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:42:46+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6a81beabda77f069b0b87673d43d99ba
 - id: ADR-0037
   type: decision
   title: GFN2 gates TS convergence and the mode count only; UMA gates every TS check
-  status: PROPOSED
+  status: SUPERSEDED
   origin: agent
   context: null
   pointer:
@@ -1493,9 +2041,9 @@ nodes:
     - tests/e2e/test_t3_cyclobutenone.py
   relates_to: []
   supersedes: []
-  superseded_by: null
-  stale: true
-  stale_reason: impact
+  superseded_by: ADR-0047
+  stale: false
+  stale_reason: null
   legacy: null
   provenance:
     created_by: agent
@@ -1503,7 +2051,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:43:00+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: f391f5f49d4349a0cdf222f1f3bdbde090f7bed6bed4de522dd2cf296a9a2d36
+    nonce: 0e667f5756e10ef46a34d808b061ca45
   history:
   - at: '2026-11-24T03:50:43+00:00'
     from: null
@@ -1511,10 +2067,23 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:43:00+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0e667f5756e10ef46a34d808b061ca45
+  - at: '2026-11-26T19:46:08+00:00'
+    from: CANON
+    to: SUPERSEDED
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: null
+    ref: ADR-0047
 - id: ADR-0038
   type: decision
   title: New stage kind ts_opt for TS search rows
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1542,7 +2111,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:43:15+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c0806e4bb0c92dc34f7f695770bbbd17dd76a3eaed6c8e4076a9e7e5957e2637
+    nonce: 9c4aaacd5a0f02f52a261666919803c8
   history:
   - at: '2026-11-24T03:50:51+00:00'
     from: null
@@ -1550,11 +2127,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:43:15+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 9c4aaacd5a0f02f52a261666919803c8
 - id: ADR-0039
   type: decision
   title: geomeTRIC TS cross-check runs only through its documented CLI in a subprocess
     with an ASE-calculator shim over eta's engine
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1583,7 +2167,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:43:29+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 20e540ff881381f472d654b937d3d65b9f2238aeef43d1ec64fa8a133c1f1d98
+    nonce: 0fd9d1882c3270dccff188ac283b1006
   history:
   - at: '2026-11-24T03:50:51+00:00'
     from: null
@@ -1591,11 +2183,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:43:29+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0fd9d1882c3270dccff188ac283b1006
 - id: ADR-0040
   type: decision
   title: 'Pre-build go/no-go for TS windows: projected UMA barrier in window with
     1 kcal/mol margin and A2 met at the literature TS'
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1627,7 +2226,15 @@ nodes:
     source: OPR.0.5.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:43:47+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: e1941280ad58d8cb9ee8483bacd5e8bb91362c5289a9584e426a1f993554b074
+    nonce: 6e37ef08e621f26f038eaacdfa9b4e31
   history:
   - at: '2026-11-24T03:50:51+00:00'
     from: null
@@ -1635,10 +2242,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0
+  - at: '2026-11-26T19:43:47+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6e37ef08e621f26f038eaacdfa9b4e31
 - id: ADR-0041
   type: decision
   title: PySCF cartesian_basis option, keyed only when True (narrow exception to ADR-0016)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1667,7 +2281,15 @@ nodes:
     source: OPR.0.5.0.15
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:44:04+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 2523fda649b1b9f3c1f58571ba7e8df712137b152163e2fc12e8b5ed59beee8a
+    nonce: c020be9c299f0e52609265413a2f645c
   history:
   - at: '2026-11-24T06:45:41+00:00'
     from: null
@@ -1675,11 +2297,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.5.0.15
+  - at: '2026-11-26T19:44:04+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce c020be9c299f0e52609265413a2f645c
 - id: ADR-0042
   type: decision
   title: TS ensemble members must keep their seed's relative configuration across
     every forming bond (face check)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1709,7 +2338,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:44:21+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 40a6d455928b6a12fcea26fd9737599cb24f4157d7462180595f3ef5987406bc
+    nonce: c8dae1dd0a765eecdccbe21d44a39f37
   history:
   - at: '2026-11-25T06:46:07+00:00'
     from: null
@@ -1717,11 +2354,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:44:21+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce c8dae1dd0a765eecdccbe21d44a39f37
 - id: ADR-0043
   type: decision
   title: TS conformer sampler is per-fragment ETKDGv3 anchored on the seed plus seeded
     non-core perturbation; pre-relax cached as constrained_preopt
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1754,7 +2398,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:44:37+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 7aa0a8d6ae3de7149f75faeec9da588e3748140f4ba3948fcaca0c1de9ee0cee
+    nonce: 185b85d8d7fcf16fde168002287766c7
   history:
   - at: '2026-11-25T06:46:07+00:00'
     from: null
@@ -1762,11 +2414,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:44:37+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 185b85d8d7fcf16fde168002287766c7
 - id: ADR-0044
   type: decision
   title: TS ensemble dedup merges on shape and face only; Boltzmann sum with degeneracy
     inside a 3.0 kcal/mol window
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1796,7 +2455,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:44:51+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 1e1c1d7fddb43a6c73c397deef969773317c27d8a679734d3e918a58cb2aed10
+    nonce: 51c3b7178370509d06826676021e172c
   history:
   - at: '2026-11-25T06:46:07+00:00'
     from: null
@@ -1804,11 +2471,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:44:51+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 51c3b7178370509d06826676021e172c
 - id: ADR-0045
   type: decision
   title: run_transition_state caches EngineRuntimeError as engine_error; unavailable
     and input errors re-raise uncached
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1838,7 +2512,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:45:06+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: f8105a5f99d17dd33bca35bb79d9608ffbd28a3caba2b11651d9567421ddf87b
+    nonce: ada71862ddff5d9f1923c89ffa69a293
   history:
   - at: '2026-11-25T06:46:07+00:00'
     from: null
@@ -1846,11 +2528,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:45:06+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce ada71862ddff5d9f1923c89ffa69a293
 - id: ADR-0046
   type: decision
   title: Typed PathwayPruningRule prunes the computed minor pathway's priority>=2
     nodes when ddG dagger exceeds a required threshold
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1880,7 +2569,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:45:22+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 2e699fb1d1a3eea414676a698e809adc7b095d698614cb0b192a4939db0e3526
+    nonce: a4adf404ce125049c6fd066b7df1bb3c
   history:
   - at: '2026-11-25T06:46:08+00:00'
     from: null
@@ -1888,11 +2585,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:45:22+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce a4adf404ce125049c6fd066b7df1bb3c
 - id: ADR-0047
   type: decision
   title: GFN2 gates convergence, mode count and the TS identity core; UMA gates all
     plus windows (supersedes ADR-0037)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1921,7 +2625,15 @@ nodes:
     source: OPR.0.6.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:46:08+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 4d79e83dea212029dbed7a9dddd80320941a39393c06ca3e70b3cc9e8f0d8c9d
+    nonce: 6cf734d567bb65d0e57677ae44e47018
   history:
   - at: '2026-11-25T06:46:08+00:00'
     from: null
@@ -1929,10 +2641,17 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0
+  - at: '2026-11-26T19:46:08+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 6cf734d567bb65d0e57677ae44e47018
 - id: ADR-0048
   type: decision
   title: Ensemble pre-relaxation runs under an in-process wall-time budget (HF-13)
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -1962,7 +2681,15 @@ nodes:
     source: OPR.0.6.0.13
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:46:25+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 4a2f39ec30aab199aaabfe0bb088ed4a0fed3c37784641b51c69fdd1fd2a8d51
+    nonce: 8127755f0ebed9fcaf604fc0dbfdc988
   history:
   - at: '2026-11-25T12:48:21+00:00'
     from: null
@@ -1970,11 +2697,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0.13
+  - at: '2026-11-26T19:46:25+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 8127755f0ebed9fcaf604fc0dbfdc988
 - id: ADR-0049
   type: decision
   title: Run-data JSON v1 is eta's single view contract; the UI track starts with
     a static, serverless review bundle
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -2006,7 +2740,15 @@ nodes:
     source: OPR.0.7.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:46:46+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 260a24388883ca4d71cea5cf51c349c9fce21a069db9084c1ec24d15a903803c
+    nonce: 9c532436de0212e23b71ed3fa6d06c60
   history:
   - at: '2026-11-26T01:18:34+00:00'
     from: null
@@ -2014,11 +2756,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.0
+  - at: '2026-11-26T19:46:46+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 9c532436de0212e23b71ed3fa6d06c60
 - id: ADR-0050
   type: decision
   title: TS seed fallback falls through only on an allow-list of template faults;
     host and engine faults stop the node
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -2051,7 +2800,15 @@ nodes:
     source: OPR.0.7.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:48:27+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 674e325286537aae5a468987389f1546efd4516e8616ccc82646a4e4b058348c
+    nonce: 5395764e7b7d5f9bda70ba6727d175cd
   history:
   - at: '2026-11-26T01:18:34+00:00'
     from: null
@@ -2059,11 +2816,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.0
+  - at: '2026-11-26T19:48:27+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 5395764e7b7d5f9bda70ba6727d175cd
 - id: ADR-0051
   type: decision
   title: The per-ensemble stall cap reports, and the pre-relax budget is load-scaled
     wall time
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -2094,7 +2858,15 @@ nodes:
     source: OPR.0.7.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:48:43+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 1672a563da929ec61fc4dbc1067b9eaa000789d0755f895121ae97f089b69470
+    nonce: 3d292fd67fba6390fa9876e7972d70f6
   history:
   - at: '2026-11-26T01:18:34+00:00'
     from: null
@@ -2102,11 +2874,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.0
+  - at: '2026-11-26T19:48:43+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 3d292fd67fba6390fa9876e7972d70f6
 - id: ADR-0052
   type: decision
   title: Enumeration input is an EnumerationPlan beside ReactionGraph schema 1; declared
     rank wins and RMSD is a gate
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -2139,7 +2918,15 @@ nodes:
     source: OPR.0.7.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:49:01+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: c58fef844f2b7a17fd227ddb15c3d3ece28acb2f91b2cc748f71c82dc2f987e1
+    nonce: 0407f698359c9afcd30054a2c6ab1787
   history:
   - at: '2026-11-26T01:18:34+00:00'
     from: null
@@ -2147,11 +2934,18 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.0
+  - at: '2026-11-26T19:49:01+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce 0407f698359c9afcd30054a2c6ab1787
 - id: ADR-0053
   type: decision
   title: Optimization frames are payload-only, stores are forward-only, and geomeTRIC
     runs in a per-run temp cwd
-  status: PROPOSED
+  status: CANON
   origin: agent
   context: null
   pointer:
@@ -2184,7 +2978,15 @@ nodes:
     source: OPR.0.7.0
     session_id: null
     run_id: null
-  approval: null
+  approval:
+    approved_by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    approved_at: '2026-11-26T19:49:18+00:00'
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    warrant_sha256: c57c4b7c0071fdf4433e3864a928086299ccacf4f3b0af706af62a0236a9d320
+    method: AskUserQuestion+PreToolUse-ask+ticket
+    content_sha256: 48f2e321985062a7dfe81f242a073240686c937e5c3349f03a6b4910655b89f9
+    nonce: bd02cdaa101f9f6fc91b45c0b7716506
   history:
   - at: '2026-11-26T01:18:35+00:00'
     from: null
@@ -2192,3 +2994,10 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.0
+  - at: '2026-11-26T19:49:18+00:00'
+    from: PROPOSED
+    to: CANON
+    by: Thomas J. L. Mustard Ph.D. <tjmustard@mustardfamily.com>
+    warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
+      built and as I intend them.
+    ref: approve nonce bd02cdaa101f9f6fc91b45c0b7716506
