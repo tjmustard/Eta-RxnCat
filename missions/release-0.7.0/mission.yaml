@@ -52,4 +52,16 @@ composition:
     - ref: slices/14-acceptance-verdict/slice.yaml
       order: 140
       active: true
+    - ref: slices/15-seed-geometry-checks/slice.yaml
+      order: 150
+      active: true
+    - ref: slices/16-review-dispositions/slice.yaml
+      order: 160
+      active: true
+    - ref: slices/17-rerun-units/slice.yaml
+      order: 170
+      active: true
+    - ref: slices/18-rereview-bundle/slice.yaml
+      order: 180
+      active: true
 # Optional team and SDLC sections are added here.

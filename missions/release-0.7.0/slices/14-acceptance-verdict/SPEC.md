@@ -7,10 +7,10 @@ stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
 intent: "After TJ's Phase 3 visual audit and promotion, run the verdict on both engines against the promoted outputs, document the review command and the run-data contract, and bump to 0.7.0."
-depends_on: [OPR.0.7.0.13]
+depends_on: [OPR.0.7.0.18]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.7.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
@@ -27,14 +27,34 @@ hacf_legacy_order: null
 Close v0.7.0 on real outcomes after TJ's audit (mission US-013, §8 Release).
 
 Context the builder needs:
-- **Start gate:** TJ's Phase 3 is closed (his promotion commit exists and the lead says so). If TJ
-  asked for changes, stop: the lead replans.
-- **Verdict:** rerun the G7/G8 E2E against the promoted fixtures (cache hits where the stores
-  remain; otherwise fresh, under the heavy-run rule), gate on suite counts and skips (an E2E skip is
-  a failure under `ETA_RXNCAT_ACCEPTANCE=1`), write `verdict` into
-  `docs/prd/v0.7.0/ACCEPTANCE_RESULT.json` (derived).
+- **Replan 7 (R35) re-pointed this slice.**
+  - **C1 `e641ba1` stands as is:** the verdict rule, and the field-by-field rerun comparison against
+    `tests/fixtures/v0.7.0/` with its `VOLATILE` list.
+  - The fields slices 15-16 add (`SeedCheckDetail`, dispositions, `validation`) are deterministic,
+    so no `VOLATILE` change is expected.
+    - A new difference is a finding, not a `VOLATILE` edit.
+    - The one exception is a wall time this run measures: add it with its reason, disclosed in the
+      proof.
+  - The executing state and Start `9fdba68` stay as recorded. TJ's re-promotion is a **work
+    gate**, not a new Start.
+  - The one updater run after the last commit uses `--from-diff 9fdba68`, so C1 is covered. Nodes
+    of slices 15-18 that it flags again (already reconciled by their audits) are listed in the
+    proof for the audit.
+- **Start gate:** TJ's Phase 3 re-review of slice 18's bundle is closed.
+  - His **re-promotion commit** of the replan-7 candidates exists, and the lead names its sha.
+  - If TJ asked for changes, or the re-promoted file set differs from the 30 `v070_*` names, stop:
+    the lead replans.
+- **Verdict:** rerun the G7/G8 E2E against the re-promoted fixtures, gate on suite counts and skips,
+  and write `verdict` into `docs/prd/v0.7.0/ACCEPTANCE_RESULT.json` (derived; slice 18 re-derived
+  it).
+  - The rerun is cache hits on copies of the **replan-7 stores**, through the named source root
+    slice 18 set in `review_v070.py`. It never uses slices 11/12's stores.
+  - Fresh engine work runs only under the heavy-run rule.
+  - An E2E skip is a failure under `ETA_RXNCAT_ACCEPTANCE=1`.
 - **Docs:** README sections for `eta-rxncat review-bundle` and the run-data contract (version rule,
-  forward-only stores, the CSP/offline design); every claim derived from the record and pinned by
+  forward-only stores, the CSP/offline design, the row dispositions and TS identity of slice 16), and
+  the seed checks of slice 15 (`seed_clash`, `bond_changed:*`, the clash rule TJ chose);
+  every claim derived from the record and pinned by
   the claims helper in `tests/unit/test_identity.py`; CHANGELOG `[0.7.0]` is the scribe's (the lead
   dispatches it).
 - **Bump:** `version = "0.7.0"` in `pyproject.toml` and `src/eta_rxncat/__init__.py`;
@@ -70,11 +90,13 @@ Context the builder needs:
 
 ## 1. The Confidence Mandate
 
-**Score: 9/10.** The same shape as v0.6.0's verdict slice, on a smaller E2E.
+**Score: 9/10.** The same shape as v0.6.0's verdict slice, on a smaller E2E. Replan 7 changes
+only the start gate, the stores the rerun reads and two README claims. C1's comparison code holds
+against the re-promoted fixtures.
 
 ## Mini-requirements
 
-1. Phase 3 closed (start gate).
+1. TJ's Phase 3 re-review is closed, and his re-promotion commit exists (work gate).
 2. Verdict pass with suite counts and skips = 0 under acceptance.
 3. README claims derived and pinned; version 0.7.0 everywhere.
 
@@ -87,7 +109,8 @@ Context the builder needs:
 
 ## 4. The Negative Space (Constraints)
 
-- **DO NOT** start before TJ's Phase 3 closes; **DO NOT** push or tag (the lead does).
+- **DO NOT** start before TJ's re-promotion; **DO NOT** push or tag (the lead does).
+- **DO NOT** widen `VOLATILE` to absorb a non-timing difference.
 
 ## Proof contract
 
@@ -97,7 +120,7 @@ Context the builder needs:
 
 ## Source material
 
-- Mission §8 Release, US-013; slice 13's record.
+- Mission §8 Release, US-013, R35; slice 18's record and bundle; C1 `e641ba1`.
 
 ## Intent visual
 
@@ -109,4 +132,4 @@ N/A (non-visual slice).
 
 ## Dependencies
 
-- OPR.0.7.0.13 and TJ's Phase 3.
+- OPR.0.7.0.18 and TJ's re-promotion (Phase 3 re-review).

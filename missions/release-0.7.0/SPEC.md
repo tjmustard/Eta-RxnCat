@@ -62,11 +62,24 @@ A small E2E on the Tier 4 TSs with v0.6.0's alkyl series proves the mechanics.
 | v0.4.0 Q2 / roadmap | standing | "Q2. (b)"; roadmap "B: keep at v0.7.0" (PD-008) | This mission. |
 | v0.6.0 Q-RES1 | `qitem-20261125135141-40dabb65dfb7a8a8` | "Can we r-group enumerate a new TS from with a alkyl chain" | Slice 14 of v0.6.0's fragments and graft recipe are the E2E's starting point. |
 | Phase 3 / Push / Engines / Clean room | standing | culture; v0.6.0 Q3 amended "Build, install, and run these autonomously as to move on to the next step/question." | Only TJ promotes. Candidates and the bundle go to `tests/candidate_outputs/v0.7.0/`. Seats run engines, and a failed GPU run is a finding. The lead pushes. Never open Eta_Scripts/nMap. Read no TS-optimizer or conformer-search source; geomeTRIC is a black box, and only eta's own wrapper and geomeTRIC's **output files** are read. |
+| Replan 7: fix | `qitem-20261126151741-216f0468b8ca13cd` | "Fix site + seed clash check" ("…plus a check that rejects or repairs seeds with atoms too close before optimization, so clashes like this one don't produce junk TSs"); TJ: "The initial structure was too close and the clashes led to a bad path and bad TS geometry. The ethyl group reacted with the diene due to a bad initial geometry clash." | Slices 15 (clash) and 16 (site) (R35). |
+| Replan 7: bond check | `qitem-20261126151838-e190808aa4d1ce77` | Unintended-bond check: "Yes, add it in v0.7.0 (Recommended)" (A+, all inside v0.7.0) | Slice 15's `bond_changed:*`; reruns and re-review (slices 17-18). |
+| Replan 7: promotion | same rows | "Yes, it stands (Recommended)". Keep 9fdba68; regenerated records come back as candidates to promote again. | Slice 14 waits for TJ's re-promotion. |
 
-**OPEN TJ questions: none.** One conditional row: if M11 (slice 06) finds the frames cannot be
-labelled well enough for TJ's audit, the builder stops and the lead files a TJ row before slice 06
-merges. M11 is measured and the frames are labelled per frame (`accepted_bool`, R33), so
-this row is not owed.
+**OPEN TJ questions (R35): Q-R7a and Q-R7b.** The text is in
+`~/.hacf/eta-rxncat-hacf/evidence/v070-replan7/TJ_QUESTION.md`.
+- **Q-R7a, the clash cut:**
+  - **A:** 1.3 × Σ covalent radii, eta's bond rule (recommended);
+  - **B:** 0.45 × Σ Bondi vdW radii;
+  - **C:** an absolute Å.
+- **Q-R7b, a clashing sample:**
+  - **A:** reject, record it, keep the slot (recommended);
+  - **B:** reject and draw a replacement;
+  - **C:** repair it.
+- **Until TJ answers:** slice 15 builds A + A, and slice 17 does not start until the answer (or the
+  lead's go on A + A).
+- The M11 conditional row of slice 06 is not owed: M11 is measured, and the frames are labelled per
+  frame (`accepted_bool`, R33).
 
 ## 1. Introduction & Goals
 
@@ -153,6 +166,19 @@ scheduler and network view build on these contracts; TJ's planned v1.0 API freez
 - **G13 Bundle for v0.7.0.** Every v0.7.0 E2E run is bundled into
   `tests/candidate_outputs/v0.7.0/review/` before Phase 3. The real-bundle hygiene scans run, and
   TJ's visual audit is the Phase 3 gate.
+- **G14 Seed geometry checks (R35, slice 15).**
+  - A start geometry with a clash (pairs >= 3 bonds apart; the Q-R7a cut) never reaches an engine:
+    it is `seed_clash`, recorded with the pair, the distance and the ratio.
+  - A bond made or broken outside the forming bonds, at the pre-relax or at the TS, is
+    `bond_changed:<stage>`, recorded with the bonds.
+  - A graft with close contacts is never seeded.
+- **G15 Review dispositions (R35, slices 16 and 18).**
+  - Every frequency row on the site carries its disposition: member, merged or excluded with its
+    reason, fell through, kept, superseded by push, or dropped with its reason.
+  - Not-used rows are grouped apart from used rows.
+  - Every TS shows its imaginary frequency, forming-bond overlap and forming distances, and a banner
+    on any identity failure.
+  - The rerun records and a fresh bundle go back to TJ for re-promotion.
 
 ## 2. Confidence Mandate
 
@@ -347,6 +373,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 | R32 | Replan 4: multi-site forming-bond seeding (slice 04 audit, observed item (b)) | R2 | resolved (lead ruling) | A later site can delete an earlier site's forming-bond or core atom: each `GraftRecord` checks only its own `forming_bonds`/`constrained_core`, and its `mapped_forming_bonds`/`constrained_core_product_indices` are in that graft's product space, so R2's "both atoms kept" held per graft, not for the final product. **Slice 05 owns it; slice 04's code and core are not reopened (core 1973/2000).** `enumerated_pathway_inputs` takes the node's `ok` records for the reference template (`template_id` minus `__<candidate_id>`) in `candidate.records` order (site order), maps each record's two lists into the final product through every later record with the public `map_template_indices`, and refuses with `FallbackInputError` `multi_site_seed_atom_deleted` (node, template, both site ids, the index) when one raises `EnumerationError`. One record: its lists verbatim (today's seed and stage keys, pinned). Several: forming bonds concatenated in site order, unordered duplicates dropped; core = sorted union. `run_ts_with_fallback` derives every eligible template's inputs before its first engine call, so the refusal costs 0 engine calls and is not on the R4 allow-list. The single-site E2E (slices 11-12) is unaffected. HACF-Replan-Of: OPR.0.7.0.5. |
 | R33 | Replan 5: slice 06 halted before code (builder halt report `qitem-20261126043922-a61f5c38`): P-RFO step geometry vs the ts_opt key; M11 needs a missing field | G10, R13, M11 | resolved (lead rulings 1-4) | **1. Option B.** `prfo.py` is not edited: its sha256 is `opt.version` (`src-897c4e19cb4e738a`) in the ts_opt key, recorded in 13 promoted fixtures under `tests/fixtures/v0.5.0`/`v0.6.0` (no ACCEPTANCE_RESULT.json records it), so A would change TJ's promoted data. A recording engine in `orchestrator/ts.py` around the `CountingEngine` fills `TSStep.coordinates_angstrom`: in prfo.py at 897c4e19 the only `hessian=False` evaluation is the trial point, once per iteration, appended as `history[k]` with no engine call between, so the k-th `hessian=False` call is step k. Checked exactly (count, energy, max gradient) after the search, else a private code-fault error; `_source_identity().version` is pinned by a test. **2.** `OptimizationFrame.accepted_bool: bool \| None = None` (additive, omitted when None); slice 06 touches `core/optimization_models.py` and `tests/unit/core/test_frame_fields.py`; core ledger description (1973/2000) not changed. Each step's `optim.xyz` frames match bridge frames at <= 1e-6 Å max |Δ| (M11: 5.0e-11 matched, >= 5.3e-4 neighbours) → True, others False ("other engine evaluations (trial points, Hessian displacements)"), unreadable or unmatched → None. **3.** M11's second (forced-ladder) GFN2 command is part of M11; its table is the measured outcome. **4.** Frame sink per R13; ts_opt failure rows carry the recorder's frames too. HACF-Replan-Of: OPR.0.7.0.6. |
 | R34 | Replan 6: slice 13 (not started) cannot bundle every run through one `--record`/`--store`, and its gates left M10, fresh output, engine-call count, browsers and the Phase 3 packet open (slice 11 execute `qitem-20261126122127-46a505c5` and audit `qitem-20261126124011-8a25256f`; slice 12 writes a fresh store) | G13, R15, R17, R18, M10, M12 | resolved (lead rulings 1-8) | **1. One bundle, no `src/` change.** The runs live in four stores (slice 11's and slice 12's three, one per unit) and share unit ids across them (`ethyl|endo|<xtb>`), so no single `RunData` holds them. Coverage is gated per store. The bundle is one root folder: one sub-bundle per bundled (record, store) pair written by the unchanged `eta-rxncat review-bundle`, a harness-written static root `index.html` (CSP, no script; links, gates, strides, sizes) and a root `MANIFEST.sha256`. No row is copied and no store merged. Slice 13 moves to node `eta_rxncat_species_runner` (owner of `tests/e2e/**`; 1979/2000). **2. M10.** `decimation_stride` > 2 on any `ts_search` trajectory, read from each sub-bundle's `run_data.json`, is a stop-and-report, tested. R18's 25 MB ceiling applies per sub-bundle; the total is reported (lead-accepted). **3.** Both output roots must be absent or empty; non-empty is refused, never wiped. Build and gate in scratch, then copy to `tests/candidate_outputs/v0.7.0/review/`. **4.** 0 `Engine.evaluate` calls, unchanged store row counts, no `missing` entry. **5. M12.** Gate: installed Chrome and Playwright Firefox; a Mozilla release Firefox run is optional (TJ's call). **6.** The Phase 3 row carries the slice 11 audit packet and slice 12's fallback results per construct (graft time per lead ruling A: rank-1 graft refused `alignment_rmsd`, a one-attempt `FallbackRecord`; run time: rank 1 `fell_through`, rank 2 `chosen`); the lead sends it to advisor-lead@kernel, tag `question-for-tj`. **7.** Builder proof `proof/13-execute.md`, never a QA verdict. The acceptance record derives from evidence records, never from candidates. **8.** Slice 13 runs no engine unit: `timeout 3600` throughout. Slice 14's seat rule now states 5400 for a G7/G8 unit command and 3600 otherwise (R7). Slice 12 is not edited. HACF-Replan-Of: OPR.0.7.0.13. |
+| R35 | Replan 7: TJ's Phase 3 findings on the first bundle (TS1a_n__ethyl sample `1f64216a4471`; pre-push minimum `071c077d750a`). Diagnosis `~/.hacf/eta-rxncat-hacf/evidence/v070-diag/DIAGNOSIS.md`; TJ `qitem-20261126151741-216f0468b8ca13cd` + `qitem-20261126151838-e190808aa4d1ce77` (A+, all in v0.7.0) | G7, G8, G12, G13, R4, R6, R12, R17, R34 | resolved (TJ); Q-R7a/b OPEN, defaults A/A | **Measured** (read-only, `~/.hacf/eta-rxncat-hacf/evidence/v070-replan7/MEASUREMENT.md`): sample 6's start puts ethyl H21 0.438 Å from diene C4; its pre-relax made C4–C17 and C0–H21 and broke C17–H21, kept at the TS (TJ's reading confirmed). Over all 121 starts (hashes verified), d < 1.3 × Σr_cov for a pair ≥ 3 bonds apart rejects 53, every one already excluded (the UMA stall included), and 0 of 68 seeds/members/merged (used ≥ 1.543, rejected ≤ 1.286). An absolute-Å cut cannot separate them. Topology changed at pre-relax/TS for sample 6 only. **Slices** (before the verdict): **15** (selectivity, core additive) `seed_checks` keyword: clash before any engine call → `seed_clash`; `bond_changed:pre_relax`/`:ts`; graft close contacts → `seed:seed_clash`; three new R4 fall-through reasons; `SeedCheckDetail` omitted when None. **16** (review; species.py; `unit_record`) dispositions on every row, used/not-used groups, `TSIdentity` with a banner on identity failure; `record_version` and RunData `schema_version` stay 1 (optional keys, unreleased, no enum value added). **17** reruns all 11 units + 4 scores on store copies in `v070-replan7-runs/`; under A/A 0 new rows and dG‡/ddG‡ equal to 9fdba68's; old candidates `git rm`'d, fresh ones candidate-only. **18** fresh bundle through slice 13's harness retargeted, the G15 gates, M12, the record re-derived, the Phase 3 re-review row. **14** re-pointed: after 18 and TJ's re-promotion; C1 `e641ba1` stands. Promotion 9fdba68 stands until TJ re-promotes. HACF-Replan-Of: OPR.0.7.0.14 (new OPR.0.7.0.15-18). |
 
 ### PROPOSED lore (this mission; TJ approves with `/hyper-lore-approve`)
 
@@ -383,6 +410,11 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 - Replan 6 (R34): slice 13 bundles one sub-bundle per (record, store) pair over four stores under
   one root page and manifest (no `src/` change), gates M10 on the real `run_data.json`, refuses a non-empty output,
   counts 0 engine calls, gates M12 on Chrome + Playwright Firefox, and carries the Phase 3 packet.
+- Replan 7 (R35):
+  - new slices 15 (seed clash and unintended-bond checks), 16 (review dispositions and TS
+    identity), 17 (rerun all 11 units on store copies) and 18 (fresh bundle, record, Phase 3
+    re-review);
+  - slice 14 now waits for slice 18 and TJ's re-promotion; its C1 `e641ba1` stands.
 
 ### Graph split (slice 01; after the base only; never hand-edit `architecture.yml`)
 
@@ -547,12 +579,32 @@ Plan-vs-code rows (appended verbatim as a "Plan-vs-code (v0.7.0)" section under 
   - cli: `review-bundle`;
   - scaffold: `pyproject.toml` package data for `review/assets` and `review/schema`, README.
 - **Untouched:** engines, conformers, thermo, store.
+- **Replan 7 (R35):**
+  - selectivity: `ts_ensemble.py`, `ts_fallback.py`;
+  - core: `selectivity_models.py`, `enumeration_models.py` (additive);
+  - review: `run_data.py`, `export.py`, `bundle.py`, `eta-view.js`, the schema;
+  - species_runner: `orchestrator/species.py`, `tests/e2e/**`, candidates;
+  - scaffold: README and the record.
 - The lead re-measures `hyper_ledger.py impact` after slice 01.
 
 ### Execution checklist (build order; the lead's work queue)
 
-The slice table at the end of this document, in order 01 → 14. Slice 11 starts only if HF-3 is
-filled (it is: see §2), and slices 11–13 run engines only under the heavy-run rule.
+The slice table at the end of this document, in build order 01 → 13, then 15 → 18, then 14 (R35).
+Slice 11 starts only if HF-3 is filled (it is: see §2). Slices 11–13 and 17 run engines only under
+the heavy-run rule. Slice 17 waits for TJ's Q-R7a/b answer (or the lead's go on A + A), and slice 14
+waits for TJ's re-promotion of slice 17's candidates.
+
+Replan 7 time estimate (R35), as seat time per slice (build + audit) and GPU:
+
+| slice | seat time | GPU |
+|---|---|---|
+| 15 | 2.5 h + 0.75 h | 0 |
+| 16 | 3.5 h + 1 h | 0 |
+| 17 | 1.5 h + 0.75 h; about 45 min of wall time for 15 commands, all store hits | about 10 min under A + A |
+| 18 | 2.5 h + 1 h | 0 |
+
+- About 13.5 h in sequence, plus TJ's re-review, then the rest of slice 14 (about 1.5 h).
+- Under Q-R7b B, add about 1.5 h of wall time and about 1 h of GPU.
 
 ### Dependencies
 
@@ -606,6 +658,7 @@ filled (it is: see §2), and slices 11–13 run engines only under the heavy-run
 | Vendored JS provenance (F19) | R20 integrity check, banner inventory, CSP. |
 | Graph split corrupts node files (F9) | R19 sequence, import scan, union counts, updater once. |
 | UI scope creep | Placement A; §3 and §6. |
+| A clashing seed giving a junk saddle (TJ's Phase 3 finding) | R35: the clash check before any engine call, the bond check at the pre-relax and the TS, dispositions on the site, reruns and re-review. |
 
 ## 8. Success Metrics
 
@@ -639,6 +692,18 @@ filled (it is: see §2), and slices 11–13 run engines only under the heavy-run
 - **G13:** the bundle covers every G7/G8 run; `MANIFEST.sha256` verifies; size ≤ 25 MB or
   decimation stated; real-bundle scans clean; every trajectory has frames; M12 on the real bundle;
   TJ's Phase 3 closed before slice 14.
+- **G14:**
+  - the sample-6 known answer: (4, 21), 0.438 Å, ratio 0.409;
+  - fake-engine tests per check, with 0 engine calls for a rejected sample;
+  - old fixtures re-serialise byte-equal; `seed_checks=False` is unchanged;
+  - slice 17 under A + A: 0 new rows, every dG‡/ddG‡ equal to 9fdba68's, `seed_clash` exactly the
+    measured set, 0 stalls.
+- **G15:**
+  - every row carries a disposition (none `not_recorded` in the fresh bundle) and sits in its group;
+  - `TSIdentity` on every TS block, with the banner on an identity failure;
+  - the known answers for `1f64216a4471` and `071c077d750a`;
+  - M12 on stubs and on the real bundle;
+  - TJ re-promotes before slice 14.
 - **Release:** `uv run ruff check .`, `uv run ruff format --check .` (with the `spec/archive`,
   `spec/process` excludes), `uv run mypy` and `uv run pytest` exit 0. E2E skips = 0 under
   `ETA_RXNCAT_ACCEPTANCE=1`.
@@ -662,6 +727,10 @@ filled (it is: see §2), and slices 11–13 run engines only under the heavy-run
 | OPR.0.7.0.12 | slices/12-fallback-e2e | Prove the fallback end to end on GFN2: a rank-1 template refused at graft time and a rank-1 seed refused by the pathway face each fall through to rank 2, which yields the ensemble, with rank 1's reason recorded; UMA reported once. |
 | OPR.0.7.0.13 | slices/13-review-bundle-and-record | Bundle every v0.7.0 E2E run for TJ's visual audit, gate the real bundle's hygiene and frames, repeat the M12 smoke on it, write the acceptance record from the evidence run records, and send TJ the Phase 3 row. |
 | OPR.0.7.0.14 | slices/14-acceptance-verdict | After TJ's Phase 3 visual audit and promotion, run the verdict on both engines against the promoted outputs, document the review command and the run-data contract, and bump to 0.7.0. |
+| OPR.0.7.0.15 | slices/15-seed-geometry-checks | Refuse a clashing start geometry before any engine call and exclude any TS whose pre-relax or search made or broke a bond outside the template's forming bonds, each with a recorded reason and detail, behind a seed_checks keyword the fallback runner turns on. |
+| OPR.0.7.0.16 | slices/16-review-dispositions | Show on every review-site frequency row whether it fed the result and why not, group rejected rows apart from used ones, show each TS's identity numbers with a banner on any identity failure, and carry the endpoint disposition from the species runner into the run record. |
+| OPR.0.7.0.17 | slices/17-rerun-units | Rerun all 11 v0.7.0 E2E units and the 4 score commands on copies of their stores with the seed checks and the new record fields, gate 0 new rows and unchanged dG dagger under the default rule, and land the fresh records as candidates after moving the old ones aside. |
+| OPR.0.7.0.18 | slices/18-rereview-bundle | Bundle the rerun records with the fixed site through slice 13's harness retargeted to the replan-7 evidence, gate every row's disposition and TS identity, repeat M12, re-derive the acceptance record and draft TJ's Phase 3 re-review row. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
