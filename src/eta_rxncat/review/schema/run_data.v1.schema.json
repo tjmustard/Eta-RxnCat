@@ -1,0 +1,1234 @@
+{
+  "$defs": {
+    "Candidate": {
+      "additionalProperties": false,
+      "description": "One candidate x pathway x engine unit.\n\n``dG_dagger_kcal_mol`` is the run's activation free energy. ``ddG_dagger_kcal_mol`` is the\ngap of the candidate's selectivity result on this engine (minor minus major pathway), the same\non every pathway it compares. ``graft_rmsd_angstrom`` is the largest alignment RMSD of the\ngrafts behind the chosen template. ``frequency_ids`` and ``trajectory_ids`` are the\ntransition-state samples; the ``endpoint_*`` ids are the minima.",
+      "properties": {
+        "candidate_entry_id": {
+          "minLength": 1,
+          "title": "Candidate Entry Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "charge": {
+          "title": "Charge",
+          "type": "integer"
+        },
+        "chosen_template_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Chosen Template Id"
+        },
+        "dG_dagger_kcal_mol": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dg Dagger Kcal Mol"
+        },
+        "ddG_dagger_kcal_mol": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ddg Dagger Kcal Mol"
+        },
+        "endpoint_frequency_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Endpoint Frequency Ids",
+          "type": "array"
+        },
+        "endpoint_trajectory_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Endpoint Trajectory Ids",
+          "type": "array"
+        },
+        "engine_id": {
+          "minLength": 1,
+          "title": "Engine Id",
+          "type": "string"
+        },
+        "entry_ids_by_site": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Entry Ids By Site",
+          "type": "object"
+        },
+        "fallback_attempts": {
+          "items": {
+            "$ref": "#/$defs/FallbackAttemptCode"
+          },
+          "title": "Fallback Attempts",
+          "type": "array"
+        },
+        "frequency_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Frequency Ids",
+          "type": "array"
+        },
+        "graft_refusals": {
+          "items": {
+            "$ref": "#/$defs/GraftRefusal"
+          },
+          "title": "Graft Refusals",
+          "type": "array"
+        },
+        "graft_rmsd_angstrom": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Graft Rmsd Angstrom"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Members",
+          "type": "array"
+        },
+        "node_id": {
+          "minLength": 1,
+          "title": "Node Id",
+          "type": "string"
+        },
+        "pathway": {
+          "minLength": 1,
+          "title": "Pathway",
+          "type": "string"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "spin_multiplicity": {
+          "minimum": 1,
+          "title": "Spin Multiplicity",
+          "type": "integer"
+        },
+        "stall_cap_reached_bool": {
+          "title": "Stall Cap Reached Bool",
+          "type": "boolean"
+        },
+        "stop_reason_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stop Reason Code"
+        },
+        "template_rank_used": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Template Rank Used"
+        },
+        "thermo_options_id": {
+          "minLength": 1,
+          "title": "Thermo Options Id",
+          "type": "string"
+        },
+        "trajectory_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Trajectory Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "candidate_entry_id",
+        "candidate_id",
+        "entry_ids_by_site",
+        "pathway",
+        "node_id",
+        "engine_id",
+        "thermo_options_id",
+        "species_id",
+        "charge",
+        "spin_multiplicity",
+        "template_rank_used",
+        "chosen_template_id",
+        "stop_reason_code",
+        "fallback_attempts",
+        "graft_refusals",
+        "dG_dagger_kcal_mol",
+        "ddG_dagger_kcal_mol",
+        "graft_rmsd_angstrom",
+        "stall_cap_reached_bool",
+        "members",
+        "frequency_ids",
+        "trajectory_ids",
+        "endpoint_frequency_ids",
+        "endpoint_trajectory_ids"
+      ],
+      "title": "Candidate",
+      "type": "object"
+    },
+    "Convergence": {
+      "additionalProperties": false,
+      "description": "How an optimization ended; ``None`` where the stored row holds no such number.",
+      "properties": {
+        "converged_bool": {
+          "title": "Converged Bool",
+          "type": "boolean"
+        },
+        "failed_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Failed Code"
+        },
+        "final_energy_hartree": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Final Energy Hartree"
+        },
+        "final_max_gradient_hartree_per_bohr": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Final Max Gradient Hartree Per Bohr"
+        },
+        "n_engine_calls": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "N Engine Calls"
+        },
+        "n_steps": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "N Steps"
+        },
+        "recovery_steps": {
+          "items": {
+            "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+            "type": "string"
+          },
+          "title": "Recovery Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "converged_bool",
+        "failed_code",
+        "n_steps",
+        "n_engine_calls",
+        "final_energy_hartree",
+        "final_max_gradient_hartree_per_bohr",
+        "recovery_steps"
+      ],
+      "title": "Convergence",
+      "type": "object"
+    },
+    "EngineEntry": {
+      "additionalProperties": false,
+      "description": "An engine identity: tag, version and, for a model engine, its content-hashed model id.",
+      "properties": {
+        "engine_id": {
+          "minLength": 1,
+          "title": "Engine Id",
+          "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model"
+        },
+        "name": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_id",
+        "name",
+        "version",
+        "model"
+      ],
+      "title": "EngineEntry",
+      "type": "object"
+    },
+    "FallbackAttemptCode": {
+      "additionalProperties": false,
+      "description": "One template tried as the TS seed, with the reason as a code.",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "chosen",
+            "fell_through",
+            "stopped"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "rank": {
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason Code"
+        },
+        "template_id": {
+          "minLength": 1,
+          "title": "Template Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "template_id",
+        "rank",
+        "outcome",
+        "reason_code"
+      ],
+      "title": "FallbackAttemptCode",
+      "type": "object"
+    },
+    "Frame": {
+      "additionalProperties": false,
+      "description": "One geometry an optimizer evaluated.",
+      "properties": {
+        "accepted_bool": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Accepted Bool"
+        },
+        "coordinates_angstrom": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates Angstrom",
+          "type": "array"
+        },
+        "energy_hartree": {
+          "title": "Energy Hartree",
+          "type": "number"
+        },
+        "ladder_step": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ladder Step"
+        },
+        "max_gradient_hartree_per_bohr": {
+          "minimum": 0.0,
+          "title": "Max Gradient Hartree Per Bohr",
+          "type": "number"
+        }
+      },
+      "required": [
+        "coordinates_angstrom",
+        "energy_hartree",
+        "max_gradient_hartree_per_bohr",
+        "accepted_bool",
+        "ladder_step"
+      ],
+      "title": "Frame",
+      "type": "object"
+    },
+    "FrequencyCompleted": {
+      "additionalProperties": false,
+      "description": "Frequencies recomputed from the stored Hessian with the run's own options.",
+      "properties": {
+        "coordinates_angstrom": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates Angstrom",
+          "type": "array"
+        },
+        "frequencies_cm1": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Frequencies Cm1",
+          "type": "array"
+        },
+        "frequency_id": {
+          "minLength": 1,
+          "title": "Frequency Id",
+          "type": "string"
+        },
+        "imag_tol_cm1": {
+          "minimum": 0.0,
+          "title": "Imag Tol Cm1",
+          "type": "number"
+        },
+        "imaginary_modes": {
+          "items": {
+            "$ref": "#/$defs/ImaginaryMode"
+          },
+          "title": "Imaginary Modes",
+          "type": "array"
+        },
+        "n_imaginary": {
+          "minimum": 0,
+          "title": "N Imaginary",
+          "type": "integer"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "status": {
+          "const": "completed",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "frequency_id",
+        "species_id",
+        "stage_key",
+        "coordinates_angstrom",
+        "frequencies_cm1",
+        "n_imaginary",
+        "imag_tol_cm1",
+        "imaginary_modes"
+      ],
+      "title": "FrequencyCompleted",
+      "type": "object"
+    },
+    "FrequencyFailed": {
+      "additionalProperties": false,
+      "description": "A frequency row that records a failure.",
+      "properties": {
+        "failed_code": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Failed Code",
+          "type": "string"
+        },
+        "frequency_id": {
+          "minLength": 1,
+          "title": "Frequency Id",
+          "type": "string"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "status": {
+          "const": "failed",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "frequency_id",
+        "species_id",
+        "stage_key",
+        "failed_code"
+      ],
+      "title": "FrequencyFailed",
+      "type": "object"
+    },
+    "FrequencyMissing": {
+      "additionalProperties": false,
+      "description": "A frequency row the store does not hold; it is never recomputed.",
+      "properties": {
+        "frequency_id": {
+          "minLength": 1,
+          "title": "Frequency Id",
+          "type": "string"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "status": {
+          "const": "missing",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "frequency_id",
+        "species_id",
+        "stage_key"
+      ],
+      "title": "FrequencyMissing",
+      "type": "object"
+    },
+    "Gate": {
+      "additionalProperties": false,
+      "description": "A mechanics gate; ``value`` and ``threshold`` are in ``unit``.",
+      "properties": {
+        "candidate_entry_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Candidate Entry Id"
+        },
+        "detail_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Detail Code"
+        },
+        "gate_id": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Gate Id",
+          "type": "string"
+        },
+        "pass_bool": {
+          "title": "Pass Bool",
+          "type": "boolean"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Threshold"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "angstrom",
+                "kcal_mol",
+                "hartree",
+                "cm1",
+                "count",
+                "fraction"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "gate_id",
+        "candidate_entry_id",
+        "pass_bool",
+        "value",
+        "unit",
+        "threshold",
+        "detail_code"
+      ],
+      "title": "Gate",
+      "type": "object"
+    },
+    "GraftRefusal": {
+      "additionalProperties": false,
+      "description": "A graft onto the pathway's node that was refused.",
+      "properties": {
+        "entry_id": {
+          "minLength": 1,
+          "title": "Entry Id",
+          "type": "string"
+        },
+        "reason_code": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "site_id": {
+          "minLength": 1,
+          "title": "Site Id",
+          "type": "string"
+        },
+        "template_id": {
+          "minLength": 1,
+          "title": "Template Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "template_id",
+        "site_id",
+        "entry_id",
+        "reason_code"
+      ],
+      "title": "GraftRefusal",
+      "type": "object"
+    },
+    "ImaginaryMode": {
+      "additionalProperties": false,
+      "description": "An imaginary mode: the Cartesian displacement per atom, unit length over all components.\n\nThe displacement is a direction; a viewer scales it. Its sign is fixed so that the component\nof largest magnitude is positive.",
+      "properties": {
+        "displacements_angstrom": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Displacements Angstrom",
+          "type": "array"
+        },
+        "frequency_cm1": {
+          "title": "Frequency Cm1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "frequency_cm1",
+        "displacements_angstrom"
+      ],
+      "title": "ImaginaryMode",
+      "type": "object"
+    },
+    "Member": {
+      "additionalProperties": false,
+      "description": "One summed TS conformer and its rows.",
+      "properties": {
+        "degeneracy": {
+          "minimum": 1,
+          "title": "Degeneracy",
+          "type": "integer"
+        },
+        "frequency_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Frequency Id"
+        },
+        "gibbs_free_energy_hartree": {
+          "title": "Gibbs Free Energy Hartree",
+          "type": "number"
+        },
+        "member_index": {
+          "minimum": 0,
+          "title": "Member Index",
+          "type": "integer"
+        },
+        "rmsd_to_seed_angstrom": {
+          "minimum": 0.0,
+          "title": "Rmsd To Seed Angstrom",
+          "type": "number"
+        },
+        "source": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Source",
+          "type": "string"
+        },
+        "trajectory_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Trajectory Ids",
+          "type": "array"
+        },
+        "weight_fraction": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Weight Fraction",
+          "type": "number"
+        }
+      },
+      "required": [
+        "member_index",
+        "source",
+        "weight_fraction",
+        "gibbs_free_energy_hartree",
+        "degeneracy",
+        "rmsd_to_seed_angstrom",
+        "frequency_id",
+        "trajectory_ids"
+      ],
+      "title": "Member",
+      "type": "object"
+    },
+    "OptimizerEntry": {
+      "additionalProperties": false,
+      "description": "An optimizer identity.",
+      "properties": {
+        "name": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "title": "OptimizerEntry",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where the document came from; the store is named by its file name only.",
+      "properties": {
+        "engines": {
+          "items": {
+            "$ref": "#/$defs/EngineEntry"
+          },
+          "title": "Engines",
+          "type": "array"
+        },
+        "eta_version": {
+          "minLength": 1,
+          "title": "Eta Version",
+          "type": "string"
+        },
+        "optimizers": {
+          "items": {
+            "$ref": "#/$defs/OptimizerEntry"
+          },
+          "title": "Optimizers",
+          "type": "array"
+        },
+        "stage_keys": {
+          "items": {
+            "$ref": "#/$defs/StageKeyEntry"
+          },
+          "title": "Stage Keys",
+          "type": "array"
+        },
+        "store_file_name": {
+          "minLength": 1,
+          "pattern": "^[^/\\\\]+$",
+          "title": "Store File Name",
+          "type": "string"
+        },
+        "thermo_options": {
+          "items": {
+            "$ref": "#/$defs/ThermoOptionsEntry"
+          },
+          "title": "Thermo Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "eta_version",
+        "store_file_name",
+        "engines",
+        "optimizers",
+        "thermo_options",
+        "stage_keys"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Species": {
+      "additionalProperties": false,
+      "description": "One species: atom identity and its input geometry.",
+      "properties": {
+        "active_atom_indices": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": "Active Atom Indices",
+          "type": "array"
+        },
+        "charge": {
+          "title": "Charge",
+          "type": "integer"
+        },
+        "coordinates_angstrom": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates Angstrom",
+          "type": "array"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "spin_multiplicity": {
+          "minimum": 1,
+          "title": "Spin Multiplicity",
+          "type": "integer"
+        },
+        "symbols": {
+          "items": {
+            "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+            "type": "string"
+          },
+          "title": "Symbols",
+          "type": "array"
+        }
+      },
+      "required": [
+        "species_id",
+        "label",
+        "symbols",
+        "coordinates_angstrom",
+        "charge",
+        "spin_multiplicity",
+        "active_atom_indices"
+      ],
+      "title": "Species",
+      "type": "object"
+    },
+    "StageKeyEntry": {
+      "additionalProperties": false,
+      "description": "One stage row the document was exported from.",
+      "properties": {
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "stage_kind": {
+          "enum": [
+            "constrained_preopt",
+            "ts_opt",
+            "frequency",
+            "geometry_opt"
+          ],
+          "title": "Stage Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage_kind",
+        "stage_key"
+      ],
+      "title": "StageKeyEntry",
+      "type": "object"
+    },
+    "ThermoOptionsEntry": {
+      "additionalProperties": false,
+      "description": "The normal-mode and symmetry tolerances of a run.",
+      "properties": {
+        "imag_tol_cm1": {
+          "minimum": 0.0,
+          "title": "Imag Tol Cm1",
+          "type": "number"
+        },
+        "linear_tol_angstrom": {
+          "minimum": 0.0,
+          "title": "Linear Tol Angstrom",
+          "type": "number"
+        },
+        "max_automorphisms": {
+          "minimum": 1,
+          "title": "Max Automorphisms",
+          "type": "integer"
+        },
+        "sym_tol_angstrom": {
+          "minimum": 0.0,
+          "title": "Sym Tol Angstrom",
+          "type": "number"
+        },
+        "thermo_options_id": {
+          "minLength": 1,
+          "title": "Thermo Options Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thermo_options_id",
+        "imag_tol_cm1",
+        "sym_tol_angstrom",
+        "linear_tol_angstrom",
+        "max_automorphisms"
+      ],
+      "title": "ThermoOptionsEntry",
+      "type": "object"
+    },
+    "TrajectoryMissing": {
+      "additionalProperties": false,
+      "description": "An optimization row the store does not hold.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "pre_relax",
+            "ts_search",
+            "endpoint_opt"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "status": {
+          "const": "missing",
+          "title": "Status",
+          "type": "string"
+        },
+        "trajectory_id": {
+          "minLength": 1,
+          "title": "Trajectory Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "trajectory_id",
+        "kind",
+        "species_id",
+        "label",
+        "stage_key"
+      ],
+      "title": "TrajectoryMissing",
+      "type": "object"
+    },
+    "TrajectoryStored": {
+      "additionalProperties": false,
+      "description": "The stored frames of one optimization, possibly decimated.\n\n``frames`` keeps every ``decimation_stride``-th frame and the last one; ``n_frames_total`` is\nthe full count in the store. A row without frames has none (no trajectory stored).",
+      "properties": {
+        "convergence": {
+          "$ref": "#/$defs/Convergence"
+        },
+        "decimation_stride": {
+          "minimum": 1,
+          "title": "Decimation Stride",
+          "type": "integer"
+        },
+        "frames": {
+          "items": {
+            "$ref": "#/$defs/Frame"
+          },
+          "title": "Frames",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "pre_relax",
+            "ts_search",
+            "endpoint_opt"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "n_frames_total": {
+          "minimum": 0,
+          "title": "N Frames Total",
+          "type": "integer"
+        },
+        "species_id": {
+          "minLength": 1,
+          "title": "Species Id",
+          "type": "string"
+        },
+        "stage_key": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Stage Key",
+          "type": "string"
+        },
+        "status": {
+          "const": "stored",
+          "title": "Status",
+          "type": "string"
+        },
+        "trajectory_id": {
+          "minLength": 1,
+          "title": "Trajectory Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "trajectory_id",
+        "kind",
+        "species_id",
+        "label",
+        "stage_key",
+        "frames",
+        "n_frames_total",
+        "decimation_stride",
+        "convergence"
+      ],
+      "title": "TrajectoryStored",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The eta-rxncat run-data document, version 1.\n\nVersion rule: additive optional keys keep the version; removing, renaming or retyping a key,\nchanging a unit or a meaning, or adding an enum value bumps it. The writer always emits the\ncurrent version. Every key with a physical unit carries it in its name (a gate's value and\nthreshold carry it in ``unit``). Every reference is an id of another entry of the document.",
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/Candidate"
+      },
+      "title": "Candidates",
+      "type": "array"
+    },
+    "frequencies": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "completed": "#/$defs/FrequencyCompleted",
+            "failed": "#/$defs/FrequencyFailed",
+            "missing": "#/$defs/FrequencyMissing"
+          },
+          "propertyName": "status"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/FrequencyCompleted"
+          },
+          {
+            "$ref": "#/$defs/FrequencyFailed"
+          },
+          {
+            "$ref": "#/$defs/FrequencyMissing"
+          }
+        ]
+      },
+      "title": "Frequencies",
+      "type": "array"
+    },
+    "gates": {
+      "items": {
+        "$ref": "#/$defs/Gate"
+      },
+      "title": "Gates",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "species": {
+      "items": {
+        "$ref": "#/$defs/Species"
+      },
+      "title": "Species",
+      "type": "array"
+    },
+    "trajectories": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "missing": "#/$defs/TrajectoryMissing",
+            "stored": "#/$defs/TrajectoryStored"
+          },
+          "propertyName": "status"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/TrajectoryStored"
+          },
+          {
+            "$ref": "#/$defs/TrajectoryMissing"
+          }
+        ]
+      },
+      "title": "Trajectories",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "provenance",
+    "species",
+    "frequencies",
+    "trajectories",
+    "candidates",
+    "gates"
+  ],
+  "title": "RunData",
+  "type": "object"
+}

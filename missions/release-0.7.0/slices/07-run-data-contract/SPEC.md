@@ -10,7 +10,7 @@ intent: "Define RunRecord and the versioned RunData v1 contract with a strict wr
 depends_on: [OPR.0.7.0.5, OPR.0.7.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", spec/compiled/architecture.yml]
@@ -109,10 +109,10 @@ command.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] `review/run_data.py` (writer, reader, version error), `review/schema/__main__.py`, schema file.
-- [ ] `review/export.py` (`export_run_data`, `canonical_run_data_json`).
-- [ ] Tests `tests/unit/review/test_run_data.py`, `test_export.py`, `test_canonical_json.py`.
+- [x] Index.
+- [x] `review/run_data.py` (writer, reader, version error), `review/schema/__main__.py`, schema file.
+- [x] `review/export.py` (`export_run_data`, `canonical_run_data_json`).
+- [x] Tests `tests/unit/review/test_run_data.py`, `test_export.py`, `test_canonical_json.py`.
 - [ ] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)

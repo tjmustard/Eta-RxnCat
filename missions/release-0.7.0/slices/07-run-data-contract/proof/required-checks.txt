@@ -1,0 +1,40 @@
+slice 07 required checks, Start 2f9248d, before commit C1; 2026-11-26T09:51:59Z
+host:
+               total        used        free      shared  buff/cache   available
+Mem:              30          18           4           0           8          12
+(a hacf rig CPU pytest was running; CPU-only suite overlap, >= 6 G available)
+
+$ uv run ruff check .
+All checks passed!
+exit: 0
+
+$ uv run ruff format --check . --extend-exclude spec/archive --extend-exclude spec/process
+707 files already formatted
+exit: 0
+
+$ uv run mypy
+Success: no issues found in 90 source files
+exit: 0
+
+$ uv run pytest -q -p no:cacheprovider
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 98%]
+.........................................                                [100%]
+=============================== warnings summary ===============================
+tests/unit/engines/test_pyscf_cpu.py::test_unknown_basis_refused
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv/lib/python3.12/site-packages/pyscf/gto/basis/__init__.py:691: UserWarning: Basis may be available in basis-set-exchange. It is recommended to install basis-set-exchange: pip install basis-set-exchange
+    warnings.warn(
+
+tests/unit/engines/test_pyscf_cpu.py::test_ecp_rule
+  /home/tjmustard/PROJECTS/eta-rxncat/.venv/lib/python3.12/site-packages/pyscf/gto/basis/__init__.py:766: UserWarning: ECP may be available in basis-set-exchange. It is recommended to install basis-set-exchange: pip install basis-set-exchange
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2489 passed, 180 deselected, 2 warnings in 322.48s (0:05:22)
+exit: 0
+
+$ uv run pytest tests/unit/review -q -p no:cacheprovider
+.....................................                                    [100%]
+37 passed in 0.71s
+exit: 0
