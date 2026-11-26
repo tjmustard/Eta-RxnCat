@@ -1,0 +1,5 @@
+console.error: m12-control-error @ <control>
+console.error: Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:59999/m12-control
+request document GET <control>
+request image GET http://127.0.0.1:59999/m12-control
+requestfailed http://127.0.0.1:59999/m12-control net::ERR_CONNECTION_REFUSED
