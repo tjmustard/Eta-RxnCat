@@ -1,15 +1,17 @@
-r"""Derive docs/prd/v0.7.0/ACCEPTANCE_RESULT.json from the v0.7.0 evidence (slice 13, R34).
+r"""Derive docs/prd/v0.7.0/ACCEPTANCE_RESULT.json from the replan-7 evidence (slices 13, 18; R35).
 
 Usage::
 
-    uv run python tests/e2e/acceptance_record_v070.py <evidence_dir> <slice12_proof.md> \
+    uv run python tests/e2e/acceptance_record_v070.py <evidence_dir> <slice17_proof.md> \
         <full_pytest.log> <full_pytest_exit_code> <out.json> [<rerun_dir> <fixtures_dir>]
 
-Every value comes from the evidence run records of slices 11 and 12, their proof tables and logs,
-the final default-suite log, and the scratch bundle (``<evidence_dir>/v070-slice13/review`` with
-``review_report.json`` beside it). Nothing is typed by hand and no candidate output is ever read: a
-path below ``tests/candidate_outputs`` is refused. Without ``<rerun_dir>`` the record holds no
-verdict (slice 13's record).
+Every value comes from the run records of slice 17's reruns, their logs and slice 17's proof
+tables, the final default-suite log, and the scratch bundle (``<root>/review`` with
+``review_report.json`` beside it), where ``<root>`` is ``<evidence_dir>/SOURCE_ROOT``. The
+``replan_7`` block compares them with slice 13's record, kept as ``<root>/proof/PREVIOUS`` (the
+bytes ``git show <slice 18 Start>:docs/prd/v0.7.0/ACCEPTANCE_RESULT.json`` prints). Nothing is
+typed by hand and no candidate output is ever read: a path below ``tests/candidate_outputs`` is
+refused. Without ``<rerun_dir>`` the record holds no verdict (slice 18's record).
 
 With ``<rerun_dir>`` (slice 14: ``candidates/`` holds the rerun's outputs, ``proof/`` its command
 logs and time files) and ``<fixtures_dir>`` (TJ's promoted ``tests/fixtures/v0.7.0/``), each rerun
@@ -26,8 +28,9 @@ from pathlib import Path
 from typing import Any
 
 from acceptance_record_v040 import pytest_counts
-from review_v070 import SLICE11, SLICE12, Source, sha256_of, sources
+from review_v070 import ENUMERATION, FALLBACK, SOURCE_ROOT, Source, sha256_of, sources
 
+from eta_rxncat.orchestrator.ts_ensemble import SEED_CLASH_FACTOR
 from eta_rxncat.review import RunRecord
 from eta_rxncat.review.run_data import RecordRun
 
@@ -35,6 +38,10 @@ TIMEOUT_REASON = "pre_relax_failed:PreRelaxTimeout"
 GRAFT_TIMEOUT_REASON = "graft_pre_relax_timeout"
 BUNDLE_PATH = "tests/candidate_outputs/v0.7.0/review/"
 ENGINE_NAMES = {"xtb_subprocess": "GFN2", "uma_direct": "UMA"}
+CLASH_REASON = "seed_clash"
+BOND_CHANGED = "bond_changed"
+PREVIOUS = "acceptance-slice13.json"
+RULING = re.compile(r"TJ Q-R7a = (\w) and Q-R7b = (\w), advisor relay\s+`(qitem-[0-9a-z-]+)`")
 
 
 RUN_WALL = "a wall time measured by this run"
@@ -98,9 +105,14 @@ def run_values(run: RecordRun) -> dict[str, Any]:
     excluded = [] if ensemble is None else list(ensemble.excluded)
     stalls = [e for e in excluded if e.reason == TIMEOUT_REASON]
     graft = [a for a in run.fallback.attempts if a.reason == GRAFT_TIMEOUT_REASON]
+    clashed = sorted(e.index for e in excluded if e.reason == CLASH_REASON)
+    reasons = [e.reason for e in excluded] + [a.reason or "" for a in run.fallback.attempts]
     return {
         "n_members": 0 if ensemble is None else len(ensemble.members),
         "exclusions_by_reason": dict(sorted(Counter(e.reason for e in excluded).items())),
+        "seed_clash_count": len(clashed),
+        "seed_clash_indices": clashed,
+        "bond_changed_count": sum(BOND_CHANGED in r for r in reasons),
         "n_merges": 0 if ensemble is None else len(ensemble.merges),
         "G_pathway_hartree": None if ensemble is None else ensemble.G_pathway_hartree,
         "dG_dagger_kcal_mol": run.dG_dagger_kcal_mol,
@@ -142,60 +154,158 @@ def unit_block(name: str, record: RunRecord) -> dict[str, Any]:
     }
 
 
-def table_rows(markdown: str) -> dict[str, list[str]]:
-    """Markdown table rows keyed by their first cell."""
-    rows = {}
-    for line in markdown.splitlines():
-        if line.startswith("|") and not set(line) <= set("|-: "):
-            cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            rows.setdefault(cells[0], cells[1:])
-    return rows
+def section_rows(markdown: str, heading: str) -> list[list[str]]:
+    """The cells of every table row of the section that starts with ``## <heading>``.
+
+    Raises:
+        RecordError: The proof has no such section.
+    """
+    parts = markdown.split(f"\n## {heading}", 1)
+    if len(parts) != 2:
+        raise RecordError(f"slice 17's proof has no section {heading!r}")
+    return [
+        [c.strip() for c in line.strip().strip("|").split("|")]
+        for line in parts[1].split("\n## ", 1)[0].splitlines()
+        if line.startswith("|") and not set(line) <= set("|-: ")
+    ]
 
 
-def check_slice11_table(units: list[dict[str, Any]], table: str) -> None:
-    """Members, stalls, time lost, cap and dG-dagger agree with slice 11's proof table.
+def _expect_row(rows: list[list[str]], key: tuple[str, ...], value: float, what: str) -> None:
+    found = [r for r in rows if tuple(r[: len(key)]) == key]
+    if len(found) != 1:
+        raise RecordError(f"{what}: {len(found)} rows in slice 17's proof")
+    if float(found[0][3]) != value:
+        raise RecordError(f"{what}: proof {found[0][3]} differs from the record {value!r}")
+
+
+def check_energies(records: Mapping[str, RunRecord], proof: str) -> None:
+    """Every dG-dagger, ddG-dagger and fallback ``G_pathway`` equals slice 17's energy table.
+
+    Raises:
+        RecordError: A value is missing from the table or differs from it.
+    """
+    rows = section_rows(proof, "Energies against")
+    for name, record in sorted(records.items()):
+        stem = name.removesuffix(".runrecord.json")
+        for run in record.runs:
+            if run.dG_dagger_kcal_mol is None:
+                assert run.ensemble is not None
+                quantity, value = (
+                    "G_pathway (Eh); record has no dG‡",
+                    run.ensemble.G_pathway_hartree,
+                )
+            else:
+                quantity, value = "dG‡", run.dG_dagger_kcal_mol
+            assert value is not None
+            _expect_row(rows, (stem, run.pathway, quantity), value, f"{stem} {run.pathway}")
+        for scored in record.selectivity:
+            ddg = scored.result.ddG_dagger_kcal_mol
+            _expect_row(rows, (stem, "endo/exo", "ddG‡"), ddg, f"{stem} ddG")
+
+
+def check_exclusions(units: list[dict[str, Any]], proof: str) -> None:
+    """``seed_clash`` indices, ``bond_changed`` and stalls equal slice 17's clash table.
 
     Raises:
         RecordError: A unit is missing from the table or disagrees with it.
     """
-    rows = table_rows(table)
+    rows = {r[0]: r for r in section_rows(proof, "`seed_clash`")}
     for unit in units:
-        key = f"{unit['candidate_id']} {unit['pathway']} {_tag(unit['engine'])}"
-        if key not in rows:
-            raise RecordError(f"{key} is not in slice 11's proof table")
-        cells, values = rows[key], unit["values"]
-        stalls = [s.strip() for s in cells[3].split("/")]
-        found = (int(cells[1]), int(stalls[0]), round(float(stalls[1])), stalls[2], float(cells[4]))
+        stem = unit["record"].removesuffix(".runrecord.json")
+        if stem not in rows:
+            raise RecordError(f"{stem} is not in slice 17's clash table")
+        cells, values = rows[stem], unit["values"]
+        found = (json.loads(cells[1]), int(cells[3]), int(cells[4]))
         expected = (
-            values["n_members"],
-            values["stall_count"],
-            round(values["time_lost_to_stalls_s"]),
-            str(values["stall_cap_reached_bool"]),
-            round(values["dG_dagger_kcal_mol"], 3),
+            values["seed_clash_indices"],
+            values["bond_changed_count"],
+            values["stall_count"] + values["graft_pre_relax_timeouts"],
         )
         if found != expected:
-            raise RecordError(f"{key}: proof table {found} differs from the record {expected}")
+            raise RecordError(f"{stem}: proof table {found} differs from the record {expected}")
 
 
-def check_slice12_proof(units: list[dict[str, Any]], proof: str) -> None:
-    """Merges and ``G_pathway`` agree with slice 12's proof ensemble table.
+def clash_rule(proof: str, records: Mapping[str, RunRecord]) -> dict[str, Any]:
+    """TJ's chosen clash rule (as slice 17's proof states it), eta's cut and the measured ratios.
 
     Raises:
-        RecordError: A unit is missing from the table or disagrees with it.
+        RecordError: The proof does not state the answers.
     """
-    section = proof.split("### Ensemble gates and values", 1)
-    if len(section) != 2:
-        raise RecordError("slice 12's proof has no ensemble table")
-    rows = table_rows(section[1].split("\n## ", 1)[0])
+    found = RULING.search(proof)
+    if not found:
+        raise RecordError("slice 17's proof does not state TJ's Q-R7a and Q-R7b answers")
+    ratios = [
+        e.detail.ratio_to_covalent_sum
+        for record in records.values()
+        for run in record.runs
+        if run.ensemble is not None
+        for e in run.ensemble.excluded
+        if e.reason == CLASH_REASON and e.detail is not None
+    ]
+    return {
+        "q_r7a": found[1],
+        "q_r7b": found[2],
+        "relay_row": found[3],
+        "cut_covalent_sum_factor": SEED_CLASH_FACTOR,
+        "rejected_ratio_min": min(ratios) if ratios else None,
+        "rejected_ratio_max": max(ratios) if ratios else None,
+    }
+
+
+def replan_block(
+    previous: Mapping[str, Any],
+    units: list[dict[str, Any]],
+    scores: list[dict[str, Any]],
+    manifest_sha256: str,
+) -> dict[str, Any]:
+    """What changed against slice 13's record: exclusion reasons, stalls, energies, bundle.
+
+    Raises:
+        RecordError: A unit or score has no counterpart in the previous record.
+    """
+    old = {u["record"]: u for u in [*previous["g7_units"], *previous["g8_constructs"]]}
+    old_scores = {s["record"]: s for s in previous["g7_selectivity"]}
+    if set(old) != {u["record"] for u in units} or set(old_scores) != {s["record"] for s in scores}:
+        raise RecordError("the previous record covers other units or scores")
+    reasons = {}
+    energies = []
     for unit in units:
-        key = f"{unit['construct']} {unit['engine']}"
-        if key not in rows:
-            raise RecordError(f"{key} is not in slice 12's proof table")
-        cells, values = rows[key], unit["values"]
-        found = (int(cells[2]), float(cells[5]))
-        expected = (values["n_merges"], round(values["G_pathway_hartree"], 7))
-        if found != expected:
-            raise RecordError(f"{key}: proof table {found} differs from the record {expected}")
+        before, after = old[unit["record"]]["values"], unit["values"]
+        if before["exclusions_by_reason"] != after["exclusions_by_reason"]:
+            reasons[unit["record"]] = {
+                "before": before["exclusions_by_reason"],
+                "after": after["exclusions_by_reason"],
+            }
+        energies.extend(
+            f"{unit['record']}: {key}"
+            for key in ("dG_dagger_kcal_mol", "G_pathway_hartree", "n_members", "n_merges")
+            if before[key] != after[key]
+        )
+    energies.extend(
+        f"{s['record']}: ddG_dagger_kcal_mol"
+        for s in scores
+        if old_scores[s["record"]]["ddG_dagger_kcal_mol"] != s["ddG_dagger_kcal_mol"]
+    )
+    return {
+        "exclusion_reasons_changed": reasons,
+        "stalls": {
+            "before": previous["stalls"],
+            "after": _stall_totals(units),
+        },
+        "units_or_scores_with_changed_values": energies,
+        "bundle_root_manifest_sha256": {
+            "before": previous["bundle"]["root_manifest_sha256"],
+            "after": manifest_sha256,
+        },
+    }
+
+
+def _stall_totals(units: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "count": sum(u["values"]["stall_count"] for u in units),
+        "time_lost_s": sum(u["values"]["time_lost_to_stalls_s"] for u in units),
+        "graft_pre_relax_timeouts": sum(u["values"]["graft_pre_relax_timeouts"] for u in units),
+    }
 
 
 def score_block(name: str, record: RunRecord) -> dict[str, Any]:
@@ -218,7 +328,7 @@ def bundle_block(evidence: Path) -> dict[str, Any]:
     Raises:
         RecordError: No scratch bundle, or its manifest differs from the report.
     """
-    out = evidence / "v070-slice13"
+    out = evidence / SOURCE_ROOT
     manifest = out / "review" / "MANIFEST.sha256"
     report_path = out / "review_report.json"
     if not manifest.is_file() or not report_path.is_file():
@@ -236,6 +346,7 @@ def bundle_block(evidence: Path) -> dict[str, Any]:
         "sub_bundle_bytes": gates["sub_bundle_bytes"],
         "total_bytes": gates["total_bytes"],
         "gate_counts": report["gate_counts"],
+        "g15": report["g15"],
         "rows_per_store": {
             name: {"before": s["rows_before"], "after": s["rows_after"]}
             for name, s in report["stores"].items()
@@ -401,7 +512,7 @@ def _records(source: Source) -> Mapping[str, RunRecord]:
 
 def build_record(
     evidence: Path,
-    slice12_proof: Path,
+    slice17_proof: Path,
     full_log: Path,
     full_exit: int,
     rerun: Path | None = None,
@@ -415,18 +526,20 @@ def build_record(
     if (rerun is None) != (fixtures is None):
         raise RecordError("the verdict needs both a rerun directory and a fixtures directory")
     verdict_inputs = [p for p in (rerun, fixtures) if p is not None]
-    refuse_candidates(evidence, slice12_proof, full_log, *verdict_inputs)
+    refuse_candidates(evidence, slice17_proof, full_log, *verdict_inputs)
     found = sources(evidence)
-    (first,) = [s for s in found if s.slice_name == SLICE11]
+    (first,) = [s for s in found if s.group == ENUMERATION]
+    records = dict(_records(first))
     g7, scores = [], []
-    for name, record in sorted(_records(first).items()):
+    for name, record in sorted(records.items()):
         if record.selectivity:
             scores.append(score_block(name, record))
         else:
             g7.append(unit_block(name, record))
     g8 = []
-    for source in (s for s in found if s.slice_name == SLICE12):
+    for source in (s for s in found if s.group == FALLBACK):
         ((name, record),) = _records(source).items()
+        records[name] = record
         construct = source.store.stem.removeprefix("v070_fallback_").rsplit("_", 1)[0]
         block = unit_block(name, record)
         block["construct"] = construct
@@ -436,40 +549,38 @@ def build_record(
             for r in c.records
         ]
         g8.append(block)
-    first_proof = evidence / "v070-slice11" / "proof"
-    check_slice11_table(g7, (first_proof / "table.md").read_text(encoding="utf-8"))
-    check_slice12_proof(g8, slice12_proof.read_text(encoding="utf-8"))
+    root = evidence / SOURCE_ROOT
+    proof = slice17_proof.read_text(encoding="utf-8")
+    units = [*g7, *g8]
+    check_energies(records, proof)
+    check_exclusions(units, proof)
     commands = [
-        command_block(first_proof, f"{u['candidate_id']}-{u['pathway']}-{_tag(u['engine'])}")
-        for u in g7
-    ] + [
-        command_block(first_proof, f"score-{s['candidate_id']}-{_tag(s['engine'])}") for s in scores
-    ]
-    commands += [
-        command_block(
-            evidence / "v070-slice12" / "proof",
-            f"{u['construct'].replace('_', '-')}-{_tag(u['engine'])}",
-        )
-        for u in g8
+        command_block(root / "proof", command_tag(u["record"].removesuffix(".runrecord.json")))
+        for u in [*g7, *scores, *g8]
     ]
     suite = pytest_counts(full_log.read_text(encoding="utf-8", errors="replace"))
-    units = [*g7, *g8]
+    previous_path = root / "proof" / PREVIOUS
+    if not previous_path.is_file():
+        raise RecordError(f"no previous record {PREVIOUS}")
+    previous = json.loads(previous_path.read_bytes())
+    bundle = bundle_block(evidence)
     record: dict[str, Any] = {
         "version": "0.7.0",
         "derived_by": "tests/e2e/acceptance_record_v070.py",
         "g7_units": g7,
         "g7_selectivity": scores,
         "g8_constructs": g8,
-        "stalls": {
-            "count": sum(u["values"]["stall_count"] for u in units),
-            "time_lost_s": sum(u["values"]["time_lost_to_stalls_s"] for u in units),
-            "graft_pre_relax_timeouts": sum(u["values"]["graft_pre_relax_timeouts"] for u in units),
-        },
+        "stalls": _stall_totals(units),
         "suites": {
             "engine_commands": commands,
             "default_suite": {"command": "uv run pytest", "exit_code": full_exit, "counts": suite},
         },
-        "bundle": bundle_block(evidence),
+        "bundle": bundle,
+        "replan_7": {
+            "clash_rule": clash_rule(proof, records),
+            "previous_record_sha256": sha256_of(previous_path),
+            **replan_block(previous, units, scores, bundle["root_manifest_sha256"]),
+        },
     }
     if rerun is None or fixtures is None:
         return record
@@ -481,10 +592,6 @@ def build_record(
     )
     record.update(record_verdict(record))
     return record
-
-
-def _tag(engine: str) -> str:
-    return {"GFN2": "xtb", "UMA": "uma"}[engine]
 
 
 def main(argv: list[str]) -> int:

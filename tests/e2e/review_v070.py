@@ -1,4 +1,7 @@
-"""The v0.7.0 review bundle over four stores (slice 13, mission G13, R15, R17, R18, R20, R34).
+"""The v0.7.0 review bundle over four stores (mission G13, G15, R15, R17, R18, R20, R34, R35).
+
+Slice 18 retargeted slice 13's harness to the replan-7 reruns: the records and the four stores of
+``<evidence>/SOURCE_ROOT``, with the scratch tree below it and the G15 gates of ``review_g15``.
 
 One bundle root: ``<root>/<sub>/`` is one sub-bundle per bundled (record, store) pair, written by
 the unchanged ``eta-rxncat review-bundle``; ``<root>/index.html`` is a static page (no script) over
@@ -28,6 +31,7 @@ from pathlib import Path
 from typing import Any
 
 from e2e_env import REPO
+from review_g15 import g15_gate
 from v070 import counted_engine_calls
 
 from eta_rxncat import cli
@@ -36,8 +40,10 @@ from eta_rxncat.review.bundle import ASSETS_PATH, BUNDLE_BYTE_LIMIT, CONTENT_SEC
 from eta_rxncat.review.run_data import RecordRun
 from eta_rxncat.store import ArtifactStore
 
-SLICE11 = "11-enumeration-e2e"
-SLICE12 = "12-fallback-e2e"
+SOURCE_ROOT = "v070-replan7-runs"
+"""The evidence directory (below the evidence root) holding the records and stores."""
+ENUMERATION = "G7 enumeration"
+FALLBACK = "G8 fallback"
 FALLBACK_STORES = ("graft_time_xtb", "run_time_xtb", "run_time_uma")
 M10_MAX_TS_STRIDE = 2
 CSP_META = f'<meta http-equiv="Content-Security-Policy" content="{CONTENT_SECURITY_POLICY}">'
@@ -71,9 +77,9 @@ class ReviewError(AssertionError):
 
 @dataclass(frozen=True)
 class Source:
-    """One store, its slice, and every run record written for it (by file name)."""
+    """One store, its group, and every run record written for it (by file name)."""
 
-    slice_name: str
+    group: str
     store: Path
     records: Mapping[str, Path]
 
@@ -83,34 +89,35 @@ class SubBundle:
     """One bundled (record, store) pair."""
 
     name: str
-    slice_name: str
+    group: str
     record: Path
     store: Path
 
 
 def sources(evidence: Path) -> list[Source]:
-    """The four stores of slices 11 and 12 with their records, under ``evidence``.
+    """The four replan-7 stores with their records, under ``evidence / SOURCE_ROOT``.
 
     Raises:
-        ReviewError: A store is missing, or a record of a slice belongs to no store.
+        ReviewError: A store is missing, or a record belongs to no store.
     """
-    first = evidence / "v070-slice11"
-    second = evidence / "v070-slice12"
+    root = evidence / SOURCE_ROOT
+    unassigned = {p.name for p in (root / "records").glob("*.runrecord.json")}
+    enumeration = sorted(n for n in unassigned if n.startswith("v070_enum_"))
+    unassigned -= set(enumeration)
     found = [
         Source(
-            SLICE11,
-            first / "v070_enum.sqlite",
-            {p.name: p for p in sorted((first / "records").glob("*.runrecord.json"))},
+            ENUMERATION,
+            root / "v070_enum.sqlite",
+            {n: root / "records" / n for n in enumeration},
         )
     ]
-    unassigned = {p.name for p in (second / "records").glob("*.runrecord.json")}
     for unit in FALLBACK_STORES:
         stem = f"v070_fallback_{unit}"
         name = f"{stem}.runrecord.json"
         if name not in unassigned:
             raise ReviewError(f"no run record {name} for store {stem}")
         unassigned.remove(name)
-        found.append(Source(SLICE12, second / f"{stem}.sqlite", {name: second / "records" / name}))
+        found.append(Source(FALLBACK, root / f"{stem}.sqlite", {name: root / "records" / name}))
     if unassigned:
         raise ReviewError(f"run record(s) of no store: {sorted(unassigned)}")
     missing = [s.store.name for s in found if not s.store.is_file() or not s.records]
@@ -232,7 +239,7 @@ def build_sub_bundles(
         bundled, covered = plan_store(records)
         counts = coverage_gate(records, bundled)
         report["stores"][source.store.name] = {
-            "slice": source.slice_name,
+            "group": source.group,
             "coverage": counts,
             "bundled": bundled,
             "covered": covered,
@@ -262,7 +269,7 @@ def build_sub_bundles(
                 report["sub_bundles"].append(
                     {
                         "name": sub,
-                        "slice": source.slice_name,
+                        "group": source.group,
                         "record": name,
                         "store": source.store.name,
                         "candidate_entries": entry_gate(records[name], data),
@@ -416,7 +423,7 @@ def intro_gate(root: Path, names: Sequence[str]) -> str:
 def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
     """Write ``<root>/index.html``: static, no script, one row per sub-bundle, file names only.
 
-    Each item of ``subs`` has ``name``, ``slice``, ``record`` and ``store`` (file names).
+    Each item of ``subs`` has ``name``, ``group``, ``record`` and ``store`` (file names).
     """
     rows = []
     total = 0
@@ -434,7 +441,7 @@ def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
         rows.append(
             "<tr>"
             f'<td><a href="{_text(sub["name"])}/index.html">{_text(sub["name"])}</a></td>'
-            f"<td>{_text(sub['slice'])}</td>"
+            f"<td>{_text(sub['group'])}</td>"
             f"<td>{_text(sub['record'])}</td>"
             f"<td>{_text(sub['store'])}</td>"
             f"<td>{units}</td>"
@@ -459,7 +466,7 @@ def write_root_index(root: Path, subs: Sequence[Mapping[str, str]]) -> None:
         f"{_text(decimation_statement(documents))}</p>\n"
         "<p><b>Gates:</b> the mechanics gates count for gating on the GFN2 runs only. UMA gates "
         "are <b>reported, not gated</b>.</p>\n"
-        "<table><thead><tr><th>Sub-bundle</th><th>Source slice</th><th>Run record</th>"
+        "<table><thead><tr><th>Sub-bundle</th><th>Source</th><th>Run record</th>"
         "<th>Store</th><th>Unit ids</th><th>GFN2 mechanics gates (gated)</th>"
         "<th>UMA gates (reported, not gated)</th><th>Record-level gates</th>"
         "<th>Trajectories</th><th>Bytes</th></tr></thead>"
@@ -746,12 +753,20 @@ def build_review(evidence: Path, scratch: Path, candidate: Path) -> dict[str, An
     """
     require_fresh(scratch)
     require_fresh(candidate)
-    report = build_sub_bundles(sources(evidence), scratch)
+    found = sources(evidence)
+    report = build_sub_bundles(found, scratch)
     subs = report["sub_bundles"]
     names = [s["name"] for s in subs]
     write_root_index(scratch, subs)
     write_root_manifest(scratch)
     report["gates"] = run_gates(scratch, names, [str(evidence), str(scratch)])
+    records = {
+        s["name"]: read_records(source)[s["record"]]
+        for source in found
+        for s in subs
+        if s["store"] == source.store.name
+    }
+    report["g15"] = g15_gate(scratch, records)
     report["gate_counts"] = {
         n: gate_counts(json.loads((scratch / n / "run_data.json").read_bytes())) for n in names
     }

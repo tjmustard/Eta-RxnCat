@@ -1,4 +1,4 @@
-"""The v0.7.0 record writer on stub evidence in ``tmp_path`` (slices 13 and 14; no engine)."""
+"""The v0.7.0 record writer on stub evidence in ``tmp_path`` (slices 13, 14, 18; no engine)."""
 
 import json
 import sys
@@ -10,6 +10,7 @@ import pytest
 sys.path.append(str(Path(__file__).resolve().parents[1] / "unit" / "review"))
 
 from acceptance_record_v070 import (  # noqa: E402
+    PREVIOUS,
     RecordError,
     build_record,
     command_tag,
@@ -20,7 +21,7 @@ from acceptance_record_v070 import (  # noqa: E402
     volatile_reason,
 )
 from review_helpers import stub_record  # noqa: E402
-from review_v070 import sha256_of  # noqa: E402
+from review_v070 import SOURCE_ROOT, sha256_of  # noqa: E402
 
 ENGINES = {"xtb": "xtb_subprocess", "uma": "uma_direct"}
 G_PATHWAY = -1.05
@@ -79,67 +80,101 @@ def put_command(proof: Path, tag: str, code: int = 0) -> None:
     (proof / f"{tag}.time").write_text(f"\tExit status: {code}\n")
 
 
-def stub_evidence(tmp_path: Path) -> tuple[Path, Path, Path]:
-    """Slices 11, 12 and 13 evidence: one GFN2 unit with a stall, one score, three constructs."""
-    ev = tmp_path / "evidence"
-    first = ev / "v070-slice11"
-    second = ev / "v070-slice12"
-    for folder in (first / "records", first / "proof", second / "records", second / "proof"):
-        folder.mkdir(parents=True)
-    (first / "v070_enum.sqlite").write_bytes(b"")
-    unit = unit_record("ethyl", "exo", "xtb", stall=True)
-    (first / "records" / "v070_enum_ethyl_exo_xtb.runrecord.json").write_text(
-        unit.model_dump_json()
-    )
-    scored = stub_record()
-    score = scored.selectivity[0].model_copy(
-        update={
-            "candidate_id": "ethyl",
-            "engine": unit.runs[0].engine,
-        }
-    )
-    merged = unit.model_copy(update={"selectivity": [score]})
-    (first / "records" / "v070_enum_ethyl_selectivity_xtb.runrecord.json").write_text(
-        merged.model_dump_json()
-    )
-    put_command(first / "proof", "ethyl-exo-xtb")
-    put_command(first / "proof", "score-ethyl-xtb")
-    (first / "proof" / "table.md").write_text(
-        "| ethyl exo xtb | exit 0 | 1 | x | 1 / 600 / False | 12.500 | a |\n"
-    )
-    proof_rows = []
-    for construct, engine in (("graft_time", "xtb"), ("run_time", "xtb"), ("run_time", "uma")):
-        stem = f"v070_fallback_{construct}_{engine}"
-        (second / f"{stem}.sqlite").write_bytes(b"")
-        record = unit_record("ethyl", "endo", engine, stall=False)
-        (second / "records" / f"{stem}.runrecord.json").write_text(record.model_dump_json())
-        put_command(second / "proof", f"{construct.replace('_', '-')}-{engine}")
-        name = {"xtb": "GFN2", "uma": "UMA"}[engine]
-        proof_rows.append(f"| {construct} {name} | m | x | 0 | 1 | no | {G_PATHWAY} | 1 / 1 |")
-    slice12 = tmp_path / "12-execute.md"
-    slice12.write_text(
-        "### Ensemble gates and values\n\n| unit | a |\n|---|---|\n"
-        + "\n".join(proof_rows)
+STEMS = {
+    "v070_enum_ethyl_exo_xtb": "exo",
+    "v070_fallback_graft_time_xtb": "endo",
+    "v070_fallback_run_time_xtb": "endo",
+    "v070_fallback_run_time_uma": "endo",
+}
+SCORE = "v070_enum_ethyl_selectivity_xtb"
+
+
+def proof_text(dg: float = 12.5, ddg: float = 1.5, stalls: int = 1) -> str:
+    """Slice 17's proof: the ruling, the energy table and the clash table."""
+    energies = [f"| {stem} | {path} | dG‡ | {dg} | {dg} | True |" for stem, path in STEMS.items()]
+    energies += [
+        f"| {SCORE} | exo | dG‡ | {dg} | {dg} | True |",
+        f"| {SCORE} | endo/exo | ddG‡ | {ddg} | {ddg} | True |",
+    ]
+    clash = [f"| {stem} | [] | [] | 0 | {stalls if 'exo' in stem else 0} |" for stem in STEMS]
+    return (
+        "## Gate and rulings\n\n- TJ Q-R7a = A and Q-R7b = A, advisor relay\n"
+        "  `qitem-20261126153756-49f5d76005956ea5`.\n\n"
+        "## Energies against `tests/fixtures/v0.7.0/`\n\n"
+        "| record | pathway | quantity | new | fixture | equal |\n|---|---|---|---|---|---|\n"
+        + "\n".join(energies)
+        + "\n\n## `seed_clash` against `cov_margin.out`\n\n"
+        "| unit | seed_clash indices | measured | bond_changed | stalls |\n|---|---|---|---|---|\n"
+        + "\n".join(clash)
         + "\n\n## Stores\n"
     )
-    out = ev / "v070-slice13"
-    (out / "review").mkdir(parents=True)
-    manifest = out / "review" / "MANIFEST.sha256"
+
+
+def previous_record(units: list[str], manifest: str) -> dict[str, Any]:
+    """Slice 13's record as far as the ``replan_7`` block reads it."""
+    values = {
+        "exclusions_by_reason": {"pre_relax_failed:PreRelaxTimeout": 1},
+        "dG_dagger_kcal_mol": 12.5,
+        "G_pathway_hartree": G_PATHWAY,
+        "n_members": 1,
+        "n_merges": 0,
+    }
+    entries = [{"record": f"{s}.runrecord.json", "values": values} for s in units]
+    return {
+        "g7_units": entries[:1],
+        "g8_constructs": entries[1:],
+        "g7_selectivity": [{"record": f"{SCORE}.runrecord.json", "ddG_dagger_kcal_mol": 1.5}],
+        "stalls": {"count": 4, "time_lost_s": 2400.0, "graft_pre_relax_timeouts": 0},
+        "bundle": {"root_manifest_sha256": manifest},
+    }
+
+
+def stub_evidence(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """The replan-7 evidence: one GFN2 unit with a stall, one score, three constructs."""
+    ev = tmp_path / "evidence"
+    root = ev / SOURCE_ROOT
+    for folder in (root / "records", root / "proof"):
+        folder.mkdir(parents=True)
+    unit = unit_record("ethyl", "exo", "xtb", stall=True)
+    score = (
+        stub_record()
+        .selectivity[0]
+        .model_copy(update={"candidate_id": "ethyl", "engine": unit.runs[0].engine})
+    )
+    (root / "v070_enum.sqlite").write_bytes(b"")
+    (root / "records" / "v070_enum_ethyl_exo_xtb.runrecord.json").write_text(unit.model_dump_json())
+    (root / "records" / f"{SCORE}.runrecord.json").write_text(
+        unit.model_copy(update={"selectivity": [score]}).model_dump_json()
+    )
+    put_command(root / "proof", "ethyl-exo-xtb")
+    put_command(root / "proof", "score-ethyl-xtb")
+    for construct, engine in (("graft_time", "xtb"), ("run_time", "xtb"), ("run_time", "uma")):
+        stem = f"v070_fallback_{construct}_{engine}"
+        (root / f"{stem}.sqlite").write_bytes(b"")
+        record = unit_record("ethyl", "endo", engine, stall=False)
+        (root / "records" / f"{stem}.runrecord.json").write_text(record.model_dump_json())
+        put_command(root / "proof", f"{construct.replace('_', '-')}-{engine}")
+    proof = tmp_path / "17-execute.md"
+    proof.write_text(proof_text())
+    (root / "proof" / PREVIOUS).write_text(json.dumps(previous_record(list(STEMS), "1" * 64)))
+    (root / "review").mkdir()
+    manifest = root / "review" / "MANIFEST.sha256"
     manifest.write_text("0" * 64 + "  index.html\n")
     report = {
         "engine_calls": 0,
         "stores": {"v070_enum.sqlite": {"rows_before": 3, "rows_after": 3}},
         "gate_counts": {},
+        "g15": {"known_clash": [], "known_superseded": []},
         "gates": {
             "root_manifest_sha256": sha256_of(manifest),
             "sub_bundle_bytes": {"a": 1},
             "total_bytes": 2,
         },
     }
-    (out / "review_report.json").write_text(json.dumps(report))
+    (root / "review_report.json").write_text(json.dumps(report))
     log = tmp_path / "full.log"
     log.write_text("=== 10 passed, 2 deselected, 1 warning in 5.00s ===\n")
-    return ev, slice12, log
+    return ev, proof, log
 
 
 def test_the_record_is_derived_from_the_evidence(tmp_path: Path) -> None:
@@ -149,6 +184,8 @@ def test_the_record_is_derived_from_the_evidence(tmp_path: Path) -> None:
     (unit,) = record["g7_units"]
     assert unit["gates"] == {"G7.ok": "pass"} and unit["gated"] is True
     assert unit["values"]["stall_count"] == 1
+    assert unit["values"]["seed_clash_count"] == 0
+    assert unit["values"]["bond_changed_count"] == 0
     assert record["stalls"]["time_lost_s"] == pytest.approx(600.004)
     assert [u["construct"] for u in record["g8_constructs"]] == [
         "graft_time",
@@ -165,24 +202,61 @@ def test_the_record_is_derived_from_the_evidence(tmp_path: Path) -> None:
     assert "verdict" not in record
 
 
-def test_a_table_that_disagrees_with_the_record_is_refused(tmp_path: Path) -> None:
-    """A proof table with another stall count fails the derivation."""
+def test_the_replan_block_states_what_changed(tmp_path: Path) -> None:
+    """The clash rule, the changed exclusion reasons, the stalls and the manifests."""
     ev, proof, log = stub_evidence(tmp_path)
-    table = ev / "v070-slice11" / "proof" / "table.md"
-    table.write_text(table.read_text().replace("1 / 600", "0 / 0"))
-    with pytest.raises(RecordError, match="differs from the record"):
-        build_record(ev, proof, log, 0)
+    block = build_record(ev, proof, log, 0)["replan_7"]
+    assert block["clash_rule"]["q_r7a"] == "A" and block["clash_rule"]["q_r7b"] == "A"
+    assert block["clash_rule"]["cut_covalent_sum_factor"] == 1.3
+    assert block["clash_rule"]["rejected_ratio_min"] is None
+    assert block["stalls"]["before"]["count"] == 4 and block["stalls"]["after"]["count"] == 1
+    assert block["exclusion_reasons_changed"]["v070_fallback_run_time_xtb.runrecord.json"] == {
+        "before": {"pre_relax_failed:PreRelaxTimeout": 1},
+        "after": {},
+    }
+    assert block["units_or_scores_with_changed_values"] == []
+    assert block["bundle_root_manifest_sha256"]["before"] == "1" * 64
+    previous = ev / SOURCE_ROOT / "proof" / PREVIOUS
+    assert block["previous_record_sha256"] == sha256_of(previous)
+    old = json.loads(previous.read_text())
+    old["g7_selectivity"][0]["ddG_dagger_kcal_mol"] = 2.0
+    previous.write_text(json.dumps(old))
+    changed = build_record(ev, proof, log, 0)["replan_7"]["units_or_scores_with_changed_values"]
+    assert changed == [f"{SCORE}.runrecord.json: ddG_dagger_kcal_mol"]
 
 
-def test_a_slice12_disagreement_or_missing_log_is_refused(tmp_path: Path) -> None:
-    """A different ``G_pathway`` or a missing command log fails."""
+@pytest.mark.parametrize(
+    "text",
+    [
+        proof_text(dg=12.6),
+        proof_text(ddg=1.6),
+        proof_text(stalls=2),
+        proof_text().replace("| [] | [] |", "| [3] | [3] |", 1),
+        proof_text().replace("Q-R7a = A", "Q-R7a is open"),
+    ],
+)
+def test_a_proof_that_disagrees_with_the_records_is_refused(tmp_path: Path, text: str) -> None:
+    """Each changed value, or a proof without the ruling, fails the derivation."""
     ev, proof, log = stub_evidence(tmp_path)
-    text = proof.read_text()
-    proof.write_text(text.replace(str(G_PATHWAY), "-1.06", 1))
-    with pytest.raises(RecordError, match="differs from the record"):
-        build_record(ev, proof, log, 0)
     proof.write_text(text)
-    (ev / "v070-slice12" / "proof" / "run-time-uma.log").unlink()
+    with pytest.raises(RecordError, match="differs from the record|does not state"):
+        build_record(ev, proof, log, 0)
+
+
+def test_a_missing_proof_row_section_log_or_previous_is_refused(tmp_path: Path) -> None:
+    """A missing table row, section, command log or previous record fails."""
+    ev, proof, log = stub_evidence(tmp_path)
+    proof.write_text(proof_text().replace("## Energies against", "## Energy"))
+    with pytest.raises(RecordError, match="no section"):
+        build_record(ev, proof, log, 0)
+    proof.write_text(proof_text().replace("| v070_fallback_run_time_uma | endo | dG‡", "| x |", 1))
+    with pytest.raises(RecordError, match="rows in slice 17"):
+        build_record(ev, proof, log, 0)
+    proof.write_text(proof_text())
+    (ev / SOURCE_ROOT / "proof" / PREVIOUS).unlink()
+    with pytest.raises(RecordError, match="no previous record"):
+        build_record(ev, proof, log, 0)
+    (ev / SOURCE_ROOT / "proof" / "run-time-uma.log").unlink()
     with pytest.raises(RecordError, match="no log"):
         build_record(ev, proof, log, 0)
 
@@ -190,7 +264,7 @@ def test_a_slice12_disagreement_or_missing_log_is_refused(tmp_path: Path) -> Non
 def test_a_changed_manifest_or_candidate_input_is_refused(tmp_path: Path) -> None:
     """The manifest must be the one the build reported; candidates are never inputs."""
     ev, proof, log = stub_evidence(tmp_path)
-    (ev / "v070-slice13" / "review" / "MANIFEST.sha256").write_text("changed\n")
+    (ev / SOURCE_ROOT / "review" / "MANIFEST.sha256").write_text("changed\n")
     with pytest.raises(RecordError, match="differs from the build report"):
         build_record(ev, proof, log, 0)
     with pytest.raises(RecordError, match="candidate"):

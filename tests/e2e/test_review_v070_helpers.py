@@ -1,4 +1,4 @@
-"""The review bundle harness on stub stores and records in ``tmp_path`` (slice 13; no engine).
+"""The review bundle harness on stub stores and records in ``tmp_path`` (slices 13, 18; no engine).
 
 Every check has a failing case: coverage, M10, fresh output, the root index, the manifest and the
 other real-bundle gates.
@@ -10,12 +10,16 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import review_g15
 
 sys.path.append(str(Path(__file__).resolve().parents[1] / "unit" / "review"))
 
 from review_helpers import put, stub_record  # noqa: E402
 from review_v070 import (  # noqa: E402
     CSP_META,
+    ENUMERATION,
+    FALLBACK,
+    SOURCE_ROOT,
     ReviewError,
     Source,
     build_sub_bundles,
@@ -39,6 +43,7 @@ from review_v070 import (  # noqa: E402
     write_root_index,
     write_root_manifest,
 )
+from test_dispositions import export, extra_key, full_record  # noqa: E402
 
 from eta_rxncat.review.bundle import ASSETS_PATH, BundleError, write_review_bundle  # noqa: E402
 from eta_rxncat.review.run_data import RunRecord  # noqa: E402
@@ -53,7 +58,7 @@ def stub_source(tmp_path: Path, labels: tuple[str, ...] = ("endo TS",)) -> Sourc
         path = tmp_path / f"stub_{index}.runrecord.json"
         path.write_text(stub_record(label).model_dump_json(), encoding="utf-8")
         records[path.name] = path
-    return Source("11-enumeration-e2e", store, records)
+    return Source(ENUMERATION, store, records)
 
 
 def built(tmp_path: Path) -> tuple[Path, dict[str, Any], list[str]]:
@@ -117,20 +122,28 @@ def test_coverage_fails_on_a_missing_run_no_bundle_or_a_different_run() -> None:
 
 
 def test_sources_refuse_a_missing_or_unassigned_record(tmp_path: Path) -> None:
-    """Every store has its record and no record is unassigned."""
-    for name in ("v070-slice11/records", "v070-slice12/records"):
-        (tmp_path / name).mkdir(parents=True)
-    (tmp_path / "v070-slice11" / "v070_enum.sqlite").write_bytes(b"")
+    """Every store of the named source root has its records and no record is unassigned."""
+    records = tmp_path / SOURCE_ROOT / "records"
+    records.mkdir(parents=True)
+    (tmp_path / SOURCE_ROOT / "v070_enum.sqlite").write_bytes(b"")
     with pytest.raises(ReviewError, match="no run record"):
         sources(tmp_path)
     for unit in ("graft_time_xtb", "run_time_xtb", "run_time_uma"):
-        (tmp_path / f"v070-slice12/records/v070_fallback_{unit}.runrecord.json").write_text("{}")
-    (tmp_path / "v070-slice12/records/stray.runrecord.json").write_text("{}")
+        (records / f"v070_fallback_{unit}.runrecord.json").write_text("{}")
+    (records / "stray.runrecord.json").write_text("{}")
     with pytest.raises(ReviewError, match="of no store"):
         sources(tmp_path)
-    (tmp_path / "v070-slice12/records/stray.runrecord.json").unlink()
+    (records / "stray.runrecord.json").unlink()
     with pytest.raises(ReviewError, match="missing store"):
         sources(tmp_path)
+    for unit in ("graft_time_xtb", "run_time_xtb", "run_time_uma"):
+        (tmp_path / SOURCE_ROOT / f"v070_fallback_{unit}.sqlite").write_bytes(b"")
+    with pytest.raises(ReviewError, match="missing store"):
+        sources(tmp_path)
+    (records / "v070_enum_ethyl_endo_xtb.runrecord.json").write_text("{}")
+    found = sources(tmp_path)
+    assert [s.group for s in found] == [ENUMERATION, FALLBACK, FALLBACK, FALLBACK]
+    assert list(found[0].records) == ["v070_enum_ethyl_endo_xtb.runrecord.json"]
 
 
 def test_fresh_root_refused_and_nothing_wiped(tmp_path: Path) -> None:
@@ -198,7 +211,7 @@ def clean_root(tmp_path: Path) -> tuple[Path, list[str]]:
     path = tmp_path / "ok.runrecord.json"
     path.write_text(record.model_copy(update={"runs": [run]}).model_dump_json(), encoding="utf-8")
     root = tmp_path / "review"
-    report = build_sub_bundles([Source("12-fallback-e2e", store, {path.name: path})], root)
+    report = build_sub_bundles([Source(FALLBACK, store, {path.name: path})], root)
     names = [s["name"] for s in report["sub_bundles"]]
     write_root_index(root, report["sub_bundles"])
     write_root_manifest(root)
@@ -270,7 +283,7 @@ def set_stride(root: Path, name: str, kind: str, stride: int) -> None:
 def reindex(root: Path, names: list[str]) -> str:
     """Rewrite the root page from the files and return it."""
     subs = [
-        {"name": n, "slice": "s", "record": "ok.runrecord.json", "store": "stub.sqlite"}
+        {"name": n, "group": "g", "record": "ok.runrecord.json", "store": "stub.sqlite"}
         for n in names
     ]
     write_root_index(root, subs)
@@ -392,3 +405,95 @@ def test_sink_and_csp_gates_fail() -> None:
         csp_gate({"index.html": b"<html></html>"})
     with pytest.raises(ReviewError, match="CSP"):
         csp_gate({})
+
+
+# --- The G15 gates (slice 18) -----------------------------------------------------------------
+
+
+def dispositions_bundle(tmp_path: Path, drop: int | None = 5) -> tuple[dict[str, Any], str, Any]:
+    """A written bundle of the stub record with every disposition kind (``drop`` removes one)."""
+    record = full_record()
+    run = record.runs[0]
+    kept = [s for s in run.samples if s.sample_index != drop]
+    record = record.model_copy(update={"runs": [run.model_copy(update={"samples": kept})]})
+    out = write_review_bundle(export(tmp_path, record), tmp_path / "bundle")
+    data = json.loads((out / "run_data.json").read_bytes())
+    return data, (out / "index.html").read_text(encoding="utf-8"), record
+
+
+def test_g15_gates_pass_on_a_recorded_bundle(tmp_path: Path) -> None:
+    """Every row is recorded, grouped and headed; identity and banners show."""
+    data, html, record = dispositions_bundle(tmp_path)
+    review_g15.disposition_gate("s", data, record)
+    counts = review_g15.page_gate("s", data, html)
+    assert counts["used_ts"] == 1 and counts["used_minimum"] == 1
+    assert counts["notused_ts"] == 2 and counts["notused_minimum"] == 2
+    assert counts["notused_lines"] == 3 and counts["ts_banners"] >= 1
+
+
+def test_g15_refuses_a_not_recorded_or_missing_disposition(tmp_path: Path) -> None:
+    """The unjudged sample, a dropped disposition and a missing endpoint row each fail."""
+    data, _, record = dispositions_bundle(tmp_path, drop=None)
+    with pytest.raises(review_g15.G15Error, match="not_recorded"):
+        review_g15.disposition_gate("s", data, record)
+    shorter = tmp_path / "short"
+    shorter.mkdir()
+    data, _, record = dispositions_bundle(shorter)
+    data["candidates"][0]["sample_dispositions"].pop()
+    with pytest.raises(review_g15.G15Error, match="samples"):
+        review_g15.disposition_gate("s", data, record)
+    again = tmp_path / "ends"
+    again.mkdir()
+    data, _, record = dispositions_bundle(again)
+    data["candidates"][0]["endpoint_dispositions"].pop()
+    with pytest.raises(review_g15.G15Error, match="endpoint dispositions"):
+        review_g15.disposition_gate("s", data, record)
+
+
+@pytest.mark.parametrize(
+    ("old", "new", "message"),
+    [
+        ("— member (weight 1.000)", "— something else", "block missing"),
+        ('<div class="notused">', '<div class="other">', "outside the Used"),
+        ("Identity: imaginary frequency", "Numbers: imaginary frequency", "no identity"),
+        ("Transition state identity check failed", "Check passed", "banner differs"),
+        ("forming-bond overlap", "forming overlap", "overlap differs"),
+        ("excluded: seed_clash", "excluded: other", "line missing"),
+    ],
+)
+def test_g15_page_gate_fails_on_a_changed_page(
+    tmp_path: Path, old: str, new: str, message: str
+) -> None:
+    """Each way the static page can lose a disposition fails the gate."""
+    data, html, _ = dispositions_bundle(tmp_path)
+    assert old in html
+    with pytest.raises(review_g15.G15Error, match=message):
+        review_g15.page_gate("s", data, html.replace(old, new))
+
+
+def test_g15_known_answers(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The clash and superseded answers hold on matching constants and fail on others."""
+    data, html, record = dispositions_bundle(tmp_path)
+    engine = data["provenance"]["engines"][0]["name"]
+    candidate = data["candidates"][0]["candidate_id"]
+    for name, value in (
+        ("CLASH_ENGINE", engine),
+        ("CLASH_CANDIDATE", (candidate, "endo")),
+        ("CLASH_SAMPLE", 3),
+        ("CLASH_PAIR", (0, 1)),
+        ("SUPERSEDED_ENGINE", engine),
+        ("SUPERSEDED_CANDIDATE", candidate),
+        ("SUPERSEDED_KEY", extra_key("first").key[:12]),
+    ):
+        monkeypatch.setattr(review_g15, name, value)
+    (clash,) = review_g15._clash_answers("s", data, html)
+    assert "excluded: seed_clash" in clash["line"]
+    (pushed,) = review_g15._superseded_answers("s", data, record, html)
+    assert (pushed["successor_kind"], pushed["successor_reason"]) == ("kept", None)
+    monkeypatch.setattr(review_g15, "CLASH_ANGSTROM", 0.5)
+    with pytest.raises(review_g15.G15Error, match="expected"):
+        review_g15._clash_answers("s", data, html)
+    changed = data["candidates"][0]["endpoint_dispositions"]
+    changed[1].update(kind="dropped", reason_code="x")
+    with pytest.raises(review_g15.G15Error, match="recorded"):
+        review_g15._superseded_answers("s", data, record, html)
