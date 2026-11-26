@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -65,9 +65,9 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T02:35:43+00:00'
-    reviewed_by: audit:01-starter-graph-split
-    summary: patched description
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -76,7 +76,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,14 +177,14 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -228,12 +228,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T02:35:43+00:00'
-    reviewed_by: audit:01-starter-graph-split
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -277,12 +277,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -344,12 +344,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -402,12 +402,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -458,14 +458,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -524,14 +524,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -614,14 +614,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_mapping
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -681,14 +681,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
-    summary: patched description
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
+    summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -760,40 +760,42 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
   description: >-
     eta_rxncat.mapping.enumerator (v0.7.0, multi-site). enumerate_candidates(plan,
-    *, max_alignment_rmsd_angstrom (keyed, no default), max_research=TSEnsembleOptions().max_research)
-    -> EnumerationResult: candidates are the product of each site's library entries
-    (plan.sites order, declared order, ids joined '+'). EnumerationError: no site,
-    a (node, template) mapped twice in a site, product > max_candidates (before any
-    graft). Per template of a covered node, listed by every covering site (else dropped_unlisted),
-    sites graft in order, stopping at a refusal; one record per attempt. Later-site
-    maps (template indices) remap through earlier index_maps, earlier appended atoms
-    kept; a deleted atom -> site_atom_deleted. Before graft: multi_component_template,
-    multiplicity_conflict (declared across applied entries, else inherited), graft_input
-    if a frozen stage index (node stages, else default_stages) is not in keep. Charge:
-    template + sum of applied charge_delta. Per fragment order: wrong length -> graft_input;
-    parity; else graft (GraftInputError, AlignmentError, ValidationError -> graft_input;
-    GraftClashError -> graft_clash). Lowest RMSD wins, ties first; all refused ->
-    first reason. Then alignment_rmsd, composition_mismatch (final product vs first
-    eligible), forming_bond_deleted. Candidate: unmappable (node id); inconsistent
-    partial_pathway_coverage:<site>, frozen_index_mismatch:<node>, ts_{composition,charge,multiplicity}_mismatch,
+    *, max_alignment_rmsd_angstrom (no default), max_research=DEFAULT_MAX_RESEARCH)
+    -> EnumerationResult: one candidate per product of site entries (plan.sites order,
+    declared order, last fastest, ids joined '+'). EnumerationError: no site, a (node,
+    template) mapped twice in a site, product > max_candidates (before any graft).
+    Per template of a covered node by rank, if listed by every covering site (else
+    dropped, no record), sites graft in order, stopping at a refusal; one record per
+    attempt. Later sites remap through earlier index_maps, keeping appended atoms.
+    Checks: multi_component_template; multiplicity_conflict (applied entries' declared,
+    else template's); site_atom_deleted; graft_input (a frozen index of node stages,
+    else default_stages, not kept). Charge: template + applied charge_deltas. Per
+    order: wrong length -> graft_input; parity; else graft (GraftInputError/AlignmentError/ValidationError
+    -> graft_input, GraftClashError -> graft_clash). Lowest RMSD wins, ties first;
+    all refused -> first reason. Then alignment_rmsd; composition_mismatch (last site
+    only: charge or elements vs the node's first eligible product); forming_bond_deleted.
+    Each index_map refers to its graft input (prior product after site 1); mapped_forming_bonds
+    to its product. Candidate: unmappable (node id); inconsistent partial_pathway_coverage:<site>,
+    frozen_index_mismatch:<node>, rank-1 ts_{composition,charge,multiplicity}_mismatch,
     reactant_{composition,charge}_mismatch, entry_multiset_mismatch:<set> (TS entries
-    != union over reactants); else ok: graph <ref>__<id>, eligible products ranked
-    1..k as <template>__<id>, composed frozen indices on the node. map_template_indices
-    (graft-input indices); projected_ts_searches. Pure, deterministic, uncached; imports
-    core, mapping; not re-exported by eta_rxncat.mapping.
+    != reactant union); else ok (detail dropped_unlisted:<node>/<template>,...): graph
+    <ref>__<id>, eligible products ranked 1..k as <template>__<id>, node stages =
+    composed frozen indices (defaults only if freezing). Also map_template_indices,
+    projected_ts_searches. Pure, deterministic, uncached; imports core, mapping; not
+    re-exported. Also under mapping's glob (recorded overlap). Tests: test_enumerator*.py.
   inputs:
   - data_type: reaction_graph_and_enumeration_plan_models
     source_id: eta_rxncat_core
@@ -809,14 +811,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: patched description
   provenance:
     last_slice: OPR.0.7.0.4
 - id: eta_rxncat_review
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -850,8 +852,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:52:04+00:00'
-    reviewed_by: audit:OPR.0.7.0.3
+    reviewed_at: '2026-11-26T04:32:49+00:00'
+    reviewed_by: audit:OPR.0.7.0.4
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.4

@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/04-qa.md - qa PASS: pytest 2353 passed (643 s), mapping 131 passed; 9 requirements each with a named multisite test; ledger 14 nodes reconciled
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

@@ -2,7 +2,7 @@
 id: OPR.0.7.0.4
 slice: 04-multi-site-product
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 replan 3 (R31) against 960d63a mapping/enumerator.py"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Enumerate multi-site plans as a deterministic Cartesian product, refusi
 depends_on: [OPR.0.7.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_enumerator
 parent: null
 hacf_touches: [src/eta_rxncat/mapping/enumerator.py, "tests/unit/mapping/test_enumerator*.py", spec/compiled/architecture.yml]
