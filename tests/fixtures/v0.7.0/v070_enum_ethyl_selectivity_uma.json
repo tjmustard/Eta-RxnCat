@@ -1,0 +1,76 @@
+{
+  "case": "v070_enum_ethyl_selectivity_uma",
+  "checks": {
+    "tier_gates": {
+      "both_pathways_scored": {
+        "status": "pass"
+      },
+      "ratio_finite": {
+        "status": "pass"
+      },
+      "unit_gates_pass": {
+        "status": "pass"
+      }
+    }
+  },
+  "commit_sha": "3af1e954da3315db3dbcc3a81ed5a772f8be71a9",
+  "export": {
+    "candidates": 2,
+    "frequencies": 25,
+    "frequencies_missing": 0,
+    "trajectories": 61,
+    "trajectories_missing": 0
+  },
+  "failed_checks": [],
+  "fixture": "e2e5_v070_enumeration",
+  "inputs_sha256": {
+    "v070_enumeration.yaml": "3b18c839ba97c630bdecb086758b503811077d19f64788b4e2d50126fbe8c8de",
+    "xyz/1_cyclopentadiene.xyz": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812",
+    "xyz/5_cyclopropene.xyz": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2",
+    "xyz/TS1a_n.xyz": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "xyz/TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+    "xyz/r_ethyl_cyclopropene.xyz": "ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0"
+  },
+  "r_group": "ethyl",
+  "recipe": "uma",
+  "reported": {
+    "dG_dagger_kcal_mol": {
+      "endo": 20.235660364919468,
+      "exo": 24.808196296814334
+    },
+    "ddG_dagger_kcal_mol": 4.5725359318948655,
+    "major_pathway": "endo",
+    "n_members": {
+      "endo": 3,
+      "exo": 3
+    },
+    "selectivity": {
+      "ddG_dagger_kcal_mol": 4.5725359318948655,
+      "kind": "de",
+      "major_pathway": "endo",
+      "per_pathway": {
+        "endo": {
+          "G_pathway_hartree": -389.10761435694513,
+          "fraction": 0.9995552512786587,
+          "n_excluded": 5,
+          "n_members": 3
+        },
+        "exo": {
+          "G_pathway_hartree": -389.1003275571104,
+          "fraction": 0.0004447487213411832,
+          "n_excluded": 4,
+          "n_members": 3
+        }
+      },
+      "pruning": null,
+      "ratio": 2247.4606520832763,
+      "selectivity_percent": 99.91105025573177,
+      "signed_ddG_dagger_kcal_mol": {
+        "exo_vs_endo": 4.5725359318948655
+      },
+      "temperature_k": 298.15
+    }
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}
