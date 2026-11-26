@@ -226,9 +226,14 @@ class TagTS(FakeTS):
         forming_bonds: Sequence[tuple[int, int]] = (),
         options: Mapping[str, ScalarValue] | None = None,
     ) -> TSSearchResult:
-        """Evaluate once, then return the tag's saddle (or raise the tag's failure)."""
+        """Return the tag's saddle (or raise the tag's failure), evaluating exactly once.
+
+        One ``hessian=False`` evaluation per history step is the contract the TS runner's step
+        recorder checks (v0.7.0, R33); a success evaluates in ``FakeTS``.
+        """
         tag = tag_of(state)
-        engine.evaluate(state, forces=True)
+        if tag in ("fail", "scf", "engine", "unavail"):
+            engine.evaluate(state, forces=True)
         if tag == "fail":
             raise TSSearchFailedError(
                 "stub", reason="max_steps", steps=("0",), last_energy_hartree=-1.0

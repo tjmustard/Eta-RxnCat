@@ -1,0 +1,81 @@
+M11 (v0.7.0 slice 06, requirement 1): recorded as measured (mission R33). No new M11 run was made.
+Source: /home/tjmustard/.hacf/eta-rxncat-hacf/evidence/v070-slice06 (builder halt report qitem-20261126043922-a61f5c38). GFN2, ethyl/TS1a_n graft, ENDO order
+[2,3,4,10], 24 atoms, core frozen. The maxiter-3 run is a disclosed second command (forced ladder).
+
+| run | ladder step | bridge frames | optim.xyz frames | outcome |
+|---|---|---|---|---|
+| maxiter 200 (m11.json) | tric | 8 (= n_engine_calls 8; n_steps 7) | 8 (bridge 0-7) | converged |
+| maxiter 3 forced (m11-ladder.json) | tric | 4 | 4 (0-3) | not converged |
+| | tric_tight_trust | 148 | 4 (0, 145, 146, 147) | not converged |
+| | hdlc | 4 | 4 (0-3) | not converged |
+
+Every optim.xyz frame matches a bridge frame (max deviation 5.0e-11 A; next-nearest bridge frame
+>= 5.3e-4 A); the final frame equals final_xyz bitwise; each ladder step writes its own optim.xyz
+from Iteration 0. Tight-trust's 144 unmatched frames are, by count (24 x 3 x 2) and spacing
+(0.001 Bohr), finite-difference Hessian displacements from hessian="first" (an inference).
+Decision (lead ruling, R33): accepted_bool per frame, matched at 1e-6 A against each step's optim.xyz.
+
+== m11: env
+ETA_RXNCAT_ACCEPTANCE=1
+ETA_RXNCAT_XTB=/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb
+TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp
+== m11: blocking host check (before the command)
+2026-11-26T04:37:37Z
+== free -g
+               total        used        free      shared  buff/cache   available
+Mem:              30          17           5           0           8          12
+Swap:             15          10           5
+== nvidia-smi
+2 %, 1884 MiB
+4106, /usr/libexec/gnome-remote-desktop-daemon, 130 MiB
+5895, /usr/bin/ptyxis, 91 MiB
+3924909, /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-
+463244, handy, 747 MiB
+2956539, /usr/bin/nautilus, 22 MiB
+== heavy processes (>=100% CPU or >=2 GiB RSS, any user/rig)
+    PID USER      NI %CPU   RSS     ELAPSED COMMAND
+== python/xtb/pytest/uv
+   8848   0 python3         python3 /usr/bin/wsdd --no-host --discovery --listen /run/user/1000/gvfsd/wsdd
+ 745212   0 python3         python3 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/dev/scripts/host_gate.py run --job check.sh -- bash /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/dev/scripts/check.sh
+1196586   0 python3         python3 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/dev/release_export.py scan --tree worktree
+1602778   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1603944   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1604783   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1606123   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1607349   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1608961   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1610269   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+verdict: avail=12G gpu_apps=0 heavy=0 eta=0
+
+== m11-ladder: env
+ETA_RXNCAT_ACCEPTANCE=1
+ETA_RXNCAT_XTB=/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb
+TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp
+== m11-ladder: blocking host check (before the command)
+2026-11-26T04:38:32Z
+== free -g
+               total        used        free      shared  buff/cache   available
+Mem:              30          17           5           0           8          13
+Swap:             15          10           5
+== nvidia-smi
+3 %, 1884 MiB
+4106, /usr/libexec/gnome-remote-desktop-daemon, 130 MiB
+5895, /usr/bin/ptyxis, 91 MiB
+3924909, /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-
+463244, handy, 747 MiB
+2956539, /usr/bin/nautilus, 22 MiB
+== heavy processes (>=100% CPU or >=2 GiB RSS, any user/rig)
+    PID USER      NI %CPU   RSS     ELAPSED COMMAND
+== python/xtb/pytest/uv
+   8848   0 python3         python3 /usr/bin/wsdd --no-host --discovery --listen /run/user/1000/gvfsd/wsdd
+1197291   0 uv              uv run --locked pytest -q dev/tests/compat
+1197295   0 pytest          /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/python /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/.venv/bin/pytest -q dev/tests/compat
+1204966   0 python3         python3 /home/tjmustard/AI/Hypergraph-Agentic-Coding-Framework/dev/openrig_compat.py watch-outbox dropped --state-dir /home/tjmustard/.cache/hacf-tmp/build-audit/pytest-of-tjmustard/pytest-173
+1602778   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1603944   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1604783   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1606123   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1607349   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1608961   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1610269   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+verdict: avail=13G gpu_apps=0 heavy=0 eta=0

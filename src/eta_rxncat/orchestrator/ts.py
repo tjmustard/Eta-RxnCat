@@ -6,6 +6,9 @@ failures included as completed rows carrying ``failed_reason`` (v0.3.0 R50). A T
 the species runner's minimum path (R13, N3): this module calls none of ``run_species``,
 ``check_ground_state``, ``_frequency_and_thermo``, ``_push`` or ``_dedup_after_push``.
 Connectivity is reported, never gated (R3, N7).
+
+The search's step geometries (v0.7.0, R33) are recorded by an engine wrapper around the counted
+engine, so ``optimize/prfo.py``, whose bytes key the ``ts_opt`` stage, is unchanged.
 """
 
 import time
@@ -13,8 +16,13 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
+import numpy as np
+
 from eta_rxncat.core import (
+    EngineIdentity,
     MolecularState,
+    OptimizationFrame,
+    PotentialResult,
     StageConfig,
     ThermoAnalysisOptions,
     ThermoConfig,
@@ -24,11 +32,16 @@ from eta_rxncat.core import (
     TSValidationOptions,
 )
 from eta_rxncat.core.models import ScalarValue
-from eta_rxncat.engines import EngineRuntimeError, ScfConvergenceError
+from eta_rxncat.engines import Engine, EngineRuntimeError, RawResult, ScfConvergenceError
 from eta_rxncat.mapping import perceive_bonds
 from eta_rxncat.optimize import TransitionStateOptimizer, TSSearchFailedError
 from eta_rxncat.orchestrator.counting import CountingEngine
-from eta_rxncat.orchestrator.species import StageMetrics, _with_kind, build_engine
+from eta_rxncat.orchestrator.species import (
+    StageMetrics,
+    _frames_entry,
+    _with_kind,
+    build_engine,
+)
 from eta_rxncat.store import (
     ArtifactStatus,
     ArtifactStore,
@@ -158,6 +171,80 @@ def _runtime_failure(exc: EngineRuntimeError) -> dict[str, str]:
     }
 
 
+class _StepRecordError(RuntimeError):
+    """The recorded evaluations do not map one to one onto the search's steps.
+
+    A code fault (the TS optimizer's call order differs from the one this mapping relies on): it
+    is never caught here and never cached.
+    """
+
+
+class _RecordingEngine(Engine):
+    """Delegate to ``engine`` and keep each ``hessian=False`` evaluation as a frame, in order.
+
+    P-RFO evaluates ``hessian=False`` exactly once per iteration, at the trial point it then
+    appends to its history, so ``frames[k]`` is the geometry of ``history[k]`` (mission R33).
+    """
+
+    def __init__(self, engine: Engine) -> None:
+        self._engine = engine
+        self.frames: list[OptimizationFrame] = []
+
+    @property
+    def stage(self) -> StageConfig:
+        return self._engine.stage
+
+    @property
+    def identity(self) -> EngineIdentity:
+        return self._engine.identity
+
+    def evaluate(
+        self, state: MolecularState, *, forces: bool = True, hessian: bool = False
+    ) -> PotentialResult:
+        result = self._engine.evaluate(state, forces=forces, hessian=hessian)
+        if not hessian and result.forces_hartree_per_bohr is not None:
+            gradient = np.asarray(result.forces_hartree_per_bohr, dtype=np.float64)
+            self.frames.append(
+                OptimizationFrame(
+                    coordinates_angstrom=state.coordinates,
+                    energy_hartree=result.energy_hartree,
+                    max_gradient_hartree_per_bohr=float(np.max(np.abs(gradient))),
+                    ladder_step=None,
+                )
+            )
+        return result
+
+    def _evaluate(self, state: MolecularState, *, forces: bool, hessian: bool) -> RawResult:
+        raise NotImplementedError("_RecordingEngine delegates evaluate; _evaluate is never used")
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._engine, name)
+
+
+def _with_step_coordinates(
+    search: TSSearchResult, frames: Sequence[OptimizationFrame]
+) -> TSSearchResult:
+    """Return ``search`` with each history step's geometry filled from ``frames``.
+
+    Raises:
+        _StepRecordError: The counts differ, or a step's energy or largest gradient component is
+            not exactly that of its frame.
+    """
+    if len(frames) != len(search.history):
+        raise _StepRecordError(
+            f"{len(frames)} recorded evaluations for {len(search.history)} search steps"
+        )
+    history = []
+    for k, (step, frame) in enumerate(zip(search.history, frames, strict=True)):
+        if (
+            frame.energy_hartree != step.energy_hartree
+            or frame.max_gradient_hartree_per_bohr != step.max_gradient_hartree_per_bohr
+        ):
+            raise _StepRecordError(f"recorded evaluation {k} is not search step {k}'s")
+        history.append(step.model_copy(update={"coordinates_angstrom": frame.coordinates_angstrom}))
+    return search.model_copy(update={"history": history})
+
+
 class _TSRun:
     """One TS run: counted engine, store, metrics and keys."""
 
@@ -202,24 +289,28 @@ class _TSRun:
                 return str(payload["failed_reason"])
             if payload is not None:
                 return TSSearchResult.model_validate(payload)
+            recorder = _RecordingEngine(self.engine)
             try:
                 result = self.recipe.ts_optimizer.find_saddle(
                     self.spec.start,
-                    self.engine,
+                    recorder,
                     forming_bonds=self.pairs,
                     options=self.recipe.ts_options,
                 )
             except TSSearchFailedError as exc:
                 reason = f"ts_search_failed:{exc.reason}"
-                self._save("ts_opt", key, {"failed_reason": reason, "message": str(exc)})
+                failure = {"failed_reason": reason, "message": str(exc)}
+                self._save("ts_opt", key, {**failure, **_frames_entry(recorder.frames)})
                 return reason
             except ScfConvergenceError as exc:
                 failure = {"failed_reason": "scf_convergence", "message": str(exc)}
-                self._save("ts_opt", key, failure)
+                self._save("ts_opt", key, {**failure, **_frames_entry(recorder.frames)})
                 return "scf_convergence"
             except EngineRuntimeError as exc:
-                self._save("ts_opt", key, _runtime_failure(exc))
+                payload = {**_runtime_failure(exc), **_frames_entry(recorder.frames)}
+                self._save("ts_opt", key, payload)
                 return "engine_error"
+            result = _with_step_coordinates(result, recorder.frames)
             self._save("ts_opt", key, result.model_dump(mode="json"))
         return result
 

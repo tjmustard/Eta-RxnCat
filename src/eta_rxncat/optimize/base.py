@@ -6,15 +6,46 @@ their own methods.
 
 import abc
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
+from contextvars import ContextVar
 from typing import Any, ClassVar, Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from eta_rxncat.core import MolecularState, OptimizationResult, OptimizerIdentity
+from eta_rxncat.core import (
+    MolecularState,
+    OptimizationFrame,
+    OptimizationResult,
+    OptimizerIdentity,
+)
 from eta_rxncat.core.models import ScalarValue
 from eta_rxncat.engines import Engine, OptionSpec
 from eta_rxncat.optimize.errors import OptimizerInputError
+
+_FRAME_SINK: ContextVar[list[OptimizationFrame] | None] = ContextVar(
+    "eta_rxncat_frame_sink", default=None
+)
+
+
+@contextmanager
+def capture_frames() -> Iterator[list[OptimizationFrame]]:
+    """Yield a fresh list that a ``minimize`` run in this context appends its frames to.
+
+    The caller therefore holds every evaluated geometry even when the run (or a check after it)
+    raises. The sink is per context, so another thread never writes into it.
+    """
+    frames: list[OptimizationFrame] = []
+    token = _FRAME_SINK.set(frames)
+    try:
+        yield frames
+    finally:
+        _FRAME_SINK.reset(token)
+
+
+def frame_sink() -> list[OptimizationFrame] | None:
+    """Return the active ``capture_frames`` list, or ``None`` outside one."""
+    return _FRAME_SINK.get()
 
 
 class DihedralConstraint(BaseModel):

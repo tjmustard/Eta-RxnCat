@@ -8,6 +8,7 @@ install); ``TransitionStateOptimizer`` is pure Python.
 from eta_rxncat.optimize.base import (
     DihedralConstraint,
     Optimizer,
+    capture_frames,
     check_constraints,
     constraints_text,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "PRFOOptimizer",
     "TSSearchFailedError",
     "TransitionStateOptimizer",
+    "capture_frames",
     "check_constraints",
     "constraints_text",
 ]

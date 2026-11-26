@@ -29,6 +29,12 @@ V060_RESULT_JSON = (
     '"options":{"a":1}}'
 )
 
+# Bytes of a frame as slice 02 wrote it, before ``accepted_bool`` existed.
+V070_FRAME_JSON = (
+    '{"coordinates_angstrom":[[0.0,0.0,0.0],[0.0,0.0,0.74]],"energy_hartree":-1.17,'
+    '"max_gradient_hartree_per_bohr":0.001,"ladder_step":null}'
+)
+
 XYZ = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.74]]
 
 
@@ -104,6 +110,20 @@ def test_frame_round_trip_and_refusals() -> None:
         OptimizationFrame.model_validate(
             {k: v for k, v in frame().model_dump().items() if k != "ladder_step"}
         )
+
+
+def test_unjudged_frame_serialises_as_before_the_field() -> None:
+    """``accepted_bool`` ``None`` is left out (slice 02's bytes); ``True``/``False`` round-trip."""
+    unjudged = frame(accepted_bool=None)
+    assert unjudged.model_dump_json() == V070_FRAME_JSON
+    assert OptimizationFrame.model_validate_json(V070_FRAME_JSON) == unjudged
+    assert "accepted_bool" not in unjudged.model_dump(mode="json")
+    for value in (True, False):
+        judged = frame(accepted_bool=value)
+        assert judged.model_dump()["accepted_bool"] is value
+        assert OptimizationFrame.model_validate_json(judged.model_dump_json()) == judged
+    nested = result(frames=[frame()]).model_dump(mode="json")
+    assert "accepted_bool" not in nested["frames"][0]
 
 
 @pytest.mark.parametrize(

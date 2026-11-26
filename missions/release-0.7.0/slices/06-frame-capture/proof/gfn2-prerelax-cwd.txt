@@ -1,0 +1,68 @@
+Requirement 7: one real GFN2 core-frozen pre-relaxation through the built code (this slice's working
+tree on 6981176), from a clean temporary cwd. One command, timeout 3600, blocking host check first.
+Script: /home/tjmustard/.hacf/eta-rxncat-hacf/evidence/v070-slice06/smoke.py, wrapper /home/tjmustard/.hacf/eta-rxncat-hacf/evidence/v070-slice06/smoke.sh. Exit 0.
+
+== env
+ETA_RXNCAT_ACCEPTANCE=1
+ETA_RXNCAT_XTB=/home/tjmustard/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb
+TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp
+== host check
+2026-11-26T09:16:55Z
+== free -g
+               total        used        free      shared  buff/cache   available
+Mem:              30          17           5           0           7          12
+Swap:             15           9           6
+== nvidia-smi
+0 %, 1881 MiB
+4106, /usr/libexec/gnome-remote-desktop-daemon, 130 MiB
+5895, /usr/bin/ptyxis, 91 MiB
+3924909, /opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-
+463244, handy, 747 MiB
+2956539, /usr/bin/nautilus, 22 MiB
+== heavy processes (>=100% CPU or >=2 GiB RSS, any user/rig)
+    PID USER      NI %CPU   RSS     ELAPSED COMMAND
+== python/xtb/pytest/uv
+   8848   0 python3         python3 /usr/bin/wsdd --no-host --discovery --listen /run/user/1000/gvfsd/wsdd
+1602778   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1603944   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1604783   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1606123   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1607349   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1608961   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+1610269   0 uv              /home/tjmustard/.local/bin/uv tool uvx codebase-memory-mcp@0.12.1
+verdict: avail=12G gpu_apps=0 heavy=0 eta=0
+== result
+{
+ "eta": "/home/tjmustard/PROJECTS/eta-rxncat/src/eta_rxncat/__init__.py",
+ "cwd": "/home/tjmustard/.cache/eta-rxncat-tmp/v070-s06-smoke-cwd",
+ "cwd_restored": true,
+ "listing_before": [],
+ "listing_after": [],
+ "n_atoms": 24,
+ "n_steps": 7,
+ "n_engine_calls": 8,
+ "recovery_steps": [
+  "tric"
+ ],
+ "final_energy_hartree": -28.39166453399,
+ "n_frames": 8,
+ "ladder_steps": [
+  "tric"
+ ],
+ "accepted": [
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "final_frame_equals_final_xyz": true
+}
+== cwd listing before (empty) / after (empty)
+== time
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.58
+	Maximum resident set size (kbytes): 139572
+	Exit status: 0

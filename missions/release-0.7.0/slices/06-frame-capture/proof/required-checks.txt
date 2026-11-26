@@ -1,0 +1,33 @@
+Required checks, working tree on 6981176 (the content of the code commit).
+ruff check .: exit 0 (All checks passed!)
+ruff format --check . --extend-exclude spec/archive --extend-exclude spec/process: exit 0
+mypy: exit 0 (no issues, 85 source files)
+pytest (full, ETA_RXNCAT_XTB set): exit 0
+2452 passed, 180 deselected, 2 warnings in 188.52s (0:03:08)
+pytest tests/unit/optimize tests/unit/orchestrator -q: exit 0
+374 passed, 1 deselected in 71.73s (0:01:11)
+
+git status --porcelain after the runs (no HT.v_*):
+ M missions/release-0.7.0/PROGRESS.md
+ M missions/release-0.7.0/slices/06-frame-capture/PROGRESS.md
+ M missions/release-0.7.0/slices/06-frame-capture/SPEC.md
+ M src/eta_rxncat/core/optimization_models.py
+ M src/eta_rxncat/optimize/__init__.py
+ M src/eta_rxncat/optimize/base.py
+ M src/eta_rxncat/optimize/geometric_impl.py
+ M src/eta_rxncat/orchestrator/species.py
+ M src/eta_rxncat/orchestrator/ts.py
+ M src/eta_rxncat/orchestrator/ts_ensemble.py
+ M tests/unit/core/test_frame_fields.py
+ M tests/unit/orchestrator/test_ts_ensemble.py
+?? missions/release-0.7.0/slices/06-frame-capture/proof/
+?? spec/active/
+?? spec/archive/
+?? spec/process/
+?? tests/unit/optimize/test_frames.py
+?? tests/unit/optimize/test_scratch_cwd.py
+?? tests/unit/orchestrator/test_prerelax_frames.py
+?? tests/unit/orchestrator/test_stage_keys_v060.py
+
+find HT.v_* in the repo (outside .venv):
+0

@@ -39,6 +39,7 @@ from eta_rxncat.core import (
     ConformerEnsemble,
     ConformerRecord,
     MolecularState,
+    OptimizationFrame,
     OptimizationResult,
     OptimizerIdentity,
     StageConfig,
@@ -61,6 +62,7 @@ from eta_rxncat.optimize import (
     OptimizationFailedError,
     Optimizer,
     OptimizerInputError,
+    capture_frames,
     constraints_text,
 )
 from eta_rxncat.orchestrator.counting import CountingEngine
@@ -351,22 +353,24 @@ class _Runner:
                 return None, str(payload["failed_reason"]), True, key.key
             if payload is not None:
                 return _opt_from_payload(state, payload), None, True, key.key
-            try:
-                result = self.recipe.optimizer.minimize(
-                    state,
-                    self.engine,
-                    frozen_atom_indices=frozen,
-                    dihedral_constraints=dihedrals,
-                    options=self.recipe.optimizer_options,
-                )
-            except (OptimizationFailedError, ScfConvergenceError) as exc:
-                reason = (
-                    "optimization_failed"
-                    if isinstance(exc, OptimizationFailedError)
-                    else "scf_convergence"
-                )
-                self._save("geometry_opt", key, {"failed_reason": reason, "message": str(exc)})
-                return None, reason, False, key.key
+            with capture_frames() as frames:
+                try:
+                    result = self.recipe.optimizer.minimize(
+                        state,
+                        self.engine,
+                        frozen_atom_indices=frozen,
+                        dihedral_constraints=dihedrals,
+                        options=self.recipe.optimizer_options,
+                    )
+                except (OptimizationFailedError, ScfConvergenceError) as exc:
+                    reason = (
+                        "optimization_failed"
+                        if isinstance(exc, OptimizationFailedError)
+                        else "scf_convergence"
+                    )
+                    failure = {"failed_reason": reason, "message": str(exc)}
+                    self._save("geometry_opt", key, {**failure, **_frames_entry(frames)})
+                    return None, reason, False, key.key
             self._save("geometry_opt", key, _opt_payload(result))
         self.metrics.optimizer_steps_total += result.n_steps
         self.metrics.recovery_steps.update(result.recovery_steps)
@@ -461,6 +465,13 @@ def _pool_payload(pool: ConformerPool) -> dict[str, Any]:
     }
 
 
+def _frames_entry(frames: Sequence[OptimizationFrame] | None) -> dict[str, Any]:
+    """Return ``{"frames": [...]}`` for a payload, or ``{}`` when there are none."""
+    if not frames:
+        return {}
+    return {"frames": [frame.model_dump(mode="json") for frame in frames]}
+
+
 def _opt_payload(result: OptimizationResult) -> dict[str, Any]:
     """The stored form of an optimization result."""
     return {
@@ -471,6 +482,7 @@ def _opt_payload(result: OptimizationResult) -> dict[str, Any]:
         "recovery_steps": list(result.recovery_steps),
         "optimizer": result.optimizer.model_dump(),
         "options": dict(result.options),
+        **_frames_entry(result.frames),
     }
 
 
@@ -485,6 +497,7 @@ def _opt_from_payload(start: MolecularState, payload: Mapping[str, Any]) -> Opti
         recovery_steps=list(payload["recovery_steps"]),
         optimizer=OptimizerIdentity.model_validate(payload["optimizer"]),
         options=dict(payload["options"]),
+        frames=payload.get("frames"),
     )
 
 

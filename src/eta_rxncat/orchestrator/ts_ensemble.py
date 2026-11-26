@@ -14,6 +14,7 @@ import math
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -45,7 +46,7 @@ from eta_rxncat.engines import (
 from eta_rxncat.mapping import perceive_bonds
 from eta_rxncat.mapping.errors import CoreDisplacementError
 from eta_rxncat.mapping.relax import relax_constrained_core
-from eta_rxncat.optimize import OptimizationFailedError, Optimizer
+from eta_rxncat.optimize import OptimizationFailedError, Optimizer, capture_frames
 from eta_rxncat.orchestrator._deadline import (
     BUDGET_KIND,
     PreRelaxTimeout,
@@ -56,6 +57,7 @@ from eta_rxncat.orchestrator._deadline import (
 from eta_rxncat.orchestrator.counting import CountingEngine
 from eta_rxncat.orchestrator.species import (
     StageMetrics,
+    _frames_entry,
     _opt_payload,
     _state,
     build_engine,
@@ -231,29 +233,31 @@ class _PreRelax:
         budget_s, load1 = (
             (None, 0.0) if self.budget_s is None else effective_budget_s(self.budget_s)
         )
-        try:
-            with deadline(budget_s):
-                result = relax_constrained_core(
-                    state, self.engine, self.optimizer, self.core, options=PRE_RELAX_OPTIONS
-                )
-        except PreRelaxTimeout:
-            timed_out = True
-            failure = f"pre_relax_failed:{PreRelaxTimeout.__name__}"
-            message = f"the pre-relaxation exceeded its {budget_s} s wall budget"
-        except (CoreDisplacementError, OptimizationFailedError) as exc:
-            failure, message = f"pre_relax_failed:{type(exc).__name__}", str(exc)
-        except ScfConvergenceError as exc:
-            failure, message = "scf_convergence", str(exc)
-        except EngineRuntimeError as exc:
-            failure, message = "engine_error", str(exc)
+        with capture_frames() as frames:
+            try:
+                with deadline(budget_s):
+                    result = relax_constrained_core(
+                        state, self.engine, self.optimizer, self.core, options=PRE_RELAX_OPTIONS
+                    )
+            except PreRelaxTimeout:
+                timed_out = True
+                failure = f"pre_relax_failed:{PreRelaxTimeout.__name__}"
+                message = f"the pre-relaxation exceeded its {budget_s} s wall budget"
+            except (CoreDisplacementError, OptimizationFailedError) as exc:
+                failure, message = f"pre_relax_failed:{type(exc).__name__}", str(exc)
+            except ScfConvergenceError as exc:
+                failure, message = "scf_convergence", str(exc)
+            except EngineRuntimeError as exc:
+                failure, message = "engine_error", str(exc)
         wall = time.perf_counter() - start
         self.metrics.wall_time_s += wall
         self.metrics.engine_calls += self.engine.total - calls
         if result is None:
-            payload: dict[str, ScalarValue] = {
+            payload: dict[str, Any] = {
                 "failed_reason": str(failure),
                 "message": message,
                 "wall_time_s": wall,
+                **_frames_entry(frames),
             }
             if timed_out and budget_s is not None:
                 payload.update(budget_s=budget_s, load1=load1, budget_kind=BUDGET_KIND)

@@ -40,12 +40,23 @@ class OptimizationFrame(CoreModel):
         energy_hartree: Energy there (Eh).
         max_gradient_hartree_per_bohr: Largest gradient component there (Eh/Bohr).
         ladder_step: The recovery-ladder step that produced it; ``None`` outside the ladder.
+        accepted_bool: Whether the ladder step's trajectory file holds this geometry (so the
+            optimizer took it); ``None`` when not judged, and then left out of the serialised form.
     """
 
     coordinates_angstrom: list[list[FiniteFloat]]
     energy_hartree: FiniteFloat
     max_gradient_hartree_per_bohr: NonNegativeFiniteFloat
     ladder_step: str | None
+    accepted_bool: bool | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent_acceptance(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        # An unjudged frame must serialise exactly as before the field existed.
+        data: dict[str, Any] = handler(self)
+        if self.accepted_bool is None:
+            data.pop("accepted_bool", None)
+        return data
 
 
 class OptimizationResult(CoreModel):

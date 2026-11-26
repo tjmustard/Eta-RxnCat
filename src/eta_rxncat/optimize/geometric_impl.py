@@ -5,22 +5,34 @@ functions. ``geometric.optimize.run_optimizer`` is never called: it runs
 ``logging.config.fileConfig``, which closes the host's handlers (R2). Its minimal path is
 replicated instead: ``OptParams``, a ``Molecule``, the coordinate system built from
 ``geometric.internal`` (``CoordSysDict`` is a local of ``run_optimizer``, R44), and
-``Optimizer(...).optimizeGeometry()``. Every call runs in a fresh temporary directory with the
+``Optimizer(...).optimizeGeometry()``. Every step runs in a fresh temporary directory with the
 ``geometric`` logger redirected into it and numpy's global RNG seeded (both restored after); the
-working directory and the root logger are never touched.
+root logger is never touched. geomeTRIC writes scratch files into the working directory, so
+``minimize`` also runs each step in a temporary working directory and restores the caller's
+(v0.7.0, R8).
+
+Every engine evaluation is captured as an ``OptimizationFrame`` (v0.7.0): the result carries them,
+and ``capture_frames`` gives them to a caller whose run raises.
 """
 
 import importlib.metadata
 import logging
 import math
+import os
 import tempfile
+import threading
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, ClassVar
 
-from eta_rxncat.core import MolecularState, OptimizationResult, OptimizerIdentity
+from eta_rxncat.core import (
+    MolecularState,
+    OptimizationFrame,
+    OptimizationResult,
+    OptimizerIdentity,
+)
 from eta_rxncat.core.models import ScalarValue
 from eta_rxncat.engines import BOHR_ANGSTROM, Engine, OptionSpec
 from eta_rxncat.optimize.base import (
@@ -28,6 +40,7 @@ from eta_rxncat.optimize.base import (
     Optimizer,
     check_constraints,
     constraints_text,
+    frame_sink,
 )
 from eta_rxncat.optimize.errors import (
     OptimizationFailedError,
@@ -64,6 +77,16 @@ made the T1 planar run hang in 2 of 4 hash seeds, while the default reaches |phi
 
 GEOMETRIC_RNG_SEED = 0
 """Seed of numpy's global RNG for the duration of each geomeTRIC run (state restored after)."""
+
+ACCEPTED_MATCH_TOL_ANGSTROM = 1e-6
+"""Largest coordinate difference at which a trajectory-file frame is an evaluated one (R33).
+
+Measured (M11): matching frames differ by at most 5.0e-11 Angstrom, the nearest other evaluation
+by at least 5.3e-4 Angstrom.
+"""
+
+_CWD_LOCK = threading.Lock()
+"""The working directory is process-wide, so only one run may change it at a time."""
 
 UNAVAILABLE = (
     "geomeTRIC is not installed: the geometric optimizer needs the opt-geometric extra "
@@ -136,15 +159,94 @@ def _sandbox() -> Iterator[Path]:
             handler.close()
 
 
+@contextmanager
+def _scratch_cwd() -> Iterator[None]:
+    """Run the block in a temporary working directory under ``$TMPDIR``; restore the old one."""
+    with _CWD_LOCK:
+        previous = os.getcwd()
+        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
+            try:
+                os.chdir(tmp)
+                yield
+            finally:
+                # Twice, so an asynchronous deadline signal landing in the first call cannot
+                # leave the process in the directory that is about to be removed.
+                try:
+                    os.chdir(previous)
+                finally:
+                    os.chdir(previous)
+
+
+def _read_xyz_frames(path: Path, n_atoms: int) -> list[Any]:
+    """Return each frame of a multi-frame XYZ file as an N x 3 array.
+
+    Raises:
+        OSError: The file cannot be read.
+        ValueError: It is not a multi-frame XYZ file of ``n_atoms`` atoms.
+    """
+    import numpy as np
+
+    lines = path.read_text(encoding="utf-8").rstrip().splitlines()
+    frames: list[Any] = []
+    start = 0
+    while start < len(lines):
+        rows = lines[start + 2 : start + 2 + n_atoms]
+        if int(lines[start]) != n_atoms or len(rows) != n_atoms:
+            raise ValueError(f"frame at line {start + 1} does not hold {n_atoms} atoms")
+        xyz = np.asarray([[float(v) for v in row.split()[1:4]] for row in rows], dtype=np.float64)
+        if xyz.shape != (n_atoms, 3):
+            raise ValueError(f"frame at line {start + 1} is not {n_atoms} x 3")
+        frames.append(xyz)
+        start += n_atoms + 2
+    return frames
+
+
+def _mark_accepted(frames: list[OptimizationFrame], first: int, path: Path) -> None:
+    """Set ``accepted_bool`` on ``frames[first:]`` from one ladder step's trajectory file.
+
+    Each frame of the file matches the first later unmatched evaluated frame within
+    ``ACCEPTED_MATCH_TOL_ANGSTROM``; matched frames become ``True``, the step's others ``False``.
+    A missing or unreadable file, or a file frame without a match, leaves every frame ``None``.
+    Never raises: the marking is a label and must not change a run's outcome.
+    """
+    try:
+        import numpy as np
+
+        evaluated = [np.asarray(f.coordinates_angstrom, dtype=np.float64) for f in frames[first:]]
+        if not evaluated:
+            return
+        written = _read_xyz_frames(path, len(evaluated[0]))
+        if not written:
+            return
+        matched: set[int] = set()
+        k = 0
+        for xyz in written:
+            while k < len(evaluated) and not (
+                np.max(np.abs(evaluated[k] - xyz)) <= ACCEPTED_MATCH_TOL_ANGSTROM
+            ):
+                k += 1
+            if k == len(evaluated):
+                return
+            matched.add(k)
+            k += 1
+        for i in range(len(evaluated)):
+            frames[first + i] = frames[first + i].model_copy(update={"accepted_bool": i in matched})
+    except Exception:
+        logging.getLogger(__name__).debug("accepted frames not marked", exc_info=True)
+
+
 @dataclass
 class _Tally:
-    """Engine calls made and the last energy seen, across every ladder step of one run."""
+    """Engine calls, last energy and frames, across every ladder step of one run."""
 
     calls: int = 0
     last_energy: float | None = None
+    frames: list[OptimizationFrame] = field(default_factory=list)
 
 
-def _bridge(molecule: Any, state: MolecularState, engine: Engine, tally: _Tally) -> Any:
+def _bridge(
+    molecule: Any, state: MolecularState, engine: Engine, tally: _Tally, ladder_step: str
+) -> Any:
     """Return a ``geometric.engine.Engine`` that evaluates ``engine`` (Bohr in; Eh, Eh/Bohr out)."""
     from geometric.engine import Engine as GeometricEngine
 
@@ -163,6 +265,14 @@ def _bridge(molecule: Any, state: MolecularState, engine: Engine, tally: _Tally)
             result = engine.evaluate(current, forces=True)
             forces = np.asarray(result.forces_hartree_per_bohr, dtype=np.float64)
             tally.last_energy = result.energy_hartree
+            # Built whole, then appended once: an asynchronous deadline cannot leave half a frame.
+            frame = OptimizationFrame(
+                coordinates_angstrom=current.coordinates,
+                energy_hartree=result.energy_hartree,
+                max_gradient_hartree_per_bohr=float(np.max(np.abs(forces))),
+                ladder_step=ladder_step,
+            )
+            tally.frames.append(frame)
             return {"energy": result.energy_hartree, "gradient": -forces.ravel()}
 
     return Bridge(molecule)
@@ -264,13 +374,16 @@ class GeometricOptimizer(Optimizer):
         retry: tuple[type[BaseException], ...] = tuple(getattr(errors, n) for n in _RETRY_ERRORS)
 
         tried: list[str] = []
-        tally = _Tally()
+        sink = frame_sink()
+        tally = _Tally() if sink is None else _Tally(frames=sink)
+        first_frame = len(tally.frames)
         for name, step_options in self.ladder(resolved, constrained):
             tried.append(name)
             try:
-                coords, energy, n_steps = self._run(
-                    state, engine, step_options, geometric_text, tally
-                )
+                with _scratch_cwd():
+                    coords, energy, n_steps = self._run(
+                        state, engine, step_options, geometric_text, tally, name
+                    )
             except retry:
                 continue
             final = state.model_copy(update={"coordinates": coords})
@@ -295,6 +408,7 @@ class GeometricOptimizer(Optimizer):
                 recovery_steps=tried,
                 optimizer=self.identity,
                 options=recorded,
+                frames=tally.frames[first_frame:],
             )
         raise OptimizationFailedError(
             "geomeTRIC did not converge on any recovery step",
@@ -325,6 +439,7 @@ class GeometricOptimizer(Optimizer):
         options: Mapping[str, ScalarValue],
         constraint_text: str,
         tally: _Tally,
+        ladder_step: str,
     ) -> tuple[list[list[float]], float, int]:
         """Run one geomeTRIC optimization; return (coords in Angstrom, energy, steps)."""
         import numpy as np
@@ -367,7 +482,7 @@ class GeometricOptimizer(Optimizer):
                 constraints=cons,
                 cvals=cvals[0] if cvals is not None else None,
             )
-            bridge = _bridge(molecule, state, engine, tally)
+            bridge = _bridge(molecule, state, engine, tally, ladder_step)
             start = np.asarray(state.coordinates, dtype=np.float64).ravel() / BOHR_ANGSTROM
             loop = GeometricLoop(start, molecule, ic, bridge, str(tmp / "work"), params)
             # geomeTRIC draws from numpy's global RNG (step.py trust_step oscillation breaker;
@@ -375,10 +490,13 @@ class GeometricOptimizer(Optimizer):
             # different structures (slice 04). Seed it for the run; restore the host's state.
             rng_state = np.random.get_state()
             np.random.seed(GEOMETRIC_RNG_SEED)
+            first_frame = len(tally.frames)
             try:
                 progress = loop.optimizeGeometry()
             finally:
                 np.random.set_state(rng_state)
+                # Here, so a failed step's frames are marked before its directory is removed.
+                _mark_accepted(tally.frames, first_frame, tmp / "optim.xyz")
         coords = np.asarray(progress.xyzs[-1], dtype=np.float64).tolist()
         energy = float(progress.qm_energies[-1])
         return coords, energy, len(progress.xyzs) - 1

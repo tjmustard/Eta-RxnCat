@@ -10,7 +10,7 @@ intent: "Store every optimization's path: P-RFO steps gain their geometry and ge
 depends_on: [OPR.0.7.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: blocked
+hacf_status: executing
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/species.py, src/eta_rxncat/orchestrator/ts.py, "tests/unit/orchestrator/**", src/eta_rxncat/core/optimization_models.py, tests/unit/core/test_frame_fields.py, spec/compiled/architecture.yml]
@@ -162,15 +162,15 @@ prfo.py's call order, held by the exactness check and the source-identity pin (r
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] M11 proof table and decision (measured; R33).
-- [ ] `OptimizationFrame.accepted_bool` (core) and its test.
-- [ ] P-RFO recorder in ts.py; bridge frames on the tally; accepted marking; frame sink; failure
+- [x] Index.
+- [x] M11 proof table and decision (measured; R33).
+- [x] `OptimizationFrame.accepted_bool` (core) and its test.
+- [x] P-RFO recorder in ts.py; bridge frames on the tally; accepted marking; frame sink; failure
       payloads; payload writers.
-- [ ] `_scratch_cwd` in `GeometricOptimizer`.
-- [ ] Tests (`tests/unit/optimize/test_frames.py`, `test_scratch_cwd.py`,
+- [x] `_scratch_cwd` in `GeometricOptimizer`.
+- [x] Tests (`tests/unit/optimize/test_frames.py`, `test_scratch_cwd.py`,
       `tests/unit/orchestrator/test_prerelax_frames.py`, key-equality test).
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
