@@ -10,7 +10,7 @@ intent: "Enumerate multi-site plans as a deterministic Cartesian product, refusi
 depends_on: [OPR.0.7.0.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_enumerator
 parent: null
 hacf_touches: [src/eta_rxncat/mapping/enumerator.py, "tests/unit/mapping/test_enumerator*.py", spec/compiled/architecture.yml]
@@ -121,10 +121,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Product, cap, per-template remap in `mapping/enumerator.py`; remove the slice-03 single-site guard.
-- [ ] Tests `tests/unit/mapping/test_enumerator_multisite.py`.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] Product, cap, per-template remap in `mapping/enumerator.py`; remove the slice-03 single-site guard.
+- [x] Tests `tests/unit/mapping/test_enumerator_multisite.py`.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -133,8 +133,8 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] `uv run pytest tests/unit/mapping -q` passes (requirements 1-9).
-- [ ] Required checks exit 0.
+- [x] `uv run pytest tests/unit/mapping -q` passes (requirements 1-9).
+- [x] Required checks exit 0.
 
 ## Source material
 
