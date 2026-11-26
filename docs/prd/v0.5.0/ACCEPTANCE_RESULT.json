@@ -875,7 +875,7 @@
               "within_bound_bool": true
             },
             "failed_reason": null,
-            "gated_on": "convergence, mode count",
+            "gated_on": "convergence, mode count, identity core (forming overlap, in phase, KE)",
             "hessian_method": "finite_difference",
             "literature_dG_dagger_1M_kcal_mol": 22.569,
             "literature_dG_dagger_1atm_kcal_mol": 24.463,
@@ -1179,7 +1179,7 @@
               "within_bound_bool": true
             },
             "failed_reason": null,
-            "gated_on": "convergence, mode count",
+            "gated_on": "convergence, mode count, identity core (forming overlap, in phase, KE)",
             "hessian_method": "finite_difference",
             "literature_dG_dagger_1M_kcal_mol": 17.742,
             "literature_dG_dagger_1atm_kcal_mol": 19.637,
@@ -1483,7 +1483,7 @@
               "within_bound_bool": true
             },
             "failed_reason": null,
-            "gated_on": "convergence, mode count",
+            "gated_on": "convergence, mode count, identity core (forming overlap, in phase, KE)",
             "hessian_method": "finite_difference",
             "literature_dG_dagger_1M_kcal_mol": 25.899,
             "literature_dG_dagger_1atm_kcal_mol": 27.793,
@@ -1787,7 +1787,7 @@
               "within_bound_bool": true
             },
             "failed_reason": null,
-            "gated_on": "convergence, mode count",
+            "gated_on": "convergence, mode count, identity core (forming overlap, in phase, KE)",
             "hessian_method": "finite_difference",
             "literature_dG_dagger_1M_kcal_mol": 16.983,
             "literature_dG_dagger_1atm_kcal_mol": 18.877,
@@ -2166,7 +2166,7 @@
             "connectivity_equal_bool": null,
             "energy_source": null,
             "failed_reason": "ts_search_failed:max_steps",
-            "gated_on": "convergence, mode count",
+            "gated_on": "none (report-only, R32)",
             "literature_dG_dagger_1M_kcal_mol": 7.697,
             "literature_dG_dagger_1atm_kcal_mol": 9.591,
             "literature_source": "Liu, Paton, Kim, Liang, Houk, J. Am. Chem. Soc. 2013, 135, 15642, DOI 10.1021/ja408437u, SI; M06-2X/6-31G(d)"
@@ -2531,7 +2531,8 @@
   "reported_notes": {
     "geometric_hessian_units": "the cross-check seeds geometric-optimize with eta's Cartesian Hessian in Eh/Bohr^2; --help gives the file format but no units, so the units are an assumption (slice 11)",
     "geometric_licence": "geomeTRIC 1.1.1 is 'BSD 3-clause Non-AI'; the licence question is open with TJ; it runs only as a CLI subprocess in .venv-accept-uma, nothing in src/ imports it (slice 11)",
-    "gfn2_ts3a_cross_check": "on GFN2 TS3a geomeTRIC converged to a soft saddle that is not the reaction's (about -37 cm^-1, forming overlap 0.0), while eta's GFN2 TS3a passes the identity core; reported, not gated (slice 11 audit)"
+    "gfn2_ts3a_cross_check": "on GFN2 TS3a geomeTRIC converged to a soft saddle that is not the reaction's (about -37 cm^-1, forming overlap 0.0), while eta's GFN2 TS3a passes the identity core; reported, not gated (slice 11 audit)",
+    "gated_on_r32_text": "text-only correction made during v0.7.0, cited to TJ (advisor row 1b51c1b3, 2026-11-26): the xtb gated_on of n4, ts1a_n, ts1b_n and ts3a now names the R32 identity core as gated; the xtb ts4a entry is report-only and gates nothing. No value, verdict or gate state changed."
   },
   "reproducibility": {
     "uma": {

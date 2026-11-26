@@ -4,6 +4,9 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+- v0.5.0 `ACCEPTANCE_RESULT.json` text only: the xtb `gated_on` of n4, ts1a_n, ts1b_n and ts3a now names the R32 identity core, and TS4a reads report-only (TJ advisor row 1b51c1b3, 2026-11-26). No value, verdict or hash changed.
+
 ## [0.6.0] - 2026-11-26
 
 ### Added
