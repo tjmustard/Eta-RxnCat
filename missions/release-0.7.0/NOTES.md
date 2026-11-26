@@ -17,6 +17,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.2) Optional frame fields are omitted from serialised bytes by a wrap model_serializer (not exclude_if, which needs pydantic>=2.12; pyproject allows >=2). anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.3) ensure-node --from-spec skips touches owned by another node (core files, ledger) and the test glob, so it was a no-op here; the enumerator node already held both entries from slice 01. anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.4) A later-site map is in template indices and cannot name atoms an earlier graft appended; the enumerator keeps them after the remapped keep. A selectivity-set entry-multiset miss is reachable on its own only with a composition-preserving entry, because the composition checks run first. anchors: none
+- 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.6) M11: geomeTRIC calls Bridge.calc_new also for tight-trust (hessian=first) displacements: 148 evaluations vs 4 xyzout frames on 24 atoms; the PRFO identity hashes prfo.py, so any edit there changes ts_opt keys. anchors: none
 
 ## Lore capture
 

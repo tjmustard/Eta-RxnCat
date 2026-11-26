@@ -65,7 +65,8 @@ A small E2E on the Tier 4 TSs with v0.6.0's alkyl series proves the mechanics.
 
 **OPEN TJ questions: none.** One conditional row: if M11 (slice 06) finds the frames cannot be
 labelled well enough for TJ's audit, the builder stops and the lead files a TJ row before slice 06
-merges.
+merges. M11 is measured and the frames are labelled per frame (`accepted_bool`, R33), so
+this row is not owed.
 
 ## 1. Introduction & Goals
 
@@ -135,7 +136,7 @@ scheduler and network view build on these contracts; TJ's planned v1.0 API freez
   - The graph is acyclic.
   - The union of owned files is preserved.
 - **G10 Frames stored.**
-  - P-RFO `TSStep` gains geometry.
+  - P-RFO `TSStep` gains geometry, filled in `orchestrator/ts.py`; `prfo.py` is not edited (R33).
   - geomeTRIC runs gain bridge frames in success **and** failure payloads.
   - The key is unchanged; frames are payload-only (R13).
   - geomeTRIC runs in a per-run temp cwd (R8).
@@ -240,7 +241,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 
 - **M10 (slice 08):** dry-export bundle size against 25 MB.
 - **M11 (slice 06, first task):** bridge frames vs geomeTRIC's `xyzout` output on one GFN2
-  pre-relax.
+  pre-relax. Measured: every `xyzout` frame matches a bridge frame; outcome `accepted_bool` (R33).
 - **M12 (slices 09 and 13):** browser smoke on stubs, then on the real bundle with known answers.
 - **M13 (slice 05, first task):** wall vs per-thread-normalised CPU per guarded pre-relax, idle and
   beside a loaded host.
@@ -324,7 +325,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 | R10 | P3 charge rule | Q5 A | accept | `product_charge = template.total_charge + Σ charge_delta`. Multiplicity: declared, else inherited; two different declared values → `multiplicity_conflict`. Parity by electron count before the graft → `parity`. The charge sum is reported, never used. |
 | R11 | Engine-work bound | F11 | accept | `EnumerationResult.projected_ts_searches` = Σ over `ok` candidates × selectivity-set TS nodes × eligible templates × (1 + `max_research`), an upper bound. The E2E gates N = 2. A ceiling waits for v0.8.0. |
 | R12 | Run-data contract | F21, P11 | accept, amended | Strict writer model (`schema_version: Literal[1]`, `extra="forbid"`) and lenient reader (`extra="ignore"`, `schema_version: int`, refuses > 1). A **new enum value is a version bump**. The committed `src/eta_rxncat/review/schema/run_data.v1.schema.json` equals `model_json_schema()`, with a drift test whose message names the pydantic major. Ids are deterministic strings, referenced by id. Content as in the draft P11. Missing rows export `{"status": "missing", "stage_key": …}`; the exporter runs no engine. |
-| R13 | Frames and stores | F16, F20, ADR-0016 | accept | Frames are payload-only, additive, optional. Stage keys are byte-equal to v0.6.0's. **Stores are forward-only** (a v0.6.0 reader refuses v0.7.0 rows; stated). The bridge appends `OptimizationFrame` after `engine.evaluate` returns, on the per-run tally, inside `try/finally`, so failure payloads (timeout, `CoreDisplacementError`, `OptimizationFailedError`) keep their frames. `ladder_step` comes from the caller. |
+| R13 | Frames and stores | F16, F20, ADR-0016 | accept | Frames are payload-only, additive, optional. Stage keys are byte-equal to v0.6.0's. **Stores are forward-only** (a v0.6.0 reader refuses v0.7.0 rows; stated). The bridge appends `OptimizationFrame` after `engine.evaluate` returns, on the per-run tally, inside `try/finally`, so failure payloads keep their frames: every failure row written around a geomeTRIC run (timeout, `CoreDisplacementError`, `OptimizationFailedError`, `scf_convergence`, `engine_error`), through a `ContextVar` frame sink in `optimize/base.py` read in the caller's `finally` (R33). `ladder_step` comes from the caller. |
 | R14 | Serialisation and HTML safety | F14 | accept (lead guidance) | One `canonical_run_data_json(run_data) -> bytes` (sorted keys, fixed float format `repr` of the rounded value, `< > &    ` escaped) writes BOTH `run_data.json` and the embedded `<script type="application/json" id="run-data">`, byte-equal. Data values are never HTML-escaped. JS writes text with `textContent`/`setAttribute` only. A Python scan of `eta-view.js` forbids `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`, `eval(`, `Function(`, string-argument `setTimeout`/`setInterval`. CSP meta: `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'`, plus only what M12 shows 3Dmol needs, recorded. Hostile strings (`</script><img src=x onerror=…>`, `<!--`, U+2028) in a species label, an entry id and a provenance string are a byte-level unit test and an M12 known-answer item. |
 | R15 | Host data | F15 | accept | `RunData` carries reason **codes** and allow-listed fields, never a `message`. Slice 13 gates a scan of the **real** bundle for absolute paths, `$HOME`, the username and the hostname. |
 | R16 | Components | P17 | accept | `assets/eta-view.js` (MIT, ES2017, classic script, no build) exposes `EtaView` with `moleculeViewer`, `modeAnimator`, `trajectoryPlayer`, `energyPlot` (SVG) and `candidateTable`. Each is `(element, runData, id) -> {update, destroy}`, reads only `RunData` and keeps no global state. |
@@ -344,6 +345,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 | R30 | Replan 2: slice 03 halted before code on a record-field contradiction (builder halt report `qitem-20261126030623-2ded8910`) | R10, Q5 A | resolved (lead rulings A-D) | **A.** `GraftRecord` gains `whole_input_charge_sum_holds_bool: bool \| None = None` (additive, reported, never used); slice 03 touches `core/enumeration_models.py` and its unit test; the core ledger description (1973/2000) is not changed. **1.** `multiplicity_conflict` is unreachable with one site: a private helper over the declared values, tested directly; public reach in slice 04. **2.** `site_atom_deleted` is emitted from slice 04; no slice-03 test. **3.** "Templates no site lists are copied unchanged" means templates of uncovered nodes; an unlisted template of a covered node is dropped (equal-composition rule), with no record or reason, and named on the `ok` candidate's `detail` as `dropped_unlisted:<node>/<template>,…`; no new refusal reason. **4.** `max_research` is a keyword on `enumerate_candidates` and `projected_ts_searches` (default `TSEnsembleOptions().max_research`); a TS node in several selectivity sets counts once. **5.** `max_candidates` is enforced from slice 04. **7.** `AlignmentError` and a wrong-length fragment order → `graft_input`; every order raising → the first listed order's reason. **D.** Frozen atoms: on a covered node, every stage's `frozen_atom_indices` (node `stages`, else the graph's `default_stages`, then written to the node) is remapped per eligible template through `index_map`; a frozen index in `template.delete` (no image) refuses that graft `graft_input` before `graft` (graft's own rule for deleted active/core atoms); eligible templates with different images → `inconsistent`, `frozen_index_mismatch:<node>`; uncovered nodes and `default_stages` unchanged. HACF-Replan-Of: OPR.0.7.0.3. |
 | R31 | Replan 3: slice 04 is silent on `frozen_atom_indices` (resolve's R30 note) | R30.D | resolved (lead rulings 1-3) | **1.** Frozen atoms compose through every site's graft per template, in site order, as later-site atoms do: before site k's graft on T a frozen index must be in site k's remapped `keep`, else that (node, T) is refused `graft_input` before `graft` (R30.D at every site; `site_atom_deleted` decided first); after it each index is remapped through that graft's own `index_map`; differing composed images across eligible templates → `inconsistent`, `frozen_index_mismatch:<node>`. No new reason or status; no contract change. **2.** Slice 03's audit carry-forward (reading 2): the full-entry-multiset branch of the cross-node invariant gets its code and test in slice 04. **3.** The enumerator ledger description (1989/2000) stays <= 2000 after slice 04, by `--description-file` / `apply-review`. **4.** Full entry multiset = the union reading: each set's TS/pathway entry multiset equals the union of its covered reactant nodes' entries; split reactants pass. **5.** After site k refuses (node, T), later sites skip it and record nothing; a template is eligible only if every site covering its node lists it, else dropped and named in `dropped_unlisted:<node>/<template>` (sorted, unique). No new reason or status. HACF-Replan-Of: OPR.0.7.0.4. |
 | R32 | Replan 4: multi-site forming-bond seeding (slice 04 audit, observed item (b)) | R2 | resolved (lead ruling) | A later site can delete an earlier site's forming-bond or core atom: each `GraftRecord` checks only its own `forming_bonds`/`constrained_core`, and its `mapped_forming_bonds`/`constrained_core_product_indices` are in that graft's product space, so R2's "both atoms kept" held per graft, not for the final product. **Slice 05 owns it; slice 04's code and core are not reopened (core 1973/2000).** `enumerated_pathway_inputs` takes the node's `ok` records for the reference template (`template_id` minus `__<candidate_id>`) in `candidate.records` order (site order), maps each record's two lists into the final product through every later record with the public `map_template_indices`, and refuses with `FallbackInputError` `multi_site_seed_atom_deleted` (node, template, both site ids, the index) when one raises `EnumerationError`. One record: its lists verbatim (today's seed and stage keys, pinned). Several: forming bonds concatenated in site order, unordered duplicates dropped; core = sorted union. `run_ts_with_fallback` derives every eligible template's inputs before its first engine call, so the refusal costs 0 engine calls and is not on the R4 allow-list. The single-site E2E (slices 11-12) is unaffected. HACF-Replan-Of: OPR.0.7.0.5. |
+| R33 | Replan 5: slice 06 halted before code (builder halt report `qitem-20261126043922-a61f5c38`): P-RFO step geometry vs the ts_opt key; M11 needs a missing field | G10, R13, M11 | resolved (lead rulings 1-4) | **1. Option B.** `prfo.py` is not edited: its sha256 is `opt.version` (`src-897c4e19cb4e738a`) in the ts_opt key, recorded in 14 promoted fixtures under `tests/fixtures/v0.5.0`/`v0.6.0` (no ACCEPTANCE_RESULT.json records it), so A would change TJ's promoted data. A recording engine in `orchestrator/ts.py` around the `CountingEngine` fills `TSStep.coordinates_angstrom`: in prfo.py at 897c4e19 the only `hessian=False` evaluation is the trial point, once per iteration, appended as `history[k]` with no engine call between, so the k-th `hessian=False` call is step k. Checked exactly (count, energy, max gradient) after the search, else a private code-fault error; `_source_identity().version` is pinned by a test. **2.** `OptimizationFrame.accepted_bool: bool \| None = None` (additive, omitted when None); slice 06 touches `core/optimization_models.py` and `tests/unit/core/test_frame_fields.py`; core ledger description (1973/2000) not changed. Each step's `optim.xyz` frames match bridge frames at <= 1e-6 Å max |Δ| (M11: 5.0e-11 matched, >= 5.3e-4 neighbours) → True, others False ("other engine evaluations (trial points, Hessian displacements)"), unreadable or unmatched → None. **3.** M11's second (forced-ladder) GFN2 command is part of M11; its table is the measured outcome. **4.** Frame sink per R13; ts_opt failure rows carry the recorder's frames too. HACF-Replan-Of: OPR.0.7.0.6. |
 
 ### PROPOSED lore (this mission; TJ approves with `/hyper-lore-approve`)
 
@@ -374,6 +376,9 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 - Replan 4 (R32): slice 05 composes every covering site's forming bonds and core into the final
   product with `map_template_indices` and refuses `multi_site_seed_atom_deleted`; R2's "both atoms
   kept" now holds for the multi-site seed.
+- Replan 5 (R33): slice 06 fills P-RFO step geometry outside `prfo.py` (keys unchanged), adds
+  `OptimizationFrame.accepted_bool` in core, records M11 as measured, and keeps frames on every
+  failure row through a frame sink.
 
 ### Graph split (slice 01; after the base only; never hand-edit `architecture.yml`)
 
@@ -450,7 +455,8 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
     reason, wall_time_s)` and `FallbackRecord(node_id, attempts, chosen_template_id, stop_reason)`.
 - **Frame fields:**
   - `OptimizationFrame(coordinates_angstrom, energy_hartree, max_gradient_hartree_per_bohr,
-    ladder_step)`;
+    ladder_step, accepted_bool: bool | None = None)` (`accepted_bool` added in slice 06 by R33;
+    omitted when `None`);
   - `OptimizationResult.frames: list[OptimizationFrame] | None = None`;
   - `TSStep.coordinates_angstrom: list[list[float]] | None = None`.
 - **`_EXCLUSION_REASON`** gains `orientation_mismatch` (additive).
@@ -618,8 +624,8 @@ filled (it is: see §2), and slices 11–13 run engines only under the heavy-run
 - **G8:** both constructs pick rank 2 with rank 1's reason (`alignment_rmsd`;
   `seed:face_mismatch_pathway`); zero `engine_error`; GFN2 gated.
 - **G9:** new nodes; union preserved; ≤ 1800; acyclic; updater once.
-- **G10:** frames on new rows (P-RFO count = `TSStep`s; geomeTRIC count as M11 measured); failure
-  payloads keep frames; keys equal to v0.6.0's; old rows load; cwd clean.
+- **G10:** frames on new rows (P-RFO count = `TSStep`s, `prfo.py` unedited; geomeTRIC count as M11
+  measured, `accepted_bool` per frame); every failure payload keeps frames; keys equal to v0.6.0's; old rows load; cwd clean.
 - **G11–G12:**
   - Schema drift test; lenient reader loads an unknown key; strict writer refuses it; version 2
     refused.
