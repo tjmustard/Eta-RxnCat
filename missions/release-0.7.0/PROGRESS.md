@@ -30,5 +30,5 @@
 | OPR.0.7.0.15 | 15-seed-geometry-checks | audited | OPR.0.7.0.13 | 2026-11-26T16:10:26+00:00 audited |
 | OPR.0.7.0.16 | 16-review-dispositions | audited | OPR.0.7.0.15 | 2026-11-26T18:46:29+00:00 audited |
 | OPR.0.7.0.17 | 17-rerun-units | audited | OPR.0.7.0.16 | 2026-11-26T20:46:21+00:00 audited |
-| OPR.0.7.0.18 | 18-rereview-bundle | executing | OPR.0.7.0.17 | 2026-11-26T21:14:33+00:00 executing |
+| OPR.0.7.0.18 | 18-rereview-bundle | executed | OPR.0.7.0.17 | 2026-11-26T23:16:39+00:00 executed |
 <!-- END HACF GENERATED: slice-table -->

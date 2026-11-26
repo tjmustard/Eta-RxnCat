@@ -10,7 +10,7 @@ intent: "Bundle the rerun records with the fixed site through slice 13's harness
 depends_on: [OPR.0.7.0.17]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.7.0/**", docs/prd/v0.7.0/ACCEPTANCE_RESULT.json, spec/compiled/architecture.yml]
@@ -135,10 +135,10 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index; retarget the harness sources and roots (one named root); update the helper tests.
-- [ ] Host check; build in scratch; run the R34 gates and the G15 gates; copy to candidates; M12.
-- [ ] Record writer: re-derive the record, with the `replan_7` block.
-- [ ] Code commit; candidate-only commit (the bundle); record and progress commit; updater once.
+- [x] Index; retarget the harness sources and roots (one named root); update the helper tests.
+- [x] Host check; build in scratch; run the R34 gates and the G15 gates; copy to candidates; M12.
+- [x] Record writer: re-derive the record, with the `replan_7` block.
+- [x] Code commit; candidate-only commit (the bundle); record and progress commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
