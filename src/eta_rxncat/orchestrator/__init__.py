@@ -35,6 +35,7 @@ if TYPE_CHECKING:
     from eta_rxncat.orchestrator.species import (
         ENGINE_CLASSES,
         ConstrainedPoint,
+        FrequencyDisposition,
         Recipe,
         RunMetrics,
         SinglePoint,
@@ -66,6 +67,7 @@ _LAZY: dict[str, str] = {
     "BarrierEnergies": "barrier",
     "BarrierSpec": "barrier",
     "ConstrainedPoint": "species",
+    "FrequencyDisposition": "species",
     "CountingEngine": "counting",
     "ENGINE_CLASSES": "species",
     "ReactionEnergies": "reaction",
@@ -121,6 +123,7 @@ __all__ = [
     "BarrierEnergies",
     "BarrierSpec",
     "ConstrainedPoint",
+    "FrequencyDisposition",
     "CountingEngine",
     "ReactionEnergies",
     "ReactionSpec",

@@ -70,6 +70,7 @@ from eta_rxncat.review import export_run_data
 from eta_rxncat.review.run_data import (
     RecordCandidate,
     RecordEndpoint,
+    RecordFrequencyDisposition,
     RecordGate,
     RecordRun,
     RecordSample,
@@ -783,6 +784,15 @@ def unit_record(
                 species_id=species_id,
                 opt_keys=list(result.keys["geometry_opt"]),
                 frequency_keys=list(result.keys["frequency"]),
+                frequency_dispositions=[
+                    RecordFrequencyDisposition(
+                        frequency_key=d.frequency_key,
+                        kind=d.kind,
+                        reason=d.reason,
+                        superseded_by_key=d.superseded_by_key,
+                    )
+                    for d in result.frequency_dispositions
+                ],
             )
         )
     engine = build_engine(recipe.engine_stage, recipe.engine_runtime).identity
@@ -801,6 +811,7 @@ def unit_record(
         ),
         samples=unit.samples,
         endpoints=endpoints,
+        validation=ts_recipe(recipe).validation_options,
     )
     ref = RecordUnitRef(
         candidate_id=candidate.candidate_id, pathway=unit.pathway.pathway, engine=engine

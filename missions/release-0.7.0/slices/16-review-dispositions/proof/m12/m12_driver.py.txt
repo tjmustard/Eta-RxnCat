@@ -1,0 +1,392 @@
+"""M12 browser smoke (slice 09, extended in slice 16 for dispositions): drive a written bundle
+from file:// in Chrome and Firefox.
+
+Usage: python m12_driver.py <bundle_dir> <unsupported_bundle_dir> <evidence_dir>
+Throwaway Playwright; bypass_csp is never set, so the page's own policy applies.
+"""
+
+import json
+import math
+import sys
+from pathlib import Path
+
+from playwright.sync_api import sync_playwright
+
+BUNDLE = Path(sys.argv[1]).resolve()
+UNSUPPORTED = Path(sys.argv[2]).resolve()
+OUT = Path(sys.argv[3]).resolve()
+CONTROL = BUNDLE.parent / "control.html"
+HOSTILE = next(
+    s["label"] for s in json.loads((BUNDLE / "run_data.json").read_bytes())["species"]
+    if s["species_id"] == "ts_hostile"
+)
+assert "onerror=alert(1)" in HOSTILE
+
+# Records CSP violations and every readout / plot-marker change; reads only.
+INIT = """
+window.__csp = []; window.__steps = [];
+document.addEventListener("securitypolicyviolation", function (e) {
+  window.__csp.push(e.violatedDirective + " " + e.blockedURI + " " + e.sourceFile);
+});
+new MutationObserver(function () {
+  var r = document.querySelector(".eta-readout"), m = document.querySelector(".eta-current");
+  if (!r || !m) { return; }
+  var line = r.textContent.trim() + " || marker " + m.getAttribute("data-step");
+  if (window.__steps[window.__steps.length - 1] !== line) { window.__steps.push(line); }
+}).observe(document, { subtree: true, childList: true, characterData: true, attributes: true });
+"""
+
+# Mount a component in a scratch element, keeping hold of the 3Dmol viewer it creates.
+CAPTURE = """
+window.__mount = function (name, id) {
+  var runData = JSON.parse(document.getElementById("run-data").textContent);
+  var box = document.createElement("div");
+  document.body.appendChild(box);
+  var lib = window.$3Dmol, viewer = null;
+  window.$3Dmol = Object.create(lib, { createViewer: { value: function (a, b) {
+    viewer = lib.createViewer(a, b); return viewer; } } });
+  var handle = window.EtaView[name](box, runData, id);
+  window.$3Dmol = lib;
+  if (!viewer) { throw new Error("no viewer captured for " + name + " " + id); }
+  return { box: box, handle: handle, viewer: viewer };
+};
+window.__atoms = function (viewer) {
+  return viewer.getModel().selectedAtoms({}).map(function (a) { return [a.x, a.y, a.z]; });
+};
+"""
+
+
+class Check:
+    def __init__(self, log):
+        self.log = log
+        self.failed = 0
+
+    def __call__(self, name, ok, detail=""):
+        self.failed += not ok
+        self.log.append(f"{'PASS' if ok else 'FAIL'}  {name}" + (f"  [{detail}]" if detail else ""))
+
+
+def clean(text):
+    for real, name in ((BUNDLE, "<bundle>"), (UNSUPPORTED, "<unsupported>"), (CONTROL, "<control>")):
+        text = text.replace(real.as_uri(), name).replace(str(real), name)
+    return text.replace(str(BUNDLE.parent), "<scratch>").replace(str(Path.home()), "<home>")
+
+
+def watch(page, console, network, dialogs):
+    page.on("console", lambda m: console.append(f"console.{m.type}: {m.text} @ {m.location.get('url', '')}"))
+    page.on("pageerror", lambda e: console.append(f"pageerror: {e}"))
+    page.on("crash", lambda p: console.append("crash"))
+    page.on("request", lambda r: network.append(f"request {r.resource_type} {r.method} {r.url}"))
+    page.on("requestfailed", lambda r: network.append(f"requestfailed {r.url} {r.failure}"))
+    page.on("websocket", lambda w: network.append(f"websocket {w.url}"))
+    page.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
+
+
+def run(browser_name, browser):
+    shots = OUT / browser_name
+    shots.mkdir(parents=True, exist_ok=True)
+    results, console, network, dialogs = [], [], [], []
+    check = Check(results)
+    context = browser.new_context(viewport={"width": 1400, "height": 1000})
+    context.add_init_script(INIT)
+    page = context.new_page()
+    watch(page, console, network, dialogs)
+    page.goto((BUNDLE / "index.html").as_uri(), wait_until="load")
+    page.wait_for_timeout(2500)
+
+    def shot(name, locator=None):
+        path = shots / f"{name}.png"
+        if locator is None:
+            page.screenshot(path=str(path))
+        else:
+            return locator.screenshot(path=str(path))
+
+    check("opened from file://", page.url.startswith("file://"))
+    check("no load error", page.locator("#eta-load-error").count() == 0)
+    check("WebGL canvases present", page.locator(".eta-panels canvas").count() == 2,
+          f"{page.locator('.eta-panels canvas').count()} canvases")
+    page.screenshot(path=str(shots / "01-page-full.png"), full_page=True)
+    shot("02-index", page.locator("#eta-index"))
+
+    # Sorting.
+    first = lambda: page.locator(".eta-candidates tbody tr td:first-child").all_text_contents()
+    page.locator(".eta-candidates th button", has_text="Pathway").click()
+    up = page.locator(".eta-candidates tbody tr td:nth-child(3)").all_text_contents()
+    page.locator(".eta-candidates th button", has_text="Pathway").click()
+    down = page.locator(".eta-candidates tbody tr td:nth-child(3)").all_text_contents()
+    check("table sorts both ways", up == ["endo", "exo"] and down == ["exo", "endo"], f"{up} {down}")
+
+    # Index link -> candidate route.
+    page.locator(".eta-candidates a", has_text="r=ethyl").first.click()
+    page.wait_for_timeout(1500)
+    panel = page.locator('.eta-panels[data-candidate="r=ethyl"]')
+    check("index link routes to r=ethyl", "#c/r%3Dethyl" in page.url, page.url.split("#")[-1])
+    check("r=ethyl panels mounted", panel.locator("canvas").count() == 2)
+
+    # Mode: first option of the frequency chooser is the TS stretch.
+    options = panel.locator(".eta-left option").all_text_contents()
+    check("frequency options: 3 TS rows and 2 minima", len(options) == 5 and "TS C0-C1 stretch TS" in options[0], str(options))
+    groups = panel.locator(".eta-left optgroup").evaluate_all("g => g.map(x => [x.label, Array.from(x.children).map(o => o.textContent)])")
+    used, unused = (dict(groups).get(k, []) for k in ("Used in the result", "Not used (rejected, merged or superseded)"))
+    check("chooser: used group first, then not used", [g[0] for g in groups] == ["Used in the result", "Not used (rejected, merged or superseded)"], str([g[0] for g in groups]))
+    check("chooser: used rows are the member and the kept minimum", len(used) == 2 and "member (weight 1.000)" in used[0] and used[1].endswith("kept"), str(used))
+    check("chooser: not-used rows name their disposition",
+          len(unused) == 3 and "excluded: gate_failed:forming_overlap" in unused[0] and "merged into sample 0" in unused[1]
+          and "superseded by push \u2192 frequency:minimum" in unused[2], str(unused))
+    unrun = panel.locator(".eta-unrun li").all_text_contents()
+    check("seed_clash sample listed without frequencies", len(unrun) == 1 and "excluded: seed_clash H4\u2013H5 0.438" in unrun[0], str(unrun))
+    summary = page.locator('section[id="c/r=ethyl"] > div.used').inner_text()
+    below = page.locator('section[id="c/r=ethyl"] > div.notused').inner_text()
+    check("static: used group", "member (weight 1.000)" in summary and "excluded" not in summary and "superseded" not in summary)
+    check("static: not-used group names each",
+          all(t in below for t in ("excluded: gate_failed:forming_overlap", "merged into sample 0",
+              "Sample 3 (perturb:2, template t1): excluded: seed_clash H4\u2013H5 0.438", "superseded by push \u2192 frequency:minimum")))
+    check("static: used group is above not-used", page.evaluate("""() => {
+      var s = document.querySelector('section[id="c/r=ethyl"]');
+      return s.querySelector('div.used').getBoundingClientRect().top < s.querySelector('div.notused').getBoundingClientRect().top; }"""))
+    blocks = page.locator('section[id="c/r=ethyl"] h5').all_text_contents()
+    check("static: every block heading names its disposition", len(blocks) == 5 and all(" \u2014 " in b for b in blocks), str(blocks))
+    check("static: identity numbers on every TS block", (summary + below).count("Identity: imaginary frequency") == 3
+          and "forming-bond overlap 0.131" in below and "C0\u2013C1 3.662" in below and "FAIL (forming_distance_out_of_window, forming_overlap_below_threshold)" in below)
+    static_banners = page.locator('section[id="c/r=ethyl"] > div .banner').all_text_contents()
+    check("static: banners on the failed identity (count 1) and the superseded minimum only",
+          len(static_banners) == 2 and "identity check failed" in static_banners[0] and "Minimum has 1 imaginary" in static_banners[1], str(static_banners))
+    table_cell = page.locator(".eta-candidates tbody tr", has_text="endo").first.inner_text()
+    check("table: TS counts labelled, member first", "1 (member), 1 (excluded), 1 (merged)" in table_cell, table_cell.replace("\n", " ")[:300])
+    page.locator('section[id="c/r=ethyl"] > div.used').screenshot(path=str(shots / "15-static-used.png"))
+    page.locator('section[id="c/r=ethyl"] > div.notused').screenshot(path=str(shots / "16-static-not-used.png"))
+    select = panel.locator(".eta-left select")
+    select.select_option("frequency:rejected")
+    page.wait_for_timeout(400)
+    left = panel.locator(".eta-left").inner_text()
+    banner = panel.locator(".eta-left .banner").all_text_contents()
+    check("component: rejected TS shows disposition, identity and banner",
+          "Disposition: excluded: gate_failed:forming_overlap" in left and "forming-bond overlap 0.131" in left
+          and len(banner) == 1 and "Identity check failed" in banner[0] and "expected 1" not in banner[0], str(banner))
+    shot("17-rejected-ts", panel.locator(".eta-left"))
+    select.select_option("frequency:superseded")
+    page.wait_for_timeout(400)
+    left = panel.locator(".eta-left").inner_text()
+    banner = panel.locator(".eta-left .banner").all_text_contents()
+    check("component: superseded minimum keeps its count banner beside its label",
+          "Disposition: superseded by push" in left and len(banner) == 1 and "1 imaginary mode(s); expected 0." in banner[0], str(banner))
+    shot("18-superseded-minimum", panel.locator(".eta-left"))
+    select.select_option("frequency:stretch")
+    page.wait_for_timeout(400)
+    check("component: member shows its disposition and no banner",
+          "Disposition: member (weight 1.000)" in panel.locator(".eta-left").inner_text() and panel.locator(".eta-left .banner").count() == 0)
+    mode_box = panel.locator(".eta-left .eta-3d")
+    mode_box.scroll_into_view_if_needed()
+    images = []
+    for k in range(4):
+        images.append(shot(f"03-mode-phase-{k}", mode_box))
+        page.wait_for_timeout(290)
+    check("the mounted mode animates on screen", len(set(images)) > 1, f"{len(set(images))} distinct of 4")
+    shot("04-candidate-panels", page.locator('section[id="c/r=ethyl"]'))
+
+    # Known-answer motion, read back from 3Dmol's own atoms in every frame.
+    page.evaluate("() => {" + CAPTURE + "}")
+    motion = page.evaluate("""async () => {
+      var m = window.__mount("modeAnimator", "frequency:stretch");
+      m.viewer.stopAnimate();
+      var out = [];
+      for (var k = 0; k < m.viewer.getNumFrames(); k += 1) {
+        await m.viewer.setFrame(k);
+        out.push(window.__atoms(m.viewer));
+      }
+      m.handle.destroy(); m.box.remove();
+      return out;
+    }""")
+    run_data = json.loads((BUNDLE / "run_data.json").read_bytes())
+    x0 = next(f for f in run_data["frequencies"] if f["frequency_id"] == "frequency:stretch")["coordinates_angstrom"]
+    check("20 mode frames", len(motion) == 20, str(len(motion)))
+    d = [[[f[i][a] - x0[i][a] for a in range(3)] for i in range(6)] for f in motion]
+    peak = [max(math.hypot(*d[k][i]) for k in range(len(d))) for i in range(6)]
+    check("only atoms 0 and 1 move", all(p < 1e-5 for p in peak[2:]), f"peak displacement {[round(p, 6) for p in peak]} A")
+    check("largest displacement 0.4 A", abs(peak[0] - 0.4) < 1e-5 and abs(peak[1] - 0.4) < 1e-5)
+    check("opposite directions along the bond",
+          all(abs(f[0][0] + f[1][0]) < 2e-6 and all(abs(f[i][a]) < 2e-6 for i in (0, 1) for a in (1, 2)) for f in d)
+          and min(f[1][0] for f in d) < -0.39 and max(f[1][0] for f in d) > 0.39,
+          "C1 x per frame: " + " ".join(f"{f[1][0] + x0[1][0]:.3f}" for f in motion))
+
+    # Player: the three frames, in order, by Play; the plot marker follows.
+    player = panel.locator(".eta-player")
+    labels = panel.locator(".eta-right option").all_text_contents()
+    check("trajectory options", len(labels) == 2 and "ts_search t1:seed" in labels[0], str(labels))
+    player.scroll_into_view_if_needed()
+    page.evaluate("window.__steps = []")
+    shot("05-player-frame-1", panel.locator(".eta-right"))
+    player.get_by_role("button", name="Play").click()
+    page.wait_for_timeout(620)
+    shot("06-player-playing", panel.locator(".eta-right"))
+    page.wait_for_timeout(1200)
+    steps = page.evaluate("window.__steps")
+    seen = [s.split(" (")[0] for s in steps if s.startswith("frame")]
+    ordered = list(dict.fromkeys(seen))
+    check("Play shows frames 1, 2, 3 in order", ordered == ["frame 2 of 3", "frame 3 of 3"] or ordered == ["frame 1 of 3", "frame 2 of 3", "frame 3 of 3"], str(steps))
+    check("playback stops at the last frame", player.get_by_role("button", name="Play").count() == 1)
+    shot("07-player-frame-3", panel.locator(".eta-right"))
+    slider = player.locator("input[type=range]")
+    for k in (0, 1, 2):
+        slider.fill(str(k))
+        page.wait_for_timeout(300)
+        text = player.locator(".eta-readout").inner_text()
+        marker = panel.locator(".eta-current").get_attribute("data-step")
+        check(f"slider frame {k + 1} reads out and moves the marker",
+              f"frame {k + 1} of 3" in text and marker == str(k) and ("rejected" if k == 1 else "accepted") in text, text.strip())
+        shot(f"08-slider-frame-{k + 1}", panel.locator(".eta-right"))
+    panel.locator('.eta-point[data-step="1"]').click()
+    check("a plot point drives the player",
+          "frame 2 of 3" in player.locator(".eta-readout").inner_text() and slider.input_value() == "1")
+    check("player label and convergence", "t1:seed" in player.inner_text() and "converged" in player.inner_text())
+    coords = page.evaluate("""() => {
+      var m = window.__mount("moleculeViewer", "ts_search:three_frames");
+      var out = [window.__atoms(m.viewer)];
+      [1, 2].forEach(function (k) { m.handle.update(k); out.push(window.__atoms(m.viewer)); });
+      m.handle.destroy(); m.box.remove();
+      return out;
+    }""")
+    xs = [f[1][0] for f in coords]
+    check("viewer shows the known coordinates in order", all(abs(a - b) < 1e-6 for a, b in zip(xs, (1.4, 1.9, 2.4))), f"C1 x {xs}")
+    coords = page.evaluate("""() => {
+      var runData = window.EtaView.load();
+      var m = window.__mount("trajectoryPlayer", "ts_search:three_frames");
+      var out = [window.__atoms(m.viewer)[1][0]];
+      [1, 2].forEach(function (k) { m.handle.update(k); out.push(window.__atoms(m.viewer)[1][0]); });
+      m.handle.destroy(); m.box.remove();
+      return out;
+    }""")
+    check("player drives its viewer through the known coordinates", all(abs(a - b) < 1e-6 for a, b in zip(coords, (1.4, 1.9, 2.4))), f"C1 x {coords}")
+
+    text = page.evaluate("""() => {
+      var m = window.__mount("moleculeViewer", "frequency:merged");
+      var t = m.box.textContent; m.handle.destroy(); m.box.remove(); return t;
+    }""")
+    check("moleculeViewer names a frequency row's disposition", "Disposition: merged into sample 0" in text, text[:120])
+
+    # Decimated trajectory.
+    panel.locator(".eta-right select").select_option("endpoint_opt:decimated")
+    page.wait_for_timeout(500)
+    text = player.inner_text()
+    check("decimation stated", "decimated: every 2nd of 9" in text, "")
+    check("unrecorded acceptance stated", "acceptance not recorded" in text)
+    slider.fill("4")
+    check("last decimated frame is step 8", "frame 5 of 5 (step 8)" in player.locator(".eta-readout").inner_text())
+    shot("09-decimated", panel.locator(".eta-right"))
+    panel.locator(".eta-left select").select_option("frequency:minimum")
+    page.wait_for_timeout(500)
+    check("minimum: no imaginary mode, no banner", "No imaginary mode." in panel.locator(".eta-left").inner_text() and panel.locator(".banner").count() == 0)
+    shot("10-minimum", panel.locator(".eta-left"))
+
+    # Two imaginary modes and the hostile strings.
+    page.locator(".eta-candidates a", has_text="onerror").first.click()
+    page.wait_for_timeout(1500)
+    section = page.locator("section").nth(1)
+    other = section.locator(".eta-panels")
+    check("hostile candidate routes and mounts", other.locator("canvas").count() == 2, page.url.split("#")[-1])
+    check("previous panels destroyed", panel.locator("canvas").count() == 0 and page.locator("canvas").count() == 2)
+    banners = section.locator(".banner").all_text_contents()
+    check("banner in the static summary and the component", len(banners) == 2 and all("2 imaginary mode" in b for b in banners), str(banners))
+    check("two mode buttons", other.get_by_role("button", name="Mode 2").count() == 1)
+    other.get_by_role("button", name="Mode 2").click()
+    page.wait_for_timeout(400)
+    check("second mode selected", "Imaginary mode 2 of 2: -600.0" in other.inner_text())
+    shot("11-two-modes", section)
+    check("hostile label shown as text (species)", HOSTILE in other.locator(".eta-species").text_content())
+    check("hostile label shown as text (trajectory)", HOSTILE in other.locator(".eta-label").text_content())
+    check("hostile entry id shown as text (table)", any(f"r={HOSTILE}" in t for t in page.locator(".eta-candidates td").all_text_contents()))
+    check("hostile provenance shown as text", "<!--<img src=x onerror=alert(2)>" in page.locator("body > p").first.text_content())
+    check("no element made from a hostile string", page.evaluate("[document.images.length, document.scripts.length]") == [0, 3])
+    page.locator("body > h1").scroll_into_view_if_needed()
+    shot("12-hostile-top")
+
+    # Direct load of a hash route, switching, resizing, history.
+    for _ in range(3):
+        page.evaluate("location.hash = '#c/r%3Dethyl'")
+        page.wait_for_timeout(300)
+        page.get_by_role("link", name="Show the 3D viewers of this candidate").first.click()
+        page.wait_for_timeout(300)
+    page.set_viewport_size({"width": 800, "height": 700})
+    page.wait_for_timeout(500)
+    page.set_viewport_size({"width": 1400, "height": 1000})
+    page.go_back()
+    page.wait_for_timeout(500)
+    check("after switching, one candidate is mounted", page.locator("canvas").count() == 2)
+    static = page.locator("body > table a").nth(1)
+    static_target = static.get_attribute("href")
+    static.click()
+    page.wait_for_timeout(800)
+    check("the static index link routes too", page.locator("section").nth(1).locator("canvas").count() == 2, static_target)
+    page.goto("about:blank")
+    page.goto((BUNDLE / "index.html").as_uri() + static_target, wait_until="load")
+    page.wait_for_timeout(1500)
+    check("opening a hash route directly mounts it", page.locator("section").nth(1).locator("canvas").count() == 2)
+    shot("13-direct-route")
+    violations = page.evaluate("window.__csp")
+    check("no CSP violation", violations == [], str(violations))
+    check("no dialog", dialogs == [], str(dialogs))
+    context.close()
+
+    # Negative control: the page's policy is enforced here and the violation listener sees it.
+    context = browser.new_context()
+    context.add_init_script(INIT)
+    page = context.new_page()
+    page.goto((BUNDLE / "index.html").as_uri(), wait_until="load")
+    page.evaluate("""() => {
+      var img = document.createElement("img"); img.src = "http://127.0.0.1:59999/m12-csp-control";
+      document.body.appendChild(img);
+    }""")
+    page.wait_for_timeout(700)
+    blocked = page.evaluate("window.__csp")
+    check("control: the page's policy blocks a remote image and the listener reports it",
+          any(v.startswith("img-src ") for v in blocked), str(blocked))
+    context.close()
+
+    # Unsupported version.
+    context = browser.new_context(viewport={"width": 1000, "height": 700})
+    page = context.new_page()
+    watch(page, console, network, dialogs)
+    page.goto((UNSUPPORTED / "index.html").as_uri(), wait_until="load")
+    page.wait_for_timeout(700)
+    check("unsupported version refused as text", page.locator("#eta-load-error").all_text_contents() == ["unsupported run-data version 2"] and page.locator("canvas").count() == 0 and page.locator("#eta-index").count() == 0)
+    page.screenshot(path=str(shots / "14-unsupported-version.png"))
+    context.close()
+
+    bad_console = [c for c in console if c.startswith(("console.error", "pageerror", "crash"))]
+    remote = [
+        n for n in network
+        if not (n.startswith("request ") and n.split(" ", 3)[3].startswith(("file:", "blob:", "data:")))
+    ]
+    check("no console error", bad_console == [], str(bad_console))
+    check("no network request (nothing but file:, blob:, data:; no failure)", remote == [], str(remote))
+
+    # Negative control: the same listeners must catch an error and a network request.
+    c_console, c_network = [], []
+    context = browser.new_context()
+    page = context.new_page()
+    watch(page, c_console, c_network, [])
+    page.goto(CONTROL.as_uri(), wait_until="load")
+    page.wait_for_timeout(1500)
+    context.close()
+    check("control: the console log catches an error", any("m12-control-error" in c for c in c_console))
+    check("control: the network log catches a request", any("http://127.0.0.1:59999/m12-control" in n for n in c_network))
+
+    (shots / "console.txt").write_text(clean("\n".join(console) + "\n" if console else "(no console message, no page error)\n"))
+    (shots / "network.txt").write_text(clean("\n".join(network) + "\n"))
+    (shots / "control-logs.txt").write_text(clean("\n".join(c_console + c_network) + "\n"))
+    header = f"{browser_name} {browser.version}\n"
+    (shots / "checks.txt").write_text(clean(header + "\n".join(results) + f"\nfailed: {check.failed}\n"))
+    print((shots / "checks.txt").read_text())
+    return check.failed
+
+
+with sync_playwright() as p:
+    failed = 0
+    chrome = p.chromium.launch(channel="chrome", args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
+    failed += run("chrome", chrome)
+    chrome.close()
+    firefox = p.firefox.launch(firefox_user_prefs={"webgl.force-enabled": True})
+    failed += run("firefox", firefox)
+    firefox.close()
+print("total failed:", failed)
+sys.exit(1 if failed else 0)

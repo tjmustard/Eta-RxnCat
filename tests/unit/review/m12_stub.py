@@ -3,6 +3,10 @@
 ``python tests/unit/review/m12_stub.py`` rewrites ``data/m12_stub_run_data.json``;
 ``test_m12_stub.py`` checks that the committed file is what this module builds.
 
+The first candidate also carries the disposition rows of slice 16: an excluded transition-state
+sample whose identity fails (one imaginary mode, so only the identity raises its banner), a merged
+sample, a ``seed_clash`` sample without frequencies, and a minimum superseded by a push.
+
 Known answers: the transition state of candidate ``r=ethyl`` has one imaginary mode, a pure
 stretch of the C0-C1 bond (only atoms 0 and 1 move, in opposite directions); its search has three
 frames with C1 at x = 1.4, 1.9 and 2.4 Å; the second candidate's transition state has two
@@ -106,6 +110,72 @@ def frequency(name: str, species: str, digit: str, modes: list[Any]) -> dict[str
     }
 
 
+def identity(overlap: float, distance: float, reasons: list[str]) -> dict[str, Any]:
+    """Return the identity numbers of a stub transition state with one imaginary mode."""
+    return {
+        "n_imaginary": 1,
+        "imaginary_frequency_cm1": -500.0,
+        "forming_overlap": overlap,
+        "active_core_ke_fraction": 0.9,
+        "forming_distances": [{"i": 0, "j": 1, "distance_angstrom": distance}],
+        "in_phase_bool": True,
+        "passed_bool": not reasons,
+        "reason_codes": reasons,
+    }
+
+
+FAILED_IDENTITY = identity(
+    0.131, 3.662, ["forming_distance_out_of_window", "forming_overlap_below_threshold"]
+)
+
+SAMPLES: list[dict[str, Any]] = [
+    {
+        "template_id": "t1",
+        "sample_index": 0,
+        "source": "seed",
+        "frequency_id": "frequency:stretch",
+        "kind": "member",
+        "weight_fraction": 1.0,
+        "identity": identity(0.9, 2.4, []),
+    },
+    {
+        "template_id": "t1",
+        "sample_index": 1,
+        "source": "perturb:0",
+        "frequency_id": "frequency:rejected",
+        "kind": "excluded",
+        "reason_code": "gate_failed:forming_overlap",
+        "identity": FAILED_IDENTITY,
+    },
+    {
+        "template_id": "t1",
+        "sample_index": 2,
+        "source": "perturb:1",
+        "frequency_id": "frequency:merged",
+        "kind": "merged",
+        "merged_into_index": 0,
+        "identity": identity(0.9, 2.4, []),
+    },
+    {
+        "template_id": "t1",
+        "sample_index": 3,
+        "source": "perturb:2",
+        "kind": "excluded",
+        "reason_code": "seed_clash",
+        "clash": {"i": 4, "j": 5, "distance_angstrom": 0.438, "ratio": 0.35},
+    },
+]
+
+ENDPOINTS: list[dict[str, Any]] = [
+    {
+        "frequency_id": "frequency:superseded",
+        "kind": "superseded_by_push",
+        "superseded_by_frequency_id": "frequency:minimum",
+    },
+    {"frequency_id": "frequency:minimum", "kind": "kept"},
+]
+
+
 def candidate(candidate_id: str, entry_id: str, pathway: str, **extra: Any) -> dict[str, Any]:
     """Return a candidate unit; ``extra`` overrides its keys."""
     unit: dict[str, Any] = {
@@ -163,10 +233,12 @@ def m12_stub() -> RunData:
                 "trajectory_ids": ["ts_search:three_frames"],
             }
         ],
-        frequency_ids=["frequency:stretch"],
+        frequency_ids=["frequency:stretch", "frequency:rejected", "frequency:merged"],
         trajectory_ids=["ts_search:three_frames"],
-        endpoint_frequency_ids=["frequency:minimum"],
+        endpoint_frequency_ids=["frequency:superseded", "frequency:minimum"],
         endpoint_trajectory_ids=["endpoint_opt:decimated"],
+        sample_dispositions=SAMPLES,
+        endpoint_dispositions=ENDPOINTS,
     )
     hostile = candidate(
         HOSTILE_CANDIDATE,
@@ -226,6 +298,9 @@ def m12_stub() -> RunData:
                 frequency("frequency:minimum", "reactant", "1", []),
                 frequency("frequency:stretch", "ts", "2", [STRETCH]),
                 frequency("frequency:two_modes", "ts_hostile", "3", [STRETCH, BEND]),
+                frequency("frequency:rejected", "ts", "7", [STRETCH]),
+                frequency("frequency:merged", "ts", "8", [STRETCH]),
+                frequency("frequency:superseded", "reactant", "9", [BEND]),
             ],
             "trajectories": [
                 trajectory("endpoint_opt:decimated", "endpoint_opt", "reactant", "4", five, 9, 2),

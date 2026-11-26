@@ -2,7 +2,7 @@
   "$defs": {
     "Candidate": {
       "additionalProperties": false,
-      "description": "One candidate x pathway x engine unit.\n\n``dG_dagger_kcal_mol`` is the run's activation free energy. ``ddG_dagger_kcal_mol`` is the\ngap of the candidate's selectivity result on this engine (minor minus major pathway), the same\non every pathway it compares. ``graft_rmsd_angstrom`` is the largest alignment RMSD of the\ngrafts behind the chosen template. ``frequency_ids`` and ``trajectory_ids`` are the\ntransition-state samples; the ``endpoint_*`` ids are the minima.",
+      "description": "One candidate x pathway x engine unit.\n\n``dG_dagger_kcal_mol`` is the run's activation free energy. ``ddG_dagger_kcal_mol`` is the\ngap of the candidate's selectivity result on this engine (minor minus major pathway), the same\non every pathway it compares. ``graft_rmsd_angstrom`` is the largest alignment RMSD of the\ngrafts behind the chosen template. ``frequency_ids`` and ``trajectory_ids`` are the\ntransition-state samples; the ``endpoint_*`` ids are the minima. The two disposition\nlists say, per sample and per minimum row, whether it fed the result; each is left out of the\nserialised form when empty.",
       "properties": {
         "candidate_entry_id": {
           "minLength": 1,
@@ -52,6 +52,13 @@
             }
           ],
           "title": "Ddg Dagger Kcal Mol"
+        },
+        "endpoint_dispositions": {
+          "items": {
+            "$ref": "#/$defs/EndpointDisposition"
+          },
+          "title": "Endpoint Dispositions",
+          "type": "array"
         },
         "endpoint_frequency_ids": {
           "items": {
@@ -132,6 +139,13 @@
           "title": "Pathway",
           "type": "string"
         },
+        "sample_dispositions": {
+          "items": {
+            "$ref": "#/$defs/SampleDisposition"
+          },
+          "title": "Sample Dispositions",
+          "type": "array"
+        },
         "species_id": {
           "minLength": 1,
           "title": "Species Id",
@@ -211,6 +225,40 @@
         "endpoint_trajectory_ids"
       ],
       "title": "Candidate",
+      "type": "object"
+    },
+    "Clash": {
+      "additionalProperties": false,
+      "description": "The clashing atom pair of a seed check.",
+      "properties": {
+        "distance_angstrom": {
+          "minimum": 0.0,
+          "title": "Distance Angstrom",
+          "type": "number"
+        },
+        "i": {
+          "minimum": 0,
+          "title": "I",
+          "type": "integer"
+        },
+        "j": {
+          "minimum": 0,
+          "title": "J",
+          "type": "integer"
+        },
+        "ratio": {
+          "minimum": 0.0,
+          "title": "Ratio",
+          "type": "number"
+        }
+      },
+      "required": [
+        "i",
+        "j",
+        "distance_angstrom",
+        "ratio"
+      ],
+      "title": "Clash",
       "type": "object"
     },
     "Convergence": {
@@ -301,6 +349,59 @@
       "title": "Convergence",
       "type": "object"
     },
+    "EndpointDisposition": {
+      "additionalProperties": false,
+      "description": "Whether one minimum's frequency row fed the result; ``not_recorded`` in older records.",
+      "properties": {
+        "frequency_id": {
+          "minLength": 1,
+          "title": "Frequency Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "kept",
+            "superseded_by_push",
+            "dropped",
+            "not_recorded"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason Code"
+        },
+        "superseded_by_frequency_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Superseded By Frequency Id"
+        }
+      },
+      "required": [
+        "frequency_id",
+        "kind"
+      ],
+      "title": "EndpointDisposition",
+      "type": "object"
+    },
     "EngineEntry": {
       "additionalProperties": false,
       "description": "An engine identity: tag, version and, for a model engine, its content-hashed model id.",
@@ -385,6 +486,34 @@
         "reason_code"
       ],
       "title": "FallbackAttemptCode",
+      "type": "object"
+    },
+    "FormingDistance": {
+      "additionalProperties": false,
+      "description": "One forming bond's length at the transition state.",
+      "properties": {
+        "distance_angstrom": {
+          "minimum": 0.0,
+          "title": "Distance Angstrom",
+          "type": "number"
+        },
+        "i": {
+          "minimum": 0,
+          "title": "I",
+          "type": "integer"
+        },
+        "j": {
+          "minimum": 0,
+          "title": "J",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "i",
+        "j",
+        "distance_angstrom"
+      ],
+      "title": "FormingDistance",
       "type": "object"
     },
     "Frame": {
@@ -887,6 +1016,174 @@
       "title": "Provenance",
       "type": "object"
     },
+    "SampleDisposition": {
+      "additionalProperties": false,
+      "description": "Whether one transition-state sample fed the result, and why not.\n\n``merged_into_index`` is set for ``merged`` and ``weight_fraction`` for ``member``;\n``clash``, ``bonds_formed`` and ``bonds_broken`` hold a seed check's finding.",
+      "properties": {
+        "bonds_broken": {
+          "anyOf": [
+            {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bonds Broken"
+        },
+        "bonds_formed": {
+          "anyOf": [
+            {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bonds Formed"
+        },
+        "clash": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Clash"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frequency_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frequency Id"
+        },
+        "identity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TSIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "enum": [
+            "member",
+            "merged",
+            "excluded",
+            "fell_through"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "merged_into_index": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Merged Into Index"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason Code"
+        },
+        "sample_index": {
+          "minimum": 0,
+          "title": "Sample Index",
+          "type": "integer"
+        },
+        "source": {
+          "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+          "title": "Source",
+          "type": "string"
+        },
+        "template_id": {
+          "minLength": 1,
+          "title": "Template Id",
+          "type": "string"
+        },
+        "weight_fraction": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weight Fraction"
+        }
+      },
+      "required": [
+        "template_id",
+        "sample_index",
+        "source",
+        "kind"
+      ],
+      "title": "SampleDisposition",
+      "type": "object"
+    },
     "Species": {
       "additionalProperties": false,
       "description": "One species: atom identity and its input geometry.",
@@ -974,6 +1271,94 @@
         "stage_key"
       ],
       "title": "StageKeyEntry",
+      "type": "object"
+    },
+    "TSIdentity": {
+      "additionalProperties": false,
+      "description": "The validator's verdict on one stored Hessian, recomputed with the run's own options.\n\n``imaginary_frequency_cm1``, ``forming_overlap``, ``active_core_ke_fraction`` and\n``in_phase_bool`` are ``None`` without an imaginary mode.",
+      "properties": {
+        "active_core_ke_fraction": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Active Core Ke Fraction"
+        },
+        "forming_distances": {
+          "items": {
+            "$ref": "#/$defs/FormingDistance"
+          },
+          "title": "Forming Distances",
+          "type": "array"
+        },
+        "forming_overlap": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Forming Overlap"
+        },
+        "imaginary_frequency_cm1": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Imaginary Frequency Cm1"
+        },
+        "in_phase_bool": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "In Phase Bool"
+        },
+        "n_imaginary": {
+          "minimum": 0,
+          "title": "N Imaginary",
+          "type": "integer"
+        },
+        "passed_bool": {
+          "title": "Passed Bool",
+          "type": "boolean"
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Za-z0-9_.:+=,@-]+$",
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "n_imaginary",
+        "imaginary_frequency_cm1",
+        "forming_overlap",
+        "active_core_ke_fraction",
+        "forming_distances",
+        "in_phase_bool",
+        "passed_bool",
+        "reason_codes"
+      ],
+      "title": "TSIdentity",
       "type": "object"
     },
     "ThermoOptionsEntry": {

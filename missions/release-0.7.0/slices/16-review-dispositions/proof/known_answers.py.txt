@@ -1,0 +1,98 @@
+"""Slice 16 known answers from slice 11's stores: sqlite mode=ro, no engine evaluation."""
+
+import hashlib
+import json
+import sqlite3
+import sys
+import threading
+from pathlib import Path
+
+sys.path.insert(0, "tests/e2e")
+from e2e_env import recipe_for
+from v070 import enumerate_one, reactant_specs
+
+from eta_rxncat.engines._fairchem_bridge import FairchemEngine
+from eta_rxncat.engines.base import Engine
+from eta_rxncat.orchestrator import run_species
+from eta_rxncat.review import RunRecord, export_run_data, write_review_bundle
+from eta_rxncat.store import ArtifactStore
+
+OUT = Path(sys.argv[1])
+STORE = Path.home() / ".hacf/eta-rxncat-hacf/evidence/v070-slice11/v070_enum.sqlite"
+FIXTURES = Path("tests/fixtures/v0.7.0")
+EVALUATIONS = []
+
+
+def refuse(self, *args, **kwargs):
+    EVALUATIONS.append(type(self).__name__)
+    raise AssertionError("an engine was called")
+
+
+Engine.evaluate = refuse
+FairchemEngine._load = lambda self, *args: (None, "cpu")  # no model is loaded
+
+
+class ReadOnly(ArtifactStore):
+    """The store opened ``mode=ro``; any write raises inside SQLite."""
+
+    def __init__(self, path):
+        self.path = path
+        self._lock = threading.Lock()
+        self._conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True, check_same_thread=False)
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+before = sha(STORE)
+
+# 1. ethyl endo GFN2, sample 6, from the fixture record as it is
+record = RunRecord.model_validate_json(
+    (FIXTURES / "v070_enum_ethyl_endo_xtb.runrecord.json").read_text()
+)
+with ReadOnly(STORE) as store:
+    data = export_run_data(record, store)
+(unit,) = data.candidates
+(six,) = [d for d in unit.sample_dispositions if d.sample_index == 6]
+freq = {f.frequency_id: f for f in data.frequencies}
+print("sample 6 frequency key", freq[six.frequency_id].stage_key[:12])
+print(six.model_dump_json(indent=1))
+print("endpoint kinds (old record):", sorted({d.kind for d in unit.endpoint_dispositions}))
+bundle = write_review_bundle(data, OUT / "ethyl_endo_xtb")
+html = (bundle / "index.html").read_text()
+below = html.split('<div class="notused">', 1)[1]
+block = below.split("(sample 6, 1f64216a4471)", 1)
+assert len(block) == 2, "sample 6 not in the not-used group"
+print("not-used block:", ("(sample 6, 1f64216a4471)" + block[1].split("<p>n_imaginary")[0]))
+
+# 2. npropyl endo UMA: the dispositions the species runner gives, replayed from cached rows
+record = RunRecord.model_validate_json(
+    (FIXTURES / "v070_enum_npropyl_endo_uma.runrecord.json").read_text()
+)
+(run,) = record.runs
+recipe = recipe_for("uma")
+_, candidate = enumerate_one("npropyl")
+specs = reactant_specs(candidate, tuple(run.ensemble.reactant_key))
+document = record.model_dump(mode="json")
+with ReadOnly(STORE) as store:
+    for endpoint in document["runs"][0]["endpoints"]:
+        result = run_species(specs[endpoint["species_id"]], recipe, store)
+        assert list(result.keys["frequency"]) == endpoint["frequency_keys"]
+        assert list(result.keys["geometry_opt"]) == endpoint["opt_keys"]
+        assert result.metrics.engine_calls == 0
+        endpoint["frequency_dispositions"] = [vars(d) for d in result.frequency_dispositions]
+        print(endpoint["species_id"], "engine calls", result.metrics.engine_calls)
+        for d in result.frequency_dispositions:
+            print("  ", d.frequency_key[:12], d.kind, d.reason, (d.superseded_by_key or "")[:12])
+        for index, rec in enumerate(result.ensemble.records):
+            print("   kept record", index, "source_ids", rec.source_ids)
+    data = export_run_data(RunRecord.model_validate(document), store)
+bundle = write_review_bundle(data, OUT / "npropyl_endo_uma")
+html = (bundle / "index.html").read_text()
+used, below = html.split('<div class="notused">', 1)
+for key in ("071c077d750a", "ee86975197d1", "78c2c9876b89"):
+    heading = [h for h in html.split("<h5>")[1:] if f"(sample {key})" in h][0].split("</h5>")[0]
+    print(key, "in not-used" if f"(sample {key})" in below else "in used", "|", heading)
+print("engine evaluations:", len(EVALUATIONS))
+print("store sha256 unchanged:", sha(STORE) == before, before)

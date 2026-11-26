@@ -1,0 +1,17 @@
+v070_enum_ethyl_endo_uma v070-slice11/v070_enum.sqlite missing=0 {'member': 3, 'merged': 3, 'excluded': 5} {'not_recorded': 4} identity_failed={}
+v070_enum_ethyl_endo_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 3, 'member': 3, 'excluded': 5} {'not_recorded': 4} identity_failed={'excluded': 1}
+v070_enum_ethyl_exo_uma v070-slice11/v070_enum.sqlite missing=0 {'merged': 4, 'excluded': 4, 'member': 3} {'not_recorded': 4} identity_failed={}
+v070_enum_ethyl_exo_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 4, 'excluded': 4, 'member': 3} {'not_recorded': 4} identity_failed={}
+v070_enum_ethyl_selectivity_uma v070-slice11/v070_enum.sqlite missing=0 {'member': 6, 'merged': 7, 'excluded': 9} {'not_recorded': 8} identity_failed={}
+v070_enum_ethyl_selectivity_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 7, 'member': 6, 'excluded': 9} {'not_recorded': 8} identity_failed={'excluded': 1}
+v070_enum_npropyl_endo_uma v070-slice11/v070_enum.sqlite missing=0 {'member': 4, 'merged': 4, 'excluded': 3} {'not_recorded': 9} identity_failed={}
+v070_enum_npropyl_endo_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 4, 'member': 4, 'excluded': 3} {'not_recorded': 7} identity_failed={}
+v070_enum_npropyl_exo_uma v070-slice11/v070_enum.sqlite missing=0 {'member': 3, 'excluded': 7, 'merged': 1} {'not_recorded': 9} identity_failed={}
+v070_enum_npropyl_exo_xtb v070-slice11/v070_enum.sqlite missing=0 {'member': 3, 'excluded': 7, 'merged': 1} {'not_recorded': 7} identity_failed={}
+v070_enum_npropyl_selectivity_uma v070-slice11/v070_enum.sqlite missing=0 {'member': 7, 'merged': 5, 'excluded': 10} {'not_recorded': 18} identity_failed={}
+v070_enum_npropyl_selectivity_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 5, 'member': 7, 'excluded': 10} {'not_recorded': 14} identity_failed={}
+v070_fallback_graft_time_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 3, 'member': 3, 'excluded': 5} {} identity_failed={'excluded': 1}
+v070_fallback_run_time_uma v070-slice12/v070_fallback_run_time_uma.sqlite missing=0 {'member': 3, 'merged': 3, 'excluded': 5} {} identity_failed={}
+v070_fallback_run_time_xtb v070-slice11/v070_enum.sqlite missing=0 {'merged': 3, 'member': 3, 'excluded': 5} {} identity_failed={'excluded': 1}
+15 records exported
+exit 0

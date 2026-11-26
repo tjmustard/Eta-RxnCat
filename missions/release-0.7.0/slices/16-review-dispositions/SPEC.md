@@ -10,7 +10,7 @@ intent: "Show on every review-site frequency row whether it fed the result and w
 depends_on: [OPR.0.7.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", src/eta_rxncat/orchestrator/species.py, "tests/unit/orchestrator/**", tests/e2e/v070.py, spec/compiled/architecture.yml]
@@ -163,13 +163,13 @@ Context the builder needs:
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] species.py `frequency_dispositions` and its tests; compress the species_runner description.
-- [ ] RunRecord fields (omit when absent); `unit_record` fills them; old-record load tests.
-- [ ] RunData models, schema regeneration, the exporter (dispositions and `TSIdentity`); tests.
-- [ ] Static summary grouping and banners; JS labels and grouping; R14 scan; stub M12 in Chrome and
+- [x] Index.
+- [x] species.py `frequency_dispositions` and its tests; compress the species_runner description.
+- [x] RunRecord fields (omit when absent); `unit_record` fills them; old-record load tests.
+- [x] RunData models, schema regeneration, the exporter (dispositions and `TSIdentity`); tests.
+- [x] Static summary grouping and banners; JS labels and grouping; R14 scan; stub M12 in Chrome and
   Playwright Firefox.
-- [ ] Real-data known answer (read-only export); required checks; commit; updater once.
+- [x] Real-data known answer (read-only export); required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -182,13 +182,13 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] Tests for each disposition kind (species and exporter); old record and old `RunData` loads;
+- [x] Tests for each disposition kind (species and exporter); old record and old `RunData` loads;
   schema drift test.
-- [ ] Static-summary tests: grouping, disposition headings, identity numbers, the identity-failure
+- [x] Static-summary tests: grouping, disposition headings, identity numbers, the identity-failure
   banner.
-- [ ] M12 stub evidence in both gate browsers (screenshots, console, network).
-- [ ] The real-data sample-6 known answer, read-only, 0 engine calls.
-- [ ] Required checks exit 0.
+- [x] M12 stub evidence in both gate browsers (screenshots, console, network).
+- [x] The real-data sample-6 known answer, read-only, 0 engine calls.
+- [x] Required checks exit 0.
 
 ## Source material
 

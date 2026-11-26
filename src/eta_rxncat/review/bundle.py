@@ -16,11 +16,14 @@ from urllib.parse import quote
 from eta_rxncat.review.export import canonical_run_data_json
 from eta_rxncat.review.run_data import (
     Candidate,
+    EndpointDisposition,
     FrequencyCompleted,
     FrequencyEntry,
     FrequencyFailed,
     Gate,
     RunData,
+    SampleDisposition,
+    TSIdentity,
 )
 
 ASSETS_PATH = Path(__file__).with_name("assets")
@@ -34,6 +37,9 @@ CONTENT_SECURITY_POLICY = (
     "img-src 'self' data:; connect-src 'none'"
 )
 """The page's policy (mission R14): local scripts only, and no connection of any kind."""
+
+NOT_RECORDED = "disposition not recorded"
+"""The label of a row the document says nothing about (an older record or document)."""
 
 BUNDLE_BYTE_LIMIT = 25_000_000
 """The bundle's size ceiling in bytes (mission R18)."""
@@ -55,6 +61,8 @@ section { border-top: 2px solid #333; margin-top: 2em; }
 .fail { background: #ffd6d6; font-weight: bold; }
 .badge { display: inline-block; border: 1px solid #666; padding: 0 0.4em; margin: 0 0.2em 0.2em 0; }
 .imag { color: #c00000; font-weight: bold; }
+h5 { font-size: 1em; margin: 1em 0 0.3em; overflow-wrap: anywhere; }
+.notused { border-left: 6px solid #999; padding-left: 0.8em; margin-top: 1.5em; }
 .banner { border: 4px solid #c00000; background: #ffd6d6; color: #700000; font-size: 1.2em;
   font-weight: bold; padding: 0.5em 1em; margin: 0.5em 0; }
 .warn { border: 2px solid #b36b00; background: #fff0d6; padding: 0.3em 0.8em; margin: 0.5em 0; }
@@ -96,17 +104,99 @@ def _gates(gates: Iterable[Gate]) -> str:
     return "".join(_gate_badge(g) for g in gates) or "no gates"
 
 
+def _atom(symbols: Sequence[str], i: int) -> str:
+    """Return an atom's label: its element and 0-based index (the index alone if unknown)."""
+    return f"{symbols[i]}{i}" if i < len(symbols) else str(i)
+
+
+def _pair(symbols: Sequence[str], i: int, j: int) -> str:
+    return f"{_atom(symbols, i)}\u2013{_atom(symbols, j)}"
+
+
+def _sample_label(disposition: SampleDisposition, symbols: Sequence[str]) -> str:
+    """Return what became of a transition-state sample, as its block heading names it."""
+    if disposition.kind == "member":
+        weight = disposition.weight_fraction
+        return "member" if weight is None else f"member (weight {weight:.3f})"
+    if disposition.kind == "merged":
+        return f"merged into sample {disposition.merged_into_index}"
+    prefix = "excluded" if disposition.kind == "excluded" else "fell through"
+    reason = disposition.reason_code or "no reason recorded"
+    clash = disposition.clash
+    if clash is not None:
+        reason += f" {_pair(symbols, clash.i, clash.j)} {clash.distance_angstrom:.3f} \u00c5"
+    changes = [
+        f"{verb} {', '.join(_pair(symbols, *bond) for bond in bonds)}"
+        for verb, bonds in (
+            ("formed", disposition.bonds_formed),
+            ("broken", disposition.bonds_broken),
+        )
+        if bonds
+    ]
+    if changes:
+        reason += f" ({'; '.join(changes)})"
+    return f"{prefix}: {reason}"
+
+
+def _endpoint_label(disposition: EndpointDisposition) -> str:
+    """Return what became of a minimum's row, as its block heading names it."""
+    if disposition.kind == "kept":
+        return "kept"
+    if disposition.kind == "superseded_by_push":
+        pushed = disposition.superseded_by_frequency_id
+        return "superseded by push" + ("" if pushed is None else f" \u2192 {pushed}")
+    if disposition.kind == "dropped":
+        return f"dropped: {disposition.reason_code or 'no reason recorded'}"
+    return NOT_RECORDED
+
+
+def _ts_rows(candidate: Candidate) -> list[tuple[bool, str | None, SampleDisposition | None]]:
+    """Return ``(used, frequency_id, disposition)`` per TS sample, used ones first.
+
+    A frequency id no disposition names (an older document) follows without one; it counts as
+    used only when it is a member's.
+    """
+    rows: list[tuple[bool, str | None, SampleDisposition | None]] = [
+        (d.kind == "member", d.frequency_id, d) for d in candidate.sample_dispositions
+    ]
+    named = {d.frequency_id for d in candidate.sample_dispositions}
+    members = {m.frequency_id for m in candidate.members}
+    rows += [(f in members, f, None) for f in candidate.frequency_ids if f not in named]
+    return sorted(rows, key=lambda row: not row[0])
+
+
+def _endpoint_rows(candidate: Candidate) -> list[tuple[bool, str, EndpointDisposition | None]]:
+    """Return ``(used, frequency_id, disposition)`` per minimum row, used (``kept``) first."""
+    rows: list[tuple[bool, str, EndpointDisposition | None]] = [
+        (d.kind == "kept", d.frequency_id, d) for d in candidate.endpoint_dispositions
+    ]
+    named = {d.frequency_id for d in candidate.endpoint_dispositions}
+    rows += [(False, f, None) for f in candidate.endpoint_frequency_ids if f not in named]
+    return sorted(rows, key=lambda row: not row[0])
+
+
+def _short_kind(used: bool, disposition: SampleDisposition | None) -> str:
+    if disposition is not None:
+        return disposition.kind.replace("_", " ")
+    return "member" if used else "not recorded"
+
+
 def _n_imaginary(candidate: Candidate, frequencies: dict[str, FrequencyEntry]) -> str:
-    """Return the index cell of a unit's transition-state imaginary-mode counts."""
+    """Return the index cell of a unit's TS imaginary-mode counts, each with its disposition."""
     cells = []
-    for frequency_id in candidate.frequency_ids:
+    for used, frequency_id, disposition in _ts_rows(candidate):
+        if frequency_id is None:
+            continue
         entry = frequencies[frequency_id]
+        kind = _text(_short_kind(used, disposition))
         if isinstance(entry, FrequencyCompleted):
-            bad = ' class="fail"' if entry.n_imaginary != 1 else ""
-            cells.append(f"<span{bad}>{entry.n_imaginary}</span>")
+            identity = None if disposition is None else disposition.identity
+            failed = identity is not None and not identity.passed_bool
+            bad = ' class="fail"' if entry.n_imaginary != 1 or failed else ""
+            cells.append(f"<span{bad}>{entry.n_imaginary}</span> ({kind})")
         else:
-            cells.append(f'<span class="warn">{entry.status}</span>')
-    return " ".join(cells) or "none"
+            cells.append(f'<span class="warn">{entry.status}</span> ({kind})')
+    return ", ".join(cells) or "none"
 
 
 def _index_table(run_data: RunData) -> str:
@@ -133,11 +223,44 @@ def _index_table(run_data: RunData) -> str:
     )
 
 
+def _identity_text(identity: TSIdentity, symbols: Sequence[str]) -> str:
+    """Return the identity numbers of a transition state as a paragraph."""
+
+    def number(value: float | None, digits: int) -> str:
+        return "none" if value is None else f"{value:.{digits}f}"
+
+    distances = ", ".join(
+        f"{_pair(symbols, d.i, d.j)} {d.distance_angstrom:.3f} \u00c5"
+        for d in identity.forming_distances
+    )
+    phase = {True: "yes", False: "no", None: "not evaluated"}[identity.in_phase_bool]
+    verdict = "pass" if identity.passed_bool else f"FAIL ({', '.join(identity.reason_codes)})"
+    text = (
+        f"Identity: imaginary frequency "
+        f"{number(identity.imaginary_frequency_cm1, 1)} cm\u207b\u00b9; "
+        f"forming-bond overlap {number(identity.forming_overlap, 3)}; "
+        f"active-core KE fraction {number(identity.active_core_ke_fraction, 3)}; "
+        f"forming distances {distances}; in phase {phase}; {verdict}"
+    )
+    return f"<p>{_text(text)}</p>"
+
+
 def _frequency_block(
-    entry: FrequencyEntry, *, role: str, expected: int, name: str, species: str
+    entry: FrequencyEntry,
+    *,
+    role: str,
+    expected: int,
+    name: str,
+    species: str,
+    label: str,
+    identity: TSIdentity | None = None,
+    symbols: Sequence[str] = (),
 ) -> str:
-    """Return one frequency entry; a count other than ``expected`` raises the banner."""
-    title = f"<h4>{_text(role)}: {_text(species)} ({_text(name)})</h4>"
+    """Return one frequency entry, headed by its disposition.
+
+    The banner is raised by a mode count other than ``expected`` or a failed identity.
+    """
+    title = f"<h5>{_text(role)}: {_text(species)} ({_text(name)}) \u2014 {_text(label)}</h5>"
     if isinstance(entry, FrequencyFailed):
         return (
             f'{title}<p class="warn">Frequencies failed: {_text(entry.failed_code)}. '
@@ -148,18 +271,25 @@ def _frequency_block(
             f'{title}<p class="warn">Frequencies missing from the store. '
             "The imaginary-mode count is unknown.</p>"
         )
-    banner = ""
+    problems = []
     if entry.n_imaginary != expected:
-        banner = (
-            f'<div class="banner">WARNING: {_text(role)} has {entry.n_imaginary} imaginary '
-            f"mode(s); expected {expected}.</div>"
-        )
+        problems.append(f"{role} has {entry.n_imaginary} imaginary mode(s); expected {expected}.")
+    if identity is not None and not identity.passed_bool:
+        problems.append(f"{role} identity check failed: {', '.join(identity.reason_codes)}.")
+    banner = ""
+    if problems:
+        banner = f'<div class="banner">WARNING: {_text(" ".join(problems))}</div>'
     values = ", ".join(
         f'<span class="imag">{f:.1f}</span>' if f < -entry.imag_tol_cm1 else f"{f:.1f}"
         for f in entry.frequencies_cm1
     )
+    checks = ""
+    if identity is not None:
+        checks = _identity_text(identity, symbols)
+    elif expected == 1:
+        checks = "<p>Identity numbers not available.</p>"
     return (
-        f"{title}{banner}"
+        f"{title}{banner}{checks}"
         f"<p>n_imaginary = {entry.n_imaginary} (below -{entry.imag_tol_cm1:g} cm<sup>-1</sup>)</p>"
         f"<p>Frequencies / cm<sup>-1</sup>: {values}</p>"
     )
@@ -167,46 +297,72 @@ def _frequency_block(
 
 def _unit_summary(run_data: RunData, candidate: Candidate) -> str:
     frequencies = {f.frequency_id: f for f in run_data.frequencies}
-    species = {s.species_id: s.label for s in run_data.species}
+    species = {s.species_id: s for s in run_data.species}
     members = {m.frequency_id: m.member_index for m in candidate.members if m.frequency_id}
     gates = [g for g in run_data.gates if g.candidate_entry_id == candidate.candidate_entry_id]
-    blocks = []
-    for frequency_id in candidate.frequency_ids:
+    blocks: dict[bool, list[str]] = {True: [], False: []}
+    for used, frequency_id, sample in _ts_rows(candidate):
+        if frequency_id is None:
+            assert sample is not None  # only a disposition lacks a frequency row
+            symbols = species.get(sample.template_id, species[candidate.species_id]).symbols
+            line = (
+                f"Sample {sample.sample_index} ({sample.source}, template "
+                f"{sample.template_id}): {_sample_label(sample, symbols)}"
+            )
+            blocks[used].append(f"<p>{_text(line)}</p>")
+            continue
         entry = frequencies[frequency_id]
-        name = (
-            f"member {members[frequency_id]}"
-            if frequency_id in members
-            else f"sample {entry.stage_key[:12]}"
-        )
-        blocks.append(
+        unit_species = species[entry.species_id]
+        index = members.get(frequency_id) if sample is None else sample.sample_index
+        key = entry.stage_key[:12]
+        if index is None:
+            name = f"sample {key}"
+        else:
+            name = f"member {index}, sample {key}" if used else f"sample {index}, {key}"
+        if sample is not None:
+            label = _sample_label(sample, unit_species.symbols)
+        else:
+            label = "member" if used else NOT_RECORDED
+        blocks[used].append(
             _frequency_block(
                 entry,
                 role="Transition state",
                 expected=1,
                 name=name,
-                species=species[entry.species_id],
+                species=unit_species.label,
+                label=label,
+                identity=None if sample is None else sample.identity,
+                symbols=unit_species.symbols,
             )
         )
     if not candidate.frequency_ids:
         reason = candidate.stop_reason_code or "no reason recorded"
-        blocks.append(
+        blocks[False].append(
             f'<p class="warn">No transition-state frequencies for this run: {_text(reason)}</p>'
         )
-    for frequency_id in candidate.endpoint_frequency_ids:
+    for used, frequency_id, endpoint in _endpoint_rows(candidate):
         entry = frequencies[frequency_id]
-        blocks.append(
+        blocks[used].append(
             _frequency_block(
                 entry,
                 role="Minimum",
                 expected=0,
                 name=f"sample {entry.stage_key[:12]}",
-                species=species[entry.species_id],
+                species=species[entry.species_id].label,
+                label=NOT_RECORDED if endpoint is None else _endpoint_label(endpoint),
             )
         )
+    groups = "".join(
+        f'<div class="{css}"><h4>{title}</h4>{"".join(blocks[used]) or "<p>none</p>"}</div>'
+        for used, css, title in (
+            (True, "used", "Used in the result"),
+            (False, "notused", "Not used (rejected, merged or superseded)"),
+        )
+    )
     return (
         f"<h3>Pathway {_text(candidate.pathway)}, engine {_text(candidate.engine_id)}</h3>"
         f"<p>Charge {candidate.charge}, multiplicity {candidate.spin_multiplicity}</p>"
-        f"<p>Gates: {_gates(gates)}</p>{''.join(blocks)}"
+        f"<p>Gates: {_gates(gates)}</p>{groups}"
     )
 
 

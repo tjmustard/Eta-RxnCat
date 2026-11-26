@@ -1,0 +1,64 @@
+chrome 158.0.8127.36
+PASS  opened from file://
+PASS  no load error
+PASS  WebGL canvases present  [2 canvases]
+PASS  table sorts both ways  [['endo', 'exo'] ['exo', 'endo']]
+PASS  index link routes to r=ethyl  [c/r%3Dethyl]
+PASS  r=ethyl panels mounted
+PASS  frequency options: 3 TS rows and 2 minima  [['endo, rdkit_ff: TS C0-C1 stretch TS (member 0, sample 222222222222) — member (weight 1.000)', 'endo, rdkit_ff: minimum reactant (sample 111111111111) — kept', 'endo, rdkit_ff: TS C0-C1 stretch TS (sample 1, 777777777777) — excluded: gate_failed:forming_overlap', 'endo, rdkit_ff: TS C0-C1 stretch TS (sample 2, 888888888888) — merged into sample 0', 'endo, rdkit_ff: minimum reactant (sample 999999999999) — superseded by push → frequency:minimum']]
+PASS  chooser: used group first, then not used  [['Used in the result', 'Not used (rejected, merged or superseded)']]
+PASS  chooser: used rows are the member and the kept minimum  [['endo, rdkit_ff: TS C0-C1 stretch TS (member 0, sample 222222222222) — member (weight 1.000)', 'endo, rdkit_ff: minimum reactant (sample 111111111111) — kept']]
+PASS  chooser: not-used rows name their disposition  [['endo, rdkit_ff: TS C0-C1 stretch TS (sample 1, 777777777777) — excluded: gate_failed:forming_overlap', 'endo, rdkit_ff: TS C0-C1 stretch TS (sample 2, 888888888888) — merged into sample 0', 'endo, rdkit_ff: minimum reactant (sample 999999999999) — superseded by push → frequency:minimum']]
+PASS  seed_clash sample listed without frequencies  [['endo, rdkit_ff: sample 3 (perturb:2, template t1): excluded: seed_clash H4–H5 0.438 Å']]
+PASS  static: used group
+PASS  static: not-used group names each
+PASS  static: used group is above not-used
+PASS  static: every block heading names its disposition  [['Transition state: C0-C1 stretch TS (member 0, sample 222222222222) — member (weight 1.000)', 'Minimum: reactant (sample 111111111111) — kept', 'Transition state: C0-C1 stretch TS (sample 1, 777777777777) — excluded: gate_failed:forming_overlap', 'Transition state: C0-C1 stretch TS (sample 2, 888888888888) — merged into sample 0', 'Minimum: reactant (sample 999999999999) — superseded by push → frequency:minimum']]
+PASS  static: identity numbers on every TS block
+PASS  static: banners on the failed identity (count 1) and the superseded minimum only  [['WARNING: Transition state identity check failed: forming_distance_out_of_window, forming_overlap_below_threshold.', 'WARNING: Minimum has 1 imaginary mode(s); expected 0.']]
+PASS  table: TS counts labelled, member first  [r=ethyl	r=ethyl	endo	rdkit_ff|2026.1.1|none	0 / 1	2	rank 1 t0: fell_through (face); rank 2 t1: chosen	12.50	not computed	0 seed (1.000)	0.050	1 (member), 1 (excluded), 1 (merged)	graft_rmsd: PASS value 0.05 threshold 0.15 angstrom]
+PASS  component: rejected TS shows disposition, identity and banner  [['WARNING: Identity check failed: forming_distance_out_of_window, forming_overlap_below_threshold.']]
+PASS  component: superseded minimum keeps its count banner beside its label  [['WARNING: 1 imaginary mode(s); expected 0.']]
+PASS  component: member shows its disposition and no banner
+PASS  the mounted mode animates on screen  [4 distinct of 4]
+PASS  20 mode frames  [20]
+PASS  only atoms 0 and 1 move  [peak displacement [0.4, 0.4, 0.0, 0.0, 0.0, 0.0] A]
+PASS  largest displacement 0.4 A
+PASS  opposite directions along the bond  [C1 x per frame: 3.600 3.724 3.835 3.924 3.980 4.000 3.980 3.924 3.835 3.724 3.600 3.476 3.365 3.276 3.220 3.200 3.220 3.276 3.365 3.476]
+PASS  trajectory options  [['endo, rdkit_ff: ts_search t1:seed (666666666666)', 'endo, rdkit_ff: endpoint_opt reactant (444444444444)']]
+PASS  Play shows frames 1, 2, 3 in order  [['frame 1 of 3 (step 0); accepted; E = -79.00000000 Eh; max gradient 1.00e-2 Eh/Bohr || marker 0', 'frame 2 of 3 (step 1); rejected; E = -79.01000000 Eh; max gradient 1.00e-2 Eh/Bohr || marker 1', 'frame 3 of 3 (step 2); accepted; E = -79.02000000 Eh; max gradient 1.00e-2 Eh/Bohr || marker 2']]
+PASS  playback stops at the last frame
+PASS  slider frame 1 reads out and moves the marker  [frame 1 of 3 (step 0); accepted; E = -79.00000000 Eh; max gradient 1.00e-2 Eh/Bohr]
+PASS  slider frame 2 reads out and moves the marker  [frame 2 of 3 (step 1); rejected; E = -79.01000000 Eh; max gradient 1.00e-2 Eh/Bohr]
+PASS  slider frame 3 reads out and moves the marker  [frame 3 of 3 (step 2); accepted; E = -79.02000000 Eh; max gradient 1.00e-2 Eh/Bohr]
+PASS  a plot point drives the player
+PASS  player label and convergence
+PASS  viewer shows the known coordinates in order  [C1 x [1.4, 1.9, 2.4]]
+PASS  player drives its viewer through the known coordinates  [C1 x [1.4, 1.9, 2.4]]
+PASS  moleculeViewer names a frequency row's disposition  [Disposition: merged into sample 0Identity: imaginary frequency -500.0 cm⁻¹; forming-bond overlap 0.900; active-core KE f]
+PASS  decimation stated
+PASS  unrecorded acceptance stated
+PASS  last decimated frame is step 8
+PASS  minimum: no imaginary mode, no banner
+PASS  hostile candidate routes and mounts  [c/r%3D%3C%2Fscript%3E%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E%3C!--%E2%80%A8%E2%80%A9%26]
+PASS  previous panels destroyed
+PASS  banner in the static summary and the component  [['WARNING: Transition state has 2 imaginary mode(s); expected 1.', 'WARNING: 2 imaginary mode(s); expected 1.']]
+PASS  two mode buttons
+PASS  second mode selected
+PASS  hostile label shown as text (species)
+PASS  hostile label shown as text (trajectory)
+PASS  hostile entry id shown as text (table)
+PASS  hostile provenance shown as text
+PASS  no element made from a hostile string
+PASS  after switching, one candidate is mounted
+PASS  the static index link routes too  [#c/r=%3C%2Fscript%3E%3Cimg%20src=x%20onerror=alert%281%29%3E%3C%21--%E2%80%A8%E2%80%A9%26]
+PASS  opening a hash route directly mounts it
+PASS  no CSP violation  [[]]
+PASS  no dialog  [[]]
+PASS  control: the page's policy blocks a remote image and the listener reports it  [['img-src http://127.0.0.1:59999/m12-csp-control ']]
+PASS  unsupported version refused as text
+PASS  no console error  [[]]
+PASS  no network request (nothing but file:, blob:, data:; no failure)  [[]]
+PASS  control: the console log catches an error
+PASS  control: the network log catches a request
+failed: 0

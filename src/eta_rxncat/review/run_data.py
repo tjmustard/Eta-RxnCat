@@ -19,9 +19,11 @@ from pydantic import (
     ConfigDict,
     Field,
     FiniteFloat,
+    SerializerFunctionWrapHandler,
     StrictInt,
     create_model,
     field_validator,
+    model_serializer,
     model_validator,
 )
 
@@ -34,6 +36,7 @@ from eta_rxncat.core import (
     SelectivityResult,
     ThermoAnalysisOptions,
     TSEnsemble,
+    TSValidationOptions,
 )
 
 SCHEMA_VERSION = 1
@@ -58,10 +61,20 @@ Xyz = list[list[FiniteFloat]]
 
 TrajectoryKind = Literal["pre_relax", "ts_search", "endpoint_opt"]
 GateUnit = Literal["angstrom", "kcal_mol", "hartree", "cm1", "count", "fraction"]
+SampleKind = Literal["member", "merged", "excluded", "fell_through"]
+EndpointKind = Literal["kept", "superseded_by_push", "dropped", "not_recorded"]
 
 
 class UnsupportedRunDataVersion(ValueError):
     """The document's ``schema_version`` is newer than this reader understands."""
+
+
+def _without(data: dict[str, Any], absent: Iterable[str]) -> dict[str, Any]:
+    """Return ``data`` without the keys of ``absent`` that hold ``None`` or an empty list."""
+    for key in absent:
+        if data.get(key) in (None, []):
+            data.pop(key, None)
+    return data
 
 
 # --- RunRecord: the exporter's input ---------------------------------------------------------
@@ -121,6 +134,22 @@ class RecordSample(_Record):
     frequency_key: StageKeyHex | None = None
 
 
+class RecordFrequencyDisposition(_Record):
+    """What the species run did with one ``frequency`` row (``FrequencyDisposition``).
+
+    Attributes:
+        frequency_key: The row.
+        kind: ``kept``, ``superseded_by_push`` or ``dropped``.
+        reason: The run's drop reason, for a dropped row.
+        superseded_by_key: The pushed row, for a superseded one.
+    """
+
+    frequency_key: StageKeyHex
+    kind: Literal["kept", "superseded_by_push", "dropped"]
+    reason: Code | None = None
+    superseded_by_key: StageKeyHex | None = None
+
+
 class RecordEndpoint(_Record):
     """The cached rows of one endpoint (reactant) species run.
 
@@ -128,11 +157,21 @@ class RecordEndpoint(_Record):
         species_id: The species.
         opt_keys: Its ``geometry_opt`` rows.
         frequency_keys: Its ``frequency`` rows.
+        frequency_dispositions: What the run did with them; ``None`` in an older record, and
+            then left out of the serialised form.
     """
 
     species_id: Name
     opt_keys: list[StageKeyHex] = Field(default_factory=list)
     frequency_keys: list[StageKeyHex] = Field(default_factory=list)
+    frequency_dispositions: list[RecordFrequencyDisposition] | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.frequency_dispositions is None:
+            data.pop("frequency_dispositions", None)
+        return data
 
 
 class RecordRun(_Record):
@@ -151,6 +190,8 @@ class RecordRun(_Record):
         dG_dagger_kcal_mol: Activation free energy, if computed.
         samples: The rows of every TS sample.
         endpoints: The rows of every endpoint species.
+        validation: The thresholds the run validated its transition states with; ``None``
+            means the defaults, and is left out of the serialised form.
     """
 
     candidate_id: Name
@@ -165,6 +206,14 @@ class RecordRun(_Record):
     dG_dagger_kcal_mol: FiniteFloat | None = None
     samples: list[RecordSample] = Field(default_factory=list)
     endpoints: list[RecordEndpoint] = Field(default_factory=list)
+    validation: TSValidationOptions | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_absent(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.validation is None:
+            data.pop("validation", None)
+        return data
 
 
 class RecordSelectivity(_Record):
@@ -436,6 +485,70 @@ class Member(_Strict):
     trajectory_ids: list[Name]
 
 
+class Clash(_Strict):
+    """The clashing atom pair of a seed check."""
+
+    i: Index
+    j: Index
+    distance_angstrom: NonNegative
+    ratio: NonNegative
+
+
+class FormingDistance(_Strict):
+    """One forming bond's length at the transition state."""
+
+    i: Index
+    j: Index
+    distance_angstrom: NonNegative
+
+
+class TSIdentity(_Strict):
+    """The validator's verdict on one stored Hessian, recomputed with the run's own options.
+
+    ``imaginary_frequency_cm1``, ``forming_overlap``, ``active_core_ke_fraction`` and
+    ``in_phase_bool`` are ``None`` without an imaginary mode.
+    """
+
+    n_imaginary: Count
+    imaginary_frequency_cm1: FiniteFloat | None
+    forming_overlap: NonNegative | None
+    active_core_ke_fraction: NonNegative | None
+    forming_distances: list[FormingDistance]
+    in_phase_bool: bool | None
+    passed_bool: bool
+    reason_codes: list[Code]
+
+
+class SampleDisposition(_Strict):
+    """Whether one transition-state sample fed the result, and why not.
+
+    ``merged_into_index`` is set for ``merged`` and ``weight_fraction`` for ``member``;
+    ``clash``, ``bonds_formed`` and ``bonds_broken`` hold a seed check's finding.
+    """
+
+    template_id: Name
+    sample_index: Index
+    source: Code
+    frequency_id: Name | None = None
+    kind: SampleKind
+    reason_code: Code | None = None
+    merged_into_index: Index | None = None
+    weight_fraction: UnitInterval | None = None
+    clash: Clash | None = None
+    bonds_formed: list[tuple[Index, Index]] | None = None
+    bonds_broken: list[tuple[Index, Index]] | None = None
+    identity: TSIdentity | None = None
+
+
+class EndpointDisposition(_Strict):
+    """Whether one minimum's frequency row fed the result; ``not_recorded`` in older records."""
+
+    frequency_id: Name
+    kind: EndpointKind
+    reason_code: Code | None = None
+    superseded_by_frequency_id: Name | None = None
+
+
 class Candidate(_Strict):
     """One candidate x pathway x engine unit.
 
@@ -443,7 +556,9 @@ class Candidate(_Strict):
     gap of the candidate's selectivity result on this engine (minor minus major pathway), the same
     on every pathway it compares. ``graft_rmsd_angstrom`` is the largest alignment RMSD of the
     grafts behind the chosen template. ``frequency_ids`` and ``trajectory_ids`` are the
-    transition-state samples; the ``endpoint_*`` ids are the minima.
+    transition-state samples; the ``endpoint_*`` ids are the minima. The two disposition
+    lists say, per sample and per minimum row, whether it fed the result; each is left out of the
+    serialised form when empty.
     """
 
     candidate_entry_id: Name
@@ -470,6 +585,12 @@ class Candidate(_Strict):
     trajectory_ids: list[Name]
     endpoint_frequency_ids: list[Name]
     endpoint_trajectory_ids: list[Name]
+    sample_dispositions: list[SampleDisposition] = Field(default_factory=list)
+    endpoint_dispositions: list[EndpointDisposition] = Field(default_factory=list)
+
+    @model_serializer(mode="wrap")
+    def _omit_empty(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        return _without(handler(self), ("sample_dispositions", "endpoint_dispositions"))
 
 
 class Gate(_Strict):
@@ -545,7 +666,18 @@ class RunData(_Strict):
             member_frequencies = [m.frequency_id for m in c.members if m.frequency_id]
             _require_known(
                 "frequency",
-                [*c.frequency_ids, *c.endpoint_frequency_ids, *member_frequencies],
+                [
+                    *c.frequency_ids,
+                    *c.endpoint_frequency_ids,
+                    *member_frequencies,
+                    *(d.frequency_id for d in c.sample_dispositions if d.frequency_id),
+                    *(d.frequency_id for d in c.endpoint_dispositions),
+                    *(
+                        d.superseded_by_frequency_id
+                        for d in c.endpoint_dispositions
+                        if d.superseded_by_frequency_id
+                    ),
+                ],
                 frequencies,
             )
             _require_known(
@@ -587,12 +719,14 @@ def _relax(annotation: Any) -> Any:
 def _lenient_model(model: type[BaseModel]) -> type[BaseModel]:
     """Return the twin of a strict model that ignores unknown keys (built once).
 
-    Every field of the tree is required, and each keeps its type but not its constraints: the
-    strict model checks those afterwards.
+    A field is required exactly when the strict model requires it (an optional key added to
+    version 1 keeps its default, so older documents load), and each keeps its type but not its
+    constraints: the strict model checks those afterwards.
     """
     if model not in _LENIENT:
         fields: dict[str, Any] = {
-            name: (_relax(info.annotation), ...) for name, info in model.model_fields.items()
+            name: (_relax(info.annotation), ... if info.is_required() else info)
+            for name, info in model.model_fields.items()
         }
         if model is RunData:
             fields["schema_version"] = (int, ...)

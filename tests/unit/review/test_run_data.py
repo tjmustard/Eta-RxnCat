@@ -26,8 +26,16 @@ UNIT_SUFFIXES = (
     "_hartree_per_bohr",
     "_kcal_mol",
 )
-UNITLESS_FLOATS = {"weight_fraction", "value", "threshold"}
-"""A weight is a fraction by name; a gate's value and threshold carry ``unit``."""
+UNITLESS_FLOATS = {
+    "weight_fraction",
+    "value",
+    "threshold",
+    "ratio",
+    "forming_overlap",
+    "active_core_ke_fraction",
+}
+"""A weight is a fraction by name; a gate's value and threshold carry ``unit``; a clash ratio,
+a mode overlap and a kinetic-energy fraction are dimensionless."""
 
 
 @pytest.fixture(scope="module")

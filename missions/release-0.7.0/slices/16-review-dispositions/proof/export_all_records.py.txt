@@ -1,0 +1,48 @@
+"""Export every v0.7.0 fixture record against the slice 11/12 stores (mode=ro, no engine)."""
+
+import sqlite3
+import threading
+from collections import Counter
+from pathlib import Path
+
+from eta_rxncat.review import RunRecord, export_run_data, write_review_bundle
+from eta_rxncat.store import ArtifactStore
+
+STORES = sorted((Path.home() / ".hacf/eta-rxncat-hacf/evidence").glob("v070-slice1[12]/*.sqlite"))
+
+
+class ReadOnly(ArtifactStore):
+    def __init__(self, path):
+        self.path = path
+        self._lock = threading.Lock()
+        self._conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True, check_same_thread=False)
+
+
+import tempfile
+
+records = sorted(Path("tests/fixtures/v0.7.0").glob("*.runrecord.json"))
+for path in records:
+    record = RunRecord.model_validate_json(path.read_text())
+    best = None
+    for store_path in STORES:
+        with ReadOnly(store_path) as store:
+            data = export_run_data(record, store)
+        missing = sum(f.status == "missing" for f in data.frequencies) + sum(
+            t.status == "missing" for t in data.trajectories
+        )
+        if best is None or missing < best[0]:
+            best = (missing, store_path.parent.name + "/" + store_path.name, data)
+    missing, name, data = best
+    with tempfile.TemporaryDirectory() as tmp:
+        write_review_bundle(data, Path(tmp) / "b")
+    samples = Counter(d.kind for c in data.candidates for d in c.sample_dispositions)
+    endpoints = Counter(d.kind for c in data.candidates for d in c.endpoint_dispositions)
+    failing = Counter(
+        d.kind
+        for c in data.candidates
+        for d in c.sample_dispositions
+        if d.identity and not d.identity.passed_bool
+    )
+    print(path.name.removesuffix(".runrecord.json"), name, f"missing={missing}",
+          dict(samples), dict(endpoints), f"identity_failed={dict(failing)}")
+print(len(records), "records exported")

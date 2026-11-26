@@ -557,31 +557,30 @@ nodes:
   - tests/candidate_outputs/v0.6.0/**
   - tests/candidate_outputs/v0.7.0/**
   description: >-
-    eta_rxncat.orchestrator, species side (v0.3.0; TS v0.5.0): species/TS/reaction/barrier
-    runners. __init__, selectivity, TS ensembles: eta_rxncat_selectivity (v0.7.0 split).
-    species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES; run_species caches
-    each stage (build_stage_key): conformer_search, geometry_opt, dedup, window, frequency,
-    imaginary push then not_a_minimum, re-dedup (R53), ensemble, single points (R35).
-    Opt/SCF failures cached (capture_frames frames), others propagate; geometry_opt
-    payloads may carry frames (v0.7.0). run_constrained_point (R42). counting.py:
-    CountingEngine. ts.py: run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult:
-    ts_opt (key: engine + TS options, identity, forming bonds), frequency, validate_transition_state,
-    TransitionStateRecord; _RecordingEngine fills each TSStep's coordinates from the
-    k-th hessian=False evaluation, exactness-checked (_StepRecordError, uncached;
-    R33); failures cached with frames (ts_search_failed:<reason>, scf_convergence,
-    engine_error; Unavailable/Input errors raise, uncached); ts_validation_failed
+    eta_rxncat.orchestrator: species/TS/reaction/barrier runners. __init__, selectivity,
+    ensembles: eta_rxncat_selectivity. species.py: SpeciesSpec, Recipe, ENGINE_CLASSES;
+    run_species caches each stage (build_stage_key): conformer_search, geometry_opt,
+    dedup, window, frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble,
+    single points (R35); SpeciesResult.frequency_dispositions: one per frequency row
+    in visit order (kept|superseded_by_push->key|dropped:reason; R35). Opt/SCF failures
+    cached (capture_frames frames), others propagate; geometry_opt payloads may carry
+    frames (v0.7.0). run_constrained_point (R42). counting.py: CountingEngine. ts.py:
+    run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult: ts_opt (key: engine
+    + TS options, identity, forming bonds), frequency, validate_transition_state,
+    TransitionStateRecord; _RecordingEngine fills TSStep coordinates, exactness-checked
+    (_StepRecordError, uncached; R33); failures cached with frames (ts_search_failed,
+    scf_convergence, engine_error; Unavailable/Input errors raise uncached); ts_validation_failed
     keeps the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
     reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator; tests/e2e:
     t3 (HF1-HF3, R32), T4/t4_flexible; v0.7.0 v070.py (load_enumeration/load_fallback
     -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate: run_ts_with_fallback
     + run_species twice in one store, patched Engine.evaluate counts, private ts_*
-    sample keys; unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord,
-    finite ratio; run_fallback_unit, attributed_engine_calls, fallback_gates G8);
-    slice 13 review_v070.py: one bundle over 4 stores (sub-bundle per record via in-process
-    cli, 0 engine calls, root index + MANIFEST, coverage, fresh roots refused, M10,
-    intro decimation_statement, scans, copy to candidates); acceptance_record_v070.py
-    -> ACCEPTANCE_RESULT.json from evidence; acceptance records/verdicts; never reads
-    candidates.
+    sample keys; unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord
+    (dispositions, validation), finite ratio; run_fallback_unit, attributed_engine_calls,
+    fallback_gates G8); slice 13 review_v070.py: one bundle over 4 stores (in-process
+    cli, 0 engine calls, index + MANIFEST, coverage, fresh roots, M10, scans, copy
+    to candidates); acceptance_record_v070.py -> ACCEPTANCE_RESULT.json from evidence;
+    never reads candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -855,27 +854,25 @@ nodes:
     eta_rxncat.review (v0.7.0 slices 07-09). run_data.py: RunRecord, the exporter
     input (species; candidates with GraftRecords; runs per candidate x pathway x engine:
     FallbackRecord, TSEnsemble, thermo options, key hex; SelectivityResult; gates);
-    frozen. RunData v1, strict: schema_version Literal[1], extra=forbid, no inf/nan,
-    units in keys; provenance (versions, engines, stage keys, store file name only),
-    species, frequencies (completed|failed|missing), trajectories (stored|missing;
-    frames, decimation_stride, n_frames_total, convergence), candidates, gates; ids/references
-    validated. read_run_data: lenient twin then strict; > 1 raises UnsupportedRunDataVersion.
-    CHANGES. schema/run_data.v1.schema.json = model_json_schema() (validation mode);
-    drift test. export.py: export_run_data(record, store, *, trajectory_byte_budget)
-    reads rows by stage key, runs no engine; missing rows as missing; modes from the
-    stored Hessian (thermo.normal_modes) if grids match; unit-norm, sign-fixed imaginary
-    modes; one decimation stride (first/last kept, ExportBudgetError). canonical_run_data_json:
-    sorted, compact, floats rounded per unit, <>& U+2028/9 escaped. RunRecord ratio=inf
-    does not round-trip. bundle.py: write_review_bundle(run_data, out_dir) refuses
-    a file or non-empty dir (BundleError); writes index.html (CSP meta; JS-free escaped
-    summary: index, gates, frequencies, imaginary red, banner if n_imaginary != expected,
-    warn if failed/missing; sections #c/<id>; embedded JSON = run_data.json bytes),
-    run_data.json, assets/ (3Dmol-min.js 2.5.5 + licence sha-pinned, SOURCES.md, eta-view.js),
-    MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6. assets/eta-view.js (slice 09, MIT,
-    window.EtaView): load() refuses schema_version != 1 as text; moleculeViewer, modeAnimator
-    (20 frames, 0.4 A peak), trajectoryPlayer, energyPlot (SVG), candidateTable (sortable,
-    gate badges, #c/<id>), each (element, runData, id) -> {update, destroy}; text
-    nodes/attributes only; one candidate's 3D views mounted at a time.
+    frozen. RunData v1, strict (schema_version 1, extra=forbid, no inf/nan, units
+    in keys): provenance (file name only), species, frequencies (completed|failed|missing),
+    trajectories (stored|missing, decimated), candidates, gates; refs validated. read_run_data:
+    lenient (defaults kept) then strict; >1 raises. Committed schema; drift test.
+    export.py: export_run_data reads rows by key, no engine; modes and TSIdentity
+    (validate_transition_state) from stored Hessians; one decimation stride (ExportBudgetError).
+    Slice 16: per candidate sample_dispositions (member|merged|excluded|fell_through;
+    clash/bonds; identity) and endpoint_dispositions (kept|superseded_by_push|dropped|not_recorded),
+    omitted when empty; RunRecord optional frequency_dispositions, validation. canonical
+    JSON: sorted, rounded, HTML-safe. RunRecord ratio=inf does not round-trip. bundle.py:
+    write_review_bundle (empty dir only): index.html (CSP; JS-free summary, rows headed
+    by disposition, used then not-used groups, identity numbers, banner on mode count
+    or failed identity; sections #c/<id>; embedded run_data.json), assets/ (3Dmol
+    2.5.5 sha-pinned), MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6. assets/eta-view.js
+    (slice 09, MIT, window.EtaView): load() refuses schema_version != 1 as text; moleculeViewer,
+    modeAnimator (20 frames, 0.4 A peak), trajectoryPlayer, energyPlot (SVG), candidateTable
+    (sortable, gate badges, #c/<id>), each (element, runData, id) -> {update, destroy};
+    labels and grouping as above; text nodes/attributes only; one candidate's 3D views
+    at a time.
   inputs:
   - data_type: run_record_models
     source_id: eta_rxncat_core

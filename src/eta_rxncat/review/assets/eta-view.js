@@ -33,6 +33,9 @@
   var VIEWER_STYLE = "position:relative;width:420px;max-width:100%;height:320px;" +
     "outline:1px solid #999;margin:1px";
   var CURRENT_COLOR = "#c00000";
+  var NOT_RECORDED = "disposition not recorded";
+  var USED_TITLE = "Used in the result";
+  var NOT_USED_TITLE = "Not used (rejected, merged or superseded)";
 
   /* --- Small DOM helpers ---------------------------------------------------------------- */
 
@@ -129,6 +132,158 @@
     return i * trajectory.decimation_stride;
   }
 
+  /* --- Dispositions: whether a row fed the result, and why not --------------------------- */
+
+  function atom(symbols, i) {
+    return i < symbols.length ? symbols[i] + i : String(i);
+  }
+
+  function pair(symbols, i, j) {
+    return atom(symbols, i) + "–" + atom(symbols, j);
+  }
+
+  function sampleLabel(d, symbols) {
+    if (d.kind === "member") {
+      return d.weight_fraction === null || d.weight_fraction === undefined ? "member" :
+        "member (weight " + d.weight_fraction.toFixed(3) + ")";
+    }
+    if (d.kind === "merged") {
+      return "merged into sample " + d.merged_into_index;
+    }
+    var reason = d.reason_code || "no reason recorded";
+    if (d.clash) {
+      reason += " " + pair(symbols, d.clash.i, d.clash.j) + " " +
+        d.clash.distance_angstrom.toFixed(3) + " Å";
+    }
+    var changes = [["formed", d.bonds_formed], ["broken", d.bonds_broken]].filter(function (c) {
+      return c[1] && c[1].length;
+    }).map(function (c) {
+      return c[0] + " " + c[1].map(function (b) { return pair(symbols, b[0], b[1]); }).join(", ");
+    });
+    if (changes.length) {
+      reason += " (" + changes.join("; ") + ")";
+    }
+    return (d.kind === "excluded" ? "excluded: " : "fell through: ") + reason;
+  }
+
+  function endpointLabel(d) {
+    if (d.kind === "kept") {
+      return "kept";
+    }
+    if (d.kind === "superseded_by_push") {
+      return "superseded by push" + (d.superseded_by_frequency_id ?
+        " → " + d.superseded_by_frequency_id : "");
+    }
+    if (d.kind === "dropped") {
+      return "dropped: " + (d.reason_code || "no reason recorded");
+    }
+    return NOT_RECORDED;
+  }
+
+  function symbolsOf(runData, speciesId, fallbackId) {
+    var species = find(runData.species, "species_id", speciesId) ||
+      find(runData.species, "species_id", fallbackId);
+    return species ? species.symbols : [];
+  }
+
+  /* Used rows first, otherwise in the given order. */
+  function usedFirst(rows) {
+    return rows.filter(function (r) { return r.used; }).concat(
+      rows.filter(function (r) { return !r.used; }));
+  }
+
+  /* The rows of one candidate unit: TS samples, then minima, used rows first. A frequency no
+   * disposition names (an older document) is used only when it is a member's. */
+  function rowsOf(runData, c) {
+    var rows = [];
+    var named = {};
+    function frequencySymbols(frequencyId) {
+      var entry = find(runData.frequencies, "frequency_id", frequencyId);
+      return entry ? symbolsOf(runData, entry.species_id, c.species_id) : [];
+    }
+    (c.sample_dispositions || []).forEach(function (d) {
+      var symbols = d.frequency_id ? frequencySymbols(d.frequency_id) :
+        symbolsOf(runData, d.template_id, c.species_id);
+      named[d.frequency_id] = true;
+      rows.push({
+        frequencyId: d.frequency_id, ts: true, used: d.kind === "member",
+        kind: d.kind.replace("_", " "), label: sampleLabel(d, symbols),
+        sampleIndex: d.sample_index, source: d.source, templateId: d.template_id,
+        identity: d.identity || null, symbols: symbols
+      });
+    });
+    c.frequency_ids.forEach(function (frequencyId) {
+      if (named[frequencyId]) {
+        return;
+      }
+      var member = find(c.members, "frequency_id", frequencyId);
+      rows.push({
+        frequencyId: frequencyId, ts: true, used: !!member,
+        kind: member ? "member" : "not recorded", label: member ? "member" : NOT_RECORDED,
+        sampleIndex: member ? member.member_index : null, identity: null, symbols: []
+      });
+    });
+    var endpoints = {};
+    (c.endpoint_dispositions || []).forEach(function (d) {
+      endpoints[d.frequency_id] = true;
+      rows.push({
+        frequencyId: d.frequency_id, ts: false, used: d.kind === "kept",
+        label: endpointLabel(d), identity: null, symbols: []
+      });
+    });
+    c.endpoint_frequency_ids.forEach(function (frequencyId) {
+      if (!endpoints[frequencyId]) {
+        rows.push({
+          frequencyId: frequencyId, ts: false, used: false, label: NOT_RECORDED,
+          identity: null, symbols: []
+        });
+      }
+    });
+    return usedFirst(rows);
+  }
+
+  /* Every distinct row of one frequency id over all candidate units. */
+  function rowsFor(runData, frequencyId) {
+    var seen = {};
+    var rows = [];
+    runData.candidates.forEach(function (c) {
+      rowsOf(runData, c).forEach(function (r) {
+        if (r.frequencyId === frequencyId && !seen[r.label]) {
+          seen[r.label] = true;
+          rows.push(r);
+        }
+      });
+    });
+    return usedFirst(rows);
+  }
+
+  function identityText(identity, symbols) {
+    function value(x, digits) {
+      return x === null ? "none" : x.toFixed(digits);
+    }
+    var distances = identity.forming_distances.map(function (d) {
+      return pair(symbols, d.i, d.j) + " " + d.distance_angstrom.toFixed(3) + " Å";
+    }).join(", ");
+    var phase = identity.in_phase_bool === null ? "not evaluated" :
+      identity.in_phase_bool ? "yes" : "no";
+    return "Identity: imaginary frequency " + value(identity.imaginary_frequency_cm1, 1) +
+      " cm⁻¹; forming-bond overlap " + value(identity.forming_overlap, 3) +
+      "; active-core KE fraction " + value(identity.active_core_ke_fraction, 3) +
+      "; forming distances " + distances + "; in phase " + phase + "; " +
+      (identity.passed_bool ? "pass" : "FAIL (" + identity.reason_codes.join(", ") + ")");
+  }
+
+  /* The disposition and identity numbers of a frequency id, appended to element. */
+  function showDisposition(element, rows) {
+    rows.forEach(function (r) {
+      element.appendChild(make("p", "Disposition: " + r.label, { "class": "eta-disposition" }));
+      if (r.identity) {
+        element.appendChild(make("p", identityText(r.identity, r.symbols),
+          { "class": "eta-identity" }));
+      }
+    });
+  }
+
   /* --- 3Dmol ---------------------------------------------------------------------------- */
 
   function xyzBlock(symbols, coordinates) {
@@ -219,6 +374,7 @@
       message(element, "No structure is stored for " + id + ".");
       return inert(element);
     }
+    showDisposition(element, rowsFor(runData, id));
     var view = openViewer(element);
     if (!view) {
       return inert(element);
@@ -273,7 +429,9 @@
   function modeAnimator(element, runData, id) {
     empty(element);
     var entry = find(runData.frequencies, "frequency_id", id);
+    var rows = rowsFor(runData, id);
     if (!entry || entry.status !== "completed") {
+      showDisposition(element, rows);
       var why = !entry ? "unknown" : entry.status === "failed" ?
         "failed: " + entry.failed_code : "missing from the store";
       message(element, "Frequencies " + why + ". The imaginary-mode count is unknown.");
@@ -282,9 +440,18 @@
     var species = find(runData.species, "species_id", entry.species_id);
     var expected = expectedImaginary(runData, id);
     element.appendChild(make("p", species.label, { "class": "eta-species" }));
+    showDisposition(element, rows);
+    var problems = [];
     if (entry.n_imaginary !== expected) {
-      element.appendChild(make("div", "WARNING: " + entry.n_imaginary +
-        " imaginary mode(s); expected " + expected + ".", { "class": "banner" }));
+      problems.push(entry.n_imaginary + " imaginary mode(s); expected " + expected + ".");
+    }
+    rows.forEach(function (r) {
+      if (r.identity && !r.identity.passed_bool) {
+        problems.push("Identity check failed: " + r.identity.reason_codes.join(", ") + ".");
+      }
+    });
+    if (problems.length) {
+      element.appendChild(make("div", "WARNING: " + problems.join(" "), { "class": "banner" }));
     }
     var readout = make("p", null, { "class": "eta-mode" });
     var buttons = make("p");
@@ -583,10 +750,13 @@
       };
     }
     function imaginary(c) {
-      return c.frequency_ids.map(function (frequencyId) {
-        var entry = find(runData.frequencies, "frequency_id", frequencyId);
-        return entry.status === "completed" ? entry.n_imaginary : entry.status;
-      }).join(" ") || "none";
+      return rowsOf(runData, c).filter(function (r) {
+        return r.ts && r.frequencyId;
+      }).map(function (r) {
+        var entry = find(runData.frequencies, "frequency_id", r.frequencyId);
+        return (entry.status === "completed" ? entry.n_imaginary : entry.status) +
+          " (" + r.kind + ")";
+      }).join(", ") || "none";
     }
     function gatesOf(c) {
       return runData.gates.filter(function (g) {
@@ -747,33 +917,55 @@
     return runData;
   }
 
-  /* A labelled <select> over [id, text] options; onChange gets the chosen id. */
+  /* A labelled <select> over [id, text, group] options (the group is optional; options of one
+   * group are adjacent); onChange gets the chosen id. */
   function chooser(element, title, options, onChange) {
-    var select = make("select");
+    var select = make("select", null, { style: "max-width:100%" });
+    var group = null;
     options.forEach(function (option) {
-      select.appendChild(make("option", option[1], { value: option[0] }));
+      if (option[2] && (!group || group.label !== option[2])) {
+        group = make("optgroup", null, { label: option[2] });
+        select.appendChild(group);
+      }
+      (option[2] ? group : select).appendChild(make("option", option[1], { value: option[0] }));
     });
     select.addEventListener("change", function () { onChange(select.value); });
     add(element, add(make("label", title + " "), select));
   }
 
+  /* What a frequency row is called: its member or sample index (if any) and its key. */
+  function rowName(member, row, key) {
+    if (member) {
+      return "member " + member.member_index + ", sample " + key;
+    }
+    return row.ts && row.sampleIndex !== null ?
+      "sample " + row.sampleIndex + ", " + key : "sample " + key;
+  }
+
   /* The panels of one candidate: modes on the left, the player above the plot on the right. */
   function candidatePanels(element, runData, candidateId) {
-    var frequencies = [];
+    var found = [];
+    var unrun = [];
     var trajectories = [];
     runData.candidates.forEach(function (c) {
       if (c.candidate_id !== candidateId) {
         return;
       }
       var unit = c.pathway + ", " + c.engine_id.split("|")[0];
-      [["TS", c.frequency_ids], ["minimum", c.endpoint_frequency_ids]].forEach(function (group) {
-        group[1].forEach(function (frequencyId) {
-          var entry = find(runData.frequencies, "frequency_id", frequencyId);
-          var species = find(runData.species, "species_id", entry.species_id);
-          var member = find(c.members, "frequency_id", frequencyId);
-          frequencies.push([frequencyId, unit + ": " + group[0] + " " + species.label + " (" +
-            (member ? "member " + member.member_index :
-              "sample " + entry.stage_key.slice(0, 12)) + ")"]);
+      rowsOf(runData, c).forEach(function (r) {
+        if (!r.frequencyId) {
+          unrun.push(unit + ": sample " + r.sampleIndex + " (" + r.source + ", template " +
+            r.templateId + "): " + r.label);
+          return;
+        }
+        var entry = find(runData.frequencies, "frequency_id", r.frequencyId);
+        var species = find(runData.species, "species_id", entry.species_id);
+        var member = r.ts ? find(c.members, "frequency_id", r.frequencyId) : null;
+        found.push({
+          used: r.used,
+          option: [r.frequencyId, unit + ": " + (r.ts ? "TS" : "minimum") + " " + species.label +
+            " (" + rowName(member, r, entry.stage_key.slice(0, 12)) + ") — " + r.label,
+            r.used ? USED_TITLE : NOT_USED_TITLE]
         });
       });
       c.trajectory_ids.concat(c.endpoint_trajectory_ids).forEach(function (trajectoryId) {
@@ -782,6 +974,8 @@
           t.stage_key.slice(0, 12) + ")"]);
       });
     });
+
+    var frequencies = usedFirst(found).map(function (f) { return f.option; });
 
     empty(element);
     var left = make("div", null, { "class": "eta-left", style: "flex:1 1 440px" });
@@ -823,6 +1017,11 @@
       showFrequency(frequencies[0][0]);
     } else {
       message(left, "No frequencies for this candidate.");
+    }
+    if (unrun.length) {
+      var list = make("ul", null, { "class": "eta-unrun" });
+      unrun.forEach(function (line) { list.appendChild(make("li", line)); });
+      add(left, make("p", "Samples without frequencies (" + NOT_USED_TITLE + "):"), list);
     }
     if (trajectories.length) {
       chooser(right, "Optimization", trajectories, showTrajectory);

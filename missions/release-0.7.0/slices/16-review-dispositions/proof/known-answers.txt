@@ -1,0 +1,62 @@
+sample 6 frequency key 1f64216a4471
+{
+ "template_id": "TS1a_n__ethyl",
+ "sample_index": 6,
+ "source": "fragment_embed:6",
+ "frequency_id": "frequency:TS1a_n__ethyl:1f64216a44713818d59d0e4d619b86fc54865c0a9dd64fbd1f6d427f6c1b7c47:thermo:20.0:0.05:0.001:100000",
+ "kind": "excluded",
+ "reason_code": "gate_failed:forming_overlap",
+ "merged_into_index": null,
+ "weight_fraction": null,
+ "clash": null,
+ "bonds_formed": null,
+ "bonds_broken": null,
+ "identity": {
+  "n_imaginary": 1,
+  "imaginary_frequency_cm1": -117.97740304477202,
+  "forming_overlap": 0.13081659630782128,
+  "active_core_ke_fraction": 0.6186579726070024,
+  "forming_distances": [
+   {
+    "i": 1,
+    "j": 2,
+    "distance_angstrom": 3.6616294231039386
+   },
+   {
+    "i": 3,
+    "j": 5,
+    "distance_angstrom": 2.853483958119183
+   }
+  ],
+  "in_phase_bool": true,
+  "passed_bool": false,
+  "reason_codes": [
+   "forming_distance_out_of_window",
+   "forming_overlap_below_threshold"
+  ]
+ }
+}
+endpoint kinds (old record): ['not_recorded']
+not-used block: (sample 6, 1f64216a4471) — excluded: gate_failed:forming_overlap</h5><div class="banner">WARNING: Transition state identity check failed: forming_distance_out_of_window, forming_overlap_below_threshold.</div><p>Identity: imaginary frequency -118.0 cm⁻¹; forming-bond overlap 0.131; active-core KE fraction 0.619; forming distances C1–C2 3.662 Å, C3–C5 2.853 Å; in phase yes; FAIL (forming_distance_out_of_window, forming_overlap_below_threshold)</p>
+cyclopentadiene__npropyl engine calls 0
+   ea8df6ab937d kept None 
+   kept record 0 source_ids [0, 10, 18]
+cyclopropene__npropyl engine calls 0
+   78c2c9876b89 kept None 
+   edea8d156eca dropped mirror_partner 
+   eff482560785 kept None 
+   5ebb886afc5e kept None 
+   fe6df08746a6 kept None 
+   62caef43e33f dropped mirror_partner 
+   071c077d750a superseded_by_push None ee86975197d1
+   ee86975197d1 dropped duplicate_after_push 
+   kept record 0 source_ids [0, 7, 8, 9, 17, 19]
+   kept record 1 source_ids [1, 11]
+   kept record 2 source_ids [18]
+   kept record 3 source_ids [4, 14]
+071c077d750a in not-used | Minimum: cyclopropene__npropyl (sample 071c077d750a) — superseded by push → frequency:cyclopropene__npropyl:ee86975197d14e7e4a2896eae0573fe77299d2f1f1d5f882928453e605ab5a60:thermo:20.0:0.05:0.001:100000
+ee86975197d1 in not-used | Minimum: cyclopropene__npropyl (sample ee86975197d1) — dropped: duplicate_after_push
+78c2c9876b89 in used | Minimum: cyclopropene__npropyl (sample 78c2c9876b89) — kept
+engine evaluations: 0
+store sha256 unchanged: True 613751808b048e5c69b3388ea0adda46067b9e5b701ca1f8f066dcf98eba8ced
+exit 0

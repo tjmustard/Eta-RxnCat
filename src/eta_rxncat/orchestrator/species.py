@@ -206,6 +206,24 @@ class RunMetrics:
 
 
 @dataclass(frozen=True)
+class FrequencyDisposition:
+    """What a run did with one ``frequency`` row (v0.7.0, R35).
+
+    Attributes:
+        frequency_key: The row's stage key.
+        kind: ``kept`` (its record is in the returned ensemble), ``superseded_by_push`` (an
+            imaginary mode led to a push that gave a new row) or ``dropped``.
+        reason: The run's drop reason; ``None`` unless ``dropped``.
+        superseded_by_key: The pushed row's stage key; ``None`` unless ``superseded_by_push``.
+    """
+
+    frequency_key: str
+    kind: Literal["kept", "superseded_by_push", "dropped"]
+    reason: str | None = None
+    superseded_by_key: str | None = None
+
+
+@dataclass(frozen=True)
 class SpeciesResult:
     """The result of ``run_species``.
 
@@ -216,6 +234,7 @@ class SpeciesResult:
             (Eh) per ensemble record index.
         metrics: Per-stage metrics.
         keys: Every stage key the run used, by kind, in visit order.
+        frequency_dispositions: One entry per ``frequency`` row the run used, in visit order.
     """
 
     ensemble: ConformerEnsemble
@@ -223,6 +242,7 @@ class SpeciesResult:
     single_point_energies: dict[int, dict[int, float]]
     metrics: RunMetrics
     keys: dict[str, tuple[str, ...]]
+    frequency_dispositions: tuple[FrequencyDisposition, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -276,8 +296,13 @@ class _Runner:
         self.engine = CountingEngine(build_engine(recipe.engine_stage, recipe.engine_runtime))
         self.metrics = RunMetrics()
         self.keys: dict[str, list[str]] = {k: [] for k in STAGE_KINDS}
+        self.fates: dict[str, FrequencyDisposition] = {}
 
     # stage plumbing -------------------------------------------------------------------------
+
+    def drop_frequency(self, key: str, reason: str) -> None:
+        """Record the ``frequency`` row ``key`` as dropped for ``reason``."""
+        self.fates[key] = FrequencyDisposition(key, "dropped", reason=reason)
 
     def _lookup(self, kind: str, key: StageKey) -> dict[str, Any] | None:
         """Return the completed payload of ``key`` (a hit) or ``None`` (a miss)."""
@@ -567,12 +592,14 @@ def run_species(
     # frequency, push, thermo, degeneracy
     records: list[ConformerRecord] = []
     freq_geometry: dict[tuple[int, ...], dict[str, Any]] = {}
+    freq_key: dict[tuple[int, ...], str] = {}
     for k in inside:
         member, result = optimized[k.index]
         source_ids = sorted(optimized[i][0].source_id for i in k.source_ids)
         done = _frequency_and_thermo(runner, spec, recipe, result, source_ids, dropped)
         if done is not None:
             freq_geometry[tuple(done[0].source_ids)] = done[1]
+            freq_key[tuple(done[0].source_ids)] = done[2]
             records.append(done[0])
 
     records = _dedup_after_push(records, spec, dropped)
@@ -581,6 +608,14 @@ def run_species(
         dropped.append((records[index].source_ids[0], reason))
     if not kept_records:
         raise EnsembleEmptyError(sorted(dropped))
+    # a record dropped after the frequencies; a kept record on the same row overrides it below
+    reasons = dict(dropped)
+    final = {tuple(r.source_ids) for r in kept_records}
+    for ids, key in freq_key.items():
+        if ids not in final:
+            runner.drop_frequency(key, reasons[ids[0]])
+    for ids in final:
+        runner.fates[freq_key[ids]] = FrequencyDisposition(freq_key[ids], "kept")
     records = kept_records
 
     # incremental single points
@@ -614,6 +649,9 @@ def run_species(
         single_point_energies=sp_energies,
         metrics=runner.metrics,
         keys={k: tuple(v) for k, v in runner.keys.items()},
+        frequency_dispositions=tuple(
+            runner.fates[k] for k in dict.fromkeys(runner.keys["frequency"])
+        ),
     )
 
 
@@ -666,14 +704,16 @@ def _frequency_and_thermo(
     result: OptimizationResult,
     source_ids: list[int],
     dropped: list[tuple[int, str]],
-) -> tuple[ConformerRecord, dict[str, Any]] | None:
+) -> tuple[ConformerRecord, dict[str, Any], str] | None:
     """Frequency, one imaginary-mode push at most, thermo and degeneracy of one kept conformer.
 
-    Returns the record and the frequency row's stored geometry payload.
+    Returns the record, the frequency row's stored geometry payload and its stage key.
     """
     freq = runner.frequency(result.final_state)
+    key = runner.keys["frequency"][-1]
     if isinstance(freq, str):
         dropped.append((source_ids[0], freq))
+        runner.drop_frequency(key, freq)
         return None
     thermo = _thermo(spec, recipe, result.final_state, result.final_energy_hartree, freq[1])
     try:
@@ -682,17 +722,22 @@ def _frequency_and_thermo(
         pushed = _push(runner, spec, recipe, result, freq[1])
         if pushed is None:
             dropped.append((source_ids[0], "optimization_failed"))
+            runner.drop_frequency(key, "optimization_failed")
             return None
         result = pushed
         freq = runner.frequency(result.final_state)
+        old, key = key, runner.keys["frequency"][-1]
+        runner.fates[old] = FrequencyDisposition(old, "superseded_by_push", superseded_by_key=key)
         if isinstance(freq, str):
             dropped.append((source_ids[0], freq))
+            runner.drop_frequency(key, freq)
             return None
         thermo = _thermo(spec, recipe, result.final_state, result.final_energy_hartree, freq[1])
         try:
             check_ground_state(thermo)
         except NotAMinimumError:
             dropped.append((source_ids[0], "not_a_minimum"))
+            runner.drop_frequency(key, "not_a_minimum")
             return None
     record = ConformerRecord(
         state=result.final_state,
@@ -701,7 +746,7 @@ def _frequency_and_thermo(
         degeneracy=assign_degeneracy(result.final_state, spec.smiles, spec.conformer_options),
         source_ids=source_ids,
     )
-    return record, freq[2]
+    return record, freq[2], key
 
 
 def _push(
@@ -785,6 +830,7 @@ def run_constrained_point(
 __all__ = [
     "ENGINE_CLASSES",
     "ConstrainedPoint",
+    "FrequencyDisposition",
     "Recipe",
     "RunMetrics",
     "SinglePoint",

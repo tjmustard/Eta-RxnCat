@@ -1,0 +1,16 @@
+import sys
+from pathlib import Path
+from eta_rxncat.review import read_run_data, write_review_bundle
+root = Path(sys.argv[2])
+data = read_run_data(Path(sys.argv[1]).read_bytes())
+write_review_bundle(data, root / "bundle")
+other = write_review_bundle(data, root / "unsupported")
+page = other / "index.html"
+old = b'"schema_version":1,'
+html = page.read_bytes()
+assert html.count(old) == 1
+page.write_bytes(html.replace(old, b'"schema_version":2,'))
+(root / "control.html").write_text(
+    '<!DOCTYPE html><title>control</title><img src="http://127.0.0.1:59999/m12-control">'
+    '<script>console.error("m12-control-error")</script>'
+)

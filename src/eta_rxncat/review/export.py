@@ -1,10 +1,11 @@
 """Export a run from the artifact store, and serialise it canonically (v0.7.0, slice 07).
 
 The exporter resolves each stage key of a ``RunRecord`` to its cached row. It never runs an engine
-and never recomputes a result: a row the store does not hold is exported as ``missing``. The one
-derivation is the normal modes of a stored Hessian (``thermo.normal_modes`` with the run's own
-options, so the listed frequencies are the gated ones). Only allow-listed fields leave a row; its
-``message`` never does (mission R15).
+and never recomputes a result: a row the store does not hold is exported as ``missing``. The two
+derivations from a stored Hessian are its normal modes (``thermo.normal_modes``) and a transition
+state's identity numbers (``thermo.validate_transition_state``), both with the run's own options,
+so they are the gated ones. Only allow-listed fields leave a row; its ``message`` never does
+(mission R15).
 """
 
 import json
@@ -18,15 +19,20 @@ import eta_rxncat
 from eta_rxncat.core import (
     EngineIdentity,
     OptimizationFrame,
+    SeedCheckDetail,
     ThermoAnalysisOptions,
     TSSearchResult,
+    TSValidationOptions,
 )
 from eta_rxncat.review.run_data import (
     SCHEMA_VERSION,
     Candidate,
+    Clash,
     Convergence,
+    EndpointDisposition,
     EngineEntry,
     FallbackAttemptCode,
+    FormingDistance,
     Frame,
     FrequencyCompleted,
     FrequencyEntry,
@@ -39,11 +45,14 @@ from eta_rxncat.review.run_data import (
     OptimizerEntry,
     Provenance,
     RecordCandidate,
+    RecordEndpoint,
     RecordRun,
+    RecordSample,
     RecordSpecies,
     RecordUnitRef,
     RunData,
     RunRecord,
+    SampleDisposition,
     Species,
     StageKeyEntry,
     ThermoOptionsEntry,
@@ -51,9 +60,10 @@ from eta_rxncat.review.run_data import (
     TrajectoryKind,
     TrajectoryMissing,
     TrajectoryStored,
+    TSIdentity,
 )
 from eta_rxncat.store import KEY_SCHEMA, ArtifactStore, StageKey, grid_coordinate
-from eta_rxncat.thermo import normal_modes
+from eta_rxncat.thermo import normal_modes, validate_transition_state
 
 _SIGNIFICANT_DIGITS: tuple[tuple[str, int], ...] = (
     # (key suffix, significant digits); the first match wins.
@@ -360,12 +370,104 @@ class _Export:
         self.frequencies.setdefault(frequency_id, entry)
         return frequency_id
 
+    def identity(
+        self, run: RecordRun, sample: RecordSample, frequency_id: str
+    ) -> TSIdentity | None:
+        """Judge one sample's stored Hessian with the validator the run used.
+
+        ``None`` without a completed frequency row and a converged ``ts_opt`` row to read the
+        forming bonds from.
+        """
+        entry = self.frequencies[frequency_id]
+        if not isinstance(entry, FrequencyCompleted) or sample.ts_opt_key is None:
+            return None
+        row = self.rows.get("ts_opt", sample.ts_opt_key)
+        if row is None or "failed_reason" in row:
+            return None
+        search = TSSearchResult.model_validate(row)
+        hessian = self.rows.get("frequency", entry.stage_key)
+        assert hessian is not None  # the entry is completed
+        verdict = validate_transition_state(
+            search.final_state.model_copy(update={"coordinates": entry.coordinates_angstrom}),
+            hessian["hessian_hartree_per_bohr2"],
+            forming_bonds=[(bond.i, bond.j) for bond in search.forming_bonds],
+            options=run.validation or TSValidationOptions(),
+            analysis=run.analysis,
+        )
+        distances = sorted(
+            (tuple(int(a) for a in key.split("-")), value)
+            for key, value in verdict.forming_distances_angstrom.items()
+        )
+        return TSIdentity(
+            n_imaginary=verdict.n_imaginary,
+            imaginary_frequency_cm1=verdict.imaginary_frequency_cm1,
+            forming_overlap=verdict.forming_stretch_overlap,
+            active_core_ke_fraction=verdict.active_core_ke_fraction,
+            forming_distances=[
+                FormingDistance(i=pair[0], j=pair[1], distance_angstrom=value)
+                for pair, value in distances
+            ],
+            in_phase_bool=verdict.forming_bonds_in_phase_bool,
+            passed_bool=verdict.passed_bool,
+            reason_codes=list(verdict.reasons),
+        )
+
+    def sample_disposition(
+        self, run: RecordRun, sample: RecordSample, frequency_id: str | None
+    ) -> SampleDisposition:
+        """Say whether one sample fed the result, from the record alone (R35).
+
+        A sample the record says nothing about (its chosen ensemble does not list it, or no
+        fallback attempt names its template) is ``excluded`` with the reason ``not_recorded``.
+        """
+        fallback = run.fallback
+        found: dict[str, Any] = {"kind": "excluded", "reason_code": "not_recorded"}
+        detail: SeedCheckDetail | None = None
+        if sample.template_id != fallback.chosen_template_id:
+            attempt = next(
+                (a for a in fallback.attempts if a.template_id == sample.template_id), None
+            )
+            if attempt is not None:
+                found = {"kind": "fell_through", "reason_code": attempt.reason}
+                detail = attempt.detail
+        elif run.ensemble is not None:
+            index = sample.sample_index
+            for member in run.ensemble.members:
+                if member.index == index:
+                    found = {"kind": "member", "weight_fraction": member.weight}
+            for merge in run.ensemble.merges:
+                if merge.merged_index == index:
+                    found = {"kind": "merged", "merged_into_index": merge.kept_index}
+            for excluded in run.ensemble.excluded:
+                if excluded.index == index:
+                    found = {"kind": "excluded", "reason_code": excluded.reason}
+                    detail = excluded.detail
+        if detail is not None:
+            if detail.pair is not None:
+                found["clash"] = Clash(
+                    i=detail.pair[0],
+                    j=detail.pair[1],
+                    distance_angstrom=detail.distance_angstrom,
+                    ratio=detail.ratio_to_covalent_sum,
+                )
+            found["bonds_formed"] = detail.bonds_formed
+            found["bonds_broken"] = detail.bonds_broken
+        return SampleDisposition(
+            template_id=sample.template_id,
+            sample_index=sample.sample_index,
+            source=sample.source,
+            frequency_id=frequency_id,
+            identity=None if frequency_id is None else self.identity(run, sample, frequency_id),
+            **found,
+        )
+
     def candidate(self, run: RecordRun, candidate: RecordCandidate, ddg: float | None) -> Candidate:
         """Resolve one run's rows and return its candidate entry."""
         state = self.spec(run.species_id).state
         samples: dict[tuple[str, int], tuple[str | None, list[str]]] = {}
         frequency_ids: list[str] = []
         trajectory_ids: list[str] = []
+        sample_dispositions: list[SampleDisposition] = []
         for sample in run.samples:
             where = (sample.template_id, sample.sample_index)
             if where in samples:
@@ -387,11 +489,13 @@ class _Export:
                     sample.species_id, sample.frequency_key, run.analysis, geometry
                 )
                 frequency_ids.append(frequency_id)
+            sample_dispositions.append(self.sample_disposition(run, sample, frequency_id))
             samples[where] = (frequency_id, own)
             trajectory_ids.extend(own)
 
         endpoint_frequency_ids: list[str] = []
         endpoint_trajectory_ids: list[str] = []
+        endpoint_dispositions: dict[str, EndpointDisposition] = {}
         for endpoint in run.endpoints:
             label = self.spec(endpoint.species_id).label
             endpoint_trajectory_ids.extend(
@@ -399,10 +503,13 @@ class _Export:
                 for key in endpoint.opt_keys
             )
             geometry = [("geometry_opt", key) for key in endpoint.opt_keys]
-            endpoint_frequency_ids.extend(
-                self.frequency(endpoint.species_id, key, run.analysis, geometry)
+            ids = {
+                key: self.frequency(endpoint.species_id, key, run.analysis, geometry)
                 for key in endpoint.frequency_keys
-            )
+            }
+            endpoint_frequency_ids.extend(ids.values())
+            for disposition in _endpoint_dispositions(endpoint, ids):
+                endpoint_dispositions.setdefault(disposition.frequency_id, disposition)
 
         fallback = run.fallback
         chosen = fallback.chosen_template_id
@@ -478,7 +585,46 @@ class _Export:
             trajectory_ids=_distinct(trajectory_ids),
             endpoint_frequency_ids=_distinct(endpoint_frequency_ids),
             endpoint_trajectory_ids=_distinct(endpoint_trajectory_ids),
+            sample_dispositions=sample_dispositions,
+            endpoint_dispositions=list(endpoint_dispositions.values()),
         )
+
+
+def _endpoint_dispositions(
+    endpoint: RecordEndpoint, ids: dict[str, str]
+) -> list[EndpointDisposition]:
+    """Return one disposition per frequency row of ``endpoint`` (``ids``: key -> frequency id).
+
+    A row the record says nothing about is ``not_recorded``; it is never guessed.
+
+    Raises:
+        ExportError: A disposition names a row the endpoint does not list, or one row twice.
+    """
+    recorded = _index(
+        "frequency disposition",
+        ((d.frequency_key, d) for d in endpoint.frequency_dispositions or []),
+    )
+    superseding = (d.superseded_by_key for d in recorded.values() if d.superseded_by_key)
+    unknown = sorted({*recorded, *superseding} - set(ids))
+    if unknown:
+        raise ExportError(
+            f"species {endpoint.species_id!r} lists no frequency row(s) {unknown} that its "
+            "dispositions name"
+        )
+    result = []
+    for key, frequency_id in ids.items():
+        found = recorded.get(key)
+        result.append(
+            EndpointDisposition(frequency_id=frequency_id, kind="not_recorded")
+            if found is None
+            else EndpointDisposition(
+                frequency_id=frequency_id,
+                kind=found.kind,
+                reason_code=found.reason,
+                superseded_by_frequency_id=ids.get(found.superseded_by_key or ""),
+            )
+        )
+    return result
 
 
 def _distinct(ids: Iterable[str]) -> list[str]:
