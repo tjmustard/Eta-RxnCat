@@ -4,6 +4,66 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-26
+
+### Added
+- **Selectivity between competing pathways** (`eta_rxncat.orchestrator`, `selectivity.py`). A
+  pathway's free energy is a Boltzmann sum over its validated, deduplicated TS ensemble, and
+  `score_selectivity` reports the multi-pathway ΔΔG‡ and a % de (the ee form is refused over
+  multi-member ensembles, `SelectivityInputError`). A ratio overflow returns +inf rather than
+  raising (R27).
+- **Per-pathway pruning** (`PathwayPruningRule` in `core`, beside the existing `PruningRule`). It
+  prunes a minor pathway's priority ≥ 2 nodes when its ΔΔG‡ exceeds a threshold. There is no
+  library default. TJ's 1.5 kcal/mol rule is set in the Tier 4 mapped fixture (Q2 A, R7). The
+  older global `skip_remaining_nodes` is not used.
+- **TS conformer ensembles** (`eta_rxncat.conformers`). The TS sampler freezes the forming core
+  and samples the rest. Each sample is re-optimised with P-RFO, deduplicated, and its member
+  energies are combined into one Boltzmann sum. Each member carries a degeneracy.
+- **Per-fragment TS embedding.** The sampler embeds each fragment with ETKDGv3, then applies a
+  seeded perturbation to the non-core atoms. It replaces the draft's coordMap embedding, which
+  failed by measurement (R16, HF-4).
+- **HF-13 pre-relax wall-time guard.** The geomeTRIC pre-relaxation has a 600 s budget. On
+  expiry it raises `PreRelaxTimeout`, which is recorded as an exclusion with its reason rather
+  than a silent skip (ADR-0048, PROPOSED).
+- **Tier 4 inputs and acceptance** (`tests/e2e/test_t4_*.py`). Unmapped
+  and mapped endo/exo pairs run on GFN2 and UMA, with TJ's flexible alkyl series on TS1a_n (R =
+  ethyl, n-propyl, n-butyl) checking mechanics only.
+- **Phase 3 (TJ):** the ten v0.6.0 candidates are promoted to `tests/fixtures/v0.6.0/` in
+  `6fce509`, with TJ's regression bounds (R31): |ΔE_TS| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å,
+  |ΔΔG‡| ≤ 0.01 kcal/mol on GFN2 and ≤ 0.75 kcal/mol on UMA.
+- **v0.6.0 acceptance** (`docs/prd/v0.6.0/ACCEPTANCE_RESULT.json`, verdict `pass`, run
+  2026-11-26 at `b67214b`, on an NVIDIA GeForce RTX 5060 Ti with UMA `uma-s-1p2p1` (fairchem
+  2.26.0) on CUDA and xtb 6.8.0 on the CPU):
+  - default suite: 2212 passed, 0 skipped, 0 failed, 180 deselected, exit 0; every acceptance
+    command exits 0;
+  - the acceptance run's ΔΔG‡ for each pair and recipe, kcal/mol: GFN2 unmapped endo/exo 3.98,
+    GFN2 mapped 1.75 (exo pruned by the 1.5 rule); UMA unmapped 4.60, UMA mapped 1.41 (computed);
+  - reproducibility over three fresh-store runs, all within TJ's bounds: GFN2 repeats exactly;
+    the largest UMA |ΔΔG‡| between runs is 2.3e-4 kcal/mol (mapped) and 4.6e-5 kcal/mol
+    (unmapped).
+
+### Changed
+- **Engine errors in a TS search:** an xtb `EngineError` (such as exit 128) now ends the search
+  as a cached `failed_reason` instead of escaping `run_transition_state`. This closes the
+  v0.5.0 known issue of the same name (slice 03).
+
+### Known issues
+- **The Tier 4 Liu TSs converge to one member per pathway (HF-10).** The multi-member Boltzmann
+  sum is proven by unit tests and by the flexible alkyl series, not by the Liu systems.
+- **HF-13: geomeTRIC's pre-relax can stall inside the black box.** The 600 s guard bounds the
+  stall and fired in real runs. On a loaded host it also fired for GFN2 (slice 12 audit), and a
+  GFN2 unmapped endo and n-butyl now show a `PreRelaxTimeout` that the fixtures lack. The budget
+  is sensitive to host load and a member can be cut. Planned for v0.7.0.
+- **geomeTRIC writes `HT.v_*.txt` mode files into the current working directory.** The lead
+  removed the files written during the slice 12 run from the repo root. A v0.7.0 fix is planned.
+- **The mapped pair misses ADR-0040's margin.** Its UMA ΔΔG‡ margin is −0.09 against 1.0
+  kcal/mol (slice 10, G6). This is reported, not a failure.
+- **The pruning rule straddles its threshold.** On GFN2 the mapped exo is pruned (ΔΔG‡ +1.75
+  kcal/mol); on UMA the same branch is computed (+1.41 kcal/mol). The 1.5 kcal/mol cut is
+  TJ's choice, and the two recipes fall on opposite sides of it.
+- **ADR-0048 is PROPOSED and stale since slice 13.** It awaits TJ's lore review at the version
+  end, as do the other proposed ADRs.
+
 ## [0.5.0] - 2026-11-24
 
 ### Added

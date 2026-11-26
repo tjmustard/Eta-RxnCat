@@ -208,7 +208,7 @@ competing pathways and prunes the losing branch. Everything beyond it is listed 
 - TJ's 1.5 kcal/mol pruning rule prunes the minor exo branch with GFN2 (ΔΔG‡ +1.75 kcal/mol) and
   computes it with UMA (+1.41 kcal/mol).
 - Flexible ensembles are real: R = ethyl, n-propyl and n-butyl grafted onto TS1a_n give at least
-  two distinct members on GFN2 and UMA, with unit weights, the seed's face and a second pass of
+  two distinct members on GFN2 and UMA, with weights that sum to 1, the seed's face and a second pass of
   all cache hits.
 - TJ's regression bounds: |ΔE_TS| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡| ≤ 0.75 kcal/mol
   on UMA and ≤ 0.01 kcal/mol on GFN2.

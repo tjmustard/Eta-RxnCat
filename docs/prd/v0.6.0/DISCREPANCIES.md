@@ -21,7 +21,7 @@ take their text from mission §5 "Starter discrepancies" of `missions/release-0.
 The rows of mission `missions/release-0.6.0/SPEC.md` §5 "Starter discrepancies". Starter paths are
 relative to `docs/prd/v0.6.0/Eta-RxnCat-v0.6.0/`. R-, Q- and HF-numbers cite the mission SPEC.
 
-**Status.** `open` means the row is logged and its v0.6.0 decision is not yet built. The Slice column
+**Status.** `closed (audits NN, …)` means each listed audit handoff named the row as satisfied; the scribe closed it at v0.6.0 docs time. `open` means the row is logged and its v0.6.0 decision is not yet built. The Slice column
 names the implementing slice or slices from the mission's execution checklist. An audit lists a row in its
 PASS handoff when its slice satisfies it, and the scribe closes it at v0.6.0 docs time.
 
@@ -76,12 +76,12 @@ fff8b525139897cb6d84b8539093cb3d13de9fd8d6e9dad6630892d088455d3d  Eta-RxnCat-v0.
 
 | ID | Source | Behaviour there | v0.6.0 decision | Slice | Status |
 |---|---|---|---|---|---|
-| DV-01 / PD-010 | starter plan vs zip, PR #12, #13 | plan: "% ee / regioselectivity"; zip adds "*(Done when unit tests verify selectivity math and branch pruning.)*" | the `PRDs/` plan governs (TJ Q1 "A"); the zip's added done-criterion is logged, not followed. PD-010 status set to `logged as DV-01` in slice 01. | 01, 04, 07 | open |
-| DV-02 | starter `core.reaction_graph` (mission §5) | `core.reaction_graph.PruningRule(rule_id, metric, reference_node_id, target_node_id, operator, threshold, on_fail)` | eta's `core.graph.PruningRule(id, description, parameters)` stays as it is; a new `PathwayPruningRule` sits beside it (R7, R23). | 02, 07 | open |
-| DV-03 | starter selectivity code (mission §5; file not opened) | own physical constants, and an exponent clamp at 500 | `eta_rxncat.thermo` constants and log-sum-exp, no clamp. | 04 | open |
-| DV-04 | starter selectivity code (mission §5; file not opened) | compares two TSs; plan says "Boltzmann-weighted" | TJ Q1 B: each pathway's G is a Boltzmann sum over its validated, deduplicated TS ensemble. | 04, 06 | open |
-| DV-05 | starter selectivity code (mission §5; file not opened) | a global `skip_remaining_nodes` | per-pathway pruning of the computed minor pathway's priority ≥ 2 nodes (TJ Q2 A, R7). | 07 | open |
+| DV-01 / PD-010 | starter plan vs zip, PR #12, #13 | plan: "% ee / regioselectivity"; zip adds "*(Done when unit tests verify selectivity math and branch pruning.)*" | the `PRDs/` plan governs (TJ Q1 "A"); the zip's added done-criterion is logged, not followed. PD-010 status set to `logged as DV-01` in slice 01. | 01, 04, 07 | closed (audit 07) |
+| DV-02 | starter `core.reaction_graph` (mission §5) | `core.reaction_graph.PruningRule(rule_id, metric, reference_node_id, target_node_id, operator, threshold, on_fail)` | eta's `core.graph.PruningRule(id, description, parameters)` stays as it is; a new `PathwayPruningRule` sits beside it (R7, R23). | 02, 07 | closed (audit 07) |
+| DV-03 | `src/eta_rxncat/orchestrator/selectivity.py` in the starter (mission §5; file not opened) | own physical constants, and an exponent clamp at 500 | `eta_rxncat.thermo` constants and log-sum-exp, no clamp. | 04 | closed (audit 04) |
+| DV-04 | `src/eta_rxncat/orchestrator/selectivity.py` in the starter (mission §5; file not opened) | compares two TSs; plan says "Boltzmann-weighted" | TJ Q1 B: each pathway's G is a Boltzmann sum over its validated, deduplicated TS ensemble. | 04, 06 | open |
+| DV-05 | `src/eta_rxncat/orchestrator/selectivity.py` in the starter (mission §5; file not opened) | a global `skip_remaining_nodes` | per-pathway pruning of the computed minor pathway's priority ≥ 2 nodes (TJ Q2 A, R7). | 07 | closed (audit 07) |
 | DV-06 | TJ's Tier 4 YAMLs | forming-bond indices `[0,2,3,4]`, product label `P1a_n`; "% ee" for a diastereomeric pair | schema 1; indices `[1,2,3,5]`; `P1a_n` → `P1b_x` (Q-E4); the quantity is reported as % de. | 08 | open |
-| DV-07 | starter overall | no TS conformer search | added per TJ Q1 B (sampler and ensemble runner). | 05, 06 | open |
-| DV-08 | starter selectivity code (mission §5; file not opened) | `kind="ee"` accepted over any pathway | `kind="ee"` is refused over multi-member ensembles (R8, `SelectivityInputError`). | 04 | open |
-| DV-09 | starter conformer sampler | ETKDG with a coordMap over the two-fragment TS graph | per-fragment ETKDGv3 embedding plus a seeded non-core perturbation (R16; the draft fails by measurement, HF-4). | 05 | open |
+| DV-07 | starter overall | no TS conformer search | added per TJ Q1 B (sampler and ensemble runner). | 05, 06 | closed (audit 06) |
+| DV-08 | `src/eta_rxncat/orchestrator/selectivity.py` in the starter (mission §5; file not opened) | `kind="ee"` accepted over any pathway | `kind="ee"` is refused over multi-member ensembles (R8, `SelectivityInputError`). | 04 | closed (audit 04) |
+| DV-09 | draft TS sampler in mission §5 (R16, HF-4; not in the starter, which has no TS sampler, DV-07) | ETKDG with a coordMap over the two-fragment TS graph | per-fragment ETKDGv3 embedding plus a seeded non-core perturbation (R16; the draft fails by measurement, HF-4). | 05 | closed (audit 05) |
