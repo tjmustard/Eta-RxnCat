@@ -113,7 +113,7 @@ command.
 - [x] `review/run_data.py` (writer, reader, version error), `review/schema/__main__.py`, schema file.
 - [x] `review/export.py` (`export_run_data`, `canonical_run_data_json`).
 - [x] Tests `tests/unit/review/test_run_data.py`, `test_export.py`, `test_canonical_json.py`.
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
