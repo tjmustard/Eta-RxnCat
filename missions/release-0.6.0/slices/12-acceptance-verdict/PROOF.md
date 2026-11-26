@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/01-qa.md - qa PASS: Re-merge byte-identical, verdict pass; fixtures equal R31 by sha256 and blob id; own regression vs promoted fixtures within TJ bounds on all 10 cases; version 0.6.0 in four files; oracles 0, pytest 2218 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
