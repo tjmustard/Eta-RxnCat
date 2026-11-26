@@ -12,6 +12,7 @@
 
 - proof/16-execute.md - guard CLEAR: sample 6 excluded overlap 0.131 with banner; 071c superseded; 0 engine calls; M12 0 failed; pytest 2660 passed
 - proof/16-execute-fix1.md - guard CLEAR: push chain reaches duplicate_after_push (fails without the drop); re-export reverted; pytest 2660 passed
+- proof/16-qa.md - qa PASS: every review row carries its disposition; sample 6 banner and push chain reproduced on real data, 0 engine calls; pytest 2660 passed
 
 ## Residue / caveats
 

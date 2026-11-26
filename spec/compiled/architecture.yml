@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -65,8 +65,8 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.11
@@ -76,7 +76,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,14 +177,14 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -228,12 +228,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -287,12 +287,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -354,12 +354,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -412,12 +412,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.16
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -468,14 +468,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -534,14 +534,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -557,30 +557,30 @@ nodes:
   - tests/candidate_outputs/v0.6.0/**
   - tests/candidate_outputs/v0.7.0/**
   description: >-
-    eta_rxncat.orchestrator: species/TS/reaction/barrier runners. __init__, selectivity,
-    ensembles: eta_rxncat_selectivity. species.py: SpeciesSpec, Recipe, ENGINE_CLASSES;
-    run_species caches each stage (build_stage_key): conformer_search, geometry_opt,
-    dedup, window, frequency, imaginary push then not_a_minimum, re-dedup (R53), ensemble,
-    single points (R35); SpeciesResult.frequency_dispositions: one per frequency row
-    in visit order (kept|superseded_by_push->key|dropped:reason; R35). Opt/SCF failures
-    cached (capture_frames frames), others propagate; geometry_opt payloads may carry
-    frames (v0.7.0). run_constrained_point (R42). counting.py: CountingEngine. ts.py:
+    eta_rxncat.orchestrator: species/TS/reaction/barrier runners (v0.3.0+). __init__,
+    selectivity, ensembles: eta_rxncat_selectivity (v0.7.0 split). species.py: SpeciesSpec,
+    Recipe, SinglePoint, ENGINE_CLASSES; run_species caches each stage (build_stage_key):
+    conformer_search, geometry_opt, dedup, window, frequency, imaginary push then
+    not_a_minimum, re-dedup (R53), ensemble, single points (R35); SpeciesResult.frequency_dispositions
+    (FrequencyDisposition): one per frequency row, visit order, hits and misses (kept|superseded_by_push->key|dropped:reason).
+    Opt/SCF failures cached, others propagate; geometry_opt rows (failures too) may
+    carry frames. run_constrained_point (R42). counting.py: CountingEngine. ts.py:
     run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult: ts_opt (key: engine
     + TS options, identity, forming bonds), frequency, validate_transition_state,
-    TransitionStateRecord; _RecordingEngine fills TSStep coordinates, exactness-checked
-    (_StepRecordError, uncached; R33); failures cached with frames (ts_search_failed,
-    scf_convergence, engine_error; Unavailable/Input errors raise uncached); ts_validation_failed
-    keeps the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
-    reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator; tests/e2e:
-    t3 (HF1-HF3, R32), T4/t4_flexible; v0.7.0 v070.py (load_enumeration/load_fallback
-    -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate: run_ts_with_fallback
-    + run_species twice in one store, patched Engine.evaluate counts, private ts_*
-    sample keys; unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord
-    (dispositions, validation), finite ratio; run_fallback_unit, attributed_engine_calls,
-    fallback_gates G8); slice 13 review_v070.py: one bundle over 4 stores (in-process
-    cli, 0 engine calls, index + MANIFEST, coverage, fresh roots, M10, scans, copy
-    to candidates); acceptance_record_v070.py -> ACCEPTANCE_RESULT.json from evidence;
-    never reads candidates.
+    TransitionStateRecord; _RecordingEngine fills TSStep coordinates (_StepRecordError;
+    R33); failures cached with frames (ts_search_failed:<reason>, scf_convergence,
+    engine_error; Unavailable/Input errors raise uncached); ts_validation_failed keeps
+    the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
+    reaction_free_energy. report.py: JSON v1. tests/e2e: t3 (HF1-HF3, R32), T4/t4_flexible;
+    v070.py (load_enumeration/load_fallback -> V070Inputs; TS nodes priority 2; run_unit/_run_candidate:
+    run_ts_with_fallback + run_species twice in one store, patched Engine.evaluate
+    counts, private ts_* sample keys; unit_gates G7, ensemble_gates, unit_record/score_pair
+    -> RunRecord (endpoint dispositions, validation), finite ratio; run_fallback_unit,
+    attributed_engine_calls, fallback_gates G8); review_v070.py (slice 13): one bundle
+    over 4 stores (sub-bundle per record via in-process cli, 0 engine calls, root
+    index + MANIFEST, coverage, fresh roots refused, M10, intro decimation_statement,
+    scans, copy to candidates); acceptance_record_v070.py -> ACCEPTANCE_RESULT.json
+    from evidence; never reads candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -633,14 +633,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -700,14 +700,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -788,14 +788,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
@@ -839,44 +839,46 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.16
 - id: eta_rxncat_review
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
   description: >-
-    eta_rxncat.review (v0.7.0 slices 07-09). run_data.py: RunRecord, the exporter
-    input (species; candidates with GraftRecords; runs per candidate x pathway x engine:
-    FallbackRecord, TSEnsemble, thermo options, key hex; SelectivityResult; gates);
-    frozen. RunData v1, strict (schema_version 1, extra=forbid, no inf/nan, units
-    in keys): provenance (file name only), species, frequencies (completed|failed|missing),
-    trajectories (stored|missing, decimated), candidates, gates; refs validated. read_run_data:
-    lenient (defaults kept) then strict; >1 raises. Committed schema; drift test.
-    export.py: export_run_data reads rows by key, no engine; modes and TSIdentity
-    (validate_transition_state) from stored Hessians; one decimation stride (ExportBudgetError).
-    Slice 16: per candidate sample_dispositions (member|merged|excluded|fell_through;
-    clash/bonds; identity) and endpoint_dispositions (kept|superseded_by_push|dropped|not_recorded),
-    omitted when empty; RunRecord optional frequency_dispositions, validation. canonical
-    JSON: sorted, rounded, HTML-safe. RunRecord ratio=inf does not round-trip. bundle.py:
-    write_review_bundle (empty dir only): index.html (CSP; JS-free summary, rows headed
-    by disposition, used then not-used groups, identity numbers, banner on mode count
-    or failed identity; sections #c/<id>; embedded run_data.json), assets/ (3Dmol
-    2.5.5 sha-pinned), MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6. assets/eta-view.js
-    (slice 09, MIT, window.EtaView): load() refuses schema_version != 1 as text; moleculeViewer,
-    modeAnimator (20 frames, 0.4 A peak), trajectoryPlayer, energyPlot (SVG), candidateTable
-    (sortable, gate badges, #c/<id>), each (element, runData, id) -> {update, destroy};
-    labels and grouping as above; text nodes/attributes only; one candidate's 3D views
-    at a time.
+    eta_rxncat.review (v0.7.0 slices 07-09, 16). run_data.py: RunRecord, exporter
+    input (species; candidates + GraftRecords; runs per candidate x pathway x engine:
+    FallbackRecord, TSEnsemble, thermo options, key hex; SelectivityResult; gates),
+    frozen; optional RecordEndpoint.frequency_dispositions and RecordRun.validation
+    (None = defaults), omitted when absent. RunData v1, strict (schema_version 1,
+    extra=forbid, no inf/nan, units in keys): provenance, species, frequencies (completed|failed|missing),
+    trajectories (stored|missing), candidates, gates; refs validated. read_run_data:
+    lenient (defaults kept) then strict; > 1 raises UnsupportedRunDataVersion. CHANGES
+    tuple. schema/run_data.v1.schema.json = model_json_schema() (validation mode);
+    drift test. export.py: export_run_data(record, store, *, trajectory_byte_budget)
+    reads rows by key, no engine, missing as missing; modes (normal_modes) and TSIdentity
+    (validate_transition_state) from stored Hessians; one decimation stride, first/last
+    kept (ExportBudgetError). Candidate.sample_dispositions (member|merged|excluded|fell_through)
+    and endpoint_dispositions (kept|superseded_by_push|dropped|not_recorded), omitted
+    when empty. canonical JSON: sorted, rounded, HTML-safe. RunRecord ratio=inf does
+    not round-trip. bundle.py: write_review_bundle(run_data, out_dir) refuses a file
+    or non-empty dir (BundleError): index.html (CSP; JS-free summary: used then not-used
+    group, rows headed by disposition, identity numbers, banner on mode count or failed
+    identity; #c/<id>; embedded run_data.json), run_data.json, assets/ (3Dmol 2.5.5
+    + licence sha-pinned, SOURCES.md, eta-view.js), MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET
+    10e6. eta-view.js (MIT, window.EtaView): load() refuses schema_version != 1 as
+    text; moleculeViewer, modeAnimator (20 frames, 0.4 A), trajectoryPlayer, energyPlot
+    (SVG), candidateTable, each -> {update, destroy}; disposition labels, used rows
+    first; text nodes/attributes only; one candidate's 3D views at a time.
   inputs:
   - data_type: run_record_models
     source_id: eta_rxncat_core
-  - data_type: normal_modes
+  - data_type: normal_modes_and_ts_validation
     source_id: eta_rxncat_thermo
   - data_type: cached_stage_artifacts
     source_id: eta_rxncat_store
@@ -893,8 +895,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T16:10:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.15
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T18:46:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.16
+    summary: patched description, inputs
   provenance:
     last_slice: OPR.0.7.0.16

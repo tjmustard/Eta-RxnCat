@@ -2,7 +2,7 @@
 id: OPR.0.7.0.16
 slice: 16-review-dispositions
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Show on every review-site frequency row whether it fed the result and w
 depends_on: [OPR.0.7.0.15]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", src/eta_rxncat/orchestrator/species.py, "tests/unit/orchestrator/**", tests/e2e/v070.py, spec/compiled/architecture.yml]
