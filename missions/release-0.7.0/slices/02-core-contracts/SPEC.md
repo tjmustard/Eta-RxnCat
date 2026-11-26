@@ -2,7 +2,7 @@
 id: OPR.0.7.0.2
 slice: 02-core-contracts
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Add the enumeration, selectivity-set and fallback contracts, the optimi
 depends_on: [OPR.0.7.0.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_core
 parent: null
 hacf_touches: ["src/eta_rxncat/core/**", "tests/unit/core/**", spec/compiled/architecture.yml]

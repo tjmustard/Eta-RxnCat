@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/02-qa.md - qa PASS: all 11 contracts round-trip; v0.6.0 bytes equal to 14d2da1 models; core free of numpy/RDKit; pytest 2286 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
