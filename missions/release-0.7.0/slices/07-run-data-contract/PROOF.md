@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/07-qa.md - qa PASS: export from a real store byte-identical twice; schema regen no diff; hostile label escaped; pytest 2489 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
