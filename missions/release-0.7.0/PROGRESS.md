@@ -28,7 +28,7 @@
 | OPR.0.7.0.13 | 13-review-bundle-and-record | audited | OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12 | 2026-11-26T14:45:48+00:00 audited |
 | OPR.0.7.0.14 | 14-acceptance-verdict | executing | OPR.0.7.0.18 | 2026-11-26T14:58:08+00:00 executing |
 | OPR.0.7.0.15 | 15-seed-geometry-checks | audited | OPR.0.7.0.13 | 2026-11-26T16:10:26+00:00 audited |
-| OPR.0.7.0.16 | 16-review-dispositions | executed | OPR.0.7.0.15 | 2026-11-26T16:36:42+00:00 executed |
+| OPR.0.7.0.16 | 16-review-dispositions | audit_failed | OPR.0.7.0.15 | 2026-11-26T18:21:02+00:00 audit_failed |
 | OPR.0.7.0.17 | 17-rerun-units | compiled | OPR.0.7.0.16 | 2026-11-26T15:31:46+00:00 compiled |
 | OPR.0.7.0.18 | 18-rereview-bundle | compiled | OPR.0.7.0.17 | 2026-11-26T15:31:46+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->
