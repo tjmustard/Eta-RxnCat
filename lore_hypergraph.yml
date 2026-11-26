@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 48
+  ADR: 53
   STORY: 0
   CANON: 0
 nodes:
@@ -1937,7 +1937,7 @@ nodes:
   context: null
   pointer:
     path: lore/ADRs/ADR-0048-ensemble-pre-relaxation-runs-under-an-in-process-wall-time-b.md
-  content_sha256: cbaf6a2c66a124e8578df7b0b3e3b79e604ba8683df276b955eb8c253888ae08
+  content_sha256: 4a2f39ec30aab199aaabfe0bb088ed4a0fed3c37784641b51c69fdd1fd2a8d51
   anchors:
     components:
     - eta_rxncat_species_runner
@@ -1970,3 +1970,225 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.6.0.13
+- id: ADR-0049
+  type: decision
+  title: Run-data JSON v1 is eta's single view contract; the UI track starts with
+    a static, serverless review bundle
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0049-run-data-json-v1-is-eta-s-single-view-contract-the-ui-track.md
+  content_sha256: 260a24388883ca4d71cea5cf51c349c9fce21a069db9084c1ec24d15a903803c
+  anchors:
+    components:
+    - eta_rxncat_cli
+    - eta_rxncat_scaffold
+    files:
+    - src/eta_rxncat/cli.py
+    - pyproject.toml
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_review
+    files:
+    - src/eta_rxncat/review/**
+    - tests/unit/review/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-26T01:18:34+00:00'
+    source: OPR.0.7.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-26T01:18:34+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.0
+- id: ADR-0050
+  type: decision
+  title: TS seed fallback falls through only on an allow-list of template faults;
+    host and engine faults stop the node
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0050-ts-seed-fallback-falls-through-only-on-an-allow-list-of-temp.md
+  content_sha256: 674e325286537aae5a468987389f1546efd4516e8616ccc82646a4e4b058348c
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    - eta_rxncat_optimize
+    files:
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    - src/eta_rxncat/orchestrator/ts.py
+    - src/eta_rxncat/optimize/errors.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_selectivity
+    files:
+    - src/eta_rxncat/orchestrator/ts_fallback.py
+  relates_to:
+  - ADR-0045
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-26T01:18:34+00:00'
+    source: OPR.0.7.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-26T01:18:34+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.0
+- id: ADR-0051
+  type: decision
+  title: The per-ensemble stall cap reports, and the pre-relax budget is load-scaled
+    wall time
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0051-the-per-ensemble-stall-cap-reports-and-the-pre-relax-budget.md
+  content_sha256: 1672a563da929ec61fc4dbc1067b9eaa000789d0755f895121ae97f089b69470
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    - src/eta_rxncat/orchestrator/_deadline.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_selectivity
+    files: []
+  relates_to:
+  - ADR-0048
+  - ADR-0024
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-26T01:18:34+00:00'
+    source: OPR.0.7.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-26T01:18:34+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.0
+- id: ADR-0052
+  type: decision
+  title: Enumeration input is an EnumerationPlan beside ReactionGraph schema 1; declared
+    rank wins and RMSD is a gate
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0052-enumeration-input-is-an-enumerationplan-beside-reactiongraph.md
+  content_sha256: c58fef844f2b7a17fd227ddb15c3d3ece28acb2f91b2cc748f71c82dc2f987e1
+  anchors:
+    components:
+    - eta_rxncat_mapping
+    - eta_rxncat_core
+    files:
+    - src/eta_rxncat/mapping/graft.py
+    - src/eta_rxncat/core/graph.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_enumerator
+    files:
+    - src/eta_rxncat/mapping/enumerator.py
+    - src/eta_rxncat/core/enumeration_models.py
+  relates_to:
+  - ADR-0028
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-26T01:18:34+00:00'
+    source: OPR.0.7.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-26T01:18:34+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.0
+- id: ADR-0053
+  type: decision
+  title: Optimization frames are payload-only, stores are forward-only, and geomeTRIC
+    runs in a per-run temp cwd
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0053-optimization-frames-are-payload-only-stores-are-forward-only.md
+  content_sha256: 48f2e321985062a7dfe81f242a073240686c937e5c3349f03a6b4910655b89f9
+  anchors:
+    components:
+    - eta_rxncat_optimize
+    - eta_rxncat_core
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/optimize/geometric_impl.py
+    - src/eta_rxncat/core/optimization_models.py
+    - src/eta_rxncat/core/ts_models.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0016
+  - ADR-0024
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-26T01:18:35+00:00'
+    source: OPR.0.7.0
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-26T01:18:35+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.0
