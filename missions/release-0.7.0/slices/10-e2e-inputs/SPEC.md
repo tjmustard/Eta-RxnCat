@@ -10,7 +10,7 @@ intent: "Write the v0.7.0 E2E inputs: the Tier 4 endo/exo reference graph, the e
 depends_on: [OPR.0.7.0.3, OPR.0.7.0.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executing
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", spec/compiled/architecture.yml]
@@ -91,10 +91,10 @@ a stop-and-report if no clean fit (≤ 0.15 Å) exists.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Write the YAMLs, loader and SOURCES rows.
-- [ ] Offline tests.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] Write the YAMLs, loader and SOURCES rows.
+- [x] Offline tests.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 

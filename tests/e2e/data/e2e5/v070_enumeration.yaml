@@ -1,0 +1,105 @@
+# v0.7.0 enumeration E2E inputs (slice 10; mission HF-1, HF-2, R24-R26). Indices 0-based.
+# Loaded by tests/e2e/v070.py into an EnumerationPlan; every geometry is an existing file (see
+# SOURCES.md). Site c7 replaces H16 of TS1a_n and TS1a_x, the CH2 H with the larger C7->H /
+# C7->diene-centroid angle (179.9 / 163.5 deg), with R = ethyl or n-propyl.
+# TS1a_n and TS1a_x compete in endo_exo, so they carry the SAME priority (2): the fallback runner
+# takes the transition-state nodes of one priority as competitors.
+schema: 1
+fixture: e2e5_v070_enumeration
+reference_graph:
+  schema_version: 1
+  name: v070_tier4_endo_exo
+  nodes:
+    - id: cyclopentadiene
+      label: cyclopentadiene
+      kind: reactant
+      priority: 1
+      templates:
+        - {id: cyclopentadiene, rank: 1, xyz: xyz/1_cyclopentadiene.xyz, charge: 0, spin_multiplicity: 1}
+    - id: cyclopropene
+      label: cyclopropene
+      kind: reactant
+      priority: 1
+      templates:
+        - {id: cyclopropene, rank: 1, xyz: xyz/5_cyclopropene.xyz, charge: 0, spin_multiplicity: 1}
+    - id: TS1a_n
+      label: TS1a_n (endo)
+      kind: transition_state
+      priority: 2
+      pathway: endo
+      templates:
+        - id: TS1a_n
+          rank: 1
+          xyz: xyz/TS1a_n.xyz
+          charge: 0
+          spin_multiplicity: 1
+          active_atom_indices: [0, 1, 2, 3, 4, 5]
+    - id: TS1a_x
+      label: TS1a_x (exo)
+      kind: transition_state
+      priority: 2
+      pathway: exo
+      templates:
+        - id: TS1a_x
+          rank: 1
+          xyz: xyz/TS1a_x.xyz
+          charge: 0
+          spin_multiplicity: 1
+          active_atom_indices: [0, 1, 2, 3, 4, 5]
+sites:
+  - id: c7
+    maps:
+      - node_id: TS1a_n
+        template_id: TS1a_n
+        keep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17]
+        delete: [16]
+        alignment: [7, 2, 3, 17]
+        constrained_core: [0, 1, 2, 3, 4, 5]
+        forming_bonds: [[1, 2], [3, 5]]
+      - node_id: TS1a_x
+        template_id: TS1a_x
+        keep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17]
+        delete: [16]
+        alignment: [7, 2, 3, 17]
+        constrained_core: [0, 1, 2, 3, 4, 5]
+        forming_bonds: [[1, 2], [3, 5]]
+      # Reactant analogue of the TS map. The reactant has no diene, so the anti-H rule cannot apply:
+      # the map is declared by the CH2 H that the fragment's own ring_h pairs with (H3, kept) and
+      # deletes the other (H4), which R replaces. Atoms: 0 = C(sp3), 1/2 = C(sp2), 3/4 = CH2 H,
+      # 5/6 = sp2 H. H3 and H4 are mirror images (keeping H4 gives the same fits with the sp2 orders
+      # swapped). Measured fits, chosen order: ethyl [2, 3, 4, 10] 0.0525 A (other order 0.489 A);
+      # n-propyl [3, 5, 4, 13] 0.0496 A (other 0.486 A); 0 contacts; both within 0.15 A.
+      - node_id: cyclopropene
+        template_id: cyclopropene
+        keep: [0, 1, 2, 3, 5, 6]
+        delete: [4]
+        alignment: [0, 1, 2, 3]
+        constrained_core: []
+        forming_bonds: []
+library:
+    - id: ethyl
+      site_id: c7
+      xyz: xyz/r_ethyl_cyclopropene.xyz
+      charge: 0
+      spin_multiplicity: 1
+      # [ring C(sp3), sp2 a, sp2 b, ring H]; both sp2 orders, the lower fit wins per template.
+      fragment_orders: [[2, 3, 4, 10], [2, 4, 3, 10]]
+      fragment_delete: [11, 12]
+      charge_delta: 0
+    - id: npropyl
+      site_id: c7
+      xyz: xyz/r_npropyl_cyclopropene.xyz
+      charge: 0
+      spin_multiplicity: 1
+      fragment_orders: [[3, 4, 5, 13], [3, 5, 4, 13]]
+      fragment_delete: [14, 15]
+      charge_delta: 0
+selectivity_sets:
+  - id: endo_exo
+    pathways:
+      - {pathway: endo, node_id: TS1a_n, expected_face: [1, 1]}
+      - {pathway: exo, node_id: TS1a_x, expected_face: [-1, -1]}
+    reactant_node_ids: [cyclopentadiene, cyclopropene]
+max_candidates: 2
+max_alignment_rmsd_angstrom: 0.15
+orientation_centers: [7]  # product index of C7

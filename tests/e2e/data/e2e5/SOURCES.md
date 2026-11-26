@@ -138,3 +138,24 @@ the ring and the graft refuses it). Written once with 6 decimals by
 | `xyz/r_ethyl_cyclopropene.xyz` | `CCC1C=C1` | RDKit 2026.09.2, recipe above | `ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0` |
 | `xyz/r_npropyl_cyclopropene.xyz` | `CCCC1C=C1` | RDKit 2026.09.2, recipe above | `e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56` |
 | `xyz/r_nbutyl_cyclopropene.xyz` | `CCCCC1C=C1` | RDKit 2026.09.2, recipe above | `d9d00a49a4d892ce633da4f61ea86b9f205b4d6ce98ca844c92f4460c2a7af50` |
+
+## v0.7.0 E2E inputs (slice 10)
+
+`v070_enumeration.yaml` and `v070_fallback.yaml` (loaded by `tests/e2e/v070.py`) use only existing
+files; no geometry is new. Their provenance is in the sections above.
+
+| File | Role | Provenance | sha256 |
+|---|---|---|---|
+| `xyz/1_cyclopentadiene.xyz` | reactant `cyclopentadiene` | Liu SI (TJ builder), above | `db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812` |
+| `xyz/5_cyclopropene.xyz` | reactant `cyclopropene` | Liu SI (TJ builder), above | `e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2` |
+| `xyz/TS1a_n.xyz` | TS `TS1a_n` (endo) | Liu SI (TJ builder), above | `c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267` |
+| `xyz/TS1a_x.xyz` | TS `TS1a_x` (exo) | Liu SI (TJ builder), above | `ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60` |
+| `xyz/r_ethyl_cyclopropene.xyz` | library `ethyl` | generated, slice-14 recipe above | `ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0` |
+| `xyz/r_npropyl_cyclopropene.xyz` | library `npropyl` | generated, slice-14 recipe above | `e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56` |
+
+**Reactant map on `5_cyclopropene.xyz`** (site `c7`, measured in slice 10). The reactant has no
+diene, so the anti-H rule cannot apply: the map keeps the CH2 H that the fragment's `ring_h` pairs
+with (atom 3; alignment [0, 1, 2, 3]) and deletes the other (atom 4), which R replaces. The two H
+are mirror images (keeping atom 4 gives the same fits with the sp2 orders swapped). Fits (Angstrom,
+superposition RMSD, 0 close contacts): ethyl [2, 3, 4, 10] 0.0525, other order 0.4888; n-propyl
+[3, 5, 4, 13] 0.0496, other order 0.4859. Both chosen fits are within the plan's 0.15.

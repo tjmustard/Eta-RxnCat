@@ -22,7 +22,7 @@
 | OPR.0.7.0.7 | 07-run-data-contract | audited | OPR.0.7.0.5, OPR.0.7.0.6 | 2026-11-26T10:03:53+00:00 audited |
 | OPR.0.7.0.8 | 08-bundle-writer | audited | OPR.0.7.0.7 | 2026-11-26T10:21:19+00:00 audited |
 | OPR.0.7.0.9 | 09-view-components | audited | OPR.0.7.0.8 | 2026-11-26T10:50:47+00:00 audited |
-| OPR.0.7.0.10 | 10-e2e-inputs | compiled | OPR.0.7.0.3, OPR.0.7.0.5 | 2026-11-26T01:16:06+00:00 compiled |
+| OPR.0.7.0.10 | 10-e2e-inputs | executing | OPR.0.7.0.3, OPR.0.7.0.5 | 2026-11-26T10:53:05+00:00 executing |
 | OPR.0.7.0.11 | 11-enumeration-e2e | compiled | OPR.0.7.0.4, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T01:17:13+00:00 compiled |
 | OPR.0.7.0.12 | 12-fallback-e2e | compiled | OPR.0.7.0.5, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T01:17:14+00:00 compiled |
 | OPR.0.7.0.13 | 13-review-bundle-and-record | compiled | OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12 | 2026-11-26T01:17:14+00:00 compiled |
