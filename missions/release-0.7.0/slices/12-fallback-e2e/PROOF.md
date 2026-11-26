@@ -13,6 +13,7 @@
 ## Artifacts
 
 - proof/12-execute.md - guard CLEAR: 3/3 fallback units pass 9 gates (GFN2 gated, UMA reported); rank-1 TS-search calls 0; second passes 0 calls; full pytest 2563 passed
+- proof/12-qa.md - qa PASS: G8 on GFN2: both constructs pick rank 2 with rank 1 reason; rank-1 TS-search 0; audit reruns identical (slice 11 dG 13.560206712557633; slice 12 run_time 391 calls); pytest 2563
 
 ## Residue / caveats
 
