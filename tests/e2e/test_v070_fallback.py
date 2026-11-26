@@ -3,7 +3,9 @@
 One command per unit (``test_v070_fallback[<construct>-<engine>]``): both constructs of
 ``v070_fallback.yaml`` on GFN2 (gated) and the ``run_time`` construct on UMA (reported). Each unit
 has its own fresh store under ``ETA_RXNCAT_V070_STATE``, so its first pass does real engine work,
-then a second pass that must be all hits with an equal record. Gated: the graft records, the
+then a second pass that must be all hits with an equal record. The slice 14 verdict rerun sets
+``ETA_RXNCAT_V070_REUSE_STORES=1`` to read a copy of that unit's earlier store, so its first pass is
+cache hits and the fresh-store refusal does not apply. Gated: the graft records, the
 ``FallbackRecord``, no TS-search call for rank 1, every engine call attributed, G7's ensemble gates
 and the second pass. Candidates and run records go to ``tests/candidate_outputs/v0.7.0/``.
 
@@ -93,7 +95,10 @@ def test_v070_fallback(
     recipe = recipes(recipe_name)
     name = fallback_name(construct, recipe_name)
     store_path = state / f"{name}.sqlite"
-    assert not store_path.exists(), f"{store_path} exists: the first pass must start fresh"
+    if os.environ.get("ETA_RXNCAT_V070_REUSE_STORES") == "1":
+        assert store_path.is_file(), f"{store_path} is not there to reuse"
+    else:
+        assert not store_path.exists(), f"{store_path} exists: the first pass must start fresh"
     fallback = run_fallback_unit(construct, recipe, recipe_name, store_path)
     unit = fallback.unit
     gates = fallback_gates(fallback)

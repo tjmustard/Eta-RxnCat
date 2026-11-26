@@ -3,12 +3,18 @@ r"""Derive docs/prd/v0.7.0/ACCEPTANCE_RESULT.json from the v0.7.0 evidence (slic
 Usage::
 
     uv run python tests/e2e/acceptance_record_v070.py <evidence_dir> <slice12_proof.md> \
-        <full_pytest.log> <full_pytest_exit_code> <out.json>
+        <full_pytest.log> <full_pytest_exit_code> <out.json> [<rerun_dir> <fixtures_dir>]
 
 Every value comes from the evidence run records of slices 11 and 12, their proof tables and logs,
 the final default-suite log, and the scratch bundle (``<evidence_dir>/v070-slice13/review`` with
 ``review_report.json`` beside it). Nothing is typed by hand and no candidate output is ever read: a
-path below ``tests/candidate_outputs`` is refused. The record holds no verdict (slice 14's).
+path below ``tests/candidate_outputs`` is refused. Without ``<rerun_dir>`` the record holds no
+verdict (slice 13's record).
+
+With ``<rerun_dir>`` (slice 14: ``candidates/`` holds the rerun's outputs, ``proof/`` its command
+logs and time files) and ``<fixtures_dir>`` (TJ's promoted ``tests/fixtures/v0.7.0/``), each rerun
+output is compared field by field with its fixture, only the fields in ``VOLATILE`` may differ, and
+the record states ``verdict`` from ``record_verdict``.
 """
 
 import json
@@ -29,6 +35,25 @@ TIMEOUT_REASON = "pre_relax_failed:PreRelaxTimeout"
 GRAFT_TIMEOUT_REASON = "graft_pre_relax_timeout"
 BUNDLE_PATH = "tests/candidate_outputs/v0.7.0/review/"
 ENGINE_NAMES = {"xtb_subprocess": "GFN2", "uma_direct": "UMA"}
+
+
+RUN_WALL = "a wall time measured by this run"
+CACHE_HIT = "the rerun reads the earlier run's rows, so its first pass computes less"
+VOLATILE: tuple[tuple[str, str], ...] = (
+    (r"commit_sha", "HEAD of the rerun"),
+    (r"environment\.run\.eta_rxncat", "installed package metadata version of the venv"),
+    (r"reported\.resources\.\w+", "CPU, wall time and peak memory of this run"),
+    (r"reported\.(first|second)_pass_wall_time_s", RUN_WALL),
+    (r"reported\.stage_metrics\.\w+\.wall_time_s", RUN_WALL),
+    (r"(second_pass_)?fallback\.attempts\[\d+\]\.wall_time_s", RUN_WALL),
+    (r"runs\[\d+\]\.fallback\.attempts\[\d+\]\.wall_time_s", RUN_WALL),
+    (r"reported\.first_pass_(engine_calls|new_rows)", CACHE_HIT),
+    (r"reported\.stage_metrics\.\w+\.(engine_calls|cache_hits|rows_created)", CACHE_HIT),
+    (r"first_pass_engine_calls_by_template_stage(\.\w+)+", CACHE_HIT),
+    (r"checks\.\w+\.engine_calls_attributed\.(attributed|first_pass)", CACHE_HIT),
+    (r"checks\.\w+\.rank_1_no_ts_search_calls\.all_calls", CACHE_HIT),
+)
+"""The only fields of a rerun output that may differ from its fixture, each with the reason."""
 
 
 class RecordError(ValueError):
@@ -218,19 +243,179 @@ def bundle_block(evidence: Path) -> dict[str, Any]:
     }
 
 
+def differing_paths(rerun: Any, fixture: Any, path: str = "") -> list[str]:
+    """The dotted paths where two JSON documents differ (a missing key or item is a difference).
+
+    Values must also have the same type, so ``1`` differs from ``1.0`` and from ``True``.
+    """
+    if isinstance(rerun, dict) and isinstance(fixture, dict):
+        found = []
+        for key in sorted(set(rerun) | set(fixture)):
+            child = f"{path}.{key}" if path else key
+            if key not in rerun or key not in fixture:
+                found.extend(_leaves(rerun.get(key, fixture.get(key)), child))
+            else:
+                found.extend(differing_paths(rerun[key], fixture[key], child))
+        return found
+    if isinstance(rerun, list) and isinstance(fixture, list) and len(rerun) == len(fixture):
+        return [
+            p
+            for i, (a, b) in enumerate(zip(rerun, fixture, strict=True))
+            for p in differing_paths(a, b, f"{path}[{i}]")
+        ]
+    return [] if type(rerun) is type(fixture) and rerun == fixture else [path]
+
+
+def _leaves(value: Any, path: str) -> list[str]:
+    """Every leaf path below a value present on one side only (an empty mapping is a leaf)."""
+    if isinstance(value, dict) and value:
+        return [p for k, v in sorted(value.items()) for p in _leaves(v, f"{path}.{k}")]
+    return [path]
+
+
+def volatile_reason(path: str) -> str | None:
+    """The reason ``path`` may differ from its fixture, or ``None`` when it must be equal."""
+    return next((why for pattern, why in VOLATILE if re.fullmatch(pattern, path)), None)
+
+
+def compare_fixture(rerun: Path, fixture: Path) -> dict[str, Any]:
+    """One rerun output against its fixture: ``pass`` only if every difference is volatile."""
+    paths = differing_paths(json.loads(rerun.read_bytes()), json.loads(fixture.read_bytes()))
+    unexpected = [p for p in paths if volatile_reason(p) is None]
+    return {
+        "status": "fail" if unexpected else "pass",
+        "fixture_sha256": sha256_of(fixture),
+        "unexpected": unexpected,
+        "volatile": [p for p in paths if p not in unexpected],
+    }
+
+
+def regression_block(rerun: Path, fixtures: Path, expected: list[str]) -> dict[str, Any]:
+    """Every fixture compared with the rerun output of the same name.
+
+    Raises:
+        RecordError: The fixtures or the rerun outputs are not exactly the expected files.
+    """
+    for what, folder in (("fixtures", fixtures), ("rerun outputs", rerun / "candidates")):
+        found = {p.name for p in folder.glob("*.json")}
+        if found != set(expected):
+            raise RecordError(f"{what} are not the expected files: {sorted(found ^ set(expected))}")
+    return {n: compare_fixture(rerun / "candidates" / n, fixtures / n) for n in expected}
+
+
+def command_tag(stem: str) -> str:
+    """The command tag of a fixture stem (a ``selectivity`` stem is a score command)."""
+    if stem.startswith("v070_fallback_"):
+        construct, engine = stem.removeprefix("v070_fallback_").rsplit("_", 1)
+        return f"{construct.replace('_', '-')}-{engine}"
+    r_group, pathway, engine = stem.removeprefix("v070_enum_").split("_")
+    if pathway == "selectivity":
+        return f"score-{r_group}-{engine}"
+    return f"{r_group}-{pathway}-{engine}"
+
+
+def rerun_unit(path: Path) -> dict[str, Any]:
+    """What one rerun unit gated, and what it computed (cache use is reported, not gated)."""
+    payload = json.loads(path.read_bytes())
+    reported = payload["reported"]
+    gates = payload["checks"].get("tier_gates") or payload["checks"]["reported_gates"]
+    return {
+        "case": payload["case"],
+        "engine": {"xtb": "GFN2", "uma": "UMA"}[payload["recipe"]],
+        "gated": payload["recipe"] == "xtb",
+        "commit_sha": payload["commit_sha"],
+        "gates": {name: g["status"] for name, g in sorted(gates.items())},
+        "first_pass_engine_calls": reported["first_pass_engine_calls"],
+        "first_pass_new_rows": reported["first_pass_new_rows"],
+        "second_pass_engine_calls": reported["second_pass_engine_calls"],
+        "second_pass_new_rows": reported["second_pass_new_rows"],
+    }
+
+
+def verdict_block(
+    rerun: Path, fixtures: Path, units: list[str], scores: list[str]
+) -> dict[str, Any]:
+    """The verdict rerun: its commands, unit gates, cache use and fixture comparison.
+
+    ``units`` are the fixture stems of the G7 and G8 units, ``scores`` those of the scores.
+
+    Raises:
+        RecordError: A missing log or output, or a file that has no counterpart.
+    """
+    stems = [*units, *scores]
+    expected = sorted(f"{s}{suffix}" for s in stems for suffix in (".json", ".runrecord.json"))
+    regression = regression_block(rerun, fixtures, expected)
+    return {
+        "commands": [command_block(rerun / "proof", command_tag(s)) for s in stems],
+        "units": [rerun_unit(rerun / "candidates" / f"{s}.json") for s in units],
+        "volatile_fields": [{"pattern": p, "reason": r} for p, r in VOLATILE],
+        "regression": regression,
+    }
+
+
+def record_verdict(record: Mapping[str, Any]) -> dict[str, Any]:
+    """The verdict rule, from the record alone: ``pass`` or ``fail`` with the reasons.
+
+    ``fail`` on: a default suite with a non-zero exit, a failure, an error or no pass; no rerun
+    command, or one with a non-zero exit, a failure, an error, a skip or no pass; no gated (GFN2)
+    unit, or a gated unit with a gate that is not ``pass``; no fixture comparison, or one that is
+    not ``pass``. UMA gates are reported, never gated.
+    """
+    reasons = []
+    suite = record["suites"]["default_suite"]
+    counts = suite["counts"]
+    if suite["exit_code"] or counts["failed"] or counts["errors"] or not counts["passed"]:
+        reasons.append(f"default_suite: exit {suite['exit_code']}, {counts}")
+    run = record.get("verdict_run", {})
+    commands = run.get("commands", [])
+    if not commands:
+        reasons.append("commands: none recorded")
+    for command in commands:
+        found = command["counts"]
+        bad = command["exit_code"] or found["failed"] or found["errors"] or found["skipped"]
+        if bad or not found["passed"]:
+            reasons.append(f"command {command['tag']}: exit {command['exit_code']}, {found}")
+    gated = [u for u in run.get("units", []) if u["gated"]]
+    if not gated:
+        reasons.append("units: no gated unit")
+    reasons.extend(
+        f"{unit['case']}.{name}: {status}"
+        for unit in gated
+        for name, status in unit["gates"].items()
+        if status != "pass"
+    )
+    regression = run.get("regression", {})
+    if not regression:
+        reasons.append("regression: none recorded")
+    reasons.extend(
+        f"regression {name}: {entry['status']}"
+        for name, entry in regression.items()
+        if entry["status"] != "pass"
+    )
+    return {"verdict": "fail" if reasons else "pass", "verdict_reasons": reasons}
+
+
 def _records(source: Source) -> Mapping[str, RunRecord]:
     return {n: RunRecord.model_validate_json(p.read_bytes()) for n, p in source.records.items()}
 
 
 def build_record(
-    evidence: Path, slice12_proof: Path, full_log: Path, full_exit: int
+    evidence: Path,
+    slice12_proof: Path,
+    full_log: Path,
+    full_exit: int,
+    rerun: Path | None = None,
+    fixtures: Path | None = None,
 ) -> dict[str, Any]:
-    """Derive the whole record.
+    """Derive the whole record; ``rerun`` and ``fixtures`` together add the verdict.
 
     Raises:
         RecordError: A missing, forbidden or disagreeing input.
     """
-    refuse_candidates(evidence, slice12_proof, full_log)
+    if (rerun is None) != (fixtures is None):
+        raise RecordError("the verdict needs both a rerun directory and a fixtures directory")
+    verdict_inputs = [p for p in (rerun, fixtures) if p is not None]
+    refuse_candidates(evidence, slice12_proof, full_log, *verdict_inputs)
     found = sources(evidence)
     (first,) = [s for s in found if s.slice_name == SLICE11]
     g7, scores = [], []
@@ -269,7 +454,7 @@ def build_record(
     ]
     suite = pytest_counts(full_log.read_text(encoding="utf-8", errors="replace"))
     units = [*g7, *g8]
-    return {
+    record: dict[str, Any] = {
         "version": "0.7.0",
         "derived_by": "tests/e2e/acceptance_record_v070.py",
         "g7_units": g7,
@@ -286,6 +471,16 @@ def build_record(
         },
         "bundle": bundle_block(evidence),
     }
+    if rerun is None or fixtures is None:
+        return record
+    record["verdict_run"] = verdict_block(
+        rerun,
+        fixtures,
+        [u["record"].removesuffix(".runrecord.json") for u in units],
+        [s["record"].removesuffix(".runrecord.json") for s in scores],
+    )
+    record.update(record_verdict(record))
+    return record
 
 
 def _tag(engine: str) -> str:
@@ -294,17 +489,19 @@ def _tag(engine: str) -> str:
 
 def main(argv: list[str]) -> int:
     """Write the record; return 0, or 2 on a usage error."""
-    if len(argv) != 5:
+    if len(argv) not in (5, 7):
         print(__doc__, file=sys.stderr)
         return 2
-    evidence, proof, log, exit_code, out = argv
-    record = build_record(Path(evidence), Path(proof), Path(log), int(exit_code))
+    evidence, proof, log, exit_code, out = argv[:5]
+    verdict_inputs = [Path(a) for a in argv[5:]]
+    record = build_record(Path(evidence), Path(proof), Path(log), int(exit_code), *verdict_inputs)
     target = Path(out)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         json.dumps(record, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8"
     )
-    print(f"wrote {target}")
+    stated = record.get("verdict", "none (no rerun)")
+    print(f"wrote {target}; verdict {stated}; reasons {record.get('verdict_reasons')}")
     return 0
 
 
