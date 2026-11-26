@@ -10,7 +10,7 @@ intent: "Write eta-view.js, five reusable framework-free components that render 
 depends_on: [OPR.0.7.0.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", spec/compiled/architecture.yml]
@@ -94,7 +94,7 @@ Residual risk: 3Dmol behaviour under the CSP over `file://`, which M12 measures 
 - [x] Stub run-data fixture `tests/unit/review/data/m12_stub_run_data.json` (written by a test
       helper through `canonical_run_data_json`).
 - [x] Run M12 in both browsers; save evidence.
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 

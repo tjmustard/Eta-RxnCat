@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -285,7 +285,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.0.8
+    last_slice: OPR.0.7.0.9
   review:
     reviewed_at: '2026-11-26T10:21:08+00:00'
     reviewed_by: audit:OPR.0.7.0.8
@@ -839,7 +839,7 @@ nodes:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_review
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -892,4 +892,4 @@ nodes:
     reviewed_by: audit:OPR.0.7.0.8
     summary: patched description, outputs
   provenance:
-    last_slice: OPR.0.7.0.8
+    last_slice: OPR.0.7.0.9
