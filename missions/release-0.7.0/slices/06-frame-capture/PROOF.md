@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/06-qa.md - qa PASS: GFN2 pre-relax at C1 from a clean temp cwd: listing unchanged, 8 frames all accepted; keys equal v0.6.0; pytest 2452 passed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

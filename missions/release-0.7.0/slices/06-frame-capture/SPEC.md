@@ -2,7 +2,7 @@
 id: OPR.0.7.0.6
 slice: 06-frame-capture
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Store every optimization's path: P-RFO steps gain their geometry and ge
 depends_on: [OPR.0.7.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_optimize
 parent: null
 hacf_touches: ["src/eta_rxncat/optimize/**", "tests/unit/optimize/**", src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/species.py, src/eta_rxncat/orchestrator/ts.py, "tests/unit/orchestrator/**", src/eta_rxncat/core/optimization_models.py, tests/unit/core/test_frame_fields.py, spec/compiled/architecture.yml]

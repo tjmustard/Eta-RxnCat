@@ -76,7 +76,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.6
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,8 +177,8 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.6
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -277,12 +277,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.6
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -344,12 +344,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.6
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -402,41 +402,41 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.6
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
   - tests/unit/optimize/**
   description: >-
-    eta_rxncat.optimize: geometry optimizers (v0.3.0) and the clean-room P-RFO TS
-    search (v0.5.0, TJ A1). geomeTRIC is the optional opt-geometric extra (TJ Q3 A),
-    never imported by core or the base install. errors.py: OptimizerError -> OptimizerUnavailableError
-    (names uv sync --extra opt-geometric), OptimizerInputError, OptimizationFailedError(steps,
-    last_energy_hartree) -> TSSearchFailedError(reason: max_steps|too_many_rejections|mode_lost|no_reaction_mode|wall_time_exceeded);
-    none is a ValueError. base.py (pure Python): Optimizer ABC (identity, OPTIONS
-    resolved by the ADR-0016 rule, minimize(state, engine, *, frozen_atom_indices,
-    dihedral_constraints, options) -> OptimizationResult); DihedralConstraint; check_constraints;
-    constraints_text (canonical freeze:/dihedral: text, recorded as options["constraints"]).
-    geometric_impl.py: GeometricOptimizer imports geomeTRIC only inside functions;
-    OptParams, Molecule, coordsys tric/cart/dlc/hdlc, parse_constraints, optimizeGeometry
-    via a bridge to Engine.evaluate that never catches EngineError; fresh temp dir,
-    logger and numpy RNG restored. Options coordsys, convergence_set, maxiter, trust,
-    hessian; ladder tric, tric_tight_trust, then cartesian or hdlc. ts_base.py (pure
-    Python, R12): TransitionStateOptimizer ABC, separate from Optimizer; find_saddle(state,
-    engine, *, forming_bonds, options) -> TSSearchResult; 'constraints' refused, no
-    frozen atoms or dihedrals (R21). prfo.py (numpy, base install): PRFOOptimizer,
-    identity prfo src-<sha256(prfo.py)[:16]> (R11). Unweighted Cartesian Bohr, rigid
-    motions about the centroid projected out (R7, no masses or thermo); exact Hessian
-    at step 0, every 5th accepted step and after a rejection, Bofill between (identity
-    at r = 0 or s = 0, R29); initial mode = max forming-stretch overlap, then max
-    overlap with the previous mode; Baker P-RFO step, trust radius, ratio accept/reject;
-    four convergence criteria (R24); no Hessian after convergence (R27). Tests in
-    tests/unit/optimize.
+    eta_rxncat.optimize: geometry optimizers (v0.3.0), clean-room P-RFO TS search
+    (v0.5.0). geomeTRIC: optional opt-geometric extra, never imported by core or the
+    base install. errors.py: OptimizerError -> OptimizerUnavailableError (names the
+    extra), OptimizerInputError, OptimizationFailedError(steps, last_energy_hartree)
+    -> TSSearchFailedError(reason: max_steps|too_many_rejections|mode_lost|no_reaction_mode|wall_time_exceeded).
+    base.py (pure Python): Optimizer ABC (identity, OPTIONS by ADR-0016, minimize(state,
+    engine, *, frozen_atom_indices, dihedral_constraints, options) -> OptimizationResult);
+    DihedralConstraint; check_constraints; constraints_text (canonical freeze:/dihedral:
+    text, options["constraints"]); capture_frames() ContextVar sink holds a run's
+    frames when it raises. geometric_impl.py: GeometricOptimizer imports geomeTRIC
+    only in functions; OptParams, Molecule, coordsys tric/cart/dlc/hdlc, parse_constraints,
+    optimizeGeometry via a bridge to Engine.evaluate (never catches EngineError) that
+    appends an OptimizationFrame per call (ladder_step; accepted_bool from the step's
+    optim.xyz at 1e-6 A, never raises); each step in a temp dir and a locked process-wide
+    temp cwd under TMPDIR, cwd, logger, numpy RNG restored (v0.7.0 R8, R33). Options
+    coordsys, convergence_set, maxiter, trust, hessian; ladder tric, tric_tight_trust,
+    then cartesian or hdlc. ts_base.py (pure Python, R12): TransitionStateOptimizer
+    ABC; find_saddle(state, engine, *, forming_bonds, options) -> TSSearchResult;
+    'constraints' refused, no frozen atoms or dihedrals (R21). prfo.py (numpy, base
+    install): PRFOOptimizer, identity prfo src-<sha256(prfo.py)[:16]> (R11). Cartesian
+    Bohr, rigid motions projected out (R7); exact Hessian at step 0, every 5th accepted
+    step and after a rejection, Bofill between (R29); mode = max forming-stretch overlap,
+    then max overlap with the previous one; Baker P-RFO step, trust radius, ratio
+    accept/reject; four convergence criteria (R24); no Hessian after convergence (R27).
   inputs:
   - data_type: molecular_state_constraints_and_forming_bonds
     source_id: eta_rxncat_core
@@ -458,14 +458,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -524,14 +524,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -553,15 +553,19 @@ nodes:
     SinglePoint, ENGINE_CLASSES; run_species caches each stage under build_stage_key:
     conformer_search, geometry_opt, dedup, window, frequency, imaginary push then
     not_a_minimum, re-dedup (R53), ensemble, single points (R35). Opt/SCF failures
-    cached, others propagate. run_constrained_point (R42). counting.py: CountingEngine.
+    cached (with frames from capture_frames), others propagate; geometry_opt payloads
+    carry optional frames (v0.7.0). run_constrained_point (R42). counting.py: CountingEngine.
     ts.py: run_transition_state(TSSpec, TSRecipe, store) -> TSRunResult: ts_opt (key:
     engine + TS options, identity, forming bonds), frequency, validate_transition_state,
-    TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
-    engine_error; Unavailable/Input errors raise uncached); ts_validation_failed keeps
-    the validation. barrier.py: activation_free_energy (1 M, 1 atm). reaction.py:
-    reaction_free_energy. report.py: JSON v1. Tests: unit/orchestrator (glob shared
-    with selectivity); the shared tests/e2e harness: t3 (HF1-HF3, R32), T4 inputs
-    + t4/t4_flexible E2E, acceptance records and verdicts; E2E never reads candidates.
+    TransitionStateRecord; _RecordingEngine wraps the counted engine and fills each
+    TSStep's coordinates from its k-th hessian=False evaluation, exactness-checked
+    (_StepRecordError, uncached; R33, prfo.py unedited); failures cached with those
+    frames (ts_search_failed:<reason>, scf_convergence, engine_error; Unavailable/Input
+    errors raise uncached); ts_validation_failed keeps the validation. barrier.py:
+    activation_free_energy (1 M, 1 atm). reaction.py: reaction_free_energy. report.py:
+    JSON v1. Tests: unit/orchestrator (glob shared with selectivity); the shared tests/e2e
+    harness: t3 (HF1-HF3, R32), T4 inputs + t4/t4_flexible E2E, acceptance records
+    and verdicts; E2E never reads candidates.
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -614,14 +618,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -681,14 +685,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -707,15 +711,16 @@ nodes:
     (log-sum-exp G_p, ddG, inf ratio on overflow, softmax; R8 ee) and evaluate_pathway_pruning
     (R7: strict >, priority>=2 of the minor pathway); run_selectivity composes ensembles,
     score, rules, unpruned run_species; import RDKit-free. ts_ensemble.py: run_ts_ensemble(_detailed):
-    seed, samples, cached constrained_preopt (injected optimizer), re-search, exclusions
-    (R19), dedup, window, weights; v0.7.0 keywords expected_face (seed:face_mismatch_pathway),
-    max_pre_relax_timeouts (stall_cap_reached_bool), orientation_centers (orientation_mismatch).
-    _deadline.py: PreRelaxTimeout guard; effective_budget_s scales the 600 s base
-    by load1/n_cpu, cap 1200 (R7). ts_fallback.py: enumerated_pathway_inputs (multi-site
-    seed composed via map_template_indices, derived reactant_key, refuses charged/open-shell,
-    multi_site_seed_atom_deleted) and run_ts_with_fallback (templates in rank order;
-    falls through only on the R4 allow-list; stall cap 2; no own cache rows). Tests:
-    unit/orchestrator selectivity_*, ts_ensemble*, deadline, ts_fallback.
+    seed, samples, cached constrained_preopt (injected optimizer; every failure row
+    carries the capture_frames frames, v0.7.0), re-search, exclusions (R19), dedup,
+    window, weights; v0.7.0 keywords expected_face (seed:face_mismatch_pathway), max_pre_relax_timeouts
+    (stall_cap_reached_bool), orientation_centers (orientation_mismatch). _deadline.py:
+    PreRelaxTimeout guard; effective_budget_s scales the 600 s base by load1/n_cpu,
+    cap 1200 (R7). ts_fallback.py: enumerated_pathway_inputs (multi-site seed composed
+    via map_template_indices, derived reactant_key, refuses charged/open-shell, multi_site_seed_atom_deleted)
+    and run_ts_with_fallback (templates in rank order; falls through only on the R4
+    allow-list; stall cap 2; no own cache rows). Tests: unit/orchestrator selectivity_*,
+    ts_ensemble*, deadline, ts_fallback.
   inputs:
   - data_type: ts_ensembles_per_pathway
     external: eta_rxncat_consumers
@@ -766,14 +771,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
-    summary: patched inputs, outputs, files
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
@@ -817,14 +822,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_review
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -858,8 +863,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
+    reviewed_at: '2026-11-26T09:42:52+00:00'
+    reviewed_by: audit:OPR.0.7.0.6
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.6
