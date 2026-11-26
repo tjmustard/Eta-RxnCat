@@ -10,7 +10,7 @@ intent: "Define RunRecord and the versioned RunData v1 contract with a strict wr
 depends_on: [OPR.0.7.0.5, OPR.0.7.0.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_review
 parent: null
 hacf_touches: ["src/eta_rxncat/review/**", "tests/unit/review/**", spec/compiled/architecture.yml]
