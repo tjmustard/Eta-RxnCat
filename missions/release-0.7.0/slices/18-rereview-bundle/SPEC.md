@@ -149,12 +149,12 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] `proof/18-execute.md`: coverage, engine-call and row counts, R34 gate outputs, G15 gate
+- [x] `proof/18-execute.md`: coverage, engine-call and row counts, R34 gate outputs, G15 gate
   outputs and both known answers.
-- [ ] M12 evidence on the real bundle (both gate browsers).
-- [ ] The re-derived `ACCEPTANCE_RESULT.json` and its writer test.
-- [ ] The Phase 3 re-review row draft.
-- [ ] Required checks exit 0.
+- [x] M12 evidence on the real bundle (both gate browsers).
+- [x] The re-derived `ACCEPTANCE_RESULT.json` and its writer test.
+- [x] The Phase 3 re-review row draft.
+- [x] Required checks exit 0.
 
 ## Source material
 
