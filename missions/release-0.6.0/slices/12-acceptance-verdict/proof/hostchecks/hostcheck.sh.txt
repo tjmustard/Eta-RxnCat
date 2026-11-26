@@ -1,0 +1,7 @@
+#!/bin/bash
+avail=$(free -g | awk '/Mem:/{print $7}')
+busy=$(ps -eo pid,args | grep -E "pytest|xtb |/xtb|metis.*(python|pytest)|fairchem|geometric-optimize" | grep -vE "claude|grep|hostcheck|codebase-memory" | wc -l)
+util=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -1)
+apps=$(nvidia-smi --query-compute-apps=name --format=csv,noheader | grep -ciE "python|uv|torch|eta")
+echo "avail_G=$avail other_compute_procs=$busy gpu_util=$util gpu_python_apps=$apps"
+[ "$avail" -ge 9 ] && [ "$busy" -eq 0 ] && [ "$util" -lt 10 ] && [ "$apps" -eq 0 ] && echo HOST_OK

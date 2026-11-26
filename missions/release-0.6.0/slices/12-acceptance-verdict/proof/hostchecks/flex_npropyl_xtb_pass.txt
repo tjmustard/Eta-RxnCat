@@ -1,0 +1,6 @@
+label=flex_npropyl_xtb_pass at=2026-11-25T21:14:41Z head=b67214b
+               total        used        free      shared  buff/cache   available
+Mem:              30          20           5           0           5           9
+avail_G=9 other_compute_procs=0 gpu_util=1 gpu_python_apps=0
+HOST_OK
+exit=0

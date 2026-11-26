@@ -1,0 +1,5 @@
+label=acc_unmapped_xtb at=2026-11-25T20:37:43Z head=b67214b
+               total        used        free      shared  buff/cache   available
+Mem:              30          20           2           0           9          10
+avail_G=10 other_compute_procs=3 gpu_util=0 gpu_python_apps=0
+exit=1

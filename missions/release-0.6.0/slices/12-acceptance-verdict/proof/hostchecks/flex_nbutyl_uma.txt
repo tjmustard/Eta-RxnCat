@@ -1,0 +1,6 @@
+label=flex_nbutyl_uma at=2026-11-25T23:54:05Z head=b67214b
+               total        used        free      shared  buff/cache   available
+Mem:              30          16           8           0           6          13
+avail_G=13 other_compute_procs=0 gpu_util=0 gpu_python_apps=0
+HOST_OK
+exit=0

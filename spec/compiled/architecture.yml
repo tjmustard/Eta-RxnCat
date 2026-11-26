@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -63,7 +63,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.6.0.11
+    last_slice: OPR.0.6.0.12
   review:
     reviewed_at: '2026-11-25T20:10:26+00:00'
     reviewed_by: audit:OPR.0.6.0.11
@@ -234,7 +234,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -273,7 +273,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.6.0.11
+    last_slice: OPR.0.6.0.12
   review:
     reviewed_at: '2026-11-25T20:10:26+00:00'
     reviewed_by: audit:OPR.0.6.0.11
@@ -516,7 +516,7 @@ nodes:
     last_slice: OPR.0.6.0.11
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: dirty
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -620,7 +620,7 @@ nodes:
     reviewed_by: audit:OPR.0.6.0.11
     summary: patched description
   provenance:
-    last_slice: OPR.0.6.0.11
+    last_slice: OPR.0.6.0.12
 - id: eta_rxncat_mapping
   dimension: Module
   status: clean

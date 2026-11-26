@@ -1,0 +1,6 @@
+label=flex_ethyl_xtb at=2026-11-25T21:08:21Z head=b67214b
+               total        used        free      shared  buff/cache   available
+Mem:              30          20           2           0           8           9
+avail_G=9 other_compute_procs=0 gpu_util=2 gpu_python_apps=0
+HOST_OK
+exit=0

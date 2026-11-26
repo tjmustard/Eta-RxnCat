@@ -1,0 +1,6 @@
+label=flex_ethyl_uma_pass at=2026-11-25T23:42:23Z head=b67214b
+               total        used        free      shared  buff/cache   available
+Mem:              30          16           8           0           6          14
+avail_G=14 other_compute_procs=0 gpu_util=0 gpu_python_apps=0
+HOST_OK
+exit=0
