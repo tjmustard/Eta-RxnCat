@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -27,7 +27,7 @@ nodes:
   - tests/unit/test_test_policy.py
   - docs/prd/PLAN_DISCREPANCIES.md
   description: >-
-    uv-managed MIT package eta-rxncat 0.5.0 (hatchling, src layout, Python >=3.11,<3.14,
+    uv-managed MIT package eta-rxncat 0.6.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf. Extras:
     gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch), mlip-uma
     (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev; TJ v0.3.0
@@ -48,10 +48,9 @@ nodes:
     LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
     Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
     GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
-    v0.5.0 only on its verdict pass; v0.6.0 pre-release lines (pending TJ) from its
-    record. docs/prd/v<version>/: verbatim starters (excluded from gates), DISCREPANCIES.md,
-    acceptance record (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md
-    is the plan-copy register.
+    v0.5.0/v0.6.0 only on their verdict pass. docs/prd/v<version>/: verbatim starters
+    (excluded from gates), DISCREPANCIES.md, acceptance record (v0.2.0 also evidence/,
+    calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -65,8 +64,8 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.12
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T00:22:38+00:00'
+    reviewed_by: audit:OPR.0.6.0.12
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
@@ -234,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -275,8 +274,8 @@ nodes:
   provenance:
     last_slice: OPR.0.6.0.12
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T00:22:38+00:00'
+    reviewed_by: audit:OPR.0.6.0.12
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
@@ -516,7 +515,7 @@ nodes:
     last_slice: OPR.0.6.0.11
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/**
@@ -547,9 +546,9 @@ nodes:
     TransitionStateRecord; failures cached (ts_search_failed:<reason>, scf_convergence,
     v0.6.0 engine_error; Unavailable/Input errors raise uncached), ts_validation_failed
     keeps the validation; barrier.py (v0.5.0): activation_free_energy (1 M, 1 atm).
-    reaction.py: reaction_free_energy. report.py: JSON schema 1. Tests: unit; e2e
-    t3 (HF1-HF3, R32), T4 inputs + t4/t4_flexible E2E (pairs, G6 pruning, alkyl series;
-    slices .8-.10, .14); candidates never read; v050/v060 records (R33, .11).
+    reaction.py: reaction_free_energy. report.py: JSON v1. Tests: unit; e2e t3 (HF1-HF3,
+    R32), T4 inputs + t4/t4_flexible E2E (pairs, G6 pruning, alkyl series; slices
+    .8-.10, .14); never read candidates; v050/v060 record+verdict (R33, .11-.12).
   inputs:
   - data_type: species_spec_recipe_and_single_points
     external: eta_rxncat_consumers
@@ -616,8 +615,8 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-25T20:10:26+00:00'
-    reviewed_by: audit:OPR.0.6.0.11
+    reviewed_at: '2026-11-26T00:22:38+00:00'
+    reviewed_by: audit:OPR.0.6.0.12
     summary: patched description
   provenance:
     last_slice: OPR.0.6.0.12
