@@ -1,30 +1,34 @@
-"""Single-site library enumeration: graft, eligibility, charge and the cross-node check (v0.7.0).
+"""Library enumeration: site product, graft, eligibility, charge and cross-node check (v0.7.0).
 
-``enumerate_candidates`` grafts every library entry onto every declared (node, template) with eta's
-``graft`` and assembles one candidate graph per entry. It is pure and deterministic, is not cached,
-and infers no chemistry: charge and multiplicity come from the template and the entry's declared
-values. ``eta_rxncat.mapping`` does not re-export this module (mission R19).
+``enumerate_candidates`` takes the Cartesian product of the library entries of a plan's sites,
+grafts each combination onto every declared (node, template) with eta's ``graft``, one site after
+the other, and assembles one candidate graph per combination. It is pure and deterministic, is not
+cached, and infers no chemistry: charge and multiplicity come from the template and the entries'
+declared values. ``eta_rxncat.mapping`` does not re-export this module (mission R19).
 """
 
+import math
 from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
+from itertools import product
 from typing import Any
 
 from pydantic import ValidationError
 
 from eta_rxncat.core import (
     ATOMIC_NUMBERS,
+    AtomMappingSpec,
     Component,
     EnumeratedCandidate,
     EnumerationPlan,
     EnumerationResult,
-    EnumerationSite,
     GraftRecord,
     GraftRefusalReason,
     GraftResult,
     GraftSpec,
     LibraryEntry,
+    MolecularState,
     ReactionGraph,
     ReactionNode,
     SelectivitySet,
@@ -50,8 +54,17 @@ class EnumerationError(MappingError):
 
 
 @dataclass(frozen=True)
+class _SiteView:
+    """A site map rewritten into the index space of one graft input."""
+
+    template: AtomMappingSpec
+    constrained_core: list[int]
+    forming_bonds: list[tuple[int, int]]
+
+
+@dataclass(frozen=True)
 class _Eligible:
-    """An eligible graft: the template it came from, its product and its remapped stages."""
+    """An eligible template: its final product and its composed (remapped) stages."""
 
     template: TemplateGeometry
     result: GraftResult
@@ -59,14 +72,16 @@ class _Eligible:
 
 
 def map_template_indices(record: GraftRecord, indices: Sequence[int]) -> list[int]:
-    """Map template atom indices to the product indices of a graft record.
+    """Map graft-input atom indices to the product indices of a graft record.
+
+    The input is the template for the first site and the previous site's product afterwards.
 
     Args:
         record: A graft record that kept its ``index_map``.
-        indices: Template atom indices.
+        indices: Atom indices of the record's graft input.
 
     Returns:
-        The product index of each template index, in the given order.
+        The product index of each input index, in the given order.
 
     Raises:
         EnumerationError: The record has no product, or an index has no image (a deleted atom).
@@ -114,13 +129,14 @@ def enumerate_candidates(
     max_alignment_rmsd_angstrom: float,
     max_research: int = DEFAULT_MAX_RESEARCH,
 ) -> EnumerationResult:
-    """Enumerate one candidate graph per library entry of a one-site plan.
+    """Enumerate one candidate graph per combination of one library entry per site.
 
-    Candidates follow the library's declared order; records are ordered by node id, then rank.
-    ``plan.max_candidates`` is not enforced yet (slice 04).
+    Sites apply in ``plan.sites`` order. Candidates are the Cartesian product of each site's
+    entries (library declared order), the last site varying fastest, and are named by their entry
+    ids joined with ``+``. Records are ordered by node id, template rank, then site order.
 
     Args:
-        plan: The plan, with exactly one site.
+        plan: The plan, with at least one site.
         max_alignment_rmsd_angstrom: Largest alignment RMSD of an eligible graft (no default).
         max_research: Used only for ``projected_ts_searches``.
 
@@ -128,23 +144,28 @@ def enumerate_candidates(
         Every candidate with its graft records.
 
     Raises:
-        EnumerationError: The plan has no site or several sites, or a site maps one (node,
-            template) twice.
+        EnumerationError: The plan has no site, a site maps one (node, template) twice, or the
+            product exceeds ``plan.max_candidates`` (decided before any graft).
     """
-    if len(plan.sites) > 1:
-        raise EnumerationError("multi-site: slice 04")
     if not plan.sites:
         raise EnumerationError("the plan has no site")
-    site = plan.sites[0]
-    keys = Counter((m.node_id, m.template_id) for m in site.maps)
-    repeated = sorted(key for key, n in keys.items() if n > 1)
-    if repeated:
-        raise EnumerationError(f"site '{site.id}' maps (node, template) {repeated} more than once")
+    for site in plan.sites:
+        keys = Counter((m.node_id, m.template_id) for m in site.maps)
+        repeated = sorted(key for key, n in keys.items() if n > 1)
+        if repeated:
+            raise EnumerationError(
+                f"site '{site.id}' maps (node, template) {repeated} more than once"
+            )
+    per_site = [[e for e in plan.library if e.site_id == site.id] for site in plan.sites]
+    size = math.prod(len(entries) for entries in per_site)
+    if size > plan.max_candidates:
+        raise EnumerationError(
+            f"{size} candidates exceed max_candidates {plan.max_candidates}; nothing is truncated"
+        )
 
     candidates = [
-        _candidate(plan, site, entry, max_alignment_rmsd_angstrom)
-        for entry in plan.library
-        if entry.site_id == site.id
+        _candidate(plan, combination, max_alignment_rmsd_angstrom)
+        for combination in product(*per_site)
     ]
     return EnumerationResult(
         candidates=candidates,
@@ -156,13 +177,25 @@ def enumerate_candidates(
 
 
 def _candidate(
-    plan: EnumerationPlan, site: EnumerationSite, entry: LibraryEntry, max_rmsd: float
+    plan: EnumerationPlan, entries: Sequence[LibraryEntry], max_rmsd: float
 ) -> EnumeratedCandidate:
-    """Graft one entry onto every mapped template, then check and assemble its graph."""
+    """Graft one entry per site onto every mapped template, then check and assemble the graph.
+
+    Args:
+        plan: The plan.
+        entries: One entry per site, in ``plan.sites`` order.
+        max_rmsd: Alignment RMSD ceiling.
+    """
     reference = plan.reference_graph
     nodes = {n.id: n for n in reference.nodes}
-    maps = {(m.node_id, m.template_id): m for m in site.maps}
-    covered = sorted({m.node_id for m in site.maps})
+    maps = [{(m.node_id, m.template_id): m for m in site.maps} for site in plan.sites]
+    covered = sorted({m.node_id for site in plan.sites for m in site.maps})
+    candidate_id = "+".join(e.id for e in entries)
+    # Per covered node, the sites (by position in the plan) that map any of its templates.
+    covering = {
+        node_id: [k for k, site in enumerate(maps) if any(n == node_id for n, _ in site)]
+        for node_id in covered
+    }
 
     records: list[GraftRecord] = []
     eligible: dict[str, list[_Eligible]] = {}
@@ -172,24 +205,24 @@ def _candidate(
         stages = node.stages if node.stages is not None else reference.default_stages
         eligible[node_id] = []
         for template in sorted(node.templates, key=lambda t: t.rank):
-            site_map = maps.get((node_id, template.id))
-            if site_map is None:
+            key = (node_id, template.id)
+            if any(key not in maps[k] for k in covering[node_id]):
                 dropped.append(f"{node_id}/{template.id}")
                 continue
+            chain = [(entries[k], maps[k][key]) for k in covering[node_id]]
             first = eligible[node_id][0].result if eligible[node_id] else None
-            record, result = _graft_template(entry, site_map, template, stages, first, max_rmsd)
-            records.append(record)
-            if result is not None:
-                remapped = _remap_stages(stages, result)
-                eligible[node_id].append(_Eligible(template, result, remapped))
+            made, found = _graft_sites(chain, template, stages, first, max_rmsd)
+            records.extend(made)
+            if found is not None:
+                eligible[node_id].append(found)
 
     def outcome(
         status: str, detail: str | None, graph: ReactionGraph | None = None
     ) -> EnumeratedCandidate:
         return EnumeratedCandidate.model_validate(
             {
-                "candidate_id": entry.id,
-                "entry_ids_by_site": {site.id: entry.id},
+                "candidate_id": candidate_id,
+                "entry_ids_by_site": {e.site_id: e.id for e in entries},
                 "status": status,
                 "detail": detail,
                 "graph": graph,
@@ -200,22 +233,48 @@ def _candidate(
     for node_id in covered:
         if not eligible[node_id]:
             return outcome("unmappable", node_id)
-    # Each site holds one entry per candidate, so the covered nodes of a set carry the same entry
-    # multiset once the site covers all of a set's pathway nodes or none of them.
+    # A set's pathway nodes carry the same entry multiset once each site covers all or none.
     for selectivity_set in sorted(plan.selectivity_sets, key=lambda s: s.id):
         pathway_nodes = {p.node_id for p in selectivity_set.pathways}
-        if 0 < len(pathway_nodes & set(covered)) < len(pathway_nodes):
-            return outcome("inconsistent", f"partial_pathway_coverage:{site.id}")
+        for k, site in enumerate(plan.sites):
+            hit = pathway_nodes & {n for n in covered if k in covering[n]}
+            if 0 < len(hit) < len(pathway_nodes):
+                return outcome("inconsistent", f"partial_pathway_coverage:{site.id}")
     for node_id in covered:
         if any(e.stages != eligible[node_id][0].stages for e in eligible[node_id]):
             return outcome("inconsistent", f"frozen_index_mismatch:{node_id}")
 
-    graph = _candidate_graph(reference, entry.id, eligible)
+    graph = _candidate_graph(reference, candidate_id, eligible)
     failed = _cross_node_failure(graph, plan.selectivity_sets)
+    if failed is None:
+        carried = {n: Counter(entries[k].id for k in covering[n]) for n in covered}
+        failed = _entry_multiset_failure(carried, plan.selectivity_sets)
     if failed is not None:
         return outcome("inconsistent", failed)
     detail = "dropped_unlisted:" + ",".join(sorted(dropped)) if dropped else None
     return outcome("ok", detail, graph)
+
+
+def _entry_multiset_failure(
+    carried: dict[str, Counter[str]], selectivity_sets: Sequence[SelectivitySet]
+) -> str | None:
+    """Return the first set whose TS entry multiset is not the union of its reactants' entries.
+
+    The union reading (mission R31): a set's pathway nodes carry one multiset (checked by the
+    coverage rule), which must equal the multiset sum over its covered reactant nodes.
+
+    Args:
+        carried: Entry ids carried by each covered node.
+        selectivity_sets: The sets to check.
+    """
+    for selectivity_set in sorted(selectivity_sets, key=lambda s: s.id):
+        union: Counter[str] = Counter()
+        for node_id in selectivity_set.reactant_node_ids:
+            union.update(carried.get(node_id, Counter()))
+        for node_id in sorted({p.node_id for p in selectivity_set.pathways}):
+            if carried.get(node_id, Counter()) != union:
+                return f"entry_multiset_mismatch:{selectivity_set.id}"
+    return None
 
 
 def _product_multiplicity(declared: Sequence[int | None], inherited: int) -> int | None:
@@ -256,14 +315,13 @@ def _remap_stages(stages: Sequence[StageConfig], result: GraftResult) -> list[St
 
 def _graft_order(
     entry: LibraryEntry,
-    site_map: SiteTemplateMap,
-    template: TemplateGeometry,
+    site_map: SiteTemplateMap | _SiteView,
+    state: MolecularState,
     order: list[int],
     charge: int,
     multiplicity: int,
 ) -> GraftResult | GraftRefusalReason:
     """Graft one fragment order, or return why it is refused."""
-    state = template.components[0].state
     fragment = entry.fragment
     keep = site_map.template.keep
     if len(order) != len(site_map.template.alignment):
@@ -298,29 +356,136 @@ def _graft_order(
         return "graft_clash"
 
 
-def _graft_template(
-    entry: LibraryEntry,
-    site_map: SiteTemplateMap,
+def _listed_indices(site_map: SiteTemplateMap) -> set[int]:
+    """Return every template atom a site map names."""
+    mapping = site_map.template
+    return {
+        *mapping.keep,
+        *mapping.delete,
+        *mapping.alignment,
+        *site_map.constrained_core,
+        *(i for pair in site_map.forming_bonds for i in pair),
+    }
+
+
+def _remap_site(
+    site_map: SiteTemplateMap, position: dict[int, int], n_template: int, n_current: int
+) -> _SiteView:
+    """Rewrite a site map from template indices into the current graft input's indices.
+
+    Atoms appended by earlier grafts are not nameable in the template's index space; they are
+    kept, after the declared ``keep``, in ascending order.
+
+    Args:
+        site_map: A map none of whose atoms an earlier graft deleted.
+        position: ``{template index: current index}`` of the surviving template atoms.
+        n_template: Atom count of the template.
+        n_current: Atom count of the current graft input.
+    """
+
+    def image(i: int) -> int:
+        # An index outside the template stays outside the input, so graft refuses it.
+        return position[i] if i < n_template else n_current + i
+
+    appended = sorted(set(range(n_current)) - set(position.values()))
+    mapping = site_map.template
+    return _SiteView(
+        template=AtomMappingSpec(
+            keep=[image(i) for i in mapping.keep] + appended,
+            delete=[image(i) for i in mapping.delete],
+            alignment=[image(i) for i in mapping.alignment],
+        ),
+        constrained_core=[image(i) for i in site_map.constrained_core],
+        forming_bonds=[(image(i), image(j)) for i, j in site_map.forming_bonds],
+    )
+
+
+def _graft_sites(
+    chain: Sequence[tuple[LibraryEntry, SiteTemplateMap]],
     template: TemplateGeometry,
     stages: Sequence[StageConfig],
     first_eligible: GraftResult | None,
     max_rmsd: float,
-) -> tuple[GraftRecord, GraftResult | None]:
-    """Record one (entry, node, template); the result is returned only when it is eligible.
+) -> tuple[list[GraftRecord], _Eligible | None]:
+    """Graft every covering site onto one template, in site order, stopping at a refusal.
 
     Args:
-        entry: The library entry.
-        site_map: How the site reads on this template.
+        chain: ``(entry, site map)`` of each covering site; maps are in template indices.
         template: The template to graft onto.
-        stages: The node's effective stages, whose frozen atoms must survive the graft.
-        first_eligible: The node's best-ranked eligible product so far, which fixes its
-            composition and charge.
+        stages: The node's effective stages, in template indices.
+        first_eligible: The node's best-ranked eligible final product so far.
+        max_rmsd: Alignment RMSD ceiling of every graft.
+
+    Returns:
+        One record per attempted site, and the template when every site was eligible.
+    """
+    records: list[GraftRecord] = []
+    state = template.components[0].state
+    n_template = len(state.symbols)
+    position = {i: i for i in range(n_template)}  # surviving template atom -> current index
+    current_stages = list(stages)
+    applied: list[LibraryEntry] = []
+    final: _Eligible | None = None
+    for step, (entry, site_map) in enumerate(chain):
+        applied.append(entry)
+        deleted = set(range(n_template)) - set(position)
+        view: SiteTemplateMap | _SiteView | None = site_map
+        if step > 0:
+            view = (
+                None
+                if _listed_indices(site_map) & deleted
+                else _remap_site(site_map, position, n_template, len(state.symbols))
+            )
+        record, result = _graft_template(
+            applied,
+            view,
+            site_map.node_id,
+            template,
+            state,
+            current_stages,
+            first_eligible if step == len(chain) - 1 else None,
+            max_rmsd,
+        )
+        records.append(record)
+        if result is None:
+            return records, None
+        moved = _template_positions(result.index_map)
+        position = {i: moved[c] for i, c in position.items() if c in moved}
+        current_stages = _remap_stages(current_stages, result)
+        state = result.product
+        final = _Eligible(template, result, current_stages)
+    return records, final
+
+
+def _graft_template(
+    applied: Sequence[LibraryEntry],
+    view: SiteTemplateMap | _SiteView | None,
+    node_id: str,
+    template: TemplateGeometry,
+    state: MolecularState,
+    stages: Sequence[StageConfig],
+    first_eligible: GraftResult | None,
+    max_rmsd: float,
+) -> tuple[GraftRecord, GraftResult | None]:
+    """Record one site's graft; the result is returned only when it is eligible.
+
+    Args:
+        applied: The entries applied to this template so far; the last one is grafted now.
+        view: How the site reads on the graft input; ``None`` if an earlier graft deleted one of
+            its atoms.
+        node_id: Node of the template.
+        template: The reference template.
+        state: The graft input: the template's state, or the previous site's product.
+        stages: The node's stages in the input's indices; their frozen atoms must survive.
+        first_eligible: At the last site, the node's best-ranked eligible final product so far,
+            which fixes its composition and charge.
         max_rmsd: Alignment RMSD ceiling.
     """
+    entry = applied[-1]
     data: dict[str, Any] = {
         "entry_id": entry.id,
         "site_id": entry.site_id,
-        "node_id": site_map.node_id,
+        "node_id": node_id,
         "template_id": template.id,
     }
 
@@ -330,17 +495,19 @@ def _graft_template(
     if len(template.components) > 1 or template.components[0].count > 1:
         return refused("multi_component_template")
     multiplicity = _product_multiplicity(
-        [entry.multiplicity], template.components[0].state.spin_multiplicity
+        [e.multiplicity for e in applied], template.components[0].state.spin_multiplicity
     )
     if multiplicity is None:
         return refused("multiplicity_conflict")
-    kept = set(site_map.template.keep)
+    if view is None:
+        return refused("site_atom_deleted")
+    kept = set(view.template.keep)
     if any(i not in kept for stage in stages for i in stage.frozen_atom_indices):
         return refused("graft_input")
-    charge = template.total_charge + entry.charge_delta
+    charge = template.total_charge + sum(e.charge_delta for e in applied)
 
     outcomes = [
-        _graft_order(entry, site_map, template, order, charge, multiplicity)
+        _graft_order(entry, view, state, order, charge, multiplicity)
         for order in entry.fragment_orders
     ]
     data["order_rmsds_angstrom"] = [
@@ -354,7 +521,7 @@ def _graft_template(
     index, result = min(returned, key=lambda item: item[1].alignment_rmsd_angstrom)
     rmsd = result.alignment_rmsd_angstrom
     position = _template_positions(result.index_map)
-    bonds = site_map.forming_bonds
+    bonds = view.forming_bonds
     bonds_kept = all(i in position and j in position for i, j in bonds)
     data.update(
         chosen_order_index=index,

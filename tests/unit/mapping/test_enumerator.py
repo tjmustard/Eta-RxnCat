@@ -23,7 +23,7 @@ from test_enumerator_support import (
 )
 
 import eta_rxncat.mapping
-from eta_rxncat.core import EnumerationPlan, EnumerationResult, EnumerationSite, GraftResult
+from eta_rxncat.core import EnumerationPlan, EnumerationResult, GraftResult
 from eta_rxncat.mapping import AlignmentError, graft
 from eta_rxncat.mapping import enumerator as module
 from eta_rxncat.mapping.enumerator import (
@@ -320,14 +320,11 @@ def test_map_template_indices_and_mapped_forming_bonds() -> None:
         map_template_indices(unmeasured, [0])
 
 
-def test_candidates_follow_library_order_and_other_sites_are_refused() -> None:
-    """One candidate per entry, in declared order; several or no sites are refused."""
+def test_candidates_follow_library_order_and_plan_errors() -> None:
+    """One candidate per entry, in declared order; no site or a repeated map is refused."""
     result = run(plan(library=[entry("npropyl"), entry("ethyl")]))
     assert [c.candidate_id for c in result.candidates] == ["npropyl", "ethyl"]
     assert result.max_alignment_rmsd_angstrom == MAX_RMSD
-    two = [EnumerationSite(id=i, maps=default_maps()) for i in ("r", "s")]
-    with pytest.raises(EnumerationError, match="multi-site: slice 04"):
-        run(plan(sites=two))
     with pytest.raises(EnumerationError, match="no site"):
         run(plan(sites=[], library=[]))
     with pytest.raises(EnumerationError, match="more than once"):
