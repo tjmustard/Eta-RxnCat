@@ -10,7 +10,7 @@ intent: "Prove the enumeration end to end: enumerate ethyl and n-propyl onto TS1
 depends_on: [OPR.0.7.0.4, OPR.0.7.0.6, OPR.0.7.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.7.0/**", spec/compiled/architecture.yml]
@@ -98,10 +98,10 @@ bounded by R6/R7 and reported.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] `tests/e2e/test_v070_enumeration.py` + helpers.
-- [ ] Run the 8 units (host check per command), then the 4 scoring commands.
-- [ ] Candidate-only commit; code commit; updater once.
+- [x] Index.
+- [x] `tests/e2e/test_v070_enumeration.py` + helpers.
+- [x] Run the 8 units (host check per command), then the 4 scoring commands.
+- [x] Candidate-only commit; code commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
