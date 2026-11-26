@@ -15,6 +15,7 @@
 ## Artifacts
 
 - proof/17-execute.md - guard CLEAR: 15/15 exit 0, 0 rows added, dG/ddG equal to fixtures, 53 seed_clash as measured, 0 bond_changed, 0 stalls; ruff/mypy exit 0; full pytest 2660 passed
+- proof/17-qa.md - qa PASS: 15 records == fixtures on every dG/ddG (audit script), 53 seed_clash as measured, 0 rows; GFN2 + UMA reruns blob-equal; pytest 2660 passed
 
 ## Residue / caveats
 
