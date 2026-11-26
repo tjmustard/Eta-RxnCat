@@ -387,3 +387,14 @@ def test_fallback_record_accepted() -> None:
     assert stopped.stop_reason == "stopped:x"
     empty = fallback(attempts=[], chosen_template_id=None, stop_reason="all_templates_failed")
     assert empty.attempts == []
+
+
+def test_graft_record_whole_input_charge_sum() -> None:
+    """R30.A: the reported charge-sum bool defaults to None, takes a bool and stays strict."""
+    assert graft_record().whole_input_charge_sum_holds_bool is None
+    for value in (True, False):
+        record = graft_record(whole_input_charge_sum_holds_bool=value)
+        assert record.whole_input_charge_sum_holds_bool is value
+        assert GraftRecord.model_validate_json(record.model_dump_json()) == record
+    with pytest.raises(ValidationError):
+        graft_record(whole_input_charge_sum_bool=True)

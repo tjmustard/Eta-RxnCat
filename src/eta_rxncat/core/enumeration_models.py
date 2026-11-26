@@ -226,6 +226,9 @@ class GraftRecord(CoreModel):
         product_multiplicity: ``2S + 1`` of the product.
         mapped_forming_bonds: The map's forming bonds as product indices.
         constrained_core_product_indices: Product indices of the constrained core.
+        whole_input_charge_sum_holds_bool: The graft's report of product charge == template +
+            fragment charge over the whole inputs; reported, never used. ``None`` when no graft of
+            the record returned.
     """
 
     entry_id: str = Field(min_length=1)
@@ -246,6 +249,7 @@ class GraftRecord(CoreModel):
     product_multiplicity: PositiveInt | None = None
     mapped_forming_bonds: list[tuple[NonNegativeInt, NonNegativeInt]] | None = None
     constrained_core_product_indices: list[NonNegativeInt] | None = None
+    whole_input_charge_sum_holds_bool: bool | None = None
 
 
 class EnumeratedCandidate(CoreModel):
@@ -255,7 +259,9 @@ class EnumeratedCandidate(CoreModel):
         candidate_id: Deterministic candidate identifier.
         entry_ids_by_site: The entry chosen at each site.
         status: ``ok``, ``unmappable`` or ``inconsistent``.
-        detail: Why the candidate is not ``ok``; required then.
+        detail: Why the candidate is not ``ok``; required then. On an ``ok`` candidate it is
+            ``None``, or ``dropped_unlisted:<node>/<template>,…`` naming the unlisted templates of
+            covered nodes that were dropped.
         graph: The candidate graph; present exactly when ``status`` is ``ok``.
         records: The graft records.
     """
