@@ -1,0 +1,1255 @@
+{
+ "record_version": 1,
+ "species": [
+  {
+   "species_id": "TS1a_x__ethyl",
+   "label": "TS1a_x__ethyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      -1.522342,
+      -0.708889,
+      -0.667988
+     ],
+     [
+      -0.775282,
+      -1.159467,
+      0.400933
+     ],
+     [
+      1.284649,
+      -0.667062,
+      -0.624668
+     ],
+     [
+      1.284644,
+      0.667063,
+      -0.624659
+     ],
+     [
+      -1.522331,
+      0.708921,
+      -0.667968
+     ],
+     [
+      -0.77526,
+      1.159456,
+      0.400964
+     ],
+     [
+      -0.562485,
+      -0.00002,
+      1.328256
+     ],
+     [
+      2.29446,
+      -1e-6,
+      0.25529
+     ],
+     [
+      -1.94844,
+      -1.332267,
+      -1.446078
+     ],
+     [
+      -0.66421,
+      -2.195004,
+      0.701423
+     ],
+     [
+      1.24941,
+      -1.513894,
+      -1.290737
+     ],
+     [
+      1.249401,
+      1.513903,
+      -1.290719
+     ],
+     [
+      -1.948419,
+      1.332329,
+      -1.446039
+     ],
+     [
+      -0.664175,
+      2.194983,
+      0.701486
+     ],
+     [
+      -1.387067,
+      -0.000021,
+      2.059584
+     ],
+     [
+      0.368251,
+      -0.000037,
+      1.894994
+     ],
+     [
+      2.156237,
+      -6e-6,
+      1.339726
+     ],
+     [
+      4.10433298778015,
+      0.000017606718380478507,
+      -1.5958897269265602
+     ],
+     [
+      3.7491379817937487,
+      0.000011935034331851913,
+      -0.11525991273931607
+     ],
+     [
+      5.1921123059408725,
+      0.000022145455654915138,
+      -1.7203878383829097
+     ],
+     [
+      3.7100873165882473,
+      -0.887012228723665,
+      -2.1020884959048183
+     ],
+     [
+      3.7100818909721855,
+      0.8870502933313035,
+      -2.1020811115618354
+     ],
+     [
+      4.211310338749559,
+      0.8777991293766229,
+      0.3530532916181962
+     ],
+     [
+      4.211327880006028,
+      -0.8777666858523827,
+      0.35305408074661604
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "metadata": {
+     "alignment_rmsd_angstrom": 0.04859394580007897
+    }
+   }
+  },
+  {
+   "species_id": "cyclopentadiene__ethyl",
+   "label": "cyclopentadiene__ethyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      -1.0843001842882203,
+      0.6733908309669372,
+      -0.2601649703116641
+     ],
+     [
+      -1.005189379691284,
+      -0.6338141791348684,
+      0.01989860677576032
+     ],
+     [
+      0.42772586970716475,
+      -1.00437708395634,
+      0.2559554715402189
+     ],
+     [
+      1.1492688462918457,
+      0.2955018813864386,
+      0.0662775140195296
+     ],
+     [
+      0.2632258381840325,
+      1.2546361440676925,
+      -0.23115958092381172
+     ],
+     [
+      -1.988028300803617,
+      1.2253711484436614,
+      -0.47517162228472515
+     ],
+     [
+      -1.8269234788288968,
+      -1.3322299787671465,
+      0.07340258604644136
+     ],
+     [
+      0.5836579384568663,
+      -1.4154678256044853,
+      1.2591985065936782
+     ],
+     [
+      0.7728240225764188,
+      -1.7698085595754147,
+      -0.4474880457016683
+     ],
+     [
+      2.2184616360277647,
+      0.4128144253345026,
+      0.16092473212879496
+     ],
+     [
+      0.48927706587510666,
+      2.2939830711194924,
+      -0.42167267995179447
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [],
+    "metadata": {}
+   }
+  },
+  {
+   "species_id": "cyclopropene__ethyl",
+   "label": "cyclopropene__ethyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      1.723176635445016,
+      0.4157657390087835,
+      -0.003052495467293906
+     ],
+     [
+      0.6020923905832797,
+      -0.6171157445304417,
+      -0.0510243563370413
+     ],
+     [
+      -0.7195239726612825,
+      -0.004693096943369856,
+      -0.46682838482973377
+     ],
+     [
+      -2.03474483345121,
+      -0.5180587861015695,
+      0.044784178922536465
+     ],
+     [
+      -1.6533028821646714,
+      0.6084532505852596,
+      0.540650248749694
+     ],
+     [
+      2.676129664698061,
+      -0.035765779901997974,
+      0.27566880937364074
+     ],
+     [
+      1.853185074420399,
+      0.8947833005128221,
+      -0.9757291523119086
+     ],
+     [
+      1.4968258679414663,
+      1.1994251652119947,
+      0.7227912488119151
+     ],
+     [
+      0.4807964438815687,
+      -1.0857396420311105,
+      0.9292818826913595
+     ],
+     [
+      0.8685094647656867,
+      -1.4150549393772327,
+      -0.7516041648678325
+     ],
+     [
+      -0.6950349686586252,
+      0.4320321114665884,
+      -1.4674844647329899
+     ],
+     [
+      -2.762484234121515,
+      -1.3079405441666667,
+      -0.0021515457510834983
+     ],
+     [
+      -1.835623688185644,
+      1.4339190703097304,
+      1.2047107288691774
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [],
+    "metadata": {}
+   }
+  }
+ ],
+ "candidates": [
+  {
+   "candidate_id": "ethyl",
+   "entry_ids_by_site": {
+    "c7": "ethyl"
+   },
+   "records": [
+    {
+     "entry_id": "ethyl",
+     "site_id": "c7",
+     "node_id": "TS1a_n",
+     "template_id": "TS1a_n",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      0.03541681731105909,
+      0.4940270358994327
+     ],
+     "chosen_order_index": 0,
+     "alignment_rmsd_angstrom": 0.03541681731105909,
+     "min_interatomic_distance_angstrom": 1.0782109932462198,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       4
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "template",
+       7
+      ],
+      [
+       "template",
+       8
+      ],
+      [
+       "template",
+       9
+      ],
+      [
+       "template",
+       10
+      ],
+      [
+       "template",
+       11
+      ],
+      [
+       "template",
+       12
+      ],
+      [
+       "template",
+       13
+      ],
+      [
+       "template",
+       14
+      ],
+      [
+       "template",
+       15
+      ],
+      [
+       "template",
+       17
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       5
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "constrained_core_product_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "whole_input_charge_sum_holds_bool": true
+    },
+    {
+     "entry_id": "ethyl",
+     "site_id": "c7",
+     "node_id": "TS1a_x",
+     "template_id": "TS1a_x",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      "graft_clash",
+      0.04859394580007897
+     ],
+     "chosen_order_index": 1,
+     "alignment_rmsd_angstrom": 0.04859394580007897,
+     "min_interatomic_distance_angstrom": 1.0779675951094263,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       4
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "template",
+       7
+      ],
+      [
+       "template",
+       8
+      ],
+      [
+       "template",
+       9
+      ],
+      [
+       "template",
+       10
+      ],
+      [
+       "template",
+       11
+      ],
+      [
+       "template",
+       12
+      ],
+      [
+       "template",
+       13
+      ],
+      [
+       "template",
+       14
+      ],
+      [
+       "template",
+       15
+      ],
+      [
+       "template",
+       17
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       5
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "constrained_core_product_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "whole_input_charge_sum_holds_bool": true
+    },
+    {
+     "entry_id": "ethyl",
+     "site_id": "c7",
+     "node_id": "cyclopropene",
+     "template_id": "cyclopropene",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      0.052481804506829856,
+      0.4888410707095693
+     ],
+     "chosen_order_index": 0,
+     "alignment_rmsd_angstrom": 0.052481804506829856,
+     "min_interatomic_distance_angstrom": 1.0783571989628482,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       5
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [],
+     "constrained_core_product_indices": [],
+     "whole_input_charge_sum_holds_bool": true
+    }
+   ]
+  }
+ ],
+ "runs": [
+  {
+   "candidate_id": "ethyl",
+   "pathway": "exo",
+   "engine": {
+    "name": "uma_direct",
+    "version": "2.26.0",
+    "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+   },
+   "optimizers": [
+    {
+     "name": "geometric",
+     "version": "1.1.1"
+    },
+    {
+     "name": "prfo",
+     "version": "src-897c4e19cb4e738a"
+    }
+   ],
+   "species_id": "TS1a_x__ethyl",
+   "analysis": {
+    "imag_tol_cm1": 20.0,
+    "sym_tol_angstrom": 0.05,
+    "linear_tol_angstrom": 0.001,
+    "max_automorphisms": 100000
+   },
+   "fallback": {
+    "node_id": "TS1a_x",
+    "attempts": [
+     {
+      "template_id": "TS1a_x__ethyl",
+      "rank": 1,
+      "outcome": "chosen",
+      "reason": null,
+      "wall_time_s": 34.955437495955266
+     }
+    ],
+    "chosen_template_id": "TS1a_x__ethyl",
+    "stop_reason": null
+   },
+   "ensemble": {
+    "pathway": "exo",
+    "temperature_k": 298.15,
+    "reactant_key": [
+     [
+      "C1=CCC=C1",
+      1
+     ],
+     [
+      "CCC1C=C1",
+      1
+     ]
+    ],
+    "recipe_identity": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    },
+    "members": [
+     {
+      "index": 4,
+      "source": "fragment_embed:3",
+      "start_sha256": "3da40480457f6c45f1d705763b6143bea5d22f9bd5562edebda67fa887decc41",
+      "G_hartree": -389.099475087696,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 1.0742333484746887,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.4054073875423248,
+      "pre_relax_wall_time_s": 2.389833508990705
+     },
+     {
+      "index": 6,
+      "source": "fragment_embed:6",
+      "start_sha256": "5d9a52f87fc16cc27f7978969485603e2a2b5842e08911c0697fa30ded003a71",
+      "G_hartree": -389.0985767748052,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 0.000024538781752476685,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.1565657638733793,
+      "pre_relax_wall_time_s": 2.114444611943327
+     },
+     {
+      "index": 7,
+      "source": "fragment_embed:7",
+      "start_sha256": "3f40805cb505dff7406d4ef95c2cdc68afb5c7736ad546ea4dde9e1ac678fbf1",
+      "G_hartree": -389.09954815603845,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 1.0780511091599692,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.4380268485842959,
+      "pre_relax_wall_time_s": 2.830314432969317
+     }
+    ],
+    "excluded": [
+     {
+      "index": 1,
+      "source": "fragment_embed:0",
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        6,
+        17
+       ],
+       "distance_angstrom": 1.6320379549078434,
+       "ratio_to_covalent_sum": 1.0737091808604233,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
+     },
+     {
+      "index": 2,
+      "source": "fragment_embed:1",
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        18
+       ],
+       "distance_angstrom": 1.254589248092586,
+       "ratio_to_covalent_sum": 1.1725133159743795,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
+     },
+     {
+      "index": 5,
+      "source": "fragment_embed:4",
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        18
+       ],
+       "distance_angstrom": 1.3357310917386562,
+       "ratio_to_covalent_sum": 1.2483468147090244,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
+     },
+     {
+      "index": 9,
+      "source": "fragment_embed:9",
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        18
+       ],
+       "distance_angstrom": 1.238448792417803,
+       "ratio_to_covalent_sum": 1.1574287779605634,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
+     }
+    ],
+    "merges": [
+     {
+      "kept_index": 7,
+      "merged_index": 3,
+      "dG_kcal_mol": 0.0004792819377739073,
+      "rmsd_angstrom": 5.286588150521148e-7
+     },
+     {
+      "kept_index": 7,
+      "merged_index": 8,
+      "dG_kcal_mol": 0.0006383033987673369,
+      "rmsd_angstrom": 1.0312350012748226e-6
+     },
+     {
+      "kept_index": 6,
+      "merged_index": 10,
+      "dG_kcal_mol": 3.7369449074856604e-6,
+      "rmsd_angstrom": 0.00004337200828575556
+     },
+     {
+      "kept_index": 6,
+      "merged_index": 0,
+      "dG_kcal_mol": 0.00021413730527114353,
+      "rmsd_angstrom": 0.000024538781752476685
+     }
+    ],
+    "flagged_merges": [],
+    "options": {
+     "n_embed": 10,
+     "n_perturb": 10,
+     "perturb_sigma_angstrom": 0.3,
+     "pre_dedup_rmsd_angstrom": 0.125,
+     "random_seed": 42,
+     "max_research": 10,
+     "rmsd_dedup_angstrom": 0.125,
+     "flag_dG_kcal_mol": 0.05,
+     "energy_window_kcal_mol": 3.0,
+     "max_automorphisms": 100000
+    },
+    "G_pathway_hartree": -389.1003275571104,
+    "failed_reason": null
+   },
+   "stall_cap_reached_bool": false,
+   "dG_dagger_kcal_mol": 24.808196296814334,
+   "samples": [
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 0,
+     "source": "seed",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "61096ec93c2e3ac5d08e269d36c534302ccc93dbe9d8d514e52f67cd03a73829",
+     "ts_opt_key": "c48b01c522d83012a4539d513c17ce5b65889563c920f294d66fdea115d42611",
+     "frequency_key": "ab88fb2a197861d38cce05b3d902c9be60dd65ba74c97b6d6323452d23456c66"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 1,
+     "source": "fragment_embed:0",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 2,
+     "source": "fragment_embed:1",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 3,
+     "source": "fragment_embed:2",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "50e8e89917f95192b35b84c0520d4fd386740c4cd87ad282bae4b1b4c36c235a",
+     "ts_opt_key": "4c46c98fbd5da0bce266a836f1c93300b165e6d2229f67c45fb979717bd80e9a",
+     "frequency_key": "4bf0ea76d561ebba6431560d952af8a47e8211283ccd9974772005e25f824840"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 4,
+     "source": "fragment_embed:3",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "18ed332020b95606e404e03ae736d79e663432a97bd5a867d97d324b9b7b8b67",
+     "ts_opt_key": "763546c1a6910a5e4430fe331ba48d7962d6ffa0a43edf4b410db1b403c14ff9",
+     "frequency_key": "7df23478253cd05574a6dc82044eed9864371fc7897ddbe6c43a7402c852738c"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 5,
+     "source": "fragment_embed:4",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 6,
+     "source": "fragment_embed:6",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "00b09fd18351945a10b2801acf9245440ea3ec235457265e936a4bc4971ca91e",
+     "ts_opt_key": "bf254108fe7b676a72dd3245b639d89a7a977221655f9d08934dc282bff1c957",
+     "frequency_key": "8e043c33d1131340b3674dab59afab95b55cb7935891d3be39be60ad85fe1f56"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 7,
+     "source": "fragment_embed:7",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "5c087eb5068e1f1cbcb95770f29fa6eb9ebd88264c8a2bbecef0c138cd8f0318",
+     "ts_opt_key": "332887ca71dbd2aff58dff033550680c9f4cefb4ff9e4d00cad50fbc4f0c2cc5",
+     "frequency_key": "515ca83de96bacda6905de4be3c7c90932c6acd078b1cf3b76fd74cd376fb31b"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 8,
+     "source": "fragment_embed:8",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "f38d29ba3f49b932ec6a72f8ec24159704bf83710c0ddcf018e843b6c6d85442",
+     "ts_opt_key": "f317b3e806e061c10b080a90a2fae33167e0b505aafd835c449e9f420c425176",
+     "frequency_key": "86da13ad61b1bbe402342f54d8c5ee4f8a249878a8c0e709e264c96651bd8524"
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 9,
+     "source": "fragment_embed:9",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
+    },
+    {
+     "template_id": "TS1a_x__ethyl",
+     "sample_index": 10,
+     "source": "perturb:0",
+     "species_id": "TS1a_x__ethyl",
+     "pre_relax_key": "50c8dc59a0d5ed79e1deef8f7bb03e9088358c084c44d65dfae5761fb67294e1",
+     "ts_opt_key": "ee272754711ce0359a03a1bcf38ec65e5d62f4329273e8843a95abb592b95de7",
+     "frequency_key": "0c5ea8f7f9dadac237b0b550fb916d14a5a6016d0ba57c00f5cf013d7a18de73"
+    }
+   ],
+   "endpoints": [
+    {
+     "species_id": "cyclopentadiene__ethyl",
+     "opt_keys": [
+      "71006909df57d332352ef3ed5269b085cf5e48d7bf4619b2d8f9774a09209ef8",
+      "afeffd47e64f1fc3ff33850dd2f31856e152745c8d3e51e36f9549a29826a474",
+      "def29c4a5db29a0b67f61d3abb652826262dbecfcb0bcc7fb6f3cfef33652bce"
+     ],
+     "frequency_keys": [
+      "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
+     ]
+    },
+    {
+     "species_id": "cyclopropene__ethyl",
+     "opt_keys": [
+      "7d97062ba80753e67b4679852e16570448deaca5de97ca029bfa4f9f7ba78270",
+      "dc2f36cab52434427c231b1afdf85ab1d776f2f955fc99cb227e74b4428cff78",
+      "097c7e033e5147ec34a83eeb1e54f0d18a26ee6199f8883166ea4ed86226074f",
+      "bf44998af352051263b7a98b7ef84535d2ae78b8a15f39705dda0d3a203493c3",
+      "2bbd3e0402073bb4c48a4df06f7b904d15a7b031c161399b565cde8b7ec50307",
+      "f2603ccbe72eac997369f9ee5967f5d6c9fbd75abf2c25dca22130e6a94ba405",
+      "1118f5528dd2f732cbe646b42d5d1ded8fdba8624f9d771cf4d101d7b37118a2",
+      "9a505a0565b59576c8a6084d69544d3001766f751b9e6b9f2f61779ac23e5f66",
+      "ec770b61560a75887fed5079de42117b3ac9578e1c483d2566d9c92970e28731",
+      "4a7fb322a203419b0ede0ebdd219fd7938d82a5103f458b32139aa31557125f8",
+      "b41e7c9429f1330515b14ce93c672c4d005976eaef17e523de493c931fcc9a8c",
+      "1fadb015703f74b18c483d82d27edfe2252cfb369dd115c2d500681101ee05ae",
+      "d5fcb57b2e0de4b90bb71d6a260539110ccac5290014c62c60448c7b682cb630",
+      "da66f59b50b04403206d2408b71b97c8c39e61edd783868f5aa26998d70fcadf",
+      "a28be4e6c81e8ea2127b8f499410cfcd940e7d3061ff4e046f490dca2f3ba514"
+     ],
+     "frequency_keys": [
+      "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
+      "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
+      "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
+     ]
+    }
+   ],
+   "validation": {
+    "imag_tol_cm1": 20.0,
+    "cutoff_cm1": -50.0,
+    "min_active_core_ke_fraction": 0.6,
+    "min_forming_stretch_overlap": 0.5,
+    "forming_distance_min_angstrom": 1.9,
+    "forming_distance_max_angstrom": 2.9
+   }
+  }
+ ],
+ "selectivity": [],
+ "gates": [
+  {
+   "gate_id": "G7.candidate_ok",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.charge_0_multiplicity_1",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.chosen_at_rank_1",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.every_member_face_expected",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.g3_invariant",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.graft_rmsd_and_contacts",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.no_engine_error_or_face_mismatch",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.second_pass_all_hits",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.weights_sum_to_one",
+   "unit_ref": {
+    "candidate_id": "ethyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "uma_direct",
+     "version": "2.26.0",
+     "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce"
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  }
+ ]
+}

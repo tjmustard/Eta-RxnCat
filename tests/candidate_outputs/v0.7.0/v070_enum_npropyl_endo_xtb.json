@@ -1,0 +1,707 @@
+{
+  "candidate": {
+    "candidate_id": "npropyl",
+    "detail": null,
+    "entry_ids_by_site": {
+      "c7": "npropyl"
+    },
+    "records": [
+      {
+        "alignment_rmsd_angstrom": 0.03328304843205721,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0782109932462198,
+        "node_id": "TS1a_n",
+        "order_rmsds_angstrom": [
+          0.4912030009751042,
+          0.03328304843205721
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_n",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.04569871233528016,
+        "chosen_order_index": 0,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0779675951094263,
+        "node_id": "TS1a_x",
+        "order_rmsds_angstrom": [
+          0.04569871233528016,
+          "graft_clash"
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_x",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.04960653605131577,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [],
+        "min_interatomic_distance_angstrom": 1.0783571989628482,
+        "node_id": "cyclopropene",
+        "order_rmsds_angstrom": [
+          0.4859098574873644,
+          0.04960653605131577
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "cyclopropene",
+        "whole_input_charge_sum_holds_bool": true
+      }
+    ],
+    "status": "ok"
+  },
+  "case": "v070_enum_npropyl_endo_xtb",
+  "checks": {
+    "tier_gates": {
+      "candidate_ok": {
+        "candidate_status": "ok",
+        "status": "pass"
+      },
+      "charge_0_multiplicity_1": {
+        "found": [
+          [
+            0,
+            1
+          ]
+        ],
+        "status": "pass"
+      },
+      "chosen_at_rank_1": {
+        "status": "pass",
+        "stop_reason": null
+      },
+      "every_member_face_expected": {
+        "expected_face": [
+          1,
+          1
+        ],
+        "status": "pass"
+      },
+      "g3_invariant": {
+        "status": "pass"
+      },
+      "graft_rmsd_and_contacts": {
+        "close_contact_counts": [
+          0,
+          0,
+          0
+        ],
+        "max_alignment_rmsd_angstrom": 0.04960653605131577,
+        "status": "pass"
+      },
+      "no_engine_error_or_face_mismatch": {
+        "exclusions_by_reason": {
+          "seed_clash": 3
+        },
+        "status": "pass"
+      },
+      "second_pass_all_hits": {
+        "engine_calls": 0,
+        "new_rows": 0,
+        "status": "pass"
+      },
+      "weights_sum_to_one": {
+        "status": "pass",
+        "weights_sum": 1.0
+      }
+    }
+  },
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
+  "environment": {
+    "device": "cpu",
+    "engine": {
+      "model": null,
+      "name": "xtb_subprocess",
+      "version": "xtb 6.8.0"
+    },
+    "run": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "ETA_RXNCAT_XTB": "~/.local/share/eta-rxncat/xtb/6.8.0/stage/bin/xtb",
+      "TMPDIR_is_not_tmp": true,
+      "cpu_count": 20,
+      "eta_rxncat": "0.6.0",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "rdkit": "2026.09.2"
+    },
+    "versions": {
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2"
+    }
+  },
+  "export": {
+    "candidates": 1,
+    "frequencies": 15,
+    "frequencies_missing": 0,
+    "trajectories": 39,
+    "trajectories_missing": 0
+  },
+  "failed_checks": [],
+  "fallback": {
+    "attempts": [
+      {
+        "outcome": "chosen",
+        "rank": 1,
+        "reason": null,
+        "template_id": "TS1a_n__npropyl",
+        "wall_time_s": 70.73385082115419
+      }
+    ],
+    "chosen_template_id": "TS1a_n__npropyl",
+    "node_id": "TS1a_n",
+    "stop_reason": null
+  },
+  "fixture": "e2e5_v070_enumeration",
+  "inputs_sha256": {
+    "v070_enumeration.yaml": "3b18c839ba97c630bdecb086758b503811077d19f64788b4e2d50126fbe8c8de",
+    "xyz/1_cyclopentadiene.xyz": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812",
+    "xyz/5_cyclopropene.xyz": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2",
+    "xyz/TS1a_n.xyz": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "xyz/TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+    "xyz/r_npropyl_cyclopropene.xyz": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56"
+  },
+  "pathway": "endo",
+  "r_group": "npropyl",
+  "recipe": "xtb",
+  "regression": {
+    "note": "no promoted fixture exists for this case (slice 11; Phase 3)",
+    "status": "pending_promotion"
+  },
+  "reported": {
+    "G_pathway_hartree": -31.359146969835702,
+    "barrier": {
+      "ensemble_correction_kcal_mol": -1.1427529334136617,
+      "ensemble_dG_dagger_1M_kcal_mol": 13.86081776428437,
+      "seed_dG_dagger_1M_kcal_mol": 15.00357069769803
+    },
+    "barrier_error": null,
+    "derivation_engine_calls": 0,
+    "derivation_new_rows": 0,
+    "excluded": [
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.175126607095131,
+          "pair": [
+            4,
+            25
+          ],
+          "ratio_to_covalent_sum": 1.0982491655094682
+        },
+        "index": 7,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:6"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.1960660918019492,
+          "pair": [
+            4,
+            26
+          ],
+          "ratio_to_covalent_sum": 1.1178187773849992
+        },
+        "index": 8,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:7"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2735939349129,
+          "pair": [
+            4,
+            26
+          ],
+          "ratio_to_covalent_sum": 1.1902747055260747
+        },
+        "index": 9,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:9"
+      }
+    ],
+    "exclusions_by_reason": {
+      "seed_clash": 3
+    },
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 1.1214237950043753,
+    "graft_pre_relax_timeouts": 0,
+    "max_pre_relax_wall_time_s": 23.380706819007173,
+    "members": [
+      {
+        "G_hartree": -31.357348882194955,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 1,
+        "pre_relax_wall_time_s": 7.309910634998232,
+        "rmsd_to_seed_angstrom": 1.416652029855703,
+        "source": "fragment_embed:0",
+        "start_sha256": "ac8d987bcccd7fbe39b977d3f764698faec32a976a09df17cf421f418cc3e5a9",
+        "validation_passed_bool": true,
+        "weight": 0.14891480523784342
+      },
+      {
+        "G_hartree": -31.35816345677478,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 2,
+        "pre_relax_wall_time_s": 10.315650303964503,
+        "rmsd_to_seed_angstrom": 1.03168751050082,
+        "source": "fragment_embed:1",
+        "start_sha256": "0fa83d988a1a41274be4374cf3298d986bd8e70a65f16960bd9ad5c64c23a9f9",
+        "validation_passed_bool": true,
+        "weight": 0.3528708812016747
+      },
+      {
+        "G_hartree": -31.358163488488724,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 4,
+        "pre_relax_wall_time_s": 5.664982377085835,
+        "rmsd_to_seed_angstrom": 1.0316690814712106,
+        "source": "fragment_embed:3",
+        "start_sha256": "d66064351e0a4a2ac04d6d06dc12051e42599102d0a1cc983f76a85c551df9c4",
+        "validation_passed_bool": true,
+        "weight": 0.3528827338760141
+      },
+      {
+        "G_hartree": -31.357325885177683,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 10,
+        "pre_relax_wall_time_s": 23.380706819007173,
+        "rmsd_to_seed_angstrom": 3.4330067740210176e-06,
+        "source": "perturb:0",
+        "start_sha256": "1c717984506d8254bd6ac7fd94b2b2849b621b191bcfab598cce31b79a7b952b",
+        "validation_passed_bool": true,
+        "weight": 0.14533157968446775
+      }
+    ],
+    "n_flagged_merges": 0,
+    "n_members": 4,
+    "n_merges": 4,
+    "n_samples_run": 11,
+    "orientation_mismatch_count": 0,
+    "reactant_key": [
+      [
+        "C1=CCC=C1",
+        1
+      ],
+      [
+        "CCCC1C=C1",
+        1
+      ]
+    ],
+    "reactants": {
+      "cyclopentadiene__npropyl": {
+        "ensemble_gibbs_hartree": -13.646768935732661,
+        "n_kept": 1
+      },
+      "cyclopropene__npropyl": {
+        "ensemble_gibbs_hartree": -17.73446665321908,
+        "n_kept": 4
+      }
+    },
+    "resources": {
+      "cpu_user_plus_sys_s": 46.537067,
+      "peak_rss_child_kb": 166772,
+      "peak_rss_self_kb": 166772,
+      "wall_time_s": 3.0313699840335175
+    },
+    "second_pass_engine_calls": 0,
+    "second_pass_new_rows": 0,
+    "second_pass_wall_time_s": 1.1790494399610907,
+    "stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 7,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 8,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008458586991764605
+      },
+      "ts_opt": {
+        "cache_hits": 8,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0012182430364191532
+      }
+    },
+    "stall_cap_reached_bool": false,
+    "stall_count": 0,
+    "time_lost_to_stalls_s": 0.0,
+    "timeouts": []
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}

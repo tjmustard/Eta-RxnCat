@@ -1,0 +1,693 @@
+{
+  "candidate": {
+    "candidate_id": "ethyl",
+    "detail": null,
+    "entry_ids_by_site": {
+      "c7": "ethyl"
+    },
+    "records": [
+      {
+        "alignment_rmsd_angstrom": 0.03541681731105909,
+        "chosen_order_index": 0,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "ethyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            5
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0782109932462198,
+        "node_id": "TS1a_n",
+        "order_rmsds_angstrom": [
+          0.03541681731105909,
+          0.4940270358994327
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_n",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.04859394580007897,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "ethyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            5
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0779675951094263,
+        "node_id": "TS1a_x",
+        "order_rmsds_angstrom": [
+          "graft_clash",
+          0.04859394580007897
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_x",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.052481804506829856,
+        "chosen_order_index": 0,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [],
+        "entry_id": "ethyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            5
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ]
+        ],
+        "mapped_forming_bonds": [],
+        "min_interatomic_distance_angstrom": 1.0783571989628482,
+        "node_id": "cyclopropene",
+        "order_rmsds_angstrom": [
+          0.052481804506829856,
+          0.4888410707095693
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "cyclopropene",
+        "whole_input_charge_sum_holds_bool": true
+      }
+    ],
+    "status": "ok"
+  },
+  "case": "v070_enum_ethyl_endo_uma",
+  "checks": {
+    "tier_gates": {
+      "candidate_ok": {
+        "candidate_status": "ok",
+        "status": "pass"
+      },
+      "charge_0_multiplicity_1": {
+        "found": [
+          [
+            0,
+            1
+          ]
+        ],
+        "status": "pass"
+      },
+      "chosen_at_rank_1": {
+        "status": "pass",
+        "stop_reason": null
+      },
+      "every_member_face_expected": {
+        "expected_face": [
+          1,
+          1
+        ],
+        "status": "pass"
+      },
+      "g3_invariant": {
+        "status": "pass"
+      },
+      "graft_rmsd_and_contacts": {
+        "close_contact_counts": [
+          0,
+          0,
+          0
+        ],
+        "max_alignment_rmsd_angstrom": 0.052481804506829856,
+        "status": "pass"
+      },
+      "no_engine_error_or_face_mismatch": {
+        "exclusions_by_reason": {
+          "seed_clash": 5
+        },
+        "status": "pass"
+      },
+      "second_pass_all_hits": {
+        "engine_calls": 0,
+        "new_rows": 0,
+        "status": "pass"
+      },
+      "weights_sum_to_one": {
+        "status": "pass",
+        "weights_sum": 1.0
+      }
+    }
+  },
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "run": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "TMPDIR_is_not_tmp": true,
+      "cpu_count": 20,
+      "eta_rxncat": "0.5.0",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "rdkit": "2026.09.2"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "export": {
+    "candidates": 1,
+    "frequencies": 10,
+    "frequencies_missing": 0,
+    "trajectories": 30,
+    "trajectories_missing": 0
+  },
+  "failed_checks": [],
+  "fallback": {
+    "attempts": [
+      {
+        "outcome": "chosen",
+        "rank": 1,
+        "reason": null,
+        "template_id": "TS1a_n__ethyl",
+        "wall_time_s": 30.975337742944248
+      }
+    ],
+    "chosen_template_id": "TS1a_n__ethyl",
+    "node_id": "TS1a_n",
+    "stop_reason": null
+  },
+  "fixture": "e2e5_v070_enumeration",
+  "inputs_sha256": {
+    "v070_enumeration.yaml": "3b18c839ba97c630bdecb086758b503811077d19f64788b4e2d50126fbe8c8de",
+    "xyz/1_cyclopentadiene.xyz": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812",
+    "xyz/5_cyclopropene.xyz": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2",
+    "xyz/TS1a_n.xyz": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "xyz/TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+    "xyz/r_ethyl_cyclopropene.xyz": "ea69e03013d57e3d847dffebad86840f9225669405526100cb32233c59ceb4d0"
+  },
+  "pathway": "endo",
+  "r_group": "ethyl",
+  "recipe": "uma",
+  "regression": {
+    "note": "no promoted fixture exists for this case (slice 11; Phase 3)",
+    "status": "pending_promotion"
+  },
+  "reported": {
+    "G_pathway_hartree": -389.10761435694513,
+    "barrier": {
+      "ensemble_correction_kcal_mol": -1.0689750578799924,
+      "ensemble_dG_dagger_1M_kcal_mol": 20.235660364919468,
+      "seed_dG_dagger_1M_kcal_mol": 21.30463542279946
+    },
+    "barrier_error": null,
+    "derivation_engine_calls": 0,
+    "derivation_new_rows": 0,
+    "excluded": [
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3001530799685124,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.2150963364191705
+        },
+        "index": 3,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:2"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2791106224910305,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.1954304883093743
+        },
+        "index": 4,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:3"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 0.47073801030310364,
+          "pair": [
+            4,
+            21
+          ],
+          "ratio_to_covalent_sum": 0.43994206570383515
+        },
+        "index": 6,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:6"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.227594664582584,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.1472847332547513
+        },
+        "index": 7,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:7"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3710946709480432,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.2813968887364888
+        },
+        "index": 8,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:8"
+      }
+    ],
+    "exclusions_by_reason": {
+      "seed_clash": 5
+    },
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 60.03358902002219,
+    "graft_pre_relax_timeouts": 0,
+    "max_pre_relax_wall_time_s": 4.1237327409908175,
+    "members": [
+      {
+        "G_hartree": -389.1059108367561,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 0,
+        "pre_relax_wall_time_s": null,
+        "rmsd_to_seed_angstrom": 0.0,
+        "source": "seed",
+        "start_sha256": "cb63dffb8a99886f50f91341c8930e86e845c423680c96d9d0177a7fe304e245",
+        "validation_passed_bool": true,
+        "weight": 0.16460227942948327
+      },
+      {
+        "G_hartree": -389.10678359857917,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 5,
+        "pre_relax_wall_time_s": 3.448014640947804,
+        "rmsd_to_seed_angstrom": 1.0750572273658106,
+        "source": "fragment_embed:4",
+        "start_sha256": "4e3cc23ad4b885b868785c54dc2821185a3db959240548918f8e6f468d9741fe",
+        "validation_passed_bool": true,
+        "weight": 0.41483752831151244
+      },
+      {
+        "G_hartree": -389.1067965345427,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 9,
+        "pre_relax_wall_time_s": 3.219338897964917,
+        "rmsd_to_seed_angstrom": 1.0754951697715958,
+        "source": "fragment_embed:9",
+        "start_sha256": "21ddf5f2859f1d6b9c2d112ff8e0b2d1d791a8a1834664378bed6fa1b02e0660",
+        "validation_passed_bool": true,
+        "weight": 0.42056019225900426
+      }
+    ],
+    "n_flagged_merges": 0,
+    "n_members": 3,
+    "n_merges": 3,
+    "n_samples_run": 11,
+    "orientation_mismatch_count": 0,
+    "reactant_key": [
+      [
+        "C1=CCC=C1",
+        1
+      ],
+      [
+        "CCC1C=C1",
+        1
+      ]
+    ],
+    "reactants": {
+      "cyclopentadiene__ethyl": {
+        "ensemble_gibbs_hartree": -194.01063829757777,
+        "n_kept": 1
+      },
+      "cyclopropene__ethyl": {
+        "ensemble_gibbs_hartree": -195.12922363681648,
+        "n_kept": 2
+      }
+    },
+    "resources": {
+      "cpu_user_plus_sys_s": 742.991138,
+      "peak_rss_child_kb": 555488,
+      "peak_rss_self_kb": 8694180,
+      "wall_time_s": 141.05907643307
+    },
+    "second_pass_engine_calls": 0,
+    "second_pass_new_rows": 0,
+    "second_pass_wall_time_s": 52.110685571911745,
+    "stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 5,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008308693999424577
+      },
+      "ts_opt": {
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008221222902648151
+      }
+    },
+    "stall_cap_reached_bool": false,
+    "stall_count": 0,
+    "time_lost_to_stalls_s": 0.0,
+    "timeouts": []
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}

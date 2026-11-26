@@ -1,0 +1,708 @@
+{
+  "candidate": {
+    "candidate_id": "npropyl",
+    "detail": null,
+    "entry_ids_by_site": {
+      "c7": "npropyl"
+    },
+    "records": [
+      {
+        "alignment_rmsd_angstrom": 0.03328304843205721,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0782109932462198,
+        "node_id": "TS1a_n",
+        "order_rmsds_angstrom": [
+          0.4912030009751042,
+          0.03328304843205721
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_n",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.0456987123352801,
+        "chosen_order_index": 0,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0779675951094263,
+        "node_id": "TS1a_x",
+        "order_rmsds_angstrom": [
+          0.0456987123352801,
+          "graft_clash"
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_x",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.04960653605131587,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [],
+        "min_interatomic_distance_angstrom": 1.0783571989628482,
+        "node_id": "cyclopropene",
+        "order_rmsds_angstrom": [
+          0.4859098574873644,
+          0.04960653605131587
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "cyclopropene",
+        "whole_input_charge_sum_holds_bool": true
+      }
+    ],
+    "status": "ok"
+  },
+  "case": "v070_enum_npropyl_endo_uma",
+  "checks": {
+    "tier_gates": {
+      "candidate_ok": {
+        "candidate_status": "ok",
+        "status": "pass"
+      },
+      "charge_0_multiplicity_1": {
+        "found": [
+          [
+            0,
+            1
+          ]
+        ],
+        "status": "pass"
+      },
+      "chosen_at_rank_1": {
+        "status": "pass",
+        "stop_reason": null
+      },
+      "every_member_face_expected": {
+        "expected_face": [
+          1,
+          1
+        ],
+        "status": "pass"
+      },
+      "g3_invariant": {
+        "status": "pass"
+      },
+      "graft_rmsd_and_contacts": {
+        "close_contact_counts": [
+          0,
+          0,
+          0
+        ],
+        "max_alignment_rmsd_angstrom": 0.04960653605131587,
+        "status": "pass"
+      },
+      "no_engine_error_or_face_mismatch": {
+        "exclusions_by_reason": {
+          "seed_clash": 3
+        },
+        "status": "pass"
+      },
+      "second_pass_all_hits": {
+        "engine_calls": 0,
+        "new_rows": 0,
+        "status": "pass"
+      },
+      "weights_sum_to_one": {
+        "status": "pass",
+        "weights_sum": 0.9999999999999999
+      }
+    }
+  },
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "run": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "TMPDIR_is_not_tmp": true,
+      "cpu_count": 20,
+      "eta_rxncat": "0.5.0",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "rdkit": "2026.09.2"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "export": {
+    "candidates": 1,
+    "frequencies": 17,
+    "frequencies_missing": 0,
+    "trajectories": 41,
+    "trajectories_missing": 0
+  },
+  "failed_checks": [],
+  "fallback": {
+    "attempts": [
+      {
+        "outcome": "chosen",
+        "rank": 1,
+        "reason": null,
+        "template_id": "TS1a_n__npropyl",
+        "wall_time_s": 42.54037045780569
+      }
+    ],
+    "chosen_template_id": "TS1a_n__npropyl",
+    "node_id": "TS1a_n",
+    "stop_reason": null
+  },
+  "fixture": "e2e5_v070_enumeration",
+  "inputs_sha256": {
+    "v070_enumeration.yaml": "3b18c839ba97c630bdecb086758b503811077d19f64788b4e2d50126fbe8c8de",
+    "xyz/1_cyclopentadiene.xyz": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812",
+    "xyz/5_cyclopropene.xyz": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2",
+    "xyz/TS1a_n.xyz": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "xyz/TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+    "xyz/r_npropyl_cyclopropene.xyz": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56"
+  },
+  "pathway": "endo",
+  "r_group": "npropyl",
+  "recipe": "uma",
+  "regression": {
+    "note": "no promoted fixture exists for this case (slice 11; Phase 3)",
+    "status": "pending_promotion"
+  },
+  "reported": {
+    "G_pathway_hartree": -428.38556736144005,
+    "barrier": {
+      "ensemble_correction_kcal_mol": -1.2308937742755384,
+      "ensemble_dG_dagger_1M_kcal_mol": 20.444047621736306,
+      "seed_dG_dagger_1M_kcal_mol": 21.674941396011846
+    },
+    "barrier_error": null,
+    "derivation_engine_calls": 0,
+    "derivation_new_rows": 0,
+    "excluded": [
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2083146161395932,
+          "pair": [
+            4,
+            25
+          ],
+          "ratio_to_covalent_sum": 1.1292659963921432
+        },
+        "index": 7,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:6"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2846095568618714,
+          "pair": [
+            4,
+            26
+          ],
+          "ratio_to_covalent_sum": 1.2005696793101601
+        },
+        "index": 8,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:7"
+      },
+      {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2978093229836434,
+          "pair": [
+            4,
+            25
+          ],
+          "ratio_to_covalent_sum": 1.2129059093305077
+        },
+        "index": 10,
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
+        "source": "fragment_embed:9"
+      }
+    ],
+    "exclusions_by_reason": {
+      "seed_clash": 3
+    },
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 57.76514146698173,
+    "graft_pre_relax_timeouts": 0,
+    "max_pre_relax_wall_time_s": 4.931984178954735,
+    "members": [
+      {
+        "G_hartree": -428.3836058073518,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 0,
+        "pre_relax_wall_time_s": null,
+        "rmsd_to_seed_angstrom": 0.0,
+        "source": "seed",
+        "start_sha256": "11ee8429fa7f074eb3ed8a9a55e10715b3823ebb37a3104b81ef7feb95355e4a",
+        "validation_passed_bool": true,
+        "weight": 0.12524159859023307
+      },
+      {
+        "G_hartree": -428.38454917624017,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 2,
+        "pre_relax_wall_time_s": 2.9623326800065115,
+        "rmsd_to_seed_angstrom": 1.027786988191471,
+        "source": "fragment_embed:1",
+        "start_sha256": "5fb0fd7a92c52b97932215495107ff908fb0f38b00e112a88c33d90519cf7e09",
+        "validation_passed_bool": true,
+        "weight": 0.3401478734690615
+      },
+      {
+        "G_hartree": -428.3846214238852,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 3,
+        "pre_relax_wall_time_s": 4.837089048000053,
+        "rmsd_to_seed_angstrom": 1.0268145013199947,
+        "source": "fragment_embed:2",
+        "start_sha256": "00d7de58f889729d2083ae0b80698fbc08d46ecac13ac16d77b85df728f280dc",
+        "validation_passed_bool": true,
+        "weight": 0.3671971812442227
+      },
+      {
+        "G_hartree": -428.38387982983943,
+        "degeneracy": 1,
+        "face": [
+          1,
+          1
+        ],
+        "index": 5,
+        "pre_relax_wall_time_s": 3.396997119067237,
+        "rmsd_to_seed_angstrom": 1.4321532051869623,
+        "source": "fragment_embed:4",
+        "start_sha256": "d320adc79950a7d734b236261adf5447f1260cf9da30dd8809909e89d00abdcb",
+        "validation_passed_bool": true,
+        "weight": 0.16741334669648267
+      }
+    ],
+    "n_flagged_merges": 0,
+    "n_members": 4,
+    "n_merges": 4,
+    "n_samples_run": 11,
+    "orientation_mismatch_count": 0,
+    "reactant_key": [
+      [
+        "C1=CCC=C1",
+        1
+      ],
+      [
+        "CCCC1C=C1",
+        1
+      ]
+    ],
+    "reactants": {
+      "cyclopentadiene__npropyl": {
+        "ensemble_gibbs_hartree": -194.01063829757777,
+        "n_kept": 1
+      },
+      "cyclopropene__npropyl": {
+        "ensemble_gibbs_hartree": -234.40750872754347,
+        "n_kept": 4
+      }
+    },
+    "resources": {
+      "cpu_user_plus_sys_s": 677.963483,
+      "peak_rss_child_kb": 562776,
+      "peak_rss_self_kb": 8759712,
+      "wall_time_s": 139.63633882405702
+    },
+    "second_pass_engine_calls": 0,
+    "second_pass_new_rows": 0,
+    "second_pass_wall_time_s": 49.65516075794585,
+    "stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 7,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
+      },
+      "frequency": {
+        "cache_hits": 8,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.01263084914535284
+      },
+      "ts_opt": {
+        "cache_hits": 8,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.05082115484401584
+      }
+    },
+    "stall_cap_reached_bool": false,
+    "stall_count": 0,
+    "time_lost_to_stalls_s": 0.0,
+    "timeouts": []
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}
