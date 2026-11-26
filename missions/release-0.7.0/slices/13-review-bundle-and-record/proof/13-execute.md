@@ -1,10 +1,11 @@
 ---
 slice: OPR.0.7.0.13
-candidate_sha: 5b6bf1a
+candidate_sha: e0a4988
 artifact_type: guard
 verdict: CLEAR
-money_evidence: 7 sub-bundles gate clean with 0 engine calls; M12 581/581 in
-  Chrome and Playwright Firefox; M10 all stride 1; full pytest 2591 passed
+money_evidence: "Fix round: root page states no decimation; rebuilt bundle gates
+  clean, 0 engine calls; M12 581/581 in Chrome and Playwright Firefox; full
+  pytest 2593 passed"
 ---
 
 # Execute evidence: 13-review-bundle-and-record (OPR.0.7.0.13) - builder (not a QA verdict)
@@ -12,10 +13,28 @@ money_evidence: 7 sub-bundles gate clean with 0 engine calls; M12 581/581 in
 The artifact type is `guard` only because `hyper_spec.py proof` has no `execute`/`evidence` type;
 this is builder evidence and the audit writes the QA verdict.
 
-Start `9b3101e`. Code commit `43de81b` (the bundle E2E, the full suite the record reads, and the
-record derivation ran at it). Candidate-only commit `5b6bf1a`. Record and progress commit
-`d7a4e86`. The ledger flag and this proof are in the commit after it. No `src/` change. No engine
-ran. Nothing promoted, pushed or tagged.
+Start `9b3101e`. First build: code `43de81b`, candidates `5b6bf1a`, record `d7a4e86`, ledger flag
+and proof `33b9212`. **Audit FAIL, iteration 2** (U1, row qitem-20261126135941-d5138665, progress
+`fb74dd0`). Fix round from `fb74dd0` (brief row qitem-20261126135956-06dfd8cf): code `ea76693`,
+candidate removal `bcdad1d`, rebuilt candidates `e0a4988`; the record and this proof are in the
+commit after it. No `src/` change. No engine ran. Nothing promoted, pushed or tagged. Everything
+below describes the rebuilt bundle.
+
+## Fix round: U1, the false decimation sentence
+
+The root page's intro now comes from `decimation_statement` over the strides of the sub-bundles'
+`run_data.json` files; a new gate, `intro_gate`, refuses a page that does not carry it. The page
+now reads: "No trajectory is decimated: every trajectory is at decimation_stride 1, so a viewer
+shows all of its n_frames_total frames." With any stride above 1 it names each kind and its
+strides. Helper tests cover both cases, each with its failing case (the gate refusing the
+sentence once the data no longer matches).
+
+Rebuild, nothing edited by hand: `git rm -r tests/candidate_outputs/v0.7.0/review` in its own
+commit `bcdad1d` (44 files, only that path); the old scratch tree was **moved aside**, per the
+lead's ruling in the brief, to `E/v070-slice13/review-iter1` (its build report and M12 folder to
+`review_report-iter1.json` and `m12-iter1`), so both roots were absent before the run. Against
+`review-iter1`, only the root `index.html` and `MANIFEST.sha256` differ; the 42 sub-bundle files
+are byte-identical.
 
 `E` = `~/.hacf/eta-rxncat-hacf/evidence`, `P` = `E/v070-slice13/proof`.
 
@@ -54,13 +73,13 @@ its own.
 
 | sub-bundle (`.runrecord` suffix omitted) | candidate entries | trajectories | frequencies | build s | bytes | gates |
 |---|---|---|---|---|---|---|
-| v070_enum_ethyl_selectivity_uma | 2 | 61 | 25 | 0.64 | 2933562 | UMA reported 18/0 |
-| v070_enum_ethyl_selectivity_xtb | 2 | 62 | 26 | 0.27 | 3087669 | GFN2 gated 18/0 |
-| v070_enum_npropyl_selectivity_uma | 2 | 69 | 31 | 1.04 | 5687620 | UMA reported 18/0 |
-| v070_enum_npropyl_selectivity_xtb | 2 | 67 | 29 | 0.90 | 5665151 | GFN2 gated 18/0 |
-| v070_fallback_graft_time_xtb | 1 | 22 | 11 | 0.18 | 1491800 | GFN2 gated 9/0 |
-| v070_fallback_run_time_xtb | 1 | 22 | 11 | 0.09 | 1491824 | GFN2 gated 9/0 |
-| v070_fallback_run_time_uma | 1 | 22 | 11 | 0.08 | 1438321 | UMA reported 9/0 |
+| v070_enum_ethyl_selectivity_uma | 2 | 61 | 25 | 1.21 | 2933562 | UMA reported 18/0 |
+| v070_enum_ethyl_selectivity_xtb | 2 | 62 | 26 | 1.13 | 3087669 | GFN2 gated 18/0 |
+| v070_enum_npropyl_selectivity_uma | 2 | 69 | 31 | 1.84 | 5687620 | UMA reported 18/0 |
+| v070_enum_npropyl_selectivity_xtb | 2 | 67 | 29 | 1.29 | 5665151 | GFN2 gated 18/0 |
+| v070_fallback_graft_time_xtb | 1 | 22 | 11 | 0.51 | 1491800 | GFN2 gated 9/0 |
+| v070_fallback_run_time_xtb | 1 | 22 | 11 | 0.44 | 1491824 | GFN2 gated 9/0 |
+| v070_fallback_run_time_uma | 1 | 22 | 11 | 0.43 | 1438321 | UMA reported 9/0 |
 
 **Gate counts: GFN2 mechanics gates (gated) 54 pass / 0 fail. UMA gates (reported, not gated)
 45 pass / 0 fail.** The UMA RunRecords carry plain `pass_bool` with no "reported" flag, and the UMA
@@ -71,8 +90,8 @@ the root page and here, and never gate.
 
 - `sha256sum -c MANIFEST.sha256` exit 0 for the root and all 7 sub-bundles; each lists every other
   file (root 43, each sub-bundle 5). Root manifest sha256, scratch and copy:
-  `fb307c7daeb58594a0a0f18fa9b84475dae8757c3e2ec8f923885e6c2e483147`.
-- Sizes: every sub-bundle <= 25 000 000 bytes (largest 5687620). Tree total **21839280** bytes,
+  `aa923c9441b96f31282888b285b95173c3d5403e59fc2209993413c7fb3e7473`.
+- Sizes: every sub-bundle <= 25 000 000 bytes (largest 5687620). Tree total **21839233** bytes,
   reported; the root page's footer figure 21795947 is the sum of the 7 sub-bundles (without the
   root index and manifest).
 - 44 files scanned: host data none; network and sink scans as ruled; CSP meta on 8 of 8 HTML pages;
@@ -80,7 +99,7 @@ the root page and here, and never gate.
 - Fresh roots: both were absent before the run; the harness refuses a non-empty one and wipes
   nothing (helper tests). Copy: 44 files, each hashed against the scratch manifest as written,
   created exclusively, never read back. Also checked without reading candidate contents:
-  `git ls-tree -r 5b6bf1a` blob ids equal `git hash-object` of the 44 scratch files.
+  `git ls-tree -r e0a4988` blob ids equal `git hash-object` of the 44 scratch files.
 
 ## M10: decimation strides (read from each `run_data.json` file)
 
@@ -99,20 +118,21 @@ the root page and here, and never gate.
 
 ## Host check, environment, resources (bundle E2E)
 
-`E/v070-slice13/run.sh bundle 3600`: blocking `hostcheck.sh` (slice 12's copy; loops, exits 3 if
+`E/v070-slice13/run.sh bundle-iter2 3600`: blocking `hostcheck.sh` (slice 12's copy; loops, exits 3 if
 never free), then `/usr/bin/time -v timeout 3600 uv run --no-sync python -m pytest
 tests/e2e/test_review_v070.py::test_v070_review_bundle -m e2e` from
 `~/.cache/eta-rxncat-tmp/slice13/cwd`. Env: `ETA_RXNCAT_ACCEPTANCE=1`,
-`ETA_RXNCAT_V070_EVIDENCE=E`, `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp` (`P/bundle.env`, HEAD
-43de81b). Verdict immediately before: `avail=14G gpu=0% gpu_apps=0 heavy=0 eta=0`. The check's
-all-nice listing shows one hakf-rig `pytest` at nice 10, 113 % CPU: listed, not counted by the
-inherited heavy filter (nice < 10). Exit 0, 1 passed, wall 4.6 s, user+sys 53 s, max RSS 143780 kB.
+`ETA_RXNCAT_V070_EVIDENCE=E`, `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp` (`P/bundle-iter2.env`, HEAD
+bcdad1d: the code of `ea76693` with the old candidates removed). Verdict immediately before:
+`avail=13G gpu=0% gpu_apps=0 heavy=0 eta=0`, with no process at >=100 % CPU or >=2 GiB at any
+nice. Exit 0, 1 passed, wall 8.5 s, user+sys 90 s, max RSS 148752 kB.
 Scratch cwd empty and no `HT*` in the repo afterwards.
 
 ## M12 on the real scratch tree (`proof/m12/`)
 
 Driver `proof/m12/m12_driver.py.txt`, throwaway Playwright 1.65.2 venv under TMPDIR,
-`python -I m12_driver_v070.py <scratch tree> <evidence>`, host check first, exit 0.
+`python -I m12_driver_v070.py <scratch tree> <evidence>`, rerun unchanged on the rebuilt tree
+(new venv, same versions), host check first (`P/m12-iter2.hostcheck`), exit 0.
 From `file://` at the root index, each link opened.
 
 | browser | checks | TS modes animated | trajectory plays | pages | console errors | network |
@@ -133,45 +153,41 @@ WebGL, Safari.
 
 `docs/prd/v0.7.0/ACCEPTANCE_RESULT.json`, written by
 `uv run --no-sync python tests/e2e/acceptance_record_v070.py E
-missions/release-0.7.0/slices/12-fallback-e2e/proof/12-execute.md P/full-pytest.log 0
+missions/release-0.7.0/slices/12-fallback-e2e/proof/12-execute.md P/full-pytest-iter2.log 0
 docs/prd/v0.7.0/ACCEPTANCE_RESULT.json` (exit 0). 8 G7 units, 4 selectivity scores, 3 G8
-constructs; 15 engine commands exit 0 with 1 passed, 0 skipped each; default suite 2591 passed, 0
-skipped (at 43de81b); 1 stall, 600.005 s; bundle path and root manifest sha256. It cross-checks
+constructs; 15 engine commands exit 0 with 1 passed, 0 skipped each; default suite 2593 passed, 0
+skipped (at e0a4988); 1 stall, 600.005 s; bundle path and root manifest sha256. It cross-checks
 slice 11's `table.md` (members, stalls, time lost, cap, dG) and slice 12's proof table (merges,
 G_pathway) against the records and refuses a disagreement, and refuses any input under
 `tests/candidate_outputs`. No verdict (slice 14's). Test:
 `tests/e2e/test_acceptance_record_v070.py`.
 
-## `git show --stat 5b6bf1a` (candidate-only)
+## `git show --stat e0a4988` (candidate-only)
 
 `44 files changed, 7389 insertions(+)`, all under `tests/candidate_outputs/v0.7.0/review/`:
 `MANIFEST.sha256`, `index.html`, and for each of the 7 sub-bundles `MANIFEST.sha256`,
 `index.html`, `run_data.json`, `assets/{3Dmol-min.js,LICENSE-3Dmol.txt,eta-view.js}`. From the
 command output; no candidate file was opened.
 
-## Commands and exit codes
+## Commands and exit codes (fix round; every one under `timeout 3600` except `git`, `mv`, `cp`)
 
 | command | at | exit | result |
 |---|---|---|---|
-| `hyper_codegraph.py index` | Start | 0 | `index: ok` |
-| `hyper_spec.py progress --event executing` (detail: Start, `escape_tracking: v1`) | Start | 0 | |
-| `uv run pytest tests/e2e/test_review_v070_helpers.py` / `test_acceptance_record_v070.py` (iterating) | work tree | 1, then 0 | one wrong `match=` string fixed; 28 passed |
-| `uv run ruff check .`, `ruff format --check . --extend-exclude spec/archive --extend-exclude spec/process`, `mypy` | pre-commit | 0, 0, 0 | 733 files; 91 sources |
-| `uv sync --locked` | 43de81b | 0 | |
-| `uv run pytest tests/e2e/test_v070_inputs.py -q` | 43de81b | 0 | 18 passed |
-| `uv run pytest` the two new test files | 43de81b | 0 | 28 passed |
-| `uv run pytest` (full; `ETA_RXNCAT_XTB` exported) | 43de81b | 0 | 2591 passed, 196 deselected |
-| `uv sync --locked --no-dev` into `.venv-runtime`, then `tools/licence_gate.py --profile base` | 43de81b | 0 | 13 packages, 0 failures |
-| `E/v070-slice13/run.sh bundle 3600` | 43de81b | 0 | 1 passed |
-| M12 driver (Chrome, Firefox) | 43de81b | 0 | total failed 0 |
-| record writer | 43de81b | 0 | |
-| `ruff check`, format check, `mypy` | d7a4e86 | 0, 0, 0 | |
-| the slice's two oracle pytest files | d7a4e86 | 0, 0 | 5 and 23 passed |
-| `uv run pytest` (full, final) | d7a4e86 + the ledger flag uncommitted | 0 | 2591 passed, 196 deselected, 730.8 s (host load ~26) |
-| `hyper_spec.py progress --event executed`; `hyper_spec.py lint <slice>` | | 0, 0 | `lint: ok` |
+| `hyper_spec.py progress --event executing`; `hyper_codegraph.py index` | fb74dd0 | 0, 0 | `index: ok` |
+| `ruff check .`, format check (with the excludes), `mypy` | pre-commit of ea76693 | 0, 0, 0 | 734 files; 91 sources |
+| the two slice oracle test files (pre-commit) | pre-commit of ea76693 | 0 | 30 passed |
+| `E/v070-slice13/run.sh bundle-iter2 3600` | bcdad1d | 0 | 1 passed |
+| M12 driver (Chrome, Firefox) | e0a4988 | 0 | total failed 0 |
+| `uv sync --locked` | e0a4988 | 0 | |
+| `ruff check .`, format check, `mypy` | e0a4988 | 0, 0, 0 | |
+| `pytest tests/e2e/test_v070_inputs.py` | e0a4988 | 0 | |
+| `pytest tests/e2e/test_acceptance_record_v070.py`; `.../test_review_v070_helpers.py` | e0a4988 | 0, 0 | 5; 25 passed |
+| `uv sync --locked --no-dev` (`.venv-runtime`) + base licence gate | e0a4988 | 0 | 13 packages, 0 failures |
+| `uv run pytest` (full; `ETA_RXNCAT_XTB` exported) | e0a4988 | 0 | 2593 passed, 196 deselected, 560.7 s |
+| record writer | e0a4988 | 0 | only suite count, root manifest sha and tree total changed |
+| `hyper_spec.py progress --event executed` | | 0 | |
 
-Logs: `P/` (`uv-sync`, `inputs`, `helpers`, `full-pytest`, `licence`, `bundle.*`, `m12.*`,
-`oracle-*`, `final-pytest`, `dry.hostcheck`).
+First-build commands are in the earlier version of this file (`33b9212`). Logs: `P/*-iter2*`.
 
 ## Ledger
 
@@ -185,6 +201,9 @@ paths are owned by other nodes). `eta_rxncat_species_runner` description stays a
 PROGRESS/SPEC, `proof/m12/**`, and the untracked `spec/active`, `spec/archive`, `spec/process`
 paths (names only in the updater output; not opened).
 
+Fix round: the updater was **not** rerun and the ledger not touched; the fix changes only
+`tests/e2e/**` (node `eta_rxncat_species_runner`, already flagged dirty).
+
 ## Deviations and notes for the audit
 
 1. Network-reference scan per lead ruling A (above).
@@ -194,13 +213,19 @@ paths (names only in the updater output; not opened).
 4. Beyond the row count, the harness also gates each store file's sha256 as unchanged.
 5. Before the code commit, one engine-free **dry build** ran from the same harness into
    `$TMPDIR/slice13/dry/review` (host check free first; no candidate write; stores unchanged) to
-   find gate failures before the one-shot official run. It passed with the same root manifest sha.
-6. The root page's intro says trajectories are decimated to fit the budget; here none is (all
-   stride 1, as each row states). Not rebuilt: the candidate root must not be wiped.
-7. The pre-commit runs of `ruff`, `mypy` and `uv sync` had no explicit `timeout`; the pytest runs,
-   the bundle E2E, M12 and the final checks used `timeout 3600`.
-8. Fallback rank-1 attempts have no trajectory in the bundle (the records' samples are the chosen
-   template's); they show in the view's Fallbacks cell.
+   find gate failures before the one-shot official run. It passed with the same root manifest sha as the first official build.
+6. Fixed (U1, above).
+7. First build only: the pre-commit `ruff`, `mypy` and `uv sync` had no explicit `timeout`. The fix
+   round used `timeout 3600`.
+8. The writer exports only the record's samples, so a template that fell through has nothing in
+   the bundle. Run-time rank 1 `TS1a_x__ethyl` (both run-time runs, GFN2 and
+   UMA) **was pre-relaxed** (core-frozen; one `constrained_preopt` row per store, 8 frames GFN2, 10
+   UMA, equal to its attributed engine calls) and then fell through on the face check of the relaxed
+   seed (`ts_fallback.py:341-351`). **No TS search or frequency ran on it** (0 ts_opt/frequency
+   calls; no such rows in the stores). That is the only store row outside the bundle in each
+   run-time store; the graft-time store has none (rank 1 was refused at graft). The audit report
+   cites `ts_ensemble.py:322-334` and a seed record; that later check did not fire here.
+9. The rebuild ran at `bcdad1d`, whose code equals `ea76693`.
 
 ## Phase 3 row draft (the LEAD sends it: `advisor-lead@kernel`, tag `question-for-tj`)
 
@@ -237,6 +262,10 @@ row's link (7 rows). Offline; no server.
   reported): rank 1 `TS1a_x__ethyl` `fell_through`, `seed:face_mismatch_pathway`; rank 2
   `TS1a_n__ethyl` `chosen`. Chosen ensemble: GFN2 3 members, gates 9/9, G_pathway −28.2208485 Eh;
   UMA 3 members, 9/9 reported, G_pathway −389.1076145 Eh.
+- **not in the bundle:** the run-time rank-1 seed `TS1a_x__ethyl` **was optimized** (a core-frozen
+  pre-relaxation, 8 frames GFN2, 10 UMA) before it fell through on the face check; that trajectory
+  is in the store but not in the bundle, because the bundle holds only the chosen template's
+  samples. No TS search ran on it. The graft-time rank 1 has no trajectory (refused at graft).
 - gates: GFN2 54/0 (gated); UMA 45/0 (reported, not gated). No trajectory is decimated. A Mozilla
   release Firefox was not run (optional, your call).
 

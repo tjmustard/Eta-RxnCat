@@ -730,7 +730,7 @@
       "command": "uv run pytest",
       "exit_code": 0,
       "counts": {
-        "passed": 2591,
+        "passed": 2593,
         "failed": 0,
         "skipped": 0,
         "deselected": 196,
@@ -740,7 +740,7 @@
   },
   "bundle": {
     "path": "tests/candidate_outputs/v0.7.0/review/",
-    "root_manifest_sha256": "fb307c7daeb58594a0a0f18fa9b84475dae8757c3e2ec8f923885e6c2e483147",
+    "root_manifest_sha256": "aa923c9441b96f31282888b285b95173c3d5403e59fc2209993413c7fb3e7473",
     "files_listed": 43,
     "engine_calls": 0,
     "sub_bundle_bytes": {
@@ -752,7 +752,7 @@
       "v070_fallback_run_time_xtb.runrecord": 1491824,
       "v070_fallback_run_time_uma.runrecord": 1438321
     },
-    "total_bytes": 21839280,
+    "total_bytes": 21839233,
     "gate_counts": {
       "v070_enum_ethyl_selectivity_uma.runrecord": {
         "gated": [

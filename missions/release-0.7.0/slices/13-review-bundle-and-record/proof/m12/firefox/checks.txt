@@ -1,6 +1,6 @@
 firefox 159.0
 counts: {'ts': 120, 'animated': 120, 'ts_not_completed': 0, 'trajectories': 409, 'played': 409, 'pages': 7}
-passed: 581 failed: 0 in 364s
+passed: 581 failed: 0 in 365s
 PASS  root opened from file://
 PASS  root has no script
 PASS  one root link per sub-bundle  [7 links]
