@@ -2,7 +2,7 @@
 id: OPR.0.7.0.3
 slice: 03-single-site-enumerator
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Graft every library entry onto every declared (node, template) with eta
 depends_on: [OPR.0.7.0.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_enumerator
 parent: null
 hacf_touches: [src/eta_rxncat/mapping/enumerator.py, "tests/unit/mapping/test_enumerator*.py", src/eta_rxncat/core/enumeration_models.py, tests/unit/core/test_enumeration_models.py, spec/compiled/architecture.yml]

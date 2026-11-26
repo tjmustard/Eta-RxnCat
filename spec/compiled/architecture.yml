@@ -76,7 +76,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -122,15 +122,15 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.3
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
-    summary: patched description
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
+    summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -177,8 +177,8 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.3
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -277,12 +277,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.3
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -344,12 +344,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.3
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -402,12 +402,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.3
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -458,14 +458,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -524,14 +524,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -614,14 +614,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_mapping
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -655,8 +655,8 @@ nodes:
     on fixtures, suite, vectors, commands, skips). Errors: MappingError with AlignmentError,
     GraftInputError, GraftClashError, CoreDisplacementError. numpy; RDKit lazily;
     no geometric/torch/pyscf/fairchem at import; never eta_rxncat.thermo. In: MolecularState
-    + GraftSpec; out: GraftResult. MIT/BSD-only, no ase. v0.7.0 plans mapping/enumerator.py
-    (node eta_rxncat_enumerator; not yet written).
+    + GraftSpec; out: GraftResult. MIT/BSD-only, no ase. v0.7.0: mapping/enumerator.py
+    belongs to node eta_rxncat_enumerator.
   inputs:
   - data_type: graft_spec_and_molecular_state_template_and_fragment
     source_id: eta_rxncat_core
@@ -681,14 +681,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -760,29 +760,42 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
   description: >-
-    eta_rxncat.mapping.enumerator: planned for v0.7.0, not yet written (no module
-    or tests exist). Intended as pure, deterministic combinatorial enumeration of
-    candidate ReactionGraphs from a reference graph, declared graft sites and an R-group/ligand
-    library (EnumerationPlan). enumerate_candidates is to graft each declared (entry,
-    node, template) with eta's graft, try every fragment order (lowest RMSD wins,
-    ties to declared order), record refusals from a closed set, keep eligible templates
-    in declared rank order, take a capped Cartesian product over sites (refuse, never
-    truncate), require declared charge and multiplicity per template and consistency
-    across a selectivity set's nodes, and report projected_ts_searches. Pure Python/numpy;
-    no engine. Not to be re-exported by mapping/__init__. Its file also falls under
-    mapping's glob (recorded overlap). Tests planned: tests/unit/mapping/test_enumerator*.py.
+    eta_rxncat.mapping.enumerator (v0.7.0, one site). enumerate_candidates(plan, *,
+    max_alignment_rmsd_angstrom (keyed, no default), max_research=TSEnsembleOptions().max_research)
+    -> EnumerationResult: one candidate per library entry in order; EnumerationError
+    for >1 site ('multi-site: slice 04'), no site, or a (node, template) mapped twice.
+    Per (entry, node, template), node id then rank, before graft: multi_component_template,
+    multiplicity_conflict (declared else inherited), graft_input if a frozen stage
+    index (node stages, else default_stages) is not in template.keep. Per fragment
+    order: wrong length -> graft_input; electron-count parity -> parity; else eta's
+    graft (GraftInputError, AlignmentError, GraftSpec ValidationError -> graft_input;
+    GraftClashError -> graft_clash). Lowest RMSD wins, ties to first; order_rmsds_angstrom
+    holds each RMSD or reason; all refused -> first order's reason. Then alignment_rmsd,
+    composition_mismatch (charge, elements vs the node's first eligible), forming_bond_deleted.
+    Records keep index_map, mapped_forming_bonds (declared pair order), constrained_core_product_indices,
+    whole_input_charge_sum_holds_bool. Candidate: unmappable (detail node id) if a
+    covered node has no eligible template; inconsistent partial_pathway_coverage:<site>,
+    frozen_index_mismatch:<node>, ts_{composition,charge,multiplicity}_mismatch:<set>,
+    reactant_{composition,charge}_mismatch:<set>; else ok: graph <ref>__<id>, covered
+    nodes get eligible products ranked 1..k as <template>__<id> with frozen indices
+    remapped through index_map, unlisted templates dropped (detail dropped_unlisted:<node>/<template>,...),
+    uncovered nodes copied. map_template_indices; projected_ts_searches (ok candidates
+    x union of TS nodes x templates x (1 + max_research)). Pure, deterministic, uncached;
+    imports core, mapping.errors, mapping.graft; not re-exported by mapping/__init__.
+    max_candidates, multi-site: slice 04. Also under mapping's glob (recorded overlap).
+    Tests: test_enumerator*.py.
   inputs:
   - data_type: reaction_graph_and_enumeration_plan_models
     source_id: eta_rxncat_core
@@ -798,14 +811,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.0.3
 - id: eta_rxncat_review
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -839,8 +852,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T03:02:32+00:00'
-    reviewed_by: audit:OPR.0.7.0.2
+    reviewed_at: '2026-11-26T03:52:04+00:00'
+    reviewed_by: audit:OPR.0.7.0.3
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.3

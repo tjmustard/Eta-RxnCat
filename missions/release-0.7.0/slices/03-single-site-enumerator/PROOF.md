@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/03-qa.md - qa PASS: pytest 2331 passed; mapping 109 passed; 13 slice requirements each met by a named test
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
