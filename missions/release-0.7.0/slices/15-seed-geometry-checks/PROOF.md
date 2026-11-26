@@ -6,10 +6,15 @@
 
 ## What this proves
 
-[Each Proof contract item, mapped to the artifact that demonstrates it]
+- Known-answer clash numbers and provenance: proof/15-execute.md "Known-answer clash numbers".
+- Fake-engine tests (reason, detail, engine calls): proof/15-execute.md "Fake-engine tests".
+- Old-fixture byte equality, `seed_checks=False` unchanged: proof/15-execute.md "Core and old records".
+- Required checks exit 0: proof/15-execute.md "Commands".
 
 ## Artifacts
 
+- proof/15-execute.md - guard CLEAR: sample 6 clash (4,21) 0.438 A ratio 0.409, member None; old fixtures byte-equal; ruff/mypy exit 0; full pytest 2642 passed
+
 ## Residue / caveats
 
-[What is not covered, and where it is tracked]
+No engine run: the effect on the real units is measured by slice 17's reruns. Slice 16 renders the new reasons and details. TJ's Q-R7a/Q-R7b: this builds the defaults (A, A).

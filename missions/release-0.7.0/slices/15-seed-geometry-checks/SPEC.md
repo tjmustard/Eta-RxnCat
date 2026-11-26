@@ -10,7 +10,7 @@ intent: "Refuse a clashing start geometry before any engine call and exclude any
 depends_on: [OPR.0.7.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/ts_fallback.py, src/eta_rxncat/orchestrator/__init__.py, src/eta_rxncat/core/selectivity_models.py, src/eta_rxncat/core/enumeration_models.py, src/eta_rxncat/core/__init__.py, "tests/unit/orchestrator/**", "tests/unit/core/**", spec/compiled/architecture.yml]
@@ -180,7 +180,7 @@ Context the builder needs:
   geometry test.
 - [x] `seed_checks` in the ensemble (four hooks) and in the fallback (close contacts, pre-relax
   bonds, allow-list); fake-engine tests.
-- [ ] Required checks; commit; updater once.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -191,11 +191,11 @@ Context the builder needs:
 
 ## Proof contract
 
-- [ ] The known-answer clash numbers (sample 6 and the member) and the provenance of the two
+- [x] The known-answer clash numbers (sample 6 and the member) and the provenance of the two
   geometries.
-- [ ] Fake-engine tests: per check, the reason, the detail and the engine-call counts.
-- [ ] Round-trip byte equality of the old fixtures; `seed_checks=False` tests unchanged.
-- [ ] Required checks exit 0.
+- [x] Fake-engine tests: per check, the reason, the detail and the engine-call counts.
+- [x] Round-trip byte equality of the old fixtures; `seed_checks=False` tests unchanged.
+- [x] Required checks exit 0.
 
 ## Source material
 
