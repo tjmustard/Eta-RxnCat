@@ -14,6 +14,7 @@
 ## Artifacts
 
 - proof/15-execute.md - guard CLEAR: sample 6 clash (4,21) 0.438 A ratio 0.409, member None; old fixtures byte-equal; ruff/mypy exit 0; full pytest 2642 passed
+- proof/15-qa.md - qa PASS: sample 6 seed_clash (4,21) 0.438 A; 53/121 starts flagged, 0/68 used; 0 engine calls; pytest 2642 passed
 
 ## Residue / caveats
 

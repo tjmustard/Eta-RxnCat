@@ -2,7 +2,7 @@
 id: OPR.0.7.0.15
 slice: 15-seed-geometry-checks
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Refuse a clashing start geometry before any engine call and exclude any
 depends_on: [OPR.0.7.0.13]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/ts_fallback.py, src/eta_rxncat/orchestrator/__init__.py, src/eta_rxncat/core/selectivity_models.py, src/eta_rxncat/core/enumeration_models.py, src/eta_rxncat/core/__init__.py, "tests/unit/orchestrator/**", "tests/unit/core/**", spec/compiled/architecture.yml]
