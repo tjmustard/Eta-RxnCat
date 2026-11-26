@@ -51,6 +51,10 @@ if TYPE_CHECKING:
         run_ts_ensemble,
         run_ts_ensemble_detailed,
     )
+    from eta_rxncat.orchestrator.ts_fallback import (
+        enumerated_pathway_inputs,
+        run_ts_with_fallback,
+    )
 
 _LAZY: dict[str, str] = {
     "DownstreamNode": "selectivity",
@@ -80,6 +84,7 @@ _LAZY: dict[str, str] = {
     "activation_free_energy": "barrier",
     "build_engine": "species",
     "ensemble_to_payload": "report",
+    "enumerated_pathway_inputs": "ts_fallback",
     "reaction_free_energy": "reaction",
     "report_text": "report",
     "run_constrained_point": "species",
@@ -87,6 +92,7 @@ _LAZY: dict[str, str] = {
     "run_transition_state": "ts",
     "run_ts_ensemble": "ts_ensemble",
     "run_ts_ensemble_detailed": "ts_ensemble",
+    "run_ts_with_fallback": "ts_fallback",
     "score_selectivity": "selectivity",
     "standard_state_shift_kcal_mol": "reaction",
     "write_report": "report",
@@ -132,6 +138,7 @@ __all__ = [
     "activation_free_energy",
     "build_engine",
     "ensemble_to_payload",
+    "enumerated_pathway_inputs",
     "reaction_free_energy",
     "report_text",
     "run_constrained_point",
@@ -139,6 +146,7 @@ __all__ = [
     "run_transition_state",
     "run_ts_ensemble",
     "run_ts_ensemble_detailed",
+    "run_ts_with_fallback",
     "score_selectivity",
     "standard_state_shift_kcal_mol",
     "write_report",

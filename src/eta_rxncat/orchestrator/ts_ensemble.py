@@ -46,7 +46,13 @@ from eta_rxncat.mapping import perceive_bonds
 from eta_rxncat.mapping.errors import CoreDisplacementError
 from eta_rxncat.mapping.relax import relax_constrained_core
 from eta_rxncat.optimize import OptimizationFailedError, Optimizer
-from eta_rxncat.orchestrator._deadline import PreRelaxTimeout, deadline, validate_budget
+from eta_rxncat.orchestrator._deadline import (
+    BUDGET_KIND,
+    PreRelaxTimeout,
+    deadline,
+    effective_budget_s,
+    validate_budget,
+)
 from eta_rxncat.orchestrator.counting import CountingEngine
 from eta_rxncat.orchestrator.species import (
     StageMetrics,
@@ -68,7 +74,9 @@ PRE_RELAX_OPTIONS: Mapping[str, ScalarValue] = {"maxiter": 200}
 """The pre-relaxation's optimizer options (mission R24); keyed."""
 
 PRE_RELAX_BUDGET_S: float = 600.0
-"""The wall budget of one pre-relaxation, in seconds (mission R28, HF-13).
+"""The base wall budget of one pre-relaxation, in seconds (mission R28, HF-13).
+
+Since v0.7.0 (R7) the guard scales it by the host load (``effective_budget_s``).
 
 The healthy maximum measured on UMA is 49 s, so this is about 12 times that. A pre-relaxation that
 passes it is interrupted and excluded as ``pre_relax_failed:PreRelaxTimeout``. It is not an
@@ -96,6 +104,10 @@ class TSEnsembleRun:
     metrics: dict[str, StageMetrics]
     seed_result: TSRunResult
     max_pre_relax_wall_time_s: float | None = field(default=None)
+    stall_cap_reached_bool: bool = False
+    """Sampling stopped at ``max_pre_relax_timeouts`` timed-out pre-relaxations (v0.7.0, R6)."""
+    total_pre_relax_wall_time_s: float = 0.0
+    """Sum of the samples' pre-relaxation wall times, as stored in their cached rows."""
 
 
 @dataclass
@@ -138,6 +150,29 @@ def _first_failed_gate(gates: Mapping[str, bool]) -> str | None:
         if not passed:
             return name
     return None
+
+
+def _orientation_signs(
+    coords: FloatArray, centers: Sequence[int], bonds: Sequence[tuple[int, int]]
+) -> list[int]:
+    """Return, per centre, the sign of the signed volume over its three lowest-index neighbours.
+
+    The neighbours come from ``bonds`` (the seed's). The sign is that of
+    ``det([x_a - x_c, x_b - x_c, x_d - x_c])`` (mission R24).
+    """
+    signs: list[int] = []
+    for center in centers:
+        neighbours = sorted(
+            {j for i, j in bonds if i == center} | {i for i, j in bonds if j == center}
+        )
+        if len(neighbours) < 3:
+            raise ValueError(
+                f"orientation centre {center} has {len(neighbours)} neighbours in the seed's "
+                "bonds, needs 3"
+            )
+        volume = np.linalg.det(coords[neighbours[:3]] - coords[center])
+        signs.append(int(np.sign(volume)))
+    return signs
 
 
 def _add(total: StageMetrics, part: StageMetrics) -> None:
@@ -193,15 +228,18 @@ class _PreRelax:
         message = ""
         result = None
         timed_out = False
+        budget_s, load1 = (
+            (None, 0.0) if self.budget_s is None else effective_budget_s(self.budget_s)
+        )
         try:
-            with deadline(self.budget_s):
+            with deadline(budget_s):
                 result = relax_constrained_core(
                     state, self.engine, self.optimizer, self.core, options=PRE_RELAX_OPTIONS
                 )
         except PreRelaxTimeout:
             timed_out = True
             failure = f"pre_relax_failed:{PreRelaxTimeout.__name__}"
-            message = f"the pre-relaxation exceeded its {self.budget_s} s wall budget"
+            message = f"the pre-relaxation exceeded its {budget_s} s wall budget"
         except (CoreDisplacementError, OptimizationFailedError) as exc:
             failure, message = f"pre_relax_failed:{type(exc).__name__}", str(exc)
         except ScfConvergenceError as exc:
@@ -217,8 +255,8 @@ class _PreRelax:
                 "message": message,
                 "wall_time_s": wall,
             }
-            if timed_out:
-                payload["budget_s"] = float(self.budget_s or 0.0)
+            if timed_out and budget_s is not None:
+                payload.update(budget_s=budget_s, load1=load1, budget_kind=BUDGET_KIND)
             self.store.put(key, ArtifactStatus.COMPLETED, payload)
             self.metrics.rows_created += 1
             return None, failure, wall
@@ -239,12 +277,24 @@ def run_ts_ensemble_detailed(
     options: TSEnsembleOptions,
     member_gates: MemberGates,
     pre_relax_budget_s: float | None = PRE_RELAX_BUDGET_S,
+    expected_face: tuple[int, ...] | None = None,
+    max_pre_relax_timeouts: int | None = None,
+    orientation_centers: Sequence[int] = (),
 ) -> TSEnsembleRun:
     """Run ``run_ts_ensemble`` and also return the per-stage metrics and the seed's run.
 
     See ``run_ts_ensemble``.
     """
     validate_budget(pre_relax_budget_s)
+    if max_pre_relax_timeouts is not None and max_pre_relax_timeouts < 1:
+        raise ValueError(
+            f"max_pre_relax_timeouts must be an int >= 1 or None, got {max_pre_relax_timeouts!r}"
+        )
+    n_atoms = len(seed.start.symbols)
+    if any(not 0 <= c < n_atoms for c in orientation_centers):
+        raise ValueError(
+            f"orientation_centers {list(orientation_centers)} out of range for {n_atoms} atoms"
+        )
     engine_identity = build_engine(recipe.engine_stage, recipe.engine_runtime).identity
     temperature_k = recipe.thermo_config.temperature_k
     rt = R_GAS * temperature_k * J_PER_MOL_TO_HARTREE
@@ -276,8 +326,11 @@ def run_ts_ensemble_detailed(
         seed_face = forming_bond_configuration(seed_final, pairs, seed_bonds)
     except FaceDescriptorError:
         return fail("seed:face_undetermined", seed_result)
+    if expected_face is not None and tuple(expected_face) != seed_face:
+        return fail("seed:face_mismatch_pathway", seed_result)
 
     seed_xyz = np.asarray(seed_final.coordinates, dtype=np.float64)
+    seed_orientation = _orientation_signs(seed_xyz, orientation_centers, seed_bonds)
     perms = _automorphism_permutations(seed_final.symbols, seed_bonds, options.max_automorphisms)
     everything = np.arange(len(seed_final.symbols), dtype=np.intp)
 
@@ -311,11 +364,18 @@ def run_ts_ensemble_detailed(
     samples = sample_ts_conformers(seed_final, core_indices, pairs, seed_bonds, options)
     pre_relax = _PreRelax(recipe, store, optimizer, core_indices, pre_relax_budget_s)
     wall_times: list[float] = []
+    timeouts = 0
+    stall_cap_reached = False
     for index, sample in enumerate(samples[: options.max_research], start=1):
         relaxed, reason, wall = pre_relax.run(sample.state)
         wall_times.append(wall)
         if relaxed is None:
             exclude(index, sample.source, str(reason), wall)
+            if reason == f"pre_relax_failed:{PreRelaxTimeout.__name__}":
+                timeouts += 1
+                if max_pre_relax_timeouts is not None and timeouts >= max_pre_relax_timeouts:
+                    stall_cap_reached = True
+                    break
             continue
         result = run_transition_state(
             TSSpec(
@@ -348,6 +408,9 @@ def run_ts_ensemble_detailed(
             exclude(index, sample.source, "face_mismatch", wall)
             continue
         coords = np.asarray(final.coordinates, dtype=np.float64)
+        if _orientation_signs(coords, orientation_centers, seed_bonds) != seed_orientation:
+            exclude(index, sample.source, "orientation_mismatch", wall)
+            continue
         candidates.append(
             _Candidate(
                 index=index,
@@ -432,6 +495,8 @@ def run_ts_ensemble_detailed(
         metrics,
         seed_result,
         max_pre_relax_wall_time_s=max(wall_times) if wall_times else None,
+        stall_cap_reached_bool=stall_cap_reached,
+        total_pre_relax_wall_time_s=math.fsum(wall_times),
     )
 
 
@@ -447,6 +512,9 @@ def run_ts_ensemble(
     options: TSEnsembleOptions,
     member_gates: MemberGates,
     pre_relax_budget_s: float | None = PRE_RELAX_BUDGET_S,
+    expected_face: tuple[int, ...] | None = None,
+    max_pre_relax_timeouts: int | None = None,
+    orientation_centers: Sequence[int] = (),
 ) -> TSEnsemble:
     """Build one pathway's TS ensemble from a seed TS.
 
@@ -470,15 +538,24 @@ def run_ts_ensemble(
         reactant_key: Sorted ``(SMILES, count)`` pairs of the reactants.
         options: The keyed ensemble options.
         member_gates: The recipe's member gates, ``{check name: passed}`` per result.
-        pre_relax_budget_s: The wall budget of each pre-relaxation in seconds, or ``None`` for no
-            guard. A pre-relaxation past it is excluded as ``pre_relax_failed:PreRelaxTimeout``
-            (cached, with ``budget_s``) and the ensemble continues. Not part of any stage key.
+        pre_relax_budget_s: The base wall budget of each pre-relaxation in seconds, scaled by the
+            host load up to 1200 s (R7), or ``None`` for no guard. A pre-relaxation past it is
+            excluded as ``pre_relax_failed:PreRelaxTimeout`` (cached, with ``budget_s``, ``load1``
+            and ``budget_kind``) and the ensemble continues. Not part of any stage key.
+        expected_face: The pathway's face; a seed with another face fails
+            ``seed:face_mismatch_pathway``. ``None`` skips the check (v0.7.0, R2).
+        max_pre_relax_timeouts: Stop sampling after this many timed-out pre-relaxations, keeping
+            the members (``stall_cap_reached_bool``). ``None`` samples them all (v0.7.0, R6).
+        orientation_centers: Atoms whose signed volume over their three lowest-index seed
+            neighbours must keep the seed's sign, else ``orientation_mismatch`` (v0.7.0, R24).
 
     Returns:
         The ensemble.
 
     Raises:
-        ValueError: ``pre_relax_budget_s`` is not ``None`` and not a finite number above zero.
+        ValueError: ``pre_relax_budget_s`` is not ``None`` and not a finite number above zero,
+            ``max_pre_relax_timeouts`` is below 1, or an orientation centre is out of range or has
+            fewer than three neighbours.
         eta_rxncat.optimize.OptimizerInputError: Bad optimizer options or forming bonds.
         eta_rxncat.thermo.TSValidationInputError: A validator input that cannot be judged.
         eta_rxncat.engines.EngineUnavailableError: A host problem; never cached.
@@ -498,6 +575,9 @@ def run_ts_ensemble(
         options=options,
         member_gates=member_gates,
         pre_relax_budget_s=pre_relax_budget_s,
+        expected_face=expected_face,
+        max_pre_relax_timeouts=max_pre_relax_timeouts,
+        orientation_centers=orientation_centers,
     ).ensemble
 
 

@@ -13,7 +13,11 @@ import time
 import numpy as np
 import pytest
 
-from eta_rxncat.orchestrator._deadline import PreRelaxTimeout, deadline
+from eta_rxncat.orchestrator._deadline import (
+    PreRelaxTimeout,
+    deadline,
+    effective_budget_s,
+)
 
 BUDGET = 0.5
 
@@ -108,3 +112,24 @@ def test_import_loads_no_optimizer_stack() -> None:
     )
     result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "load1, base, expected",
+    [
+        (0.0, 600.0, 600.0),
+        (7.0, 600.0, 600.0),
+        (20.0, 600.0, 600.0),
+        (30.0, 600.0, 900.0),
+        (40.0, 600.0, 1200.0),
+        (400.0, 600.0, 1200.0),
+        (30.0, 2.0, 3.0),
+    ],
+)
+def test_the_budget_scales_with_load_up_to_the_cap(
+    monkeypatch: pytest.MonkeyPatch, load1: float, base: float, expected: float
+) -> None:
+    """R7: unchanged up to one load per CPU, then proportional, never above 1200 s."""
+    monkeypatch.setattr("os.getloadavg", lambda: (load1, 0.0, 0.0))
+    monkeypatch.setattr("os.cpu_count", lambda: 20)
+    assert effective_budget_s(base) == (expected, load1)

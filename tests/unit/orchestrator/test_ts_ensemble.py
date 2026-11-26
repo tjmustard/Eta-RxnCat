@@ -307,6 +307,12 @@ def gates(result: TSRunResult) -> dict[str, bool]:
 
 
 @pytest.fixture(autouse=True)
+def idle_host(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Hold the load average at zero, so the load-scaled budget (R7) is the base budget."""
+    monkeypatch.setattr("os.getloadavg", lambda: (0.0, 0.0, 0.0))
+
+
+@pytest.fixture(autouse=True)
 def tag_engine(monkeypatch: pytest.MonkeyPatch) -> type[TagEngine]:
     """Route xtb_subprocess to the tag engine."""
     monkeypatch.setitem(ENGINE_CLASSES, "xtb_subprocess", TagEngine)
@@ -693,6 +699,25 @@ def test_the_cached_timeout_is_a_cache_hit(tmp_path: Path) -> None:
     timed = [p for p in payloads if p.get("failed_reason") == "pre_relax_failed:PreRelaxTimeout"]
     assert len(timed) == 1
     assert timed[0]["budget_s"] == BUDGET_S
+    assert timed[0]["load1"] == 0.0
+    assert timed[0]["budget_kind"] == "load_scaled_wall"
+
+
+def test_a_loaded_host_records_the_effective_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R7: at 1.5 loads per CPU the row stores the scaled budget and the load it read."""
+    monkeypatch.setattr("os.getloadavg", lambda: (30.0, 0.0, 0.0))
+    monkeypatch.setattr("os.cpu_count", lambda: 20)
+    path = tmp_path / "s.sqlite"
+    _budgeted(path, SpinRelax(["spin", "B"], [0]), 1.0)
+    with sqlite3.connect(path) as conn:
+        rows = conn.execute(
+            "SELECT payload_json FROM stage_artifacts WHERE stage_kind = ?", ("constrained_preopt",)
+        ).fetchall()
+    (timed,) = [p for r in rows if "budget_s" in (p := json.loads(r[0]))]
+    assert (timed["budget_s"], timed["load1"]) == (1.5, 30.0)
+    assert timed["wall_time_s"] >= 1.5
 
 
 def test_the_budget_is_not_part_of_the_stage_key(tmp_path: Path) -> None:
