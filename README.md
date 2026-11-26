@@ -7,11 +7,11 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies. Version 0.6.0 adds transition-state conformer ensembles, Boltzmann-summed selectivity between competing pathways and a threshold rule that prunes the losing branch.</strong>
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.5.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.6.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.5.0)](#-features-v050)
+- [✨ Features (v0.6.0)](#-features-v060)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -45,9 +45,11 @@ energies, forces and Hessians on it; `v0.3.0` turns one species into a Boltzmann
 optimised conformers with free energies, and combines species into reaction free energies;
 `v0.4.0` maps a fragment onto the conserved core of a known transition state to build a guess
 for a new one; `v0.5.0` optimises that guess to a validated transition state and computes its
-activation free energy. Everything beyond it is listed under [Roadmap](#-roadmap) and is not built yet.
+activation free energy; `v0.6.0` sums transition-state conformers into selectivities between
+competing pathways and prunes the losing branch. Everything beyond it is listed under
+[Roadmap](#-roadmap) and is not built yet.
 
-## ✨ Features (v0.5.0)
+## ✨ Features (v0.6.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -191,15 +193,13 @@ activation free energy. Everything beyond it is listed under [Roadmap](#-roadmap
 - The six new Tier 3 structures match their recorded sha256s and reproduce Liu's energies within
   1e-4 Eh where Liu prints one; TJ confirmed the transcriptions.
 
-### Selectivity branching and TS ensembles (v0.6.0, pre-release)
+### Selectivity branching and TS ensembles (v0.6.0)
 
-Not released: the version is still 0.5.0 until TJ promotes the Tier 4 regression. The
-pre-promotion acceptance record ([ACCEPTANCE_RESULT.json](docs/prd/v0.6.0/ACCEPTANCE_RESULT.json))
-shows:
-
-- TS conformer ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and selectivity %) and TJ's
+- The v0.6.0 acceptance record
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.6.0/ACCEPTANCE_RESULT.json)) passed: TS conformer
+  ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and selectivity %) and TJ's
   pathway-pruning rule ran on TJ's two Tier 4 endo/exo pairs with both the xtb (GFN2) and UMA
-  recipes; Tier 4 regression pending TJ promotion.
+  recipes, and every gated result matched the fixtures TJ promoted.
 - On both recipes and both pairs, endo is the major pathway with a Boltzmann-summed ΔΔG‡ above 0.5
   kcal/mol, no ensemble excludes a sample as engine_error or face_mismatch, and the endo seed
   reproduces TJ's promoted v0.5.0 fixture.
@@ -210,8 +210,10 @@ shows:
 - Flexible ensembles are real: R = ethyl, n-propyl and n-butyl grafted onto TS1a_n give at least
   two distinct members on GFN2 and UMA, with unit weights, the seed's face and a second pass of
   all cache hits.
+- TJ's regression bounds: |ΔE_TS| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡| ≤ 0.75 kcal/mol
+  on UMA and ≤ 0.01 kcal/mol on GFN2.
 - The three new Tier 4 structures match their recorded sha256s and reproduce Liu's header ΔΔG‡
-  (+4.273 and +1.849 kcal/mol); TJ's confirmation of the transcriptions is pending.
+  (+4.273 and +1.849 kcal/mol); TJ confirmed the transcriptions.
 
 ## ⚡ Installation
 
@@ -353,13 +355,12 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 - **v0.4.0**: the conserved-core structure mapper (a clean-room rewrite of `nMap`).
 - **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
   frequency validator.
+- **v0.6.0**: selectivity branching and competing transition-state screening.
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.6.0**: selectivity branching and competing transition-state screening; Tier 4 regression
-  pending TJ promotion.
 - **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.
 - **v0.9.0**: covalent topology audit, summary reporting and an end-to-end fixture harness.

@@ -1047,7 +1047,6 @@ def merge_runs(
     }
     evidence: dict[str, Any] = {
         "run_commits": run_commits(t4, flexible),
-        "resume_note": RESUME_NOTE,
         "candidates_phase3_set": (
             "tests/candidate_outputs/v0.6.0/ (slices 09-10, 14), committed for TJ's Phase 3 "
             "review; never read by this record"
@@ -1059,6 +1058,8 @@ def merge_runs(
         ),
         "promotion": promotion,
     }
+    if not promoted:
+        evidence["resume_note"] = RESUME_NOTE  # slice 11's runs only; a verdict run is one commit
     if prior is not None:
         evidence["reproducibility_source"] = (
             f"slice 11 record at {prior['commit_sha']}: three fresh-store runs per pair x recipe; "

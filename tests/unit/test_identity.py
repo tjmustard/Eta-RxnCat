@@ -1085,7 +1085,7 @@ def test_readme_v050_claims_match_record() -> None:
     """Every README v0.5.0 claim is derived from (and true of) the v0.5.0 record."""
     record = _v050_record() if V050_RECORD.is_file() else None
     assert check_v050_claims(readme(), record) == []
-    assert project_version() == "0.5.0"
+    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.5.0")
 
 
 @pytest.mark.parametrize(
@@ -1130,7 +1130,7 @@ def test_v050_claims_refused_on_fail_or_without_record() -> None:
     assert check_v050_claims("no claims here", None) == []
 
 
-# v0.6.0 claims derived from the pre-promotion acceptance record (slice 11) ---------------------
+# v0.6.0 claims derived from the verdict acceptance record (slices 11-12) ------------------------
 
 V060_RECORD = REPO / "docs" / "prd" / "v0.6.0" / "ACCEPTANCE_RESULT.json"
 V060_PAIRS = ("t4_unmapped", "t4_mapped")
@@ -1161,17 +1161,31 @@ def _v060_gates_pass(entry: dict[str, Any]) -> bool:
     )
 
 
-def _v060_pending_promotion(record: dict[str, Any]) -> bool:
-    """Every gate passes on both recipes; the regression and the transcriptions await TJ."""
+def _v060_passed_everywhere(record: dict[str, Any]) -> bool:
+    """Verdict pass; every gate and every regression against TJ's promoted fixtures."""
     entries = [*_v060_entries(record), *_v060_flex(record)]
     unit = record["fixtures"]["unit_proof"]
     return (
-        "verdict" not in record
+        record["verdict"] == "pass"
+        and record["evidence"]["promotion"]["status"] == "verified"
         and all(_v060_gates_pass(e) for e in entries)
-        and all(e["regression"]["status"] == "pending_promotion" for e in entries)
+        and all(e["regression"]["status"] == "pass" for e in entries)
         and unit["G1"]["status"] == "pass"
         and unit["G4"]["status"] == "pass"
-        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+    )
+
+
+def _v060_bounds(record: dict[str, Any]) -> bool:
+    """The record's regression bounds are TJ's R31 numbers."""
+    bounds = record["regression_bounds"]["recipes"]
+    return bool(
+        all(
+            bounds[r]["abs_delta_ts_energy_hartree"] == 1e-5
+            and bounds[r]["heavy_rmsd_angstrom"] == 0.01
+            for r in ("xtb", "uma")
+        )
+        and bounds["uma"]["abs_delta_ddG_dagger_kcal_mol"] == 0.75
+        and bounds["xtb"]["abs_delta_ddG_dagger_kcal_mol"] == 0.01
     )
 
 
@@ -1221,20 +1235,22 @@ def _v060_flexible(record: dict[str, Any]) -> bool:
 
 
 def _v060_transcriptions(record: dict[str, Any]) -> bool:
+    """HF-1 sha256s and Liu's header ΔΔG‡ hold; TJ confirmed the transcriptions (R31)."""
     tr = record["fixtures"]["transcriptions"]
     return (
         tr["sha256"]["status"] == "pass"
         and tr["header_ddG"]["status"] == "pass"
-        and record["fixtures"]["transcription_confirmation"]["status"] == "pending_confirmation"
+        and record["fixtures"]["transcription_confirmation"]["status"] == "confirmed"
     )
 
 
 V060_CLAIMS = (
     (
-        "TS conformer ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and selectivity %) and "
-        "TJ's pathway-pruning rule ran on TJ's two Tier 4 endo/exo pairs with both the xtb (GFN2) "
-        "and UMA recipes; Tier 4 regression pending TJ promotion.",
-        _v060_pending_promotion,
+        "passed: TS conformer ensembles, Boltzmann-summed selectivity (ΔΔG‡, ratio and "
+        "selectivity %) and TJ's pathway-pruning rule ran on TJ's two Tier 4 endo/exo pairs with "
+        "both the xtb (GFN2) and UMA recipes, and every gated result matched the fixtures TJ "
+        "promoted.",
+        _v060_passed_everywhere,
     ),
     (
         "On both recipes and both pairs, endo is the major pathway with a Boltzmann-summed ΔΔG‡ "
@@ -1259,14 +1275,18 @@ V060_CLAIMS = (
         _v060_flexible,
     ),
     (
+        "TJ's regression bounds: |ΔE_TS| ≤ 1e-5 Eh, heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡| ≤ 0.75 "
+        "kcal/mol on UMA and ≤ 0.01 kcal/mol on GFN2.",
+        _v060_bounds,
+    ),
+    (
         "The three new Tier 4 structures match their recorded sha256s and reproduce Liu's header "
-        "ΔΔG‡ (+4.273 and +1.849 kcal/mol); TJ's confirmation of the transcriptions is pending.",
+        "ΔΔG‡ (+4.273 and +1.849 kcal/mol); TJ confirmed the transcriptions.",
         _v060_transcriptions,
     ),
     (
-        "**v0.6.0**: selectivity branching and competing transition-state screening; Tier 4 "
-        "regression pending TJ promotion.",
-        _v060_pending_promotion,
+        "**v0.6.0**: selectivity branching and competing transition-state screening.",
+        _v060_passed_everywhere,
     ),
 )
 
@@ -1274,16 +1294,17 @@ V060_CLAIMS = (
 def check_v060_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
     """Each v0.6.0 README claim is present and true of the record; none without a record.
 
-    A claim needs its checks ``pass``; a pending check needs the "pending TJ" wording, so a
-    settled promotion is drift too. A ``verdict`` of ``fail`` refuses every claim (R56).
+    A claim needs its checks ``pass``. Any verdict but ``pass``, or none, refuses every claim
+    (R56, v0.4.0 R27).
     """
     text = " ".join(readme_text.split())
     present = [phrase for phrase, _ in V060_CLAIMS if phrase in text]
     if record is None:
         return [f"README claims {p[:40]!r}… but there is no v0.6.0 record" for p in present]
-    if record.get("verdict") == "fail":
-        return [f"README claims {p[:40]!r}… but the record's verdict is fail" for p in present] or [
-            "the v0.6.0 record's verdict is fail"
+    if record.get("verdict") != "pass":
+        state = "has no verdict" if "verdict" not in record else f"verdict is {record['verdict']}"
+        return [f"README claims {p[:40]!r}… but the record {state}" for p in present] or [
+            f"the v0.6.0 record {state}"
         ]
     problems = []
     for phrase, holds in V060_CLAIMS:
@@ -1306,7 +1327,7 @@ def test_readme_v060_claims_match_record() -> None:
     """Every README v0.6.0 claim is derived from (and true of) the v0.6.0 record."""
     record = _v060_record() if V060_RECORD.is_file() else None
     assert check_v060_claims(readme(), record) == []
-    assert project_version() == "0.5.0"
+    assert project_version() == "0.6.0"
 
 
 @pytest.mark.parametrize(
@@ -1330,15 +1351,22 @@ def test_readme_v060_claims_match_record() -> None:
         lambda r: r["fixtures"]["t4"]["t4_mapped"]["uma"]["selectivity"].update(
             ddG_dagger_kcal_mol=2.0
         ),
-        lambda r: r["fixtures"]["t4"]["t4_unmapped"]["uma"]["regression"].update(status="pass"),
+        lambda r: r["fixtures"]["t4"]["t4_unmapped"]["uma"]["regression"].update(status="fail"),
         lambda r: r["fixtures"]["flexible_ensemble"]["nbutyl"]["uma"]["tier_gates"][
             "distinct_members_at_least_2"
         ].update(status="fail"),
         lambda r: r["fixtures"]["flexible_ensemble"]["ethyl"]["xtb"].update(test_outcome="missing"),
+        lambda r: r["fixtures"]["flexible_ensemble"]["ethyl"]["uma"]["regression"].update(
+            status="pending_promotion"
+        ),
         lambda r: r["fixtures"]["flexible_ensemble"].pop("npropyl"),
         lambda r: r["fixtures"]["unit_proof"]["G4"].update(status="fail"),
         lambda r: r["fixtures"]["transcriptions"]["sha256"].update(status="fail"),
-        lambda r: r["fixtures"]["transcription_confirmation"].update(status="pass"),
+        lambda r: r["fixtures"]["transcription_confirmation"].update(status="pending_confirmation"),
+        lambda r: r["regression_bounds"]["recipes"]["uma"].update(
+            abs_delta_ddG_dagger_kcal_mol=1.0
+        ),
+        lambda r: r["evidence"]["promotion"].update(status="absent"),
         lambda r: r["fixtures"]["t4"].pop("t4_mapped"),
     ],
 )
@@ -1350,10 +1378,13 @@ def test_v060_claim_check_catches_drift(change: Any) -> None:
 
 
 def test_v060_claims_refused_on_fail_or_without_record() -> None:
-    """A fail verdict refuses every claim; no record refuses any claim present."""
+    """A fail verdict, or none, refuses every claim; no record refuses any claim present."""
     record = _v060_record()
     record["verdict"] = "fail"
     problems = check_v060_claims(readme(), record)
     assert len(problems) == len(V060_CLAIMS) and all("verdict is fail" in p for p in problems)
+    record.pop("verdict")
+    problems = check_v060_claims(readme(), record)
+    assert len(problems) == len(V060_CLAIMS) and all("has no verdict" in p for p in problems)
     assert len(check_v060_claims(readme(), None)) == len(V060_CLAIMS)
     assert check_v060_claims("no claims here", None) == []

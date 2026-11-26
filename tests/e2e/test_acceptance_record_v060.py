@@ -690,6 +690,8 @@ def test_a_verdict_record_passes_when_every_result_matches_its_fixture(
     assert record["verdict"] == "pass" and record["verdict_reasons"] == []
     assert record["evidence"]["promotion"]["status"] == "verified"
     assert record["fixtures"]["transcription_confirmation"]["status"] == "confirmed"
+    assert "resume_note" not in record["evidence"]  # slice 11's note is never carried into it
+    assert "resume_note" in merged()["evidence"]
     assert outstanding(record) == {}
     assert record["regression_bounds"]["recipes"]["uma"] == PROPOSAL_BOUNDS["uma"]
     assert record["fixtures"]["t4"]["t4_mapped"]["xtb"]["regression"]["status"] == "pass"
@@ -899,3 +901,56 @@ def test_compare_flexible_pairs_the_nearest_energies_when_a_member_is_missing() 
     result = compare_flexible(new, old, "uma", "n")
     assert result["status"] == "pass" and result["max_abs_delta_member_G_hartree"] == 0.0
     assert result["unmatched_member_G_hartree_in_fixture"] == [-100.001]
+
+
+# --- The committed verdict record (slice 12) --------------------------------------------------
+
+COMMITTED = Path(__file__).resolve().parents[2] / "docs" / "prd" / "v0.6.0"
+
+
+def committed() -> dict[str, Any]:
+    """The committed verdict record."""
+    path = COMMITTED / "ACCEPTANCE_RESULT.json"
+    return dict(json.loads(path.read_text(encoding="utf-8")))
+
+
+def test_the_committed_record_states_the_verdict_the_rule_gives() -> None:
+    """US-012: check() passes, the verdict is pass, and it is the rule's own value."""
+    record = committed()
+    assert check(record) == []
+    assert record["verdict"] == "pass" and record["verdict_reasons"] == []
+    assert outstanding(record) == {}
+    assert command_problems(record["commands"]) == []
+    rule = record_verdict(record["fixtures"], record["default_suite"], record["commands"])
+    assert rule == {"verdict": "pass", "verdict_reasons": []}
+
+
+def test_the_committed_record_ran_against_the_promoted_fixtures_with_the_flag() -> None:
+    """R9, R31: the flag, the xtb path, TJ's promotion and the files it verified."""
+    record = committed()
+    environment = record["environment"]
+    assert environment["xtb"]["ETA_RXNCAT_ACCEPTANCE"] == "1"
+    assert environment["uma"]["ETA_RXNCAT_ACCEPTANCE"] == "1"
+    assert environment["xtb"]["ETA_RXNCAT_XTB"].endswith("/xtb")
+    promotion = record["evidence"]["promotion"]
+    assert promotion == promotion_evidence()
+    assert "resume_note" not in record["evidence"]
+    assert set(record["evidence"]["run_commits"].values()) == {record["commit_sha"]}
+
+
+def test_the_committed_record_keeps_tjs_bounds_and_slice_11_reproducibility() -> None:
+    """The bounds are TJ's; the reproducibility measurement is slice 11's, named as such."""
+    record = committed()
+    assert record["regression_bounds"]["recipes"] == PROPOSAL_BOUNDS
+    assert "slice 11 record at" in record["evidence"]["reproducibility_source"]
+    for recipe in RECIPES:
+        for pair in PAIRS:
+            assert record["reproducibility"][recipe][pair]["status"] == "measured"
+    assert set(record["reproducibility"]["xtb"]) == set(PAIRS)  # slice 14 has none
+    for pair in PAIRS:
+        for recipe in RECIPES:
+            assert record["fixtures"]["t4"][pair][recipe]["regression"]["status"] == "pass"
+    for r in FLEX:
+        for recipe in RECIPES:
+            entry = record["fixtures"]["flexible_ensemble"][r][recipe]
+            assert entry["regression"]["status"] == "pass"
