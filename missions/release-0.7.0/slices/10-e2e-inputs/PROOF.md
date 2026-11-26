@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/10-qa.md - qa PASS: test_v070_inputs 18 passed; full pytest 2563 passed; reactant fits 0.0525/0.0496 A recomputed
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
