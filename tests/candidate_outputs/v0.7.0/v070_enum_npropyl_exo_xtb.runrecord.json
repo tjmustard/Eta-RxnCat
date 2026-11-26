@@ -1,0 +1,1251 @@
+{
+ "record_version": 1,
+ "species": [
+  {
+   "species_id": "TS1a_x__npropyl",
+   "label": "TS1a_x__npropyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      -1.522342,
+      -0.708889,
+      -0.667988
+     ],
+     [
+      -0.775282,
+      -1.159467,
+      0.400933
+     ],
+     [
+      1.284649,
+      -0.667062,
+      -0.624668
+     ],
+     [
+      1.284644,
+      0.667063,
+      -0.624659
+     ],
+     [
+      -1.522331,
+      0.708921,
+      -0.667968
+     ],
+     [
+      -0.77526,
+      1.159456,
+      0.400964
+     ],
+     [
+      -0.562485,
+      -0.00002,
+      1.328256
+     ],
+     [
+      2.29446,
+      -1e-6,
+      0.25529
+     ],
+     [
+      -1.94844,
+      -1.332267,
+      -1.446078
+     ],
+     [
+      -0.66421,
+      -2.195004,
+      0.701423
+     ],
+     [
+      1.24941,
+      -1.513894,
+      -1.290737
+     ],
+     [
+      1.249401,
+      1.513903,
+      -1.290719
+     ],
+     [
+      -1.948419,
+      1.332329,
+      -1.446039
+     ],
+     [
+      -0.664175,
+      2.194983,
+      0.701486
+     ],
+     [
+      -1.387067,
+      -0.000021,
+      2.059584
+     ],
+     [
+      0.368251,
+      -0.000037,
+      1.894994
+     ],
+     [
+      2.156237,
+      -6e-6,
+      1.339726
+     ],
+     [
+      5.361875176058354,
+      0.022124357657459705,
+      -2.0899690497711356
+     ],
+     [
+      3.896865966555127,
+      -0.000355491825484534,
+      -1.6855102850658135
+     ],
+     [
+      3.732219211564689,
+      0.016669183572873877,
+      -0.16472595808558768
+     ],
+     [
+      5.454295939512802,
+      0.008470748720025179,
+      -3.1804609133040462
+     ],
+     [
+      5.891790125232296,
+      -0.8496801435497742,
+      -1.6931880382272555
+     ],
+     [
+      5.857626240186027,
+      0.9246020723625934,
+      -1.7184019887634654
+     ],
+     [
+      3.420019816205719,
+      -0.8955374483729251,
+      -2.1024272910452346
+     ],
+     [
+      3.3862883630007747,
+      0.8642942127592053,
+      -2.126033637387007
+     ],
+     [
+      4.244919760345072,
+      0.8957196058982922,
+      0.24827398639358322
+     ],
+     [
+      4.224043584456974,
+      -0.8653831572586783,
+      0.26418219292892664
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "metadata": {
+     "alignment_rmsd_angstrom": 0.04569871233528016
+    }
+   }
+  },
+  {
+   "species_id": "cyclopentadiene__npropyl",
+   "label": "cyclopentadiene__npropyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      -0.9796505975847539,
+      0.847124390682883,
+      -0.07045282288233704
+     ],
+     [
+      0.3269587290847959,
+      1.1342307769197413,
+      -0.014048626641357389
+     ],
+     [
+      1.1117512263932328,
+      -0.1339449528605686,
+      0.0581484876682847
+     ],
+     [
+      0.045774371897104614,
+      -1.179152717964755,
+      0.033435597733887455
+     ],
+     [
+      -1.1543384558381837,
+      -0.5900192761235933,
+      -0.041157765908657114
+     ],
+     [
+      -1.7931879508855697,
+      1.5482220430794273,
+      -0.12881675581270347
+     ],
+     [
+      0.7850656619733607,
+      2.1062398624274636,
+      -0.017247424246218855
+     ],
+     [
+      1.713061947905798,
+      -0.18822839934371555,
+      0.9682983717403499
+     ],
+     [
+      1.7991884020131705,
+      -0.23486301716499342,
+      -0.7845554182060955
+     ],
+     [
+      0.25772943409489724,
+      -2.231912173250035,
+      0.0716847258261468
+     ],
+     [
+      -2.1123527690538197,
+      -1.0776965364019127,
+      -0.07528836927110318
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [],
+    "metadata": {}
+   }
+  },
+  {
+   "species_id": "cyclopropene__npropyl",
+   "label": "cyclopropene__npropyl",
+   "state": {
+    "symbols": [
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H",
+     "H"
+    ],
+    "coordinates": [
+     [
+      2.2971362802398363,
+      -0.6961487396593772,
+      -0.15602243410864008
+     ],
+     [
+      1.0568795526039123,
+      -0.1641148746016285,
+      0.5506217274102001
+     ],
+     [
+      -0.03197286406251776,
+      0.2502743414236343,
+      -0.4398947980350383
+     ],
+     [
+      -1.255564039673284,
+      0.7934730378045611,
+      0.2712328146843025
+     ],
+     [
+      -2.6337072399939667,
+      0.5719452721855008,
+      -0.27770731746859656
+     ],
+     [
+      -2.3265114420433473,
+      -0.13164021758271993,
+      0.7706429287059645
+     ],
+     [
+      2.7175670511349628,
+      0.06354521593623076,
+      -0.8117493659336875
+     ],
+     [
+      3.057310512579085,
+      -0.9846014470130077,
+      0.5665241038830462
+     ],
+     [
+      2.04817294801383,
+      -1.56710162666159,
+      -0.7587887253440815
+     ],
+     [
+      1.3285570727220497,
+      0.6980019003235908,
+      1.164207638953634
+     ],
+     [
+      0.6589316083629134,
+      -0.9325425874012585,
+      1.2170382675434712
+     ],
+     [
+      0.36788131550908054,
+      1.01372984687952,
+      -1.1136630984988138
+     ],
+     [
+      -0.31966213062980314,
+      -0.6128054047700197,
+      -1.0454235559669445
+     ],
+     [
+      -1.0555478346079712,
+      1.7067851096217952,
+      0.8301271870771515
+     ],
+     [
+      -3.324790445982598,
+      0.8475959309022877,
+      -1.0356374795007453
+     ],
+     [
+      -2.5846803441721242,
+      -0.8563957573879994,
+      1.5027940473550412
+     ]
+    ],
+    "charge": 0,
+    "spin_multiplicity": 1,
+    "active_atom_indices": [],
+    "metadata": {}
+   }
+  }
+ ],
+ "candidates": [
+  {
+   "candidate_id": "npropyl",
+   "entry_ids_by_site": {
+    "c7": "npropyl"
+   },
+   "records": [
+    {
+     "entry_id": "npropyl",
+     "site_id": "c7",
+     "node_id": "TS1a_n",
+     "template_id": "TS1a_n",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      0.4912030009751042,
+      0.03328304843205721
+     ],
+     "chosen_order_index": 1,
+     "alignment_rmsd_angstrom": 0.03328304843205721,
+     "min_interatomic_distance_angstrom": 1.0782109932462198,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       4
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "template",
+       7
+      ],
+      [
+       "template",
+       8
+      ],
+      [
+       "template",
+       9
+      ],
+      [
+       "template",
+       10
+      ],
+      [
+       "template",
+       11
+      ],
+      [
+       "template",
+       12
+      ],
+      [
+       "template",
+       13
+      ],
+      [
+       "template",
+       14
+      ],
+      [
+       "template",
+       15
+      ],
+      [
+       "template",
+       17
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       2
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ],
+      [
+       "fragment",
+       10
+      ],
+      [
+       "fragment",
+       11
+      ],
+      [
+       "fragment",
+       12
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "constrained_core_product_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "whole_input_charge_sum_holds_bool": true
+    },
+    {
+     "entry_id": "npropyl",
+     "site_id": "c7",
+     "node_id": "TS1a_x",
+     "template_id": "TS1a_x",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      0.04569871233528016,
+      "graft_clash"
+     ],
+     "chosen_order_index": 0,
+     "alignment_rmsd_angstrom": 0.04569871233528016,
+     "min_interatomic_distance_angstrom": 1.0779675951094263,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       4
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "template",
+       7
+      ],
+      [
+       "template",
+       8
+      ],
+      [
+       "template",
+       9
+      ],
+      [
+       "template",
+       10
+      ],
+      [
+       "template",
+       11
+      ],
+      [
+       "template",
+       12
+      ],
+      [
+       "template",
+       13
+      ],
+      [
+       "template",
+       14
+      ],
+      [
+       "template",
+       15
+      ],
+      [
+       "template",
+       17
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       2
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ],
+      [
+       "fragment",
+       10
+      ],
+      [
+       "fragment",
+       11
+      ],
+      [
+       "fragment",
+       12
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "constrained_core_product_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "whole_input_charge_sum_holds_bool": true
+    },
+    {
+     "entry_id": "npropyl",
+     "site_id": "c7",
+     "node_id": "cyclopropene",
+     "template_id": "cyclopropene",
+     "status": "ok",
+     "reason": null,
+     "order_rmsds_angstrom": [
+      0.4859098574873644,
+      0.04960653605131577
+     ],
+     "chosen_order_index": 1,
+     "alignment_rmsd_angstrom": 0.04960653605131577,
+     "min_interatomic_distance_angstrom": 1.0783571989628482,
+     "close_contact_count": 0,
+     "index_map": [
+      [
+       "template",
+       0
+      ],
+      [
+       "template",
+       1
+      ],
+      [
+       "template",
+       2
+      ],
+      [
+       "template",
+       3
+      ],
+      [
+       "template",
+       5
+      ],
+      [
+       "template",
+       6
+      ],
+      [
+       "fragment",
+       0
+      ],
+      [
+       "fragment",
+       1
+      ],
+      [
+       "fragment",
+       2
+      ],
+      [
+       "fragment",
+       6
+      ],
+      [
+       "fragment",
+       7
+      ],
+      [
+       "fragment",
+       8
+      ],
+      [
+       "fragment",
+       9
+      ],
+      [
+       "fragment",
+       10
+      ],
+      [
+       "fragment",
+       11
+      ],
+      [
+       "fragment",
+       12
+      ]
+     ],
+     "product_charge": 0,
+     "product_multiplicity": 1,
+     "mapped_forming_bonds": [],
+     "constrained_core_product_indices": [],
+     "whole_input_charge_sum_holds_bool": true
+    }
+   ]
+  }
+ ],
+ "runs": [
+  {
+   "candidate_id": "npropyl",
+   "pathway": "exo",
+   "engine": {
+    "name": "xtb_subprocess",
+    "version": "xtb 6.8.0",
+    "model": null
+   },
+   "optimizers": [
+    {
+     "name": "geometric",
+     "version": "1.1.1"
+    },
+    {
+     "name": "prfo",
+     "version": "src-897c4e19cb4e738a"
+    }
+   ],
+   "species_id": "TS1a_x__npropyl",
+   "analysis": {
+    "imag_tol_cm1": 20.0,
+    "sym_tol_angstrom": 0.05,
+    "linear_tol_angstrom": 0.001,
+    "max_automorphisms": 100000
+   },
+   "fallback": {
+    "node_id": "TS1a_x",
+    "attempts": [
+     {
+      "template_id": "TS1a_x__npropyl",
+      "rank": 1,
+      "outcome": "chosen",
+      "reason": null,
+      "wall_time_s": 256.8348378770752
+     }
+    ],
+    "chosen_template_id": "TS1a_x__npropyl",
+    "stop_reason": null
+   },
+   "ensemble": {
+    "pathway": "exo",
+    "temperature_k": 298.15,
+    "reactant_key": [
+     [
+      "C1=CCC=C1",
+      1
+     ],
+     [
+      "CCCC1C=C1",
+      1
+     ]
+    ],
+    "recipe_identity": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    },
+    "members": [
+     {
+      "index": 0,
+      "source": "seed",
+      "start_sha256": "247ba77a9f9f6fcddc83bb48e782591917681896ffd01edb3f8c7c667d74967a",
+      "G_hartree": -31.350921663452166,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 0.0,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.2059404256862328,
+      "pre_relax_wall_time_s": null
+     },
+     {
+      "index": 7,
+      "source": "fragment_embed:6",
+      "start_sha256": "91a5399cb304d17e760b67d67a074303d6974218be70c172cd7a81565883cb79",
+      "G_hartree": -31.350906502163202,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 1.3906582113207566,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.20265993725717224,
+      "pre_relax_wall_time_s": 8.705599082051776
+     },
+     {
+      "index": 8,
+      "source": "fragment_embed:7",
+      "start_sha256": "388e76934254cb00b8c7aaa06431a3b980537e9d567a2dc99eecb0ec63c58ca7",
+      "G_hartree": -31.351917688848932,
+      "degeneracy": 1,
+      "rmsd_to_seed_angstrom": 1.030534144449743,
+      "face": [
+       -1,
+       -1
+      ],
+      "validation_passed_bool": true,
+      "weight": 0.5913996370565949,
+      "pre_relax_wall_time_s": 8.380666751996614
+     }
+    ],
+    "excluded": [
+     {
+      "index": 1,
+      "source": "fragment_embed:0",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 22.590176825993694
+     },
+     {
+      "index": 2,
+      "source": "fragment_embed:1",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 10.669538378948346
+     },
+     {
+      "index": 3,
+      "source": "fragment_embed:2",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 26.37708762299735
+     },
+     {
+      "index": 4,
+      "source": "fragment_embed:3",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 21.26719238003716
+     },
+     {
+      "index": 5,
+      "source": "fragment_embed:4",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 104.80514873703942
+     },
+     {
+      "index": 6,
+      "source": "fragment_embed:5",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 16.428327640984207
+     },
+     {
+      "index": 9,
+      "source": "fragment_embed:8",
+      "reason": "orientation_mismatch",
+      "pre_relax_wall_time_s": 27.14437035494484
+     }
+    ],
+    "merges": [
+     {
+      "kept_index": 8,
+      "merged_index": 10,
+      "dG_kcal_mol": 0.000050166878013359196,
+      "rmsd_angstrom": 0.00007246364807651392
+     }
+    ],
+    "flagged_merges": [],
+    "options": {
+     "n_embed": 10,
+     "n_perturb": 10,
+     "perturb_sigma_angstrom": 0.3,
+     "pre_dedup_rmsd_angstrom": 0.125,
+     "random_seed": 42,
+     "max_research": 10,
+     "rmsd_dedup_angstrom": 0.125,
+     "flag_dG_kcal_mol": 0.05,
+     "energy_window_kcal_mol": 3.0,
+     "max_automorphisms": 100000
+    },
+    "G_pathway_hartree": -31.352413634494408,
+    "failed_reason": null
+   },
+   "stall_cap_reached_bool": false,
+   "dG_dagger_kcal_mol": 18.086049482990774,
+   "samples": [
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 0,
+     "source": "seed",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "66d7569cb1e1a8140d9ab48e414f4d2fffab4c781a2ace58dff8f50dc1fb3ffb",
+     "ts_opt_key": "e2bbbf58e6e0da755abba0d8097971792a961b91c2a49fbc781f81a18eb759c9",
+     "frequency_key": "c999e886a1c92bb013be1506ad5efe6ce5139f2c90edaaeed6b17e4ee0ff5581"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 1,
+     "source": "fragment_embed:0",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "40c444cc8317836422ad149b2bcfcb5b85b2472a85f793c06913d2e0c85c1d64",
+     "ts_opt_key": "2539211e7059f342adf53159b3ec5d869f89d6af11cb38adb780d561a76dbf04",
+     "frequency_key": "caca1973e8402c1414bece4d7a9e7a7886aed968750d450c160449cb776ad76f"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 2,
+     "source": "fragment_embed:1",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "24196abc4989c37ac9d7c4a2fb469b040e8030b4f6b61957874a44af3b1f1c83",
+     "ts_opt_key": "672228ff5778eda9a043023773c78ae6488f2b3427b3eed1cbe3d6fe3b306184",
+     "frequency_key": "64a058926ab259ba2fe4b89da138f9132eea285b1baeff0aa024c8d9f97bd4eb"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 3,
+     "source": "fragment_embed:2",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "ce180a850b911b0dc87c52e77bd33fa73bceba141146265fade8b98c05d4eecc",
+     "ts_opt_key": "2a8537e17d2deb6a509f7e683c4a1b30535e60b8cc7c50a31f81adb9d5276bf2",
+     "frequency_key": "751511dd7d8ebe07257c6cea05b9866248bf2644aa92f32b08965f2881452153"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 4,
+     "source": "fragment_embed:3",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "4e7af266fbad799e215c709179c8c45fa0c36aaa95d693b5170087c50118746b",
+     "ts_opt_key": "b5b045975ca7c43f83a89b9c06a3bb83598a8773439a00f4808fb1d38c9c2a2c",
+     "frequency_key": "4f766ced3421891b2e93b38532e1739e1a84965d534d890b792bba302ad444c8"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 5,
+     "source": "fragment_embed:4",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "a33c461dad4b40cc92300920fdf9d36522f1a7c4142088895c8916370beb145b",
+     "ts_opt_key": "cdf2f0f3bcab02a51f5d7ba71aebddd3f320e364cfb9679fd53b26f0227e5540",
+     "frequency_key": "f6414db5ff2ac332d2e057e3c91d0060e1ae0ec12c7d228e11a51b357c5b1b15"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 6,
+     "source": "fragment_embed:5",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "c5e245b71384d66c76053911ba5ce7759dc0cd158449aaffb408e63edcec3d83",
+     "ts_opt_key": "35b9f55bee246ddaa2406da77db1f1b3a8b3718a16e90499a4dd353e85b015bd",
+     "frequency_key": "420c9e602039dd3d0162ea3541af251c69f47f75dd1b8d6005bfd56cb0c9e384"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 7,
+     "source": "fragment_embed:6",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "64be510742fe17d312c6331495b6ad0d19021b47b2e220830a0a5536ac43e497",
+     "ts_opt_key": "f32385c02d2ef3dccaa452d6b9eb315e72d9386ee06e8819469bc7c37a5602a3",
+     "frequency_key": "29806418667668afe534aa61be01c2a6748fd6d32ec7863ed19c00ac90f5ad80"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 8,
+     "source": "fragment_embed:7",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "7060f0e795cdf36a61125737e4d6453b23b8920459b1ad6282f96b814b3b1c8d",
+     "ts_opt_key": "6784aa6fcfa25c1afac2390cee47df4d6cccfc8801c1281f6dd9eee20750b041",
+     "frequency_key": "794721fe312961a48bfc5e1bd7be320ef30d44606edcbcef314c7ccf006440f5"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 9,
+     "source": "fragment_embed:8",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "458a88d5ab6be5efa8e2f90edf66d9aa0a632c51ecacb690e12e1df420381a8e",
+     "ts_opt_key": "5a1115e212acb9748977638e95a03ef56c948e3e58939046c92a922ecbc79c3a",
+     "frequency_key": "2e1d49400400ff5b55f765ea97639268bed2e3a774200b20e8d18f2c2fc9c620"
+    },
+    {
+     "template_id": "TS1a_x__npropyl",
+     "sample_index": 10,
+     "source": "fragment_embed:9",
+     "species_id": "TS1a_x__npropyl",
+     "pre_relax_key": "f65e85991528a37de96ed39269aadf3bd902b1160ce310e39c7474e31c2e1515",
+     "ts_opt_key": "912875b593fc1ada514c4ed9fb9c40543d99cebe9e5bd83204060188dcac2692",
+     "frequency_key": "6e7d134a850f22a91a95f5e342f2b943f9bf2e09932b27ba4ac94a24d4e052e8"
+    }
+   ],
+   "endpoints": [
+    {
+     "species_id": "cyclopentadiene__npropyl",
+     "opt_keys": [
+      "5d689b13cd92be5a9c4357f4ef0df714accfbc39b78b41c7181ce3886e897304",
+      "61c248d4a0c3ac3209bd8baf33c349127a4f51cf2940c4a96bae51b6aa216ed3",
+      "54c53f30bfb7683e82c19976a6aa642407cfba289d8215a92593c380fd1916e1"
+     ],
+     "frequency_keys": [
+      "21e9a03a3dfd37d22b05d74598bc29252478c8b9ea273730948711fe82ac3833"
+     ]
+    },
+    {
+     "species_id": "cyclopropene__npropyl",
+     "opt_keys": [
+      "63a40c4be65425ad5e8ae7dc7943d62cb076fc8072d7be8814928c50130c6255",
+      "ec453d21cda01a8a90e40b45dc9c7a8a9aa712719da03bf1f7e8c40a4e2d9c07",
+      "4359c03d6bf03ac19aa54f5b17a837748882a9c9b3c297f41c75617a9420fe1f",
+      "97dba4e1c19b2020343af7bc8a12b311323fb372896dd562d2e85a7c621f739f",
+      "08242036e3e05202a4b4af92443dac014dad5b47242408cbee8018e4f7dfb3fa",
+      "4309790a6842f67a94a1d1d3d45050b592f2d2a89732f7999f8919f00b597c2c",
+      "b9021a4a866ccaed8beb48e31de813a3c7db680662e77a7f26c01a083f868e61",
+      "8992c13a1907fbee0b95ed9d87438af5b6ed3344817ca7e4eff830592e1fd233",
+      "a85772d72231f095582e3e6ef6a548f4621153f18e5dce534e37026012bdd3f7",
+      "00bbd108d73ea6225bac4f0468b3b2158778ecb8f3bee842e6f453b50adb4890",
+      "6feb8904cfbcdae886135230f6bb8c3d4d0ac2dfabdfa3884913dc1d1c06c823",
+      "9ac7d7a96c5ab03e0b1b310124e66a8de45c091112d24464a126a525afe993a2",
+      "90f45febbbeb471a7852a9f986d13b5edff8e59eb49822333ca32d34a5cb9309",
+      "49292a858f6b02af71b4d92a859384ab8d1c9ada8543ce631702be3b462e5dcd",
+      "e3f28a33c55a095f502c98f9f7509d1fed6fa2010369376f232da833945afc48",
+      "3aea238fdc5b182bc4b686ca5d65ef11411250056962d188de7a4acdbe8c60be",
+      "73d6e813163f58abcfee4439ee94f7dae0407a29998658509d7085090594717b",
+      "b1deba2cd06b4df456edd4c3d5a12f07300e4b2b455682e13d772e7e901249c4",
+      "9cc0d42acfa822333b6724a6c3feb61bbcd90b74294a8158aa829d3d923bd080",
+      "17444b74a160faaf4ab3ce0cddee06844a49ec3c383157182a32080743ce52be"
+     ],
+     "frequency_keys": [
+      "82e71322020d1486f50d57cf4d4d95f38bac8cec6bb252f80f9c0f40ce0c2d4a",
+      "d4e87cb8532620ab050a4f719b14d7abb8d183461fa8541a7bafd8bb779abd4e",
+      "b1d0392cf663d430f86b57d02a135431f9a9c470dc406aa35ca22935bdcc56cc",
+      "b9f634a6b6a8fff7d718794140b6f6571dd899e80d7dfde9eb353fbd5b1bc362",
+      "1e9e5a302bbf51fbd7378bd95896589aba58269c0723512e412a7c8414057db3",
+      "b96f333d2f9f52ba084c31f33ad16266a63e134814cc1665f09987b81a9899e3"
+     ]
+    }
+   ]
+  }
+ ],
+ "selectivity": [],
+ "gates": [
+  {
+   "gate_id": "G7.candidate_ok",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.charge_0_multiplicity_1",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.chosen_at_rank_1",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.every_member_face_expected",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.g3_invariant",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.graft_rmsd_and_contacts",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.no_engine_error_or_face_mismatch",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.second_pass_all_hits",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  },
+  {
+   "gate_id": "G7.weights_sum_to_one",
+   "unit_ref": {
+    "candidate_id": "npropyl",
+    "pathway": "exo",
+    "engine": {
+     "name": "xtb_subprocess",
+     "version": "xtb 6.8.0",
+     "model": null
+    }
+   },
+   "pass_bool": true,
+   "value": null,
+   "unit": null,
+   "threshold": null,
+   "detail_code": null
+  }
+ ]
+}

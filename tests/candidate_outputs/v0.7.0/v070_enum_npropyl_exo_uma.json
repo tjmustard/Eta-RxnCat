@@ -1,0 +1,681 @@
+{
+  "candidate": {
+    "candidate_id": "npropyl",
+    "detail": null,
+    "entry_ids_by_site": {
+      "c7": "npropyl"
+    },
+    "records": [
+      {
+        "alignment_rmsd_angstrom": 0.03328304843205721,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0782109932462198,
+        "node_id": "TS1a_n",
+        "order_rmsds_angstrom": [
+          0.4912030009751042,
+          0.03328304843205721
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_n",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.0456987123352801,
+        "chosen_order_index": 0,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            4
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "template",
+            7
+          ],
+          [
+            "template",
+            8
+          ],
+          [
+            "template",
+            9
+          ],
+          [
+            "template",
+            10
+          ],
+          [
+            "template",
+            11
+          ],
+          [
+            "template",
+            12
+          ],
+          [
+            "template",
+            13
+          ],
+          [
+            "template",
+            14
+          ],
+          [
+            "template",
+            15
+          ],
+          [
+            "template",
+            17
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "min_interatomic_distance_angstrom": 1.0779675951094263,
+        "node_id": "TS1a_x",
+        "order_rmsds_angstrom": [
+          0.0456987123352801,
+          "graft_clash"
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "TS1a_x",
+        "whole_input_charge_sum_holds_bool": true
+      },
+      {
+        "alignment_rmsd_angstrom": 0.04960653605131587,
+        "chosen_order_index": 1,
+        "close_contact_count": 0,
+        "constrained_core_product_indices": [],
+        "entry_id": "npropyl",
+        "index_map": [
+          [
+            "template",
+            0
+          ],
+          [
+            "template",
+            1
+          ],
+          [
+            "template",
+            2
+          ],
+          [
+            "template",
+            3
+          ],
+          [
+            "template",
+            5
+          ],
+          [
+            "template",
+            6
+          ],
+          [
+            "fragment",
+            0
+          ],
+          [
+            "fragment",
+            1
+          ],
+          [
+            "fragment",
+            2
+          ],
+          [
+            "fragment",
+            6
+          ],
+          [
+            "fragment",
+            7
+          ],
+          [
+            "fragment",
+            8
+          ],
+          [
+            "fragment",
+            9
+          ],
+          [
+            "fragment",
+            10
+          ],
+          [
+            "fragment",
+            11
+          ],
+          [
+            "fragment",
+            12
+          ]
+        ],
+        "mapped_forming_bonds": [],
+        "min_interatomic_distance_angstrom": 1.0783571989628482,
+        "node_id": "cyclopropene",
+        "order_rmsds_angstrom": [
+          0.4859098574873644,
+          0.04960653605131587
+        ],
+        "product_charge": 0,
+        "product_multiplicity": 1,
+        "reason": null,
+        "site_id": "c7",
+        "status": "ok",
+        "template_id": "cyclopropene",
+        "whole_input_charge_sum_holds_bool": true
+      }
+    ],
+    "status": "ok"
+  },
+  "case": "v070_enum_npropyl_exo_uma",
+  "checks": {
+    "tier_gates": {
+      "candidate_ok": {
+        "candidate_status": "ok",
+        "status": "pass"
+      },
+      "charge_0_multiplicity_1": {
+        "found": [
+          [
+            0,
+            1
+          ]
+        ],
+        "status": "pass"
+      },
+      "chosen_at_rank_1": {
+        "status": "pass",
+        "stop_reason": null
+      },
+      "every_member_face_expected": {
+        "expected_face": [
+          -1,
+          -1
+        ],
+        "status": "pass"
+      },
+      "g3_invariant": {
+        "status": "pass"
+      },
+      "graft_rmsd_and_contacts": {
+        "close_contact_counts": [
+          0,
+          0,
+          0
+        ],
+        "max_alignment_rmsd_angstrom": 0.04960653605131587,
+        "status": "pass"
+      },
+      "no_engine_error_or_face_mismatch": {
+        "exclusions_by_reason": {
+          "orientation_mismatch": 7
+        },
+        "status": "pass"
+      },
+      "second_pass_all_hits": {
+        "engine_calls": 0,
+        "new_rows": 0,
+        "status": "pass"
+      },
+      "weights_sum_to_one": {
+        "status": "pass",
+        "weights_sum": 1.0
+      }
+    }
+  },
+  "commit_sha": "3af1e954da3315db3dbcc3a81ed5a772f8be71a9",
+  "environment": {
+    "device": "cuda",
+    "engine": {
+      "model": "uma-s-1p2p1@sha256:b2673b85037b075674c25f55c34ffe1ff1e15db924be977b10a184765df0d5ce",
+      "name": "uma_direct",
+      "version": "2.26.0"
+    },
+    "run": {
+      "ETA_RXNCAT_ACCEPTANCE": "1",
+      "TMPDIR_is_not_tmp": true,
+      "cpu_count": 20,
+      "eta_rxncat": "0.5.0",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "rdkit": "2026.09.2"
+    },
+    "versions": {
+      "fairchem-core": "2.26.0",
+      "geometric": "1.1.1",
+      "python": "3.12.16",
+      "rdkit": "2026.9.2",
+      "torch": "2.13.0+cu129"
+    }
+  },
+  "export": {
+    "candidates": 1,
+    "frequencies": 20,
+    "frequencies_missing": 0,
+    "trajectories": 47,
+    "trajectories_missing": 0
+  },
+  "failed_checks": [],
+  "fallback": {
+    "attempts": [
+      {
+        "outcome": "chosen",
+        "rank": 1,
+        "reason": null,
+        "template_id": "TS1a_x__npropyl",
+        "wall_time_s": 741.4132332960144
+      }
+    ],
+    "chosen_template_id": "TS1a_x__npropyl",
+    "node_id": "TS1a_x",
+    "stop_reason": null
+  },
+  "fixture": "e2e5_v070_enumeration",
+  "inputs_sha256": {
+    "v070_enumeration.yaml": "3b18c839ba97c630bdecb086758b503811077d19f64788b4e2d50126fbe8c8de",
+    "xyz/1_cyclopentadiene.xyz": "db8390fcc9fc9212d3fd7702f40d40a86eb673bc05fe8b4589b10785a83bf812",
+    "xyz/5_cyclopropene.xyz": "e61f12a6a2a1ea3f095f2bcd55153a0469afc01518a727371eb0a5ef7958a8b2",
+    "xyz/TS1a_n.xyz": "c43753744532f36b0a3ac77b6797e7442a9dd0ee246c84edf76a34ea5810f267",
+    "xyz/TS1a_x.xyz": "ec319a528d3efd0d7c14fb1d018d31d57eae85e794df59761665ed4d0f684d60",
+    "xyz/r_npropyl_cyclopropene.xyz": "e30b55b51a993b294d168e8230d9d5bb2026dbe02be883be98c5be474dfcee56"
+  },
+  "pathway": "exo",
+  "r_group": "npropyl",
+  "recipe": "uma",
+  "regression": {
+    "note": "no promoted fixture exists for this case (slice 11; Phase 3)",
+    "status": "pending_promotion"
+  },
+  "reported": {
+    "G_pathway_hartree": -428.37765294967033,
+    "barrier": {
+      "ensemble_correction_kcal_mol": -0.9660371314750568,
+      "ensemble_dG_dagger_1M_kcal_mol": 25.410415988871044,
+      "seed_dG_dagger_1M_kcal_mol": 26.376453120346103
+    },
+    "barrier_error": null,
+    "derivation_engine_calls": 0,
+    "derivation_new_rows": 0,
+    "excluded": [
+      {
+        "index": 1,
+        "pre_relax_wall_time_s": 34.201374705997296,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:0"
+      },
+      {
+        "index": 2,
+        "pre_relax_wall_time_s": 5.073664116906002,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:1"
+      },
+      {
+        "index": 3,
+        "pre_relax_wall_time_s": 29.762990316958167,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:2"
+      },
+      {
+        "index": 4,
+        "pre_relax_wall_time_s": 11.96200909698382,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:3"
+      },
+      {
+        "index": 5,
+        "pre_relax_wall_time_s": 229.38853219500743,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:4"
+      },
+      {
+        "index": 6,
+        "pre_relax_wall_time_s": 3.072327494970523,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:5"
+      },
+      {
+        "index": 9,
+        "pre_relax_wall_time_s": 399.18798818509094,
+        "reason": "orientation_mismatch",
+        "source": "fragment_embed:8"
+      }
+    ],
+    "exclusions_by_reason": {
+      "orientation_mismatch": 7
+    },
+    "first_pass_engine_calls": 1294,
+    "first_pass_new_rows": 33,
+    "first_pass_wall_time_s": 860.9971115299268,
+    "graft_pre_relax_timeouts": 0,
+    "max_pre_relax_wall_time_s": 399.18798818509094,
+    "members": [
+      {
+        "G_hartree": -428.3761134715088,
+        "degeneracy": 1,
+        "face": [
+          -1,
+          -1
+        ],
+        "index": 0,
+        "pre_relax_wall_time_s": null,
+        "rmsd_to_seed_angstrom": 0.0,
+        "source": "seed",
+        "start_sha256": "7ae2f0e2d31b17654f44b84a0d8a3cd99638eb93a68c640fca928516becf34aa",
+        "validation_passed_bool": true,
+        "weight": 0.19583479996686023
+      },
+      {
+        "G_hartree": -428.3761517123997,
+        "degeneracy": 1,
+        "face": [
+          -1,
+          -1
+        ],
+        "index": 7,
+        "pre_relax_wall_time_s": 3.9549802721012384,
+        "rmsd_to_seed_angstrom": 1.407352031182803,
+        "source": "fragment_embed:6",
+        "start_sha256": "b0e36a162dc7d0aa4e101450502c0ba3397fcec854dd12ec31ef5c96e0597535",
+        "validation_passed_bool": true,
+        "weight": 0.20392921192229502
+      },
+      {
+        "G_hartree": -428.37717100713405,
+        "degeneracy": 1,
+        "face": [
+          -1,
+          -1
+        ],
+        "index": 10,
+        "pre_relax_wall_time_s": 3.3253026789752766,
+        "rmsd_to_seed_angstrom": 1.0260557048380368,
+        "source": "fragment_embed:9",
+        "start_sha256": "35975ff8050eb459d544b928355e8487a3663cc8797a713054e33c63fdb45244",
+        "validation_passed_bool": true,
+        "weight": 0.6002359881108448
+      }
+    ],
+    "n_flagged_merges": 0,
+    "n_members": 3,
+    "n_merges": 1,
+    "n_samples_run": 11,
+    "orientation_mismatch_count": 7,
+    "reactant_key": [
+      [
+        "C1=CCC=C1",
+        1
+      ],
+      [
+        "CCCC1C=C1",
+        1
+      ]
+    ],
+    "reactants": {
+      "cyclopentadiene__npropyl": {
+        "ensemble_gibbs_hartree": -194.01063829757777,
+        "n_kept": 1
+      },
+      "cyclopropene__npropyl": {
+        "ensemble_gibbs_hartree": -234.40750872754347,
+        "n_kept": 4
+      }
+    },
+    "resources": {
+      "cpu_user_plus_sys_s": 15004.391065,
+      "peak_rss_child_kb": 8133784,
+      "peak_rss_self_kb": 10591552,
+      "wall_time_s": 970.2046115209814
+    },
+    "second_pass_engine_calls": 0,
+    "second_pass_new_rows": 0,
+    "second_pass_wall_time_s": 64.70372190198395,
+    "stage_metrics": {
+      "constrained_preopt": {
+        "cache_hits": 0,
+        "engine_calls": 1175,
+        "rows_created": 10,
+        "wall_time_s": 725.9972987399669
+      },
+      "frequency": {
+        "cache_hits": 0,
+        "engine_calls": 11,
+        "rows_created": 11,
+        "wall_time_s": 14.423773020040244
+      },
+      "ts_opt": {
+        "cache_hits": 0,
+        "engine_calls": 97,
+        "rows_created": 11,
+        "wall_time_s": 39.841251173987985
+      }
+    },
+    "stall_cap_reached_bool": false,
+    "stall_count": 0,
+    "time_lost_to_stalls_s": 0.0,
+    "timeouts": []
+  },
+  "schema": 1,
+  "test_outcome": "passed"
+}
