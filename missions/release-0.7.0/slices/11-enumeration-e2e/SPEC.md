@@ -2,7 +2,7 @@
 id: OPR.0.7.0.11
 slice: 11-enumeration-e2e
 mission: release-0.7.0
-status: active
+status: done
 stage: wip
 verified: "2026-11-26 against scaffold (hyper_scope slice create)"
 created: "2026-11-26"
@@ -10,7 +10,7 @@ intent: "Prove the enumeration end to end: enumerate ethyl and n-propyl onto TS1
 depends_on: [OPR.0.7.0.4, OPR.0.7.0.6, OPR.0.7.0.10]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.7.0/**", spec/compiled/architecture.yml]

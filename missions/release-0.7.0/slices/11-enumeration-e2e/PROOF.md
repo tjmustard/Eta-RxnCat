@@ -13,6 +13,7 @@
 ## Artifacts
 
 - proof/11-qa.md - qa PASS: 8/8 units pass 9 G7 gates on GFN2 and UMA; 4 scores finite; 0-call second passes; full pytest 2563 passed
+- proof/11-audit-qa.md - qa PASS: 8/8 units 9/9 G7 gates; ethyl endo GFN2 rerun identical (13.5602 kcal/mol, 694/0 calls); full pytest 2563 passed
 
 ## Residue / caveats
 
