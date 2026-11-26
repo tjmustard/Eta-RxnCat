@@ -57,7 +57,7 @@ A small E2E on the Tier 4 TSs with v0.6.0's alkyl series proves the mechanics.
 | UI track | `qitem-20261125203022-a8e19bbeecc4e646` | "This actually fits in perfectly to some requirements later on for a user interface. Potentially setting ourselves up for being able to visualize and build the reaction networks as well as the selecting the swapping atoms, keep, remove, align, transition state active, all of those types of things in an HTML solution, also being able to visualize outputs with frequencies, multiple conformers, etc. So, yes, if we can start building out that user interface in HTML, that would be great. Longer term, the question is: should that be HTML or a different solution that is compatible with macOS, Linux, Windows, etc. Nice thing about HTML is it is compatible. But you have to load up a server for non-technical, non-savvy scientists, this may be difficult, so it would be better to have a more user-friendly solution" | Data/view split. Run-data JSON is the one public contract (R12); the HTML only renders it. Reusable components (R16). Static and serverless; it opens with a double-click. |
 | Placement A | `qitem-20261125203315-64b10106c04fe484` | "Placement as proposed: the static review bundle in v0.7.0; a read-only network view in v0.8.0; conformer, frequency and topology views in v0.9.0; the interactive 'eta ui' as v1.1.0; desktop packaging (pywebview recommended; final choice later) as v1.2.0. PRDs/ is TJ's. Record this as a proposed master-plan change for his edit or approval, not as an edit you make." | v0.7.0 builds only the static bundle. The proposed plan changes are a PROPOSED ADR (§5) for TJ's edit; `PRDs/` is untouched. |
 | Licence | standing | "I would prefer to keep ASE out as it would be a major core dependency. The core work this repo does needs to be purely MIT/BSD/equivalent. The engines for DFT, MLIP, conf search can be copy left. Because they can be replaced with a new engine later. But the core remains." + "It's fine that the engine MACE pulls in ASE just not the core." | The enumerator is pure Python/numpy + eta's `graft`. 3Dmol.js 2.5.5 (BSD-3) is a vendored **output asset** that no Python module imports. geomeTRIC stays in the `opt-geometric` extra and is never vendored. |
-| v0.3.0 Q2 | standing | "B use it as reference only. Keep a list of the discrepancies so that if needed, we can go through each of them and fix any issues that arise." | The zip unpacks to `docs/prd/v0.7.0/` with `.ruff.toml` `exclude = ["*"]`; DV rows below. |
+| v0.3.0 Q2 | standing | "B use it as reference only. Keep a list of the discrepancies so that if needed, we can go through each of them and fix any issues that arise." | The zip unpacks to `docs/prd/v0.7.0/` with `Eta-RxnCat-v0.7.0/.ruff.toml` `exclude = ["*"]` (R29); DV rows below. |
 | v0.4.0 Q5 | standing | "Q5. A" (explicit product charge and multiplicity; parity checked; the charge sum is reported, never used to infer) | Declared `charge_delta` and multiplicity per entry (R10). |
 | v0.4.0 Q2 / roadmap | standing | "Q2. (b)"; roadmap "B: keep at v0.7.0" (PD-008) | This mission. |
 | v0.6.0 Q-RES1 | `qitem-20261125135141-40dabb65dfb7a8a8` | "Can we r-group enumerate a new TS from with a alkyl chain" | Slice 14 of v0.6.0's fragments and graft recipe are the E2E's starting point. |
@@ -287,7 +287,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 
 | ID | User Story | Acceptance Criteria | Priority |
 |---|---|---|---|
-| US-001 | As TJ, I want the v0.7.0 starter logged as reference. | 38 files byte-identical under `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`, `.ruff.toml` `exclude = ["*"]`, DV-01…DV-10, PLAN_DISCREPANCIES row. | P0 |
+| US-001 | As TJ, I want the v0.7.0 starter logged as reference. | 38 files byte-identical under `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`, `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` `exclude = ["*"]` (hook-style ruff check and format check exit 0; R29), DV-01…DV-10, PLAN_DISCREPANCIES "Plan-vs-code (v0.7.0)" section. | P0 |
 | US-002 | As the lead, I want the graph to keep room. | R19 sequence; three new nodes; owned-file union preserved; descriptions ≤ 1800; acyclic; updater once. | P0 |
 | US-015 | As TJ, I want the README claim to say what was checked. | "unit weights" → "weights summing to 1" in README and the claims helper in `tests/unit/test_identity.py`, changed together; suite green. | P1 |
 | US-003 | As a chemist, I want typed site/library/candidate/fallback models. | §5 Contracts; round-trip JSON; old graphs load; core import isolation. | P0 |
@@ -338,6 +338,7 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 | R26 | Fixture names | draft | resolved | `tests/e2e/data/e2e5/v070_enumeration.yaml` and `v070_fallback.yaml` (no `t5_` prefix, which would collide with Human Fixture Tier 5). |
 | R27 | README wording | lead (v0.6.0 docs) | accept | Slice 01 changes "unit weights" to "weights summing to 1" in `README.md` and in the matching claim in `tests/unit/test_identity.py`, together (the claims helper compares them). |
 | R28 | UI track ADR | Placement A | accept | A PROPOSED ADR records the UI track and run-data contract plus the six proposed master-plan edits for TJ's edit. `PRDs/` is untouched. |
+| R29 | Replan 1: slice 01 stopped on three plan points (builder stop report `qitem-20261126021113-a7828cef`) | — | resolved (lead) | **1. Ruff gate path.** A gate at `docs/prd/v0.7.0/.ruff.toml` does not stop the hook (the starter's `pyproject.toml` `[tool.ruff]` is nearer its files): the hook's command (`.agents/scripts/pre-commit:54`) `find docs/prd/v0.7.0 -name '*.py' -print0 \| xargs -0 .venv/bin/ruff check --force-exclude --` gave 69 errors and `format --check` 13 files; with the gate at `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` both and `ruff check .` exit 0. v0.1.0–v0.6.0 all keep it at `docs/prd/vX/Eta-RxnCat-vX/.ruff.toml`. The gate lives there only; slice 01's done-when adds the two hook-style commands. **2. Import scan scope.** `tests/e2e/**` (species_runner) imports selectivity modules (`tests/e2e/t4_flexible.py:45,55-56`, `test_t4_helpers.py:22`, `test_t4_mapped_helpers.py:12`) and `tests/unit/orchestrator/**` holds selectivity tests: the edge rule and stop-and-report apply to `src/` imports; test-file imports are listed in the proof and add no edge; globs unchanged. **3. Plan-vs-code rows.** PLAN_DISCREPANCIES is one row per plan-vs-zip hunk and the v0.7.0 zip row already reads "identical to PRDs/": the four "Plan-vs-code rows" bullets are appended verbatim as a "Plan-vs-code (v0.7.0)" section under its table; table, hashes and PD ids unchanged. HACF-Replan-Of: OPR.0.7.0.1. |
 
 ### PROPOSED lore (this mission; TJ approves with `/hyper-lore-approve`)
 
@@ -357,6 +358,9 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 - Draft M4's graft-time construct "element mismatch → `graft_input`" → wrong-H alignment →
   `alignment_rmsd` (HF-2). It exercises the new eligibility gate; `graft_input` stays a unit test.
 - New: R7 (load-scaled guard), R8 (temp cwd), R24 (orientation), R27 (README wording).
+- Replan 1 (R29): slice 01's ruff gate moves to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` with
+  hook-style checks; its import scan's edge rule covers `src/` imports only; the plan-vs-code
+  bullets go in a section under the PLAN_DISCREPANCIES table.
 
 ### Graph split (slice 01; after the base only; never hand-edit `architecture.yml`)
 
@@ -392,8 +396,10 @@ guard's budget source under load (M13, slice 05), and bundle size (M10, slice 08
 
    species_runner keeps its edges and gains none into selectivity.
    **Before step 6,** run an import scan (`grep -rn "eta_rxncat\.\(orchestrator\|mapping\|review\)"`
-   over each node's files) and attach it to the proof. Any import that contradicts these edges is
-   stop-and-report.
+   over each node's files) and attach it to the proof. Any import **in a `src/` file** that
+   contradicts these edges is stop-and-report. Test-file imports (`tests/e2e/**` and
+   `tests/unit/orchestrator/**` into selectivity modules) are listed in the scan and add no edge;
+   globs unchanged (R29).
 7. **Descriptions:** compress core and species_runner to ≤ 1800 chars, and write the three new ones
    (≤ 1800), each by `--description-file`.
 8. **Review patch:** `apply-review` (2000-char cap; it stamps `audit:<slice>`).
@@ -481,7 +487,8 @@ The zip has 38 files; 5 differ from v0.6.0's (the plan copy, `pyproject.toml`, `
 | DV-09 | — | no multi-site | Cartesian product with a cap |
 | DV-10 | `pyproject.toml` | `version = "0.7.0"`, `ruff>=0.7.0` | bump in slice 14; ruff pin not adopted |
 
-Plan-vs-code rows (PLAN_DISCREPANCIES):
+Plan-vs-code rows (appended verbatim as a "Plan-vs-code (v0.7.0)" section under the
+`docs/prd/PLAN_DISCREPANCIES.md` table; table, hashes and PD ids unchanged; R29):
 - "propagating … deltas" is read as declared (Q5 A).
 - "rank/select … fallbacks" is R4/G5 (Q-A1 B).
 - v0.8.0 keeps general fallback.

@@ -34,11 +34,30 @@ Context the builder needs:
   writes `src/` or the graph.
 - **Starter:** `PRDs/Eta-RxnCat-v0.7.0.zip` (sha256 `ad7b7616…f0b25`, read-only) unpacks
   byte-identical to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/` (38 files) with
-  `docs/prd/v0.7.0/.ruff.toml` = `exclude = ["*"]` (without it the pre-commit hook lints the starter
-  and refuses the commit). Reference only: copy no starter code.
+  `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` = `exclude = ["*"]` (without it the pre-commit hook lints the starter
+  and refuses the commit). No `docs/prd/v0.7.0/.ruff.toml`. Reference only: copy no starter code.
+- **Replan 1 (mission R29, lead rulings 1-3):**
+  - *Ruff gate path.* A gate at `docs/prd/v0.7.0/.ruff.toml` does not stop the hook: the starter's own
+    `pyproject.toml` `[tool.ruff]` is nearer its files. The builder measured the hook's command
+    (`.agents/scripts/pre-commit:54`) `find docs/prd/v0.7.0 -name '*.py' -print0 | xargs -0 .venv/bin/ruff check --force-exclude --` → 69 errors and
+    `format --check` → 13 files with the parent gate; with the gate at `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` the
+    check, the format check and `ruff check .` all exit 0. v0.1.0–v0.6.0 all keep it at
+    `docs/prd/vX/Eta-RxnCat-vX/.ruff.toml` (`git ls-files`). The gate lives there only, and the proof
+    adds the hook-style checks, because `uv run ruff check .` cannot catch this.
+  - *Import scan scope.* `tests/e2e/**` stays in species_runner's globs but imports selectivity
+    modules (`tests/e2e/t4_flexible.py:45,55-56`, `test_t4_helpers.py:22`,
+    `test_t4_mapped_helpers.py:12`), and `tests/unit/orchestrator/**` holds selectivity tests (the
+    overlap is already recorded). The edge rule and the stop-and-report apply to imports in `src/`
+    files only; test-file imports are listed in the proof's import scan and add no edge. Globs
+    unchanged.
+  - *Plan-vs-code rows.* `docs/prd/PLAN_DISCREPANCIES.md` is one row per plan-vs-zip hunk and its
+    v0.7.0 zip row already reads "identical to PRDs/"; the mission's four "Plan-vs-code rows" bullets
+    fit no column. They are appended verbatim as a short "Plan-vs-code (v0.7.0)" section under the
+    table; the table, its hashes and the PD ids are unchanged.
 - **DV register:** `docs/prd/v0.7.0/DISCREPANCIES.md` with DV-01…DV-10 exactly as the mission's
-  "Starter discrepancies" table, plus `PLAN_DISCREPANCIES` rows (mission, same section) in the
-  existing PLAN_DISCREPANCIES file.
+  "Starter discrepancies" table, plus the mission's four "Plan-vs-code rows" bullets (same section)
+  appended verbatim as a "Plan-vs-code (v0.7.0)" section under the table of the existing
+  `docs/prd/PLAN_DISCREPANCIES.md` (R29; table, hashes and PD ids unchanged).
 - **README wording (R27):** in `README.md` the v0.6.0 claim "…with unit weights, the seed's face…"
   becomes "…with weights summing to 1, the seed's face…". The same sentence lives in the claims
   helper in `tests/unit/test_identity.py` (around line 1273, the `_v060_flexible` claim); change
@@ -47,7 +66,9 @@ Context the builder needs:
 - **Graph split (normative):** run the mission's "Graph split (slice 01)" steps 1-10 in order, with
   `python3 .agents/scripts/hyper_ledger.py` (ensure-node / set-edges / apply-review) and the single
   updater run. Final globs and edges are in the mission; do not invent others. The import scan of
-  step 6 is attached to the proof; an import that contradicts the edges is stop-and-report.
+  step 6 is attached to the proof; an import **in a `src/` file** that contradicts the edges is
+  stop-and-report. Test-file imports (e.g. `tests/e2e/**` and `tests/unit/orchestrator/**` into
+  selectivity modules) are listed in the scan and add no edge (R29).
   `ensure-node --from-spec` is not used (it replaces node files). The ledger guard: `--files`
   replaces a node's whole glob list, so pass the complete list each time.
 - **Descriptions:** core (2000) and species_runner (1999) are compressed to <= 1800 chars; the new
@@ -76,16 +97,22 @@ Context the builder needs:
 ## 1. The Confidence Mandate
 
 **Score: 9/10.** Every command, glob and edge is given, and the import facts were read at the base
-(only `orchestrator/__init__.py` re-exports selectivity/ts_ensemble; no species-side module imports
-them; `ts_ensemble.py` imports mapping, engines and thermo). Residual risk: the ledger tool's
+(only `orchestrator/__init__.py` re-exports selectivity/ts_ensemble; no species-side `src/` module
+imports them; `ts_ensemble.py` imports mapping, engines and thermo). Replan 1 (R29) settles the three
+points the builder's first run hit with measured evidence: the ruff gate path (hook check 0 errors
+with the gate inside the starter dir), the import scan's `src/`-only edge rule, and the
+PLAN_DISCREPANCIES placement. Residual risk: the ledger tool's
 handling of `--allow-shared` for a file under another node's glob; the union-count check catches any
 loss, and a refusal is stop-and-report, not a workaround.
 
 ## Mini-requirements
 
 1. US-001: the 38 starter files are byte-identical to the zip (a sha256 listing in the proof), and
-   `.ruff.toml` excludes them.
-2. DV-01…DV-10 and the PLAN_DISCREPANCIES rows are present with the mission's text.
+   `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml` (`exclude = ["*"]`, the only gate file) excludes them: the hook-style
+   `find docs/prd/v0.7.0 -name '*.py' -print0 | xargs -0 .venv/bin/ruff check --force-exclude --` and
+   `find docs/prd/v0.7.0 -name '*.py' -print0 | xargs -0 .venv/bin/ruff format --check --force-exclude --` both exit 0 (R29).
+2. DV-01…DV-10 are present with the mission's text, and the four plan-vs-code bullets sit verbatim in
+   a "Plan-vs-code (v0.7.0)" section under the PLAN_DISCREPANCIES table, the table unchanged (R29).
 3. US-015: README and `tests/unit/test_identity.py` both say "weights summing to 1"; the identity
    test passes.
 4. US-002: nodes `eta_rxncat_selectivity`, `eta_rxncat_enumerator`, `eta_rxncat_review` exist with
@@ -98,8 +125,9 @@ loss, and a refusal is stop-and-report, not a workaround.
 ## 3. Implementation Plan (Task List)
 
 - [ ] `python3 .agents/scripts/hyper_codegraph.py index` → `index: ok`.
-- [ ] Unpack the zip to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`; write `.ruff.toml`; sha256 listing.
-- [ ] Write `DISCREPANCIES.md` (DV-01…DV-10) and the PLAN_DISCREPANCIES rows.
+- [ ] Unpack the zip to `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/`; write `docs/prd/v0.7.0/Eta-RxnCat-v0.7.0/.ruff.toml`; run the
+      two hook-style ruff commands (exit 0); sha256 listing.
+- [ ] Write `DISCREPANCIES.md` (DV-01…DV-10) and the "Plan-vs-code (v0.7.0)" section.
 - [ ] Change the README sentence and the `test_identity.py` claim together; run that test.
 - [ ] Graph split steps 1-5 (counts before, narrow species_runner, three ensure-node).
 - [ ] Step 6: import scan, then set-edges.
@@ -117,9 +145,11 @@ loss, and a refusal is stop-and-report, not a workaround.
 ## Proof contract
 
 - [ ] The starter sha256 listing equals the zip's; `uv run ruff check .` exits 0 with the starter
-      present.
+      present; `find docs/prd/v0.7.0 -name '*.py' -print0 | xargs -0 .venv/bin/ruff check --force-exclude --` and
+      `find docs/prd/v0.7.0 -name '*.py' -print0 | xargs -0 .venv/bin/ruff format --check --force-exclude --` exit 0 (R29).
 - [ ] `uv run pytest tests/unit/test_identity.py -q` passes with the new wording.
-- [ ] Before/after ledger tables (per-node globs, matched files, union) and the import scan.
+- [ ] Before/after ledger tables (per-node globs, matched files, union) and the import scan
+      (`src/` imports checked against the edges; test-file imports listed, no edge; R29).
 - [ ] `python3 .agents/scripts/hyper_ledger.py validate` exits 0; required checks exit 0.
 
 ## Source material
