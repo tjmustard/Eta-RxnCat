@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/08-qa.md - qa PASS: 3Dmol tarball sha512 == HF-5 and vendored files byte-equal; review/cli 121 passed; full pytest 2542 passed exit 0
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]

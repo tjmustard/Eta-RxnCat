@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -33,25 +33,25 @@ nodes:
     (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev; TJ v0.3.0
     Q3 A); [tool.uv] conflicts keep the MLIP extras exclusive; torch 2.13.0+cu129
     only from the pytorch-cu129 index. Script eta-rxncat = eta_rxncat.cli:main. __init__
-    imports no backend; mapping is its own node. Gates: ruff, strict mypy, pytest.
-    Test policy (ADR-0019): markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance,
-    e2e deselected by default; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1
-    and, under ETA_RXNCAT_ACCEPTANCE=1, fails every skip and xfail; an AST rule bans
-    module-level skips in engine and acceptance tests; .venv-accept-* gitignored.
-    tools/licence_gate.py (--profile base|opt-geometric|gpu|mlip-mace|mlip-uma) judges
-    each installed distribution exactly against [tool.eta-rxncat.licence-gate] with
-    version-pinned per-profile exemptions (base none; geometric 1.1.1 in opt-geometric
-    and, via gpu4pyscf-cuda12x, gpu/mlip-*); stale exemptions, unnamed or duplicate
-    dist-infos fail. test_package.py bans copyleft imports, heavy imports in engines/optimize,
-    and geometric outside functions of optimize/geometric_impl.py. CI: checks plus
-    licence-extras matrix. Public: README.md, CHANGELOG.md (scribe-owned), WebP media,
-    LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
+    imports no backend. Gates: ruff, strict mypy, pytest. Test policy (ADR-0019):
+    markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance, e2e deselected by default;
+    tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 and, under ETA_RXNCAT_ACCEPTANCE=1,
+    fails every skip and xfail; an AST rule bans module-level skips in engine and
+    acceptance tests; .venv-accept-* gitignored. tools/licence_gate.py (--profile
+    base|opt-geometric|gpu|mlip-mace|mlip-uma) judges each installed distribution
+    exactly against [tool.eta-rxncat.licence-gate] with version-pinned per-profile
+    exemptions (base none; geometric 1.1.1 in opt-geometric and, via gpu4pyscf-cuda12x,
+    gpu/mlip-*); stale exemptions, unnamed/duplicate dist-infos fail. test_package.py
+    bans copyleft imports, heavy imports in engines/optimize, geometric outside functions
+    of optimize/geometric_impl.py. Wheel ships review/assets/*, review/schema/*.json.
+    CI: checks plus licence-extras matrix. Public: README, CHANGELOG (scribe), WebP
+    media, LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
     Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
     GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
-    v0.5.0/v0.6.0 only on their verdict pass. docs/prd/v<version>/: verbatim starters
-    (excluded from gates; v0.7.0's has its own .ruff.toml exclude all), DISCREPANCIES.md,
-    acceptance record (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md
-    is the plan-copy register.
+    v0.5.0/v0.6.0 on verdict pass. docs/prd/v<version>/: verbatim starters (excluded
+    from gates; v0.7.0's via its own .ruff.toml), DISCREPANCIES.md, acceptance record
+    (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy
+    register.
   inputs: []
   outputs:
   - data_type: python_package_eta_rxncat_version
@@ -65,9 +65,9 @@ nodes:
   provenance:
     last_slice: OPR.0.7.0.8
   review:
-    reviewed_at: '2026-11-26T09:06:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.5
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T10:21:08+00:00'
+    reviewed_by: audit:OPR.0.7.0.8
+    summary: patched description
   spec_refs:
   - OPR.0.2.0.11
   - OPR.0.3.0.1
@@ -233,7 +233,7 @@ nodes:
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -243,20 +243,25 @@ nodes:
   - docs/prd/v0.1.0/DISCREPANCIES.md
   - spec/compiled/architecture.yml
   description: >-
-    eta_rxncat.cli (v0.1.0): the eta-rxncat console script (pyproject [project.scripts]
-    eta-rxncat = eta_rxncat.cli:main; python -m eta_rxncat via __main__.py, the only
-    raise SystemExit(main())). main(argv) -> int on stdlib argparse, never calls sys.exit;
-    argparse usage errors (no or unknown command, missing argument) return 2. hardware-check
-    prints probe_hardware() as indented JSON and returns 0; hardware-check --smoke
-    prints run_smoke() as JSON and returns smoke_exit_code (0 pass, 1 fail, 3 skipped);
-    hw_probe is imported lazily inside the handler. validate <path> loads the graph
-    with load_reaction_graph and prints exactly 'OK <path>', 'nodes: N', 'edges: M',
-    'priority_order: ids' (exit 0); a GraphValidationError (the only exception caught)
-    becomes one 'error: <message>' stderr line with whitespace collapsed, empty stdout,
-    exit 1, no traceback. validate imports no torch, pyscf, gpu4pyscf, cupy, rdkit,
-    mace or fairchem; no store import; no dependency beyond the stdlib and the project.
-    Planned for v0.7.0 (not yet written): a review-bundle subcommand over eta_rxncat.review
-    (edge recorded ahead of the code).
+    eta_rxncat.cli (v0.1.0; review-bundle v0.7.0): the eta-rxncat console script (pyproject
+    [project.scripts] eta-rxncat = eta_rxncat.cli:main; python -m eta_rxncat via __main__.py,
+    the only raise SystemExit(main())). main(argv) -> int on stdlib argparse, never
+    calls sys.exit; argparse usage errors (no or unknown command, missing argument)
+    return 2. hardware-check prints probe_hardware() as indented JSON and returns
+    0; hardware-check --smoke prints run_smoke() as JSON and returns smoke_exit_code
+    (0 pass, 1 fail, 3 skipped); hw_probe is imported lazily inside the handler. validate
+    <path> loads the graph with load_reaction_graph and prints exactly 'OK <path>',
+    'nodes: N', 'edges: M', 'priority_order: ids' (exit 0); a GraphValidationError
+    (the only exception caught) becomes one 'error: <message>' stderr line with whitespace
+    collapsed, empty stdout, exit 1, no traceback. validate imports no torch, pyscf,
+    gpu4pyscf, cupy, rdkit, mace, fairchem or store; no dependency beyond the stdlib
+    and the project. review-bundle --record <RunRecord JSON> --store <file> --out
+    <dir> (all required; v0.7.0 slice 08) lazily imports eta_rxncat.review and eta_rxncat.store:
+    RunRecord.model_validate_json, refuses a missing store path (never creates one),
+    ArtifactStore context, export_run_data(trajectory_byte_budget=TRAJECTORY_BYTE_BUDGET),
+    write_review_bundle; prints 'OK <out>' exit 0; OSError, ValueError (incl. pydantic,
+    ExportError, BundleError), StoreBusyError, StoreSchemaError or sqlite3.Error becomes
+    one 'error: <Type>: <message>' stderr line, exit 1.
   inputs:
   - data_type: reaction_graph_loader_and_models
     source_id: eta_rxncat_core
@@ -264,22 +269,27 @@ nodes:
     source_id: eta_rxncat_hw_probe
   - data_type: command_line_arguments
     external: user_shell
+  - data_type: run_record_exporter_and_bundle_writer
+    source_id: eta_rxncat_review
+  - data_type: artifact_store
+    source_id: eta_rxncat_store
   outputs:
-  - data_type: json_report_or_validation_summary_and_exit_code
+  - data_type: json_report_validation_summary_or_review_bundle_and_exit_code
     external: user_shell
   edges:
     depends_on:
     - eta_rxncat_core
     - eta_rxncat_hw_probe
     - eta_rxncat_review
+    - eta_rxncat_store
     implements: []
     member_of: []
   provenance:
     last_slice: OPR.0.7.0.8
   review:
-    reviewed_at: '2026-11-26T10:03:23+00:00'
-    reviewed_by: audit:OPR.0.7.0.7
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-26T10:21:08+00:00'
+    reviewed_by: audit:OPR.0.7.0.8
+    summary: patched description, inputs, outputs, edges.depends_on
 - id: eta_rxncat_engines
   dimension: Module
   status: clean
@@ -829,35 +839,35 @@ nodes:
     last_slice: OPR.0.7.0.6
 - id: eta_rxncat_review
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
   description: >-
-    eta_rxncat.review (v0.7.0 slice 07; bundle writer planned for slice 08). run_data.py:
-    RunRecord, the exporter input (species with MolecularState; candidates with GraftRecords;
-    runs per candidate x pathway x engine with FallbackRecord, TSEnsemble, ThermoAnalysisOptions,
-    samples and endpoints as stage-key hex; SelectivityResult per candidate x engine;
-    gates); frozen, extra=forbid. RunData v1, the strict writer: schema_version Literal[1]
-    (int only), extra=forbid, no inf/nan, every physical unit in its key; sections
-    provenance (eta __version__, engines, optimizers, thermo options, stage keys,
+    eta_rxncat.review (v0.7.0 slices 07-08). run_data.py: RunRecord, the exporter
+    input (species with MolecularState; candidates with GraftRecords; runs per candidate
+    x pathway x engine with FallbackRecord, TSEnsemble, ThermoAnalysisOptions, samples/endpoints
+    as key hex; SelectivityResult per candidate x engine; gates); frozen. RunData
+    v1, strict: schema_version Literal[1], extra=forbid, no inf/nan, units in keys;
+    sections provenance (eta version, engines, optimizers, thermo options, stage keys,
     store file name only), species, frequencies (completed|failed|missing), trajectories
     (stored|missing; frames, decimation_stride, n_frames_total, convergence), candidates
-    (codes only, ids by reference), gates; a validator checks unique ids and every
-    reference. read_run_data: lenient twin tree (extra=ignore, schema_version int)
-    then strict validation; > 1 raises UnsupportedRunDataVersion. CHANGES and the
-    version rule (RunData docstring = schema description). schema/run_data.v1.schema.json
-    = RunData.model_json_schema() (validation mode), regenerated by python3 -m eta_rxncat.review.schema;
-    drift test. export.py: export_run_data(record, store, *, trajectory_byte_budget)
-    reads rows by stage key (a StageKey with only .key set; ArtifactStore.get reads
-    the primary key), never runs an engine; missing rows exported as missing; modes
-    from the stored Hessian via thermo.normal_modes with the run's options at the
-    opt row's full-precision geometry when its grid matches; unit-norm imaginary displacements,
-    sign fixed; one common decimation stride (first and last frames kept, ExportBudgetError).
-    canonical_run_data_json: sorted keys, compact, floats rounded per unit family
-    (hartree 12, angstrom 10, cm1/kcal_mol/hartree_per_bohr 8, else 12), <, >, &,
-    U+2028/9 as \u escapes. RunRecord JSON does not round-trip SelectivityResult.ratio=inf
-    (carry-forward). Tests: tests/unit/review/**.
+    (codes, ids by ref), gates; unique ids/references validated. read_run_data: lenient
+    twin then strict; > 1 raises UnsupportedRunDataVersion. CHANGES; version rule
+    = RunData docstring. schema/run_data.v1.schema.json = model_json_schema() (validation
+    mode), python3 -m eta_rxncat.review.schema; drift test. export.py: export_run_data(record,
+    store, *, trajectory_byte_budget) reads rows by stage key, never runs an engine;
+    missing rows as missing; modes from the stored Hessian via thermo.normal_modes
+    at the opt row's geometry if grids match; unit-norm, sign-fixed imaginary modes;
+    one common decimation stride (first/last kept, ExportBudgetError). canonical_run_data_json:
+    sorted, compact, floats rounded per unit family, <>& and U+2028/9 escaped. RunRecord
+    JSON does not round-trip ratio=inf. bundle.py: write_review_bundle(run_data, out_dir)
+    refuses a file or non-empty dir (BundleError); writes index.html (CSP meta; JS-free
+    summary, text html.escape'd: index table, gates, TS/minimum frequencies, imaginary
+    in red, banner when n_imaginary != expected, warn box if failed/missing; sections
+    #c/<id>; embedded JSON = run_data.json bytes; classic local scripts), run_data.json,
+    assets/ (3Dmol-min.js 2.5.5 + LICENSE-3Dmol.txt sha-pinned, SOURCES.md; placeholder
+    eta-view.js), sorted MANIFEST.sha256. TRAJECTORY_BYTE_BUDGET 10e6.
   inputs:
   - data_type: run_record_models
     source_id: eta_rxncat_core
@@ -868,6 +878,8 @@ nodes:
   outputs:
   - data_type: run_data_v1_json_and_schema
     external: review_bundle_reader
+  - data_type: offline_html_review_bundle
+    external: review_bundle_reader
   edges:
     depends_on:
     - eta_rxncat_core
@@ -876,8 +888,8 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-26T10:03:23+00:00'
-    reviewed_by: audit:OPR.0.7.0.7
-    summary: patched description, inputs, outputs
+    reviewed_at: '2026-11-26T10:21:08+00:00'
+    reviewed_by: audit:OPR.0.7.0.8
+    summary: patched description, outputs
   provenance:
     last_slice: OPR.0.7.0.8
