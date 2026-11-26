@@ -1,0 +1,875 @@
+{
+  "version": "0.7.0",
+  "derived_by": "tests/e2e/acceptance_record_v070.py",
+  "g7_units": [
+    {
+      "record": "v070_enum_ethyl_endo_uma.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "endo",
+      "engine": "UMA",
+      "gated": false,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 5
+        },
+        "n_merges": 3,
+        "G_pathway_hartree": -389.10761435694513,
+        "dG_dagger_kcal_mol": 20.235660364919468,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_n__ethyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__ethyl"
+      }
+    },
+    {
+      "record": "v070_enum_ethyl_endo_xtb.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "endo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "gate_failed:forming_overlap": 1,
+          "orientation_mismatch": 4
+        },
+        "n_merges": 3,
+        "G_pathway_hartree": -28.22084847429305,
+        "dG_dagger_kcal_mol": 13.560206712557633,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_n__ethyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__ethyl"
+      }
+    },
+    {
+      "record": "v070_enum_ethyl_exo_uma.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "exo",
+      "engine": "UMA",
+      "gated": false,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 3,
+          "pre_relax_failed:PreRelaxTimeout": 1
+        },
+        "n_merges": 4,
+        "G_pathway_hartree": -389.1003275571104,
+        "dG_dagger_kcal_mol": 24.808196296814334,
+        "stall_count": 1,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 600.0052977799205,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__ethyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_x__ethyl"
+      }
+    },
+    {
+      "record": "v070_enum_ethyl_exo_xtb.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "exo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 4
+        },
+        "n_merges": 4,
+        "G_pathway_hartree": -28.214587602237856,
+        "dG_dagger_kcal_mol": 17.48896324308849,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__ethyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_x__ethyl"
+      }
+    },
+    {
+      "record": "v070_enum_npropyl_endo_uma.runrecord.json",
+      "candidate_id": "npropyl",
+      "pathway": "endo",
+      "engine": "UMA",
+      "gated": false,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 4,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 3
+        },
+        "n_merges": 4,
+        "G_pathway_hartree": -428.38556736144005,
+        "dG_dagger_kcal_mol": 20.444047621736306,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_n__npropyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__npropyl"
+      }
+    },
+    {
+      "record": "v070_enum_npropyl_endo_xtb.runrecord.json",
+      "candidate_id": "npropyl",
+      "pathway": "endo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 4,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 3
+        },
+        "n_merges": 4,
+        "G_pathway_hartree": -31.359146969835702,
+        "dG_dagger_kcal_mol": 13.86081776428437,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_n__npropyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__npropyl"
+      }
+    },
+    {
+      "record": "v070_enum_npropyl_exo_uma.runrecord.json",
+      "candidate_id": "npropyl",
+      "pathway": "exo",
+      "engine": "UMA",
+      "gated": false,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 7
+        },
+        "n_merges": 1,
+        "G_pathway_hartree": -428.37765294967033,
+        "dG_dagger_kcal_mol": 25.410415988871044,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__npropyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_x__npropyl"
+      }
+    },
+    {
+      "record": "v070_enum_npropyl_exo_xtb.runrecord.json",
+      "candidate_id": "npropyl",
+      "pathway": "exo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G7.candidate_ok": "pass",
+        "G7.charge_0_multiplicity_1": "pass",
+        "G7.chosen_at_rank_1": "pass",
+        "G7.every_member_face_expected": "pass",
+        "G7.g3_invariant": "pass",
+        "G7.graft_rmsd_and_contacts": "pass",
+        "G7.no_engine_error_or_face_mismatch": "pass",
+        "G7.second_pass_all_hits": "pass",
+        "G7.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 7
+        },
+        "n_merges": 1,
+        "G_pathway_hartree": -31.352413634494408,
+        "dG_dagger_kcal_mol": 18.086049482990774,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__npropyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_x__npropyl"
+      }
+    }
+  ],
+  "g7_selectivity": [
+    {
+      "record": "v070_enum_ethyl_selectivity_uma.runrecord.json",
+      "candidate_id": "ethyl",
+      "engine": "UMA",
+      "ddG_dagger_kcal_mol": 4.5725359318948655,
+      "major_pathway": "endo",
+      "ratio": 2247.4606520832763,
+      "selectivity_percent": 99.91105025573177
+    },
+    {
+      "record": "v070_enum_ethyl_selectivity_xtb.runrecord.json",
+      "candidate_id": "ethyl",
+      "engine": "GFN2",
+      "ddG_dagger_kcal_mol": 3.9287565305308614,
+      "major_pathway": "endo",
+      "ratio": 758.2257355601236,
+      "selectivity_percent": 99.73657373475038
+    },
+    {
+      "record": "v070_enum_npropyl_selectivity_uma.runrecord.json",
+      "candidate_id": "npropyl",
+      "engine": "UMA",
+      "ddG_dagger_kcal_mol": 4.966368367134739,
+      "major_pathway": "endo",
+      "ratio": 4368.911780508792,
+      "selectivity_percent": 99.95423248567808
+    },
+    {
+      "record": "v070_enum_npropyl_selectivity_xtb.runrecord.json",
+      "candidate_id": "npropyl",
+      "engine": "GFN2",
+      "ddG_dagger_kcal_mol": 4.225231718706405,
+      "major_pathway": "endo",
+      "ratio": 1250.5940039065013,
+      "selectivity_percent": 99.84020377264852
+    }
+  ],
+  "g8_constructs": [
+    {
+      "record": "v070_fallback_graft_time_xtb.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "endo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G8.candidate_ok": "pass",
+        "G8.engine_calls_attributed": "pass",
+        "G8.every_member_face_expected": "pass",
+        "G8.fallback_record": "pass",
+        "G8.graft_records": "pass",
+        "G8.no_engine_error_or_face_mismatch": "pass",
+        "G8.rank_1_no_ts_search_calls": "pass",
+        "G8.second_pass_all_hits": "pass",
+        "G8.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "gate_failed:forming_overlap": 1,
+          "orientation_mismatch": 4
+        },
+        "n_merges": 3,
+        "G_pathway_hartree": -28.22084847429305,
+        "dG_dagger_kcal_mol": null,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_n__ethyl",
+            "rank": 1,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__ethyl"
+      },
+      "construct": "graft_time",
+      "graft_records": [
+        {
+          "template_id": "TS1a_n_cp_h",
+          "status": "refused",
+          "reason": "alignment_rmsd"
+        },
+        {
+          "template_id": "TS1a_n",
+          "status": "ok",
+          "reason": null
+        },
+        {
+          "template_id": "cyclopropene",
+          "status": "ok",
+          "reason": null
+        }
+      ]
+    },
+    {
+      "record": "v070_fallback_run_time_xtb.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "endo",
+      "engine": "GFN2",
+      "gated": true,
+      "gates": {
+        "G8.candidate_ok": "pass",
+        "G8.engine_calls_attributed": "pass",
+        "G8.every_member_face_expected": "pass",
+        "G8.fallback_record": "pass",
+        "G8.graft_records": "pass",
+        "G8.no_engine_error_or_face_mismatch": "pass",
+        "G8.rank_1_no_ts_search_calls": "pass",
+        "G8.second_pass_all_hits": "pass",
+        "G8.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "gate_failed:forming_overlap": 1,
+          "orientation_mismatch": 4
+        },
+        "n_merges": 3,
+        "G_pathway_hartree": -28.22084847429305,
+        "dG_dagger_kcal_mol": null,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__ethyl",
+            "rank": 1,
+            "outcome": "fell_through",
+            "reason": "seed:face_mismatch_pathway"
+          },
+          {
+            "template_id": "TS1a_n__ethyl",
+            "rank": 2,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__ethyl"
+      },
+      "construct": "run_time",
+      "graft_records": [
+        {
+          "template_id": "TS1a_x",
+          "status": "ok",
+          "reason": null
+        },
+        {
+          "template_id": "TS1a_n",
+          "status": "ok",
+          "reason": null
+        },
+        {
+          "template_id": "cyclopropene",
+          "status": "ok",
+          "reason": null
+        }
+      ]
+    },
+    {
+      "record": "v070_fallback_run_time_uma.runrecord.json",
+      "candidate_id": "ethyl",
+      "pathway": "endo",
+      "engine": "UMA",
+      "gated": false,
+      "gates": {
+        "G8.candidate_ok": "pass",
+        "G8.engine_calls_attributed": "pass",
+        "G8.every_member_face_expected": "pass",
+        "G8.fallback_record": "pass",
+        "G8.graft_records": "pass",
+        "G8.no_engine_error_or_face_mismatch": "pass",
+        "G8.rank_1_no_ts_search_calls": "pass",
+        "G8.second_pass_all_hits": "pass",
+        "G8.weights_sum_to_one": "pass"
+      },
+      "values": {
+        "n_members": 3,
+        "exclusions_by_reason": {
+          "orientation_mismatch": 5
+        },
+        "n_merges": 3,
+        "G_pathway_hartree": -389.10761445505483,
+        "dG_dagger_kcal_mol": null,
+        "stall_count": 0,
+        "graft_pre_relax_timeouts": 0,
+        "time_lost_to_stalls_s": 0,
+        "stall_cap_reached_bool": false,
+        "fallback": [
+          {
+            "template_id": "TS1a_x__ethyl",
+            "rank": 1,
+            "outcome": "fell_through",
+            "reason": "seed:face_mismatch_pathway"
+          },
+          {
+            "template_id": "TS1a_n__ethyl",
+            "rank": 2,
+            "outcome": "chosen",
+            "reason": null
+          }
+        ],
+        "chosen_template_id": "TS1a_n__ethyl"
+      },
+      "construct": "run_time",
+      "graft_records": [
+        {
+          "template_id": "TS1a_x",
+          "status": "ok",
+          "reason": null
+        },
+        {
+          "template_id": "TS1a_n",
+          "status": "ok",
+          "reason": null
+        },
+        {
+          "template_id": "cyclopropene",
+          "status": "ok",
+          "reason": null
+        }
+      ]
+    }
+  ],
+  "stalls": {
+    "count": 1,
+    "time_lost_s": 600.0052977799205,
+    "graft_pre_relax_timeouts": 0
+  },
+  "suites": {
+    "engine_commands": [
+      {
+        "tag": "ethyl-endo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-endo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-exo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-exo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-endo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-endo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-exo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-exo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-ethyl-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-ethyl-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-npropyl-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-npropyl-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "graft-time-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "run-time-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "run-time-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      }
+    ],
+    "default_suite": {
+      "command": "uv run pytest",
+      "exit_code": 0,
+      "counts": {
+        "passed": 2591,
+        "failed": 0,
+        "skipped": 0,
+        "deselected": 196,
+        "errors": 0
+      }
+    }
+  },
+  "bundle": {
+    "path": "tests/candidate_outputs/v0.7.0/review/",
+    "root_manifest_sha256": "fb307c7daeb58594a0a0f18fa9b84475dae8757c3e2ec8f923885e6c2e483147",
+    "files_listed": 43,
+    "engine_calls": 0,
+    "sub_bundle_bytes": {
+      "v070_enum_ethyl_selectivity_uma.runrecord": 2933562,
+      "v070_enum_ethyl_selectivity_xtb.runrecord": 3087669,
+      "v070_enum_npropyl_selectivity_uma.runrecord": 5687620,
+      "v070_enum_npropyl_selectivity_xtb.runrecord": 5665151,
+      "v070_fallback_graft_time_xtb.runrecord": 1491800,
+      "v070_fallback_run_time_xtb.runrecord": 1491824,
+      "v070_fallback_run_time_uma.runrecord": 1438321
+    },
+    "total_bytes": 21839280,
+    "gate_counts": {
+      "v070_enum_ethyl_selectivity_uma.runrecord": {
+        "gated": [
+          0,
+          0
+        ],
+        "reported": [
+          18,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_enum_ethyl_selectivity_xtb.runrecord": {
+        "gated": [
+          18,
+          0
+        ],
+        "reported": [
+          0,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_enum_npropyl_selectivity_uma.runrecord": {
+        "gated": [
+          0,
+          0
+        ],
+        "reported": [
+          18,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_enum_npropyl_selectivity_xtb.runrecord": {
+        "gated": [
+          18,
+          0
+        ],
+        "reported": [
+          0,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_fallback_graft_time_xtb.runrecord": {
+        "gated": [
+          9,
+          0
+        ],
+        "reported": [
+          0,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_fallback_run_time_xtb.runrecord": {
+        "gated": [
+          9,
+          0
+        ],
+        "reported": [
+          0,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      },
+      "v070_fallback_run_time_uma.runrecord": {
+        "gated": [
+          0,
+          0
+        ],
+        "reported": [
+          9,
+          0
+        ],
+        "record": [
+          0,
+          0
+        ]
+      }
+    },
+    "rows_per_store": {
+      "v070_enum.sqlite": {
+        "before": 368,
+        "after": 368
+      },
+      "v070_fallback_graft_time_xtb.sqlite": {
+        "before": 33,
+        "after": 33
+      },
+      "v070_fallback_run_time_xtb.sqlite": {
+        "before": 34,
+        "after": 34
+      },
+      "v070_fallback_run_time_uma.sqlite": {
+        "before": 34,
+        "after": 34
+      }
+    }
+  }
+}

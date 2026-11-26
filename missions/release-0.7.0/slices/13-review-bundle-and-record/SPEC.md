@@ -10,7 +10,7 @@ intent: "Bundle every v0.7.0 E2E run for TJ's visual audit, gate the real bundle
 depends_on: [OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_species_runner
 parent: null
 hacf_touches: ["tests/e2e/**", "tests/candidate_outputs/v0.7.0/**", docs/prd/v0.7.0/ACCEPTANCE_RESULT.json, spec/compiled/architecture.yml]
@@ -181,11 +181,11 @@ real trajectories (a stop-and-report, not a fix in this slice).
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Harness + helper tests (coverage, M10, fresh output, root index, manifest) with failing cases.
-- [ ] Host check; build the bundle in scratch; run the gates; copy to candidates; M12 repeat.
-- [ ] Record writer + test; write the record.
-- [ ] Code commit; candidate-only commit (bundle); record + progress commit; updater once.
+- [x] Index.
+- [x] Harness + helper tests (coverage, M10, fresh output, root index, manifest) with failing cases.
+- [x] Host check; build the bundle in scratch; run the gates; copy to candidates; M12 repeat.
+- [x] Record writer + test; write the record.
+- [x] Code commit; candidate-only commit (bundle); record + progress commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -197,12 +197,12 @@ real trajectories (a stop-and-report, not a fix in this slice).
 
 ## Proof contract
 
-- [ ] `proof/13-execute.md` (type `execute`/`evidence`): coverage table, engine-call and row counts,
+- [x] `proof/13-execute.md` (type `execute`/`evidence`): coverage table, engine-call and row counts,
   gate outputs (manifests, sizes, scans, frames, byte equality), strides per sub-bundle.
-- [ ] M12 evidence on the real bundle (both gate browsers; release Firefox run or "not run").
-- [ ] `docs/prd/v0.7.0/ACCEPTANCE_RESULT.json` and its writer test.
-- [ ] Phase 3 row draft with the packet.
-- [ ] Required checks exit 0.
+- [x] M12 evidence on the real bundle (both gate browsers; release Firefox run or "not run").
+- [x] `docs/prd/v0.7.0/ACCEPTANCE_RESULT.json` and its writer test.
+- [x] Phase 3 row draft with the packet.
+- [x] Required checks exit 0.
 
 ## Source material
 
