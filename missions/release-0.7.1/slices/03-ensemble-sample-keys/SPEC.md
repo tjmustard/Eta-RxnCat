@@ -10,10 +10,10 @@ intent: "Expose each TS ensemble sample's stage keys on TSEnsembleRun, switch th
 depends_on: [OPR.0.7.1.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_selectivity
 parent: null
-hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/__init__.py, "tests/unit/orchestrator/test_ts_ensemble*.py", tests/e2e/v070.py, tests/e2e/test_v070_samples.py, spec/compiled/architecture.yml]
+hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/__init__.py, src/eta_rxncat/orchestrator/ts_fallback.py, "tests/unit/orchestrator/test_ts_ensemble*.py", tests/e2e/v070.py, tests/e2e/test_v070_samples.py, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", ., "--extend-exclude", spec/archive, "--extend-exclude", spec/process], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/orchestrator, tests/e2e/test_v070_samples.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -103,12 +103,12 @@ the same 5400 s bound) and any record field the switch changes, which the byte c
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] `SampleKeys`, the field, the runner fill, the export.
-- [ ] Unit tests.
-- [ ] E2E switch and `test_v070_samples.py`.
-- [ ] Required checks; commit.
-- [ ] Parity rerun in a worktree (host check first); remove the worktree; updater once.
+- [x] Index.
+- [x] `SampleKeys`, the field, the runner fill, the export.
+- [x] Unit tests.
+- [x] E2E switch and `test_v070_samples.py`.
+- [x] Required checks; commit.
+- [x] Parity rerun in a worktree (host check first); remove the worktree; updater once.
 
 ## 4. The Negative Space (Constraints)
 
