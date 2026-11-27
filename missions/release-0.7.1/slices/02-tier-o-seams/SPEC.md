@@ -10,7 +10,7 @@ intent: "Check every offline module seam (store, species runner, UFF, geomeTRIC,
 depends_on: [OPR.0.7.1.1]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", spec/compiled/architecture.yml]
@@ -106,11 +106,11 @@ is measured first with a stop line.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] M2 baseline.
-- [ ] T-O1…T-O3.
-- [ ] T-O4…T-O6 and parity.
-- [ ] M2 after; required checks; commit; updater once.
+- [x] Index.
+- [x] M2 baseline.
+- [x] T-O1…T-O3.
+- [x] T-O4…T-O6 and parity.
+- [x] M2 after; required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
