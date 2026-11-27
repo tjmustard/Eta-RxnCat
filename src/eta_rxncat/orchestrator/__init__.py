@@ -47,6 +47,7 @@ if TYPE_CHECKING:
     )
     from eta_rxncat.orchestrator.ts import TSRecipe, TSRunResult, TSSpec, run_transition_state
     from eta_rxncat.orchestrator.ts_ensemble import (
+        SampleKeys,
         TSEnsembleRun,
         run_ts_ensemble,
         run_ts_ensemble_detailed,
@@ -72,6 +73,7 @@ _LAZY: dict[str, str] = {
     "ReactionSpec": "reaction",
     "Recipe": "species",
     "RunMetrics": "species",
+    "SampleKeys": "ts_ensemble",
     "SelectivityInputError": "selectivity",
     "SinglePoint": "species",
     "SpeciesResult": "species",
@@ -126,6 +128,7 @@ __all__ = [
     "ReactionSpec",
     "Recipe",
     "RunMetrics",
+    "SampleKeys",
     "SelectivityInputError",
     "SinglePoint",
     "SpeciesResult",

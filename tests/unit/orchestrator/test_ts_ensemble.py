@@ -26,6 +26,7 @@ from eta_rxncat.core import (
     MolecularState,
     OptimizationResult,
     OptimizerIdentity,
+    SeedCheckDetail,
     TSEnsemble,
     TSEnsembleOptions,
     TSSearchResult,
@@ -609,6 +610,79 @@ def test_run_ts_ensemble_returns_the_ensemble(tmp_path: Path) -> None:
     assert relax.calls == 0  # served from the same store
     assert isinstance(plain, TSEnsemble)
     assert plain == detailed.ensemble
+
+
+# --- Per-sample stage keys (v0.7.1, R37) ---------------------------------------------------------
+
+
+def test_sample_keys_name_every_samples_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The seed, a searched, a pre-relax-failed and a clashed sample, in draw order."""
+    import eta_rxncat.orchestrator.ts_ensemble as module
+
+    checked: list[MolecularState] = []
+
+    def clash_the_third(state: MolecularState, topology: Any) -> SeedCheckDetail | None:
+        checked.append(state)
+        if len(checked) != 3:
+            return None
+        return SeedCheckDetail(
+            check="clash", pair=(0, 5), distance_angstrom=0.5, ratio_to_covalent_sum=0.4
+        )
+
+    monkeypatch.setattr(module, "find_clash", clash_the_third)
+    path = tmp_path / "s.sqlite"
+    with ArtifactStore(path) as store:
+        run = run_ts_ensemble_detailed(
+            seed_spec(),
+            recipe(),
+            store,
+            optimizer=TagRelax(["B", "pre_fail"]),
+            core_indices=CORE,
+            pathway="endo",
+            reactant_key=REACTANTS,
+            options=TSEnsembleOptions(n_perturb=3, max_research=3),
+            member_gates=gates,
+            seed_checks=True,
+        )
+        rows = {
+            kind: set(store.query(kind)) for kind in ("constrained_preopt", "ts_opt", "frequency")
+        }
+    assert reasons(run.ensemble) == {2: "pre_relax_failed:OptimizationFailedError", 3: "seed_clash"}
+    seed, searched, failed, clashed = run.samples
+    assert [s.index for s in run.samples] == [0, 1, 2, 3]
+    assert seed.source == "seed"
+    sources = {m.index: m.source for m in [*run.ensemble.members, *run.ensemble.excluded]}
+    assert all(s.source == sources[s.index] for s in run.samples if s.index in sources)
+    assert all(s.source.startswith(("fragment_embed:", "perturb:")) for s in run.samples[1:])
+    # The runner never pre-relaxes the seed it is given.
+    assert seed.pre_relax_key is None
+    assert seed.ts_opt_key == run.seed_result.keys["ts_opt"]
+    assert seed.frequency_key == run.seed_result.keys["frequency"]
+    assert None not in (searched.pre_relax_key, searched.ts_opt_key, searched.frequency_key)
+    assert failed.pre_relax_key is not None
+    assert (failed.ts_opt_key, failed.frequency_key) == (None, None)
+    assert (clashed.pre_relax_key, clashed.ts_opt_key, clashed.frequency_key) == (None, None, None)
+    assert rows["constrained_preopt"] == {searched.pre_relax_key, failed.pre_relax_key}
+    for sample in run.samples:
+        assert sample.ts_opt_key is None or sample.ts_opt_key in rows["ts_opt"]
+        assert sample.frequency_key is None or sample.frequency_key in rows["frequency"]
+
+
+def test_a_cached_run_records_the_same_sample_keys(tmp_path: Path) -> None:
+    """The keys come from cache hits too, so a rerun records the same ones."""
+    path = tmp_path / "s.sqlite"
+    first, _ = ensemble(path, SCRIPT_REASONS)
+    second, _ = ensemble(path, SCRIPT_REASONS)
+    assert second.samples == first.samples
+    assert [s.index for s in first.samples] == list(range(OPTIONS.max_research + 1))
+
+
+def test_a_failed_seed_records_only_the_seed(tmp_path: Path) -> None:
+    """Nothing is sampled, so the only entry is the seed's."""
+    run, _ = ensemble(tmp_path / "s.sqlite", seed_tag="fail")
+    assert [(s.index, s.source) for s in run.samples] == [(0, "seed")]
 
 
 # --- The pre-relax wall budget (slice 13; R28) -------------------------------------------------

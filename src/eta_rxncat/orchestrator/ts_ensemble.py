@@ -13,7 +13,7 @@ The pre-relaxation optimizer is injected: this module never imports geomeTRIC (G
 import math
 import time
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 import numpy as np
@@ -98,6 +98,26 @@ MemberGates = Callable[[TSRunResult], Mapping[str, bool]]
 
 
 @dataclass(frozen=True)
+class SampleKeys:
+    """The stage keys of one sample's cached rows (v0.7.1, R37).
+
+    Attributes:
+        index: The sample's index in the ensemble; 0 is the seed.
+        source: ``seed``, ``fragment_embed:<k>`` or ``perturb:<k>``.
+        pre_relax_key: The ``constrained_preopt`` row's key, if the sample was pre-relaxed. The
+            seed's is set only by ``run_ts_with_fallback``, which pre-relaxes it.
+        ts_opt_key: The ``ts_opt`` row's key, if the sample was searched.
+        frequency_key: The ``frequency`` row's key, if computed.
+    """
+
+    index: int
+    source: str
+    pre_relax_key: str | None
+    ts_opt_key: str | None
+    frequency_key: str | None
+
+
+@dataclass(frozen=True)
 class TSEnsembleRun:
     """An ensemble with the per-stage metrics and the seed's own run.
 
@@ -115,6 +135,11 @@ class TSEnsembleRun:
     """Sampling stopped at ``max_pre_relax_timeouts`` timed-out pre-relaxations (v0.7.0, R6)."""
     total_pre_relax_wall_time_s: float = 0.0
     """Sum of the samples' pre-relaxation wall times, as stored in their cached rows."""
+    samples: tuple[SampleKeys, ...] = ()
+    """The seed, then every sample in draw order up to where sampling stopped (v0.7.1, R37).
+
+    A ``seed_clash`` sample ran nothing, so its three keys are ``None``.
+    """
 
 
 @dataclass
@@ -275,6 +300,8 @@ class _PreRelax:
         self.engine = CountingEngine(build_engine(recipe.engine_stage, recipe.engine_runtime))
         self.engine.kind = PRE_RELAX_KIND
         self.metrics = StageMetrics()
+        self.last_key: str | None = None
+        """The key of the row the latest ``run`` read or wrote."""
 
     def stage(self) -> StageConfig:
         """The keyed stage: engine options, resolved ``opt.`` minimize options, frozen core."""
@@ -291,6 +318,7 @@ class _PreRelax:
     def run(self, state: MolecularState) -> tuple[MolecularState | None, str | None, float]:
         """Return (relaxed state or None, failure reason or None, wall time of the relaxation)."""
         key = build_stage_key(state, self.stage(), self.engine.identity)
+        self.last_key = key.key
         stored = self.store.get(key)
         if stored is not None:
             self.metrics.cache_hits += 1
@@ -377,6 +405,7 @@ def run_ts_ensemble_detailed(
     temperature_k = recipe.thermo_config.temperature_k
     rt = R_GAS * temperature_k * J_PER_MOL_TO_HARTREE
     metrics = {kind: StageMetrics() for kind in STAGE_KINDS}
+    sample_keys: list[SampleKeys] = []
 
     def fail(
         reason: str, seed_result: TSRunResult, detail: SeedCheckDetail | None = None
@@ -390,11 +419,20 @@ def run_ts_ensemble_detailed(
             reason=reason,
             detail=detail,
         )
-        return TSEnsembleRun(ensemble, metrics, seed_result)
+        return TSEnsembleRun(ensemble, metrics, seed_result, samples=tuple(sample_keys))
 
     seed_result = run_transition_state(seed, recipe, store)
     for kind in ("ts_opt", "frequency"):
         _add(metrics[kind], seed_result.metrics[kind])
+    sample_keys.append(
+        SampleKeys(
+            0,
+            "seed",
+            None,
+            seed_result.keys.get("ts_opt"),
+            seed_result.keys.get("frequency"),
+        )
+    )
     if seed_result.record is None:
         return fail(f"seed:{seed_result.failed_reason}", seed_result)
     pairs = _sorted_pairs(seed.forming_bonds)
@@ -466,8 +504,10 @@ def run_ts_ensemble_detailed(
             clash = find_clash(sample.state, [*seed_bonds, *pairs])
             if clash is not None:
                 exclude(index, sample.source, "seed_clash", None, clash)
+                sample_keys.append(SampleKeys(index, sample.source, None, None, None))
                 continue
         relaxed, reason, wall = pre_relax.run(sample.state)
+        sample_keys.append(SampleKeys(index, sample.source, pre_relax.last_key, None, None))
         wall_times.append(wall)
         if relaxed is None:
             exclude(index, sample.source, str(reason), wall)
@@ -493,6 +533,11 @@ def run_ts_ensemble_detailed(
         )
         for kind in ("ts_opt", "frequency"):
             _add(metrics[kind], result.metrics[kind])
+        sample_keys[-1] = replace(
+            sample_keys[-1],
+            ts_opt_key=result.keys.get("ts_opt"),
+            frequency_key=result.keys.get("frequency"),
+        )
         if result.record is None:
             exclude(index, sample.source, str(result.failed_reason), wall)
             continue
@@ -607,6 +652,7 @@ def run_ts_ensemble_detailed(
         max_pre_relax_wall_time_s=max(wall_times) if wall_times else None,
         stall_cap_reached_bool=stall_cap_reached,
         total_pre_relax_wall_time_s=math.fsum(wall_times),
+        samples=tuple(sample_keys),
     )
 
 
@@ -702,6 +748,7 @@ __all__ = [
     "PRE_RELAX_BUDGET_S",
     "PRE_RELAX_OPTIONS",
     "SEED_CLASH_FACTOR",
+    "SampleKeys",
     "TSEnsembleRun",
     "bond_changes",
     "find_clash",

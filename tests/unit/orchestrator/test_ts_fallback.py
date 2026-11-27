@@ -335,6 +335,26 @@ def test_an_unknown_reason_stops(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert not module.falls_through("seed:gate_failed:")
 
 
+def test_the_seed_sample_names_the_graft_pre_relax_row(tmp_path: Path) -> None:
+    """v0.7.1 R37: ``samples[0].pre_relax_key`` is the chosen template's pre-relax row."""
+    path = tmp_path / "s.sqlite"
+    built = candidate()
+    record, run = fallback(path, TagRelax(), built)
+    assert run is not None and record.chosen_template_id == f"t1__{CID}"
+    recipe = stub_recipe()
+    inputs = enumerated_pathway_inputs(built, "ts", f"t1__{CID}", recipe, gates)
+    with ArtifactStore(path) as store:
+        pre = ensemble_module._PreRelax(recipe, store, TagRelax(), inputs.core_indices)
+        expected = build_stage_key(inputs.seed.start, pre.stage(), pre.engine.identity).key
+        rows = set(store.query("constrained_preopt"))
+    seed = run.samples[0]
+    assert (seed.index, seed.source) == (0, "seed")
+    assert seed.pre_relax_key == expected
+    assert expected in rows
+    assert expected not in {s.pre_relax_key for s in run.samples[1:]}
+    assert seed.ts_opt_key == run.seed_result.keys["ts_opt"]
+
+
 def test_every_search_failure_reason_is_classified() -> None:
     """A new ``TSSearchFailureReason`` must be put on one side of R4."""
     declared = set(get_args(TSSearchFailureReason))

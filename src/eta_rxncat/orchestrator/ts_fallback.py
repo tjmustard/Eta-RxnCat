@@ -9,6 +9,7 @@ its own, so a rerun re-derives the same ``FallbackRecord`` from the cached rows.
 
 from collections import Counter
 from collections.abc import Sequence
+from dataclasses import replace
 
 from rdkit import Chem
 from rdkit.Chem import rdDetermineBonds
@@ -351,6 +352,7 @@ def run_ts_with_fallback(
             continue
         pre_relax = _PreRelax(recipe, store, optimizer, inputs.core_indices)
         relaxed, reason, wall = pre_relax.run(inputs.seed.start)
+        seed_pre_relax_key = pre_relax.last_key
         if relaxed is None:
             if reason == f"pre_relax_failed:{PreRelaxTimeout.__name__}":
                 reason = "graft_pre_relax_timeout"
@@ -397,7 +399,8 @@ def run_ts_with_fallback(
             record = FallbackRecord(
                 node_id=node_id, attempts=attempts, chosen_template_id=template.id
             )
-            return record, run
+            seed_keys = replace(run.samples[0], pre_relax_key=seed_pre_relax_key)
+            return record, replace(run, samples=(seed_keys, *run.samples[1:]))
         reason = failed or "no_member"
         if falls_through(reason):
             note("fell_through", reason, wall, run.ensemble.failed_detail)

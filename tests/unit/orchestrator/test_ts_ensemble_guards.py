@@ -95,6 +95,8 @@ def test_the_cap_stops_sampling_after_two_timeouts(tmp_path: Path) -> None:
     assert reasons(result.ensemble) == {2: TIMEOUT, 4: TIMEOUT}
     assert result.ensemble.failed_reason is None
     assert [m.index for m in result.ensemble.members] == [0, 1]
+    assert [s.index for s in result.samples] == [0, 1, 2, 3, 4]  # up to where sampling stopped
+    assert result.samples[4].pre_relax_key is not None and result.samples[4].ts_opt_key is None
 
 
 def test_no_cap_samples_everything(tmp_path: Path) -> None:

@@ -6,8 +6,8 @@ block mirrors the ``EnumerationPlan`` fields, with every structure given as an `
 rest and refuse unknown keys.
 
 Units (mission G7): ``run_unit`` runs one (R x pathway) unit of one recipe through
-``run_ts_with_fallback`` and the species runner twice in one store, derives the per-sample stage
-keys ``TSEnsembleRun`` does not expose, and ``unit_gates``/``unit_record`` judge it and build its
+``run_ts_with_fallback`` and the species runner twice in one store, records the per-sample stage
+keys of ``TSEnsembleRun.samples``, and ``unit_gates``/``unit_record`` judge it and build its
 ``RunRecord``. ``score_pair`` scores the two pathways of one (R, engine).
 
 Fallback units (slice 12, mission G8): ``run_fallback_unit`` does the same for one construct of
@@ -54,17 +54,14 @@ from eta_rxncat.orchestrator import (
     SpeciesResult,
     SpeciesSpec,
     TSEnsembleRun,
-    TSSpec,
     activation_free_energy,
     build_engine,
     enumerated_pathway_inputs,
     run_species,
-    run_transition_state,
     run_ts_with_fallback,
     score_selectivity,
 )
 from eta_rxncat.orchestrator.counting import CountingEngine
-from eta_rxncat.orchestrator.ts import _sorted_pairs
 from eta_rxncat.orchestrator.ts_ensemble import PRE_RELAX_KIND, _digest, _PreRelax
 from eta_rxncat.review import export_run_data
 from eta_rxncat.review.run_data import (
@@ -79,7 +76,7 @@ from eta_rxncat.review.run_data import (
     RecordUnitRef,
     RunRecord,
 )
-from eta_rxncat.store import ArtifactStore, build_stage_key
+from eta_rxncat.store import KEY_SCHEMA, ArtifactStore, StageKey
 
 E2E5 = DATA / "e2e5"
 ENUMERATION_YAML = E2E5 / "v070_enumeration.yaml"
@@ -373,6 +370,22 @@ def _one_pass(
     return UnitPass(record, run, reactants, time.perf_counter() - start, engine_calls, new_rows)
 
 
+def stored_row(store: ArtifactStore, kind: str, key: str) -> dict[str, Any] | None:
+    """The completed row under a stage key's hex digest, or ``None``."""
+    # ``ArtifactStore.get`` looks a row up by ``StageKey.key`` alone (the primary key).
+    return store.get(
+        StageKey(
+            key_schema=KEY_SCHEMA,
+            geometry_hash="",
+            stage_hash="",
+            key=key,
+            stage_kind=kind,
+            engine="",
+            engine_version="",
+        )
+    )
+
+
 def derive_samples(
     candidate: EnumeratedCandidate,
     pathway: PathwaySpec,
@@ -384,101 +397,36 @@ def derive_samples(
 ) -> tuple[list[RecordSample], list[dict[str, Any]]]:
     """The stage keys of every sample of the chosen ensemble, and its timeout rows.
 
-    ``TSEnsembleRun`` exposes no per-sample keys, so they are re-derived the way the runner builds
-    them (same sampler, same pre-relax key, a cached ``run_transition_state``). Only rows already
-    in the store are read back through the runners, so nothing is computed.
+    The keys are ``run.samples`` as the runner recorded them (v0.7.1, R37), so a clashed sample
+    (v0.7.0, R35) has none, whatever rows an earlier run left in the store. Nothing is computed:
+    the timeout rows are read from the store, and the samples are redrawn (no engine) only to
+    check the members' start digests.
 
     Raises:
-        AssertionError: The derived samples do not cover the ensemble's members, exclusions and
-            merges, or a member's start digest differs.
+        AssertionError: A pre-relaxation row is missing, the samples do not cover the ensemble's
+            members, exclusions and merges, or a member's start digest differs.
     """
-    options = TSEnsembleOptions()
-    tsr = ts_recipe(recipe)
-    inputs = enumerated_pathway_inputs(
-        candidate, pathway.node_id, template_id, tsr, member_gates(recipe_name)
-    )
-    pre = _PreRelax(tsr, store, GeometricOptimizer(), inputs.core_indices)
-
-    def key_of(state: MolecularState) -> str:
-        return build_stage_key(state, pre.stage(), pre.engine.identity).key
-
-    def row_of(state: MolecularState) -> dict[str, Any] | None:
-        return store.get(build_stage_key(state, pre.stage(), pre.engine.identity))
-
     timeouts: list[dict[str, Any]] = []
-
-    def note_timeout(index: int, row: Mapping[str, Any]) -> None:
-        if str(row.get("failed_reason")) == TIMEOUT_REASONS[0]:
-            fields = ("wall_time_s", "budget_s", "load1", "budget_kind")
-            timeouts.append({"sample_index": index, **{k: row.get(k) for k in fields}})
-
-    graft_row = row_of(inputs.seed.start)
-    assert graft_row is not None, "no graft pre-relax row"
-    note_timeout(0, graft_row)
-    species_id = template_id
-    samples = [
-        RecordSample(
-            template_id=template_id,
-            sample_index=0,
-            source="seed",
-            species_id=species_id,
-            pre_relax_key=key_of(inputs.seed.start),
-            ts_opt_key=run.seed_result.keys.get("ts_opt"),
-            frequency_key=run.seed_result.keys.get("frequency"),
-        )
-    ]
-    assert run.seed_result.record is not None
-    seed_final = run.seed_result.record.state
-    bonds = perceive_bonds(seed_final)
-    drawn = sample_ts_conformers(
-        seed_final, inputs.core_indices, _sorted_pairs(inputs.seed.forming_bonds), bonds, options
-    )
-    digests: dict[int, str] = {}
-    # A clashing start (R35) made no engine call, so it has no rows of this run; a store copied from
-    # an earlier run still holds that run's rows for it, which must not enter this record.
-    clashed = {e.index for e in run.ensemble.excluded if e.reason == "seed_clash"}
-    for index, sample in enumerate(drawn[: options.max_research], start=1):
-        if index in clashed:
-            samples.append(
-                RecordSample(
-                    template_id=template_id,
-                    sample_index=index,
-                    source=sample.source,
-                    species_id=species_id,
-                )
-            )
-            continue
-        row = row_of(sample.state)
-        if row is None:
-            break  # sampling stopped at the stall cap
-        note_timeout(index, row)
-        digests[index] = _digest(sample.state)
-        ts_opt_key = frequency_key = None
-        if "failed_reason" not in row:
-            relaxed, _, _ = pre.run(sample.state)
-            assert relaxed is not None
-            result = run_transition_state(
-                TSSpec(
-                    ts_id=f"{inputs.seed.ts_id}:{sample.source}",
-                    start=relaxed,
-                    forming_bonds=inputs.seed.forming_bonds,
-                ),
-                tsr,
-                store,
-            )
-            ts_opt_key = result.keys.get("ts_opt")
-            frequency_key = result.keys.get("frequency")
+    samples: list[RecordSample] = []
+    for keys in run.samples:
+        if keys.pre_relax_key is not None:
+            row = stored_row(store, PRE_RELAX_KIND, keys.pre_relax_key)
+            assert row is not None, f"no pre-relax row for sample {keys.index}"
+            if str(row.get("failed_reason")) == TIMEOUT_REASONS[0]:
+                fields = ("wall_time_s", "budget_s", "load1", "budget_kind")
+                timeouts.append({"sample_index": keys.index, **{k: row.get(k) for k in fields}})
         samples.append(
             RecordSample(
                 template_id=template_id,
-                sample_index=index,
-                source=sample.source,
-                species_id=species_id,
-                pre_relax_key=key_of(sample.state),
-                ts_opt_key=ts_opt_key,
-                frequency_key=frequency_key,
+                sample_index=keys.index,
+                source=keys.source,
+                species_id=template_id,
+                pre_relax_key=keys.pre_relax_key,
+                ts_opt_key=keys.ts_opt_key,
+                frequency_key=keys.frequency_key,
             )
         )
+    assert samples and samples[0].pre_relax_key is not None, "no graft pre-relax row"
     ensemble = run.ensemble
     judged = (
         {m.index for m in ensemble.members}
@@ -486,9 +434,21 @@ def derive_samples(
         | {m.merged_index for m in ensemble.merges}
     )
     assert judged == {s.sample_index for s in samples}, (judged, samples)
+    inputs = enumerated_pathway_inputs(
+        candidate, pathway.node_id, template_id, ts_recipe(recipe), member_gates(recipe_name)
+    )
+    assert run.seed_result.record is not None
+    seed_final = run.seed_result.record.state
+    drawn = sample_ts_conformers(
+        seed_final,
+        inputs.core_indices,
+        sorted((min(i, j), max(i, j)) for i, j in inputs.seed.forming_bonds),
+        perceive_bonds(seed_final),
+        TSEnsembleOptions(),
+    )
     for member in ensemble.members:
         if member.index:
-            assert member.start_sha256 == digests[member.index]
+            assert member.start_sha256 == drawn[member.index - 1].start_sha256
     return samples, timeouts
 
 
