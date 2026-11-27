@@ -265,10 +265,10 @@ def project_version() -> str:
 
 
 def readme_sections(version: str) -> list[str]:
-    """The eight README section titles at ``version`` (the Features title carries the version)."""
+    """The eight README section titles (Features is plain; its subsections carry the versions)."""
     return [
         "What is Eta-RxnCat?",
-        f"Features (v{version})",
+        "Features",
         "Installation",
         "Usage",
         "Development",
@@ -291,8 +291,9 @@ def _section(text: str, start: str, end: str) -> str:
 def check_version_identity(readme_text: str, version: str) -> list[str]:
     """R50: the README's badge, Features heading and Roadmap match ``version``.
 
-    The release badge is ``release-v<version>``; the Features heading is ``Features (v<version>)``;
-    the Roadmap's ``### Built`` lists every plan version up to and including ``<version>``, and
+    The release badge is ``release-v<version>``; the Features section is titled plainly
+    ``Features`` and its newest (last) ``###`` subsection ends ``(v<version>)``; the Roadmap's
+    ``### Built`` lists every plan version up to and including ``<version>``, and
     ``### Planned, not yet built`` lists every later one and no built one. Each problem names the
     part it is about (``badge``, ``heading``, ``roadmap``).
     """
@@ -302,8 +303,12 @@ def check_version_identity(readme_text: str, version: str) -> list[str]:
         problems.append(f"badge: no release-v{version} badge")
     headings = [line[3:] for line in readme_text.splitlines() if line.startswith("## ")]
     titles = [h.split(" ", 1)[1] for h in headings if " " in h]
-    if f"Features (v{version})" not in titles:
-        problems.append(f"heading: no 'Features (v{version})' section")
+    if "Features" not in titles:
+        problems.append("heading: no 'Features' section")
+    features = _section(readme_text, "## ✨ Features", "\n## ")
+    subsections = re.findall(r"^### (.+)$", features, flags=re.M)
+    if not subsections or not subsections[-1].endswith(f"(v{version})"):
+        problems.append(f"heading: newest Features subsection is not (v{version})")
     roadmap = _section(readme_text, "## 🧭 Roadmap", "\n## ")
     built_text = _section(roadmap, "### Built", "\n### ")
     planned_text = _section(roadmap, "### Planned, not yet built", "\n### ")
@@ -317,6 +322,28 @@ def check_version_identity(readme_text: str, version: str) -> list[str]:
         problems.append(f"roadmap: '### Planned, not yet built' does not list {missing}")
     if wrong := sorted(built & _bold_versions(planned_text)):
         problems.append(f"roadmap: '### Planned, not yet built' lists built {wrong}")
+    return problems
+
+
+def listing_problems(readme_text: str) -> list[str]:
+    """The Features subsections, the pitch bullets and the Roadmap's ``### Built`` list agree.
+
+    The Features subsection versions, in order, equal the Built versions exactly (v0.1.0
+    included). Both, minus v0.1.0 (the intro covers the foundation), equal the pitch bullet
+    versions in order.
+    """
+    features = _section(readme_text, "## ✨ Features", "\n## ")
+    shown = re.findall(r"^### .*\(v(\d+\.\d+\.\d+)\)$", features, flags=re.M)
+    roadmap = _section(readme_text, "## 🧭 Roadmap", "\n## ")
+    built = re.findall(r"\*\*v(\d+\.\d+\.\d+)\*\*", _section(roadmap, "### Built", "\n### "))
+    pitch = [v for line in _pitch_bullets(readme_text) or [] for v in PITCH_BULLET.findall(line)]
+    problems = []
+    if shown != built:
+        problems.append(f"features: subsections {shown} != roadmap built {built}")
+    if [v for v in shown if v != "0.1.0"] != pitch:
+        problems.append(f"features: subsections {shown} (minus v0.1.0) != pitch {pitch}")
+    if [v for v in built if v != "0.1.0"] != pitch:
+        problems.append(f"roadmap: built {built} (minus v0.1.0) != pitch {pitch}")
     return problems
 
 
@@ -350,6 +377,20 @@ PITCH_INTRO = re.compile(r'<p align="center">\s*<strong>[^<]+</strong>\s*</p>')
 PITCH_BULLET = re.compile(r"^- .*\(v(\d+\.\d+\.\d+)\)[;.]$")
 
 
+def _pitch_bullets(readme_text: str) -> list[str] | None:
+    """The bullet lines after the centred intro, or ``None`` when there is no intro."""
+    match = PITCH_INTRO.search(readme_text)
+    if match is None:
+        return None
+    block: list[str] = []
+    for line in readme_text[match.end() :].splitlines():
+        if line.startswith("- "):
+            block.append(line)
+        elif line.strip():
+            break
+    return block
+
+
 def pitch_problems(readme_text: str, version: str) -> list[str]:
     """The README pitch is a centred bold intro, then a Markdown list with one bullet per version.
 
@@ -357,15 +398,9 @@ def pitch_problems(readme_text: str, version: str) -> list[str]:
     ``(vX.Y.Z).``. Its versions, in order, equal the Roadmap's ``### Built`` versions minus v0.1.0
     (the intro covers the foundation), and its last bullet is ``version``.
     """
-    match = PITCH_INTRO.search(readme_text)
-    if match is None:
+    block = _pitch_bullets(readme_text)
+    if block is None:
         return ["pitch: no centred bold intro paragraph"]
-    block: list[str] = []
-    for line in readme_text[match.end() :].splitlines():
-        if line.startswith("- "):
-            block.append(line)
-        elif line.strip():
-            break
     problems = []
     if not block:
         problems.append("pitch: no version list after the intro")
@@ -439,8 +474,9 @@ def synthetic_readme(version: str, built: tuple[str, ...], planned: tuple[str, .
     lines = [
         f'<img src="https://img.shields.io/badge/release-v{version}-blue" alt="Latest Release"/>',
         "",
-        f"## ✨ Features (v{version})",
+        "## ✨ Features",
         "",
+        *[line for v in built for line in (f"### Release notes (v{v})", "")],
         "## 🧭 Roadmap",
         "",
     ]
@@ -478,6 +514,23 @@ def test_version_identity_missing_planned_version_fails() -> None:
     """v0.3.0 missing from Planned fails."""
     text = synthetic_readme("0.2.0", ("0.1.0", "0.2.0"), PLAN_VERSIONS[3:])
     assert any("does not list ['0.3.0']" in p for p in check_version_identity(text, "0.2.0"))
+
+
+def test_readme_features_pitch_and_roadmap_agree() -> None:
+    """The real README's Features subsections, pitch bullets and Built list agree."""
+    assert listing_problems(readme()) == []
+
+
+def test_listing_mismatch_fails() -> None:
+    """A complete pitch and Features list passes; dropping v0.2.0 from either side is reported."""
+    intro = '<p align="center">\n    <strong>Intro.</strong>\n</p>\n\n'
+    roadmap = synthetic_readme("0.3.0", ("0.1.0", "0.2.0", "0.3.0"), PLAN_VERSIONS[3:])
+    complete = intro + "- engines (v0.2.0);\n- sweeps (v0.3.0).\n\n" + roadmap
+    assert listing_problems(complete) == []
+    no_feature = complete.replace("### Release notes (v0.2.0)\n\n", "")
+    assert any("features: subsections" in p for p in listing_problems(no_feature))
+    no_pitch = complete.replace("- engines (v0.2.0);\n", "")
+    assert any("pitch" in p for p in listing_problems(no_pitch))
 
 
 GPU_PASS_PHRASE = "GPU acceptance passed"
