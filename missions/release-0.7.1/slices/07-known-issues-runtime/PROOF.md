@@ -11,6 +11,7 @@
 ## Artifacts
 
 - proof/07-execute.md - guard CLEAR: 12 new tests fail at bf7b949 then pass; full pytest 2878 passed; Tier X 6 passed 0 skipped; 15 v0.7.0 records byte-identical
+- proof/07-qa.md - qa PASS: audit: 12 new-contract tests fail at bf7b949, all pass after; held-lock bounded (30 s fail with no releaser); 15 v0.7.0 records byte-identical; core diff empty; full pytest 2878 passed; Tier X 6/0/0
 
 ## Residue / caveats
 
