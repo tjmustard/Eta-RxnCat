@@ -1,0 +1,12 @@
+diff --git a/src/eta_rxncat/store/keys.py b/src/eta_rxncat/store/keys.py
+index 595fbae..10dc96d 100644
+--- a/src/eta_rxncat/store/keys.py
++++ b/src/eta_rxncat/store/keys.py
+@@ -74,7 +74,6 @@ def stage_payload(stage: StageConfig, engine: EngineIdentity) -> dict[str, objec
+         },
+         "frozen_atom_indices": sorted(stage.frozen_atom_indices),
+         "options": {key: canonical_number(value) for key, value in stage.options.items()},
+-        "engine_identity": {"name": engine.name, "version": engine.version, "model": engine.model},
+     }
+ 
+ 

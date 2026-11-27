@@ -1,0 +1,13 @@
+diff --git a/tests/integration/conftest.py b/tests/integration/conftest.py
+index 621a081..6045cad 100644
+--- a/tests/integration/conftest.py
++++ b/tests/integration/conftest.py
+@@ -90,7 +90,7 @@ def load_v070_plan(path: Path = V070_ENUMERATION_YAML) -> V070Plan:
+     missing, extra = sorted(expected - set(data)), sorted(set(data) - expected)
+     if missing or extra:
+         raise ValueError(f"{path}: top-level keys: missing {missing}, unknown {extra}")
+-    base = path.parent
++    base = ROOT
+     graph = dict(data["reference_graph"])
+     graph["nodes"] = [
+         {**node, "templates": [_template(base, t) for t in node["templates"]]}

@@ -1,0 +1,107 @@
+{
+  "slice": "OPR.0.7.1.2",
+  "worktree": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02",
+  "worktree_commit": "fa7cc02",
+  "unbroken": "exit 0, 8 passed",
+  "breaks": [
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip",
+      "break_description": "stage_payload drops engine_identity (store/keys.py)",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O1-identity.patch",
+      "eta_file": "src/eta_rxncat/store/keys.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 5.01s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip",
+      "break_description": "ArtifactStore.get returns None",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O1-get-none.patch",
+      "eta_file": "src/eta_rxncat/store/artifact_store.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 4.77s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to2_reaction_energies_replay_from_reopened_store",
+      "break_description": "reaction_free_energy drops the first product's term",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O2-drop-term.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/reaction.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to2_reaction_energies_replay_from_reopened_store -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 3.65s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to3_conformer_stage_stores_members",
+      "break_description": "the conformer stage stores no members (_pool_payload members empty)",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O3-no-members.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/species.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to3_conformer_stage_stores_members -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 2.76s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft",
+      "break_description": "the enumerator skips the index_map remap of the forming bonds",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O4-bonds.patch",
+      "eta_file": "src/eta_rxncat/mapping/enumerator.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.04s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft",
+      "break_description": "the enumerator skips the index_map remap of the stages' frozen atoms",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O4-stages.patch",
+      "eta_file": "src/eta_rxncat/mapping/enumerator.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.04s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to5_candidate_graph_file_roundtrip",
+      "break_description": "dump_reaction_graph_json omits the node field priority",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O5-omit-field.patch",
+      "eta_file": "src/eta_rxncat/core/io.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to5_candidate_graph_file_roundtrip -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.04s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs",
+      "break_description": "enumerated_pathway_inputs returns the reference (template-index, ungrafted) forming bonds",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/O6-reference-bonds.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "2 failed in 0.06s",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_offline.py::test_plan_loader_parity",
+      "break_description": "the conftest loader resolves xyz against the repo root instead of the YAML dir",
+      "patch_file": "missions/release-0.7.1/slices/02-tier-o-seams/proof/seam_breaks/parity-root.patch",
+      "eta_file": "tests/integration/conftest.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest tests/integration/test_seams_offline.py::test_plan_loader_parity -q -p no:cacheprovider",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt-audit02/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.26s",
+      "failed": true
+    }
+  ]
+}

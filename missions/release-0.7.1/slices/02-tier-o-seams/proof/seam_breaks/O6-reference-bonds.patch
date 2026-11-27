@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/ts_fallback.py b/src/eta_rxncat/orchestrator/ts_fallback.py
+index 1cbfa39..3ee0db3 100644
+--- a/src/eta_rxncat/orchestrator/ts_fallback.py
++++ b/src/eta_rxncat/orchestrator/ts_fallback.py
+@@ -247,6 +247,8 @@ def enumerated_pathway_inputs(
+     if not records:
+         raise FallbackInputError(f"node '{node_id}': no ok graft record of template '{ref}'")
+     pairs, core = _compose_seed(records, node_id, ref)
++    _inv = {p: i for p, (s, i) in enumerate(records[-1].index_map or []) if s == "template"}
++    pairs = [(_inv[i], _inv[j]) for i, j in pairs]
+     start = MolecularState.model_validate(
+         {**template.components[0].state.model_dump(), "active_atom_indices": core}
+     )

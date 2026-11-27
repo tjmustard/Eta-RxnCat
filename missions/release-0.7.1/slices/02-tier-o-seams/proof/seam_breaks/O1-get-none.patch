@@ -1,0 +1,12 @@
+diff --git a/src/eta_rxncat/store/artifact_store.py b/src/eta_rxncat/store/artifact_store.py
+index 2009389..76dea75 100644
+--- a/src/eta_rxncat/store/artifact_store.py
++++ b/src/eta_rxncat/store/artifact_store.py
+@@ -252,6 +252,7 @@ class ArtifactStore:
+         if row is None:
+             return None
+         payload: dict[str, Any] = json.loads(row[0])
++        return None
+         return payload
+ 
+     def status(self, key: StageKey) -> ArtifactStatus | None:

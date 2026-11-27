@@ -13,6 +13,7 @@
 ## Artifacts
 
 - proof/02-execute.md - guard CLEAR: full pytest 2755 passed, 0 skipped; 8 Tier O ids pass; M2 added 40.0 s (limit 60 s); 9/9 seam breaks fail
+- proof/02-qa.md - qa PASS: Tier O 8/8 passed in default suite (2755 passed, 0 skipped); 9/9 seam breaks fail; +10.2 s
 
 ## Residue / caveats
 

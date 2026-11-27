@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/mapping/enumerator.py b/src/eta_rxncat/mapping/enumerator.py
+index c4f008c..46c599d 100644
+--- a/src/eta_rxncat/mapping/enumerator.py
++++ b/src/eta_rxncat/mapping/enumerator.py
+@@ -307,7 +307,7 @@ def _remap_stages(stages: Sequence[StageConfig], result: GraftResult) -> list[St
+     position = _template_positions(result.index_map)
+     return [
+         StageConfig.model_validate(
+-            {**dict(stage), "frozen_atom_indices": [position[i] for i in stage.frozen_atom_indices]}
++            {**dict(stage), "frozen_atom_indices": list(stage.frozen_atom_indices)}
+         )
+         for stage in stages
+     ]

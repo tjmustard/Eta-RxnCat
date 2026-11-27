@@ -14,7 +14,7 @@
 | id | slice | hacf_status | depends_on | last event |
 |---|---|---|---|---|
 | OPR.0.7.1.1 | 01-integration-harness | audited |  | 2026-11-27T19:58:32+00:00 audited |
-| OPR.0.7.1.2 | 02-tier-o-seams | executed | OPR.0.7.1.1 | 2026-11-27T20:33:39+00:00 executed |
+| OPR.0.7.1.2 | 02-tier-o-seams | audited | OPR.0.7.1.1 | 2026-11-27T20:44:56+00:00 audited |
 | OPR.0.7.1.3 | 03-ensemble-sample-keys | compiled | OPR.0.7.1.2 | 2026-11-27T19:37:14+00:00 compiled |
 | OPR.0.7.1.4 | 04-tier-x-ts-seams | compiled | OPR.0.7.1.3 | 2026-11-27T19:37:14+00:00 compiled |
 | OPR.0.7.1.5 | 05-tier-x-selectivity-review | compiled | OPR.0.7.1.4 | 2026-11-27T19:37:14+00:00 compiled |

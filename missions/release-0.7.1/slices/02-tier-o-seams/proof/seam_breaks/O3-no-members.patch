@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/species.py b/src/eta_rxncat/orchestrator/species.py
+index fb7c7b8..d843dba 100644
+--- a/src/eta_rxncat/orchestrator/species.py
++++ b/src/eta_rxncat/orchestrator/species.py
+@@ -480,7 +480,7 @@ def _pool_payload(pool: ConformerPool) -> dict[str, Any]:
+     return {
+         "members": [
+             {"id": m.source_id, "origin": m.origin, "xyz": [list(r) for r in m.state.coordinates]}
+-            for m in pool.members
++            for m in pool.members[:0]
+         ],
+         "failure_counts": {k: list(v) for k, v in sorted(pool.failure_counts.items())},
+         "pre_dedup_survivors": list(pool.pre_dedup_survivors),

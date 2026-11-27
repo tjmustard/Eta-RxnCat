@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/reaction.py b/src/eta_rxncat/orchestrator/reaction.py
+index 460239d..c0b756b 100644
+--- a/src/eta_rxncat/orchestrator/reaction.py
++++ b/src/eta_rxncat/orchestrator/reaction.py
+@@ -115,7 +115,7 @@ def reaction_free_energy(
+             ens = ensembles[species_id]
+             return ens.ensemble_gibbs_hartree if fn == "G" else _weighted(ens, fn)
+ 
+-        prod = math.fsum(c * value(s) for s, c in spec.products)
++        prod = math.fsum(c * value(s) for s, c in spec.products[1:])
+         reac = math.fsum(c * value(s) for s, c in spec.reactants)
+         return (prod - reac) * HARTREE_KCAL_MOL
+ 

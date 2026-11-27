@@ -1,0 +1,10 @@
+diff --git a/src/eta_rxncat/core/io.py b/src/eta_rxncat/core/io.py
+index 51425ee..742f9b0 100644
+--- a/src/eta_rxncat/core/io.py
++++ b/src/eta_rxncat/core/io.py
+@@ -117,4 +117,4 @@ def dump_reaction_graph_json(graph: ReactionGraph) -> str:
+     Returns:
+         Indented JSON text.
+     """
+-    return graph.model_dump_json(indent=2)
++    return graph.model_dump_json(indent=2, exclude={"nodes": {"__all__": {"priority"}}})

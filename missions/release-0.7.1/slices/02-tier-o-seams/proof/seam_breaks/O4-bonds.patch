@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/mapping/enumerator.py b/src/eta_rxncat/mapping/enumerator.py
+index c4f008c..c1d7aab 100644
+--- a/src/eta_rxncat/mapping/enumerator.py
++++ b/src/eta_rxncat/mapping/enumerator.py
+@@ -532,7 +532,7 @@ def _graft_template(
+         product_charge=result.product_charge,
+         product_multiplicity=result.product.spin_multiplicity,
+         mapped_forming_bonds=(
+-            [(position[i], position[j]) for i, j in bonds] if bonds_kept else None
++            [(i, j) for i, j in bonds] if bonds_kept else None
+         ),
+         constrained_core_product_indices=result.constrained_core_product_indices,
+         whole_input_charge_sum_holds_bool=result.whole_input_charge_sum_holds_bool,

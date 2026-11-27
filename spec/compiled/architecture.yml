@@ -910,7 +910,7 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_integration
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - tests/integration/**
   description: >-
@@ -922,8 +922,17 @@ nodes:
     returns V070Plan). test_integration_policy.py: AST scan failing on unittest.mock,
     monkeypatch beyond setenv/delenv/chdir, assignment into eta_rxncat names or sys.modules,
     setattr/delattr, imports of other tests packages, any skip/xfail form, gpu/mlip/slow
-    markers, and a test module without the integration pytestmark. No imports from
-    tests.unit or tests.e2e.
+    markers, and a test module without the integration pytestmark. test_seams_offline.py
+    (Tier O, slice 02, no engine binary): T-O1 butane run_species on UFF, rerun 0
+    rows/0 engine_calls, fresh-store equal keys, engine-identity key lookup, ThermoResult
+    payload round trip; T-O2 reaction_free_energy replay from a reopened store; T-O3
+    propanol conformer pool members stored, weights sum 1 within 1e-12; T-O4 enumerate_candidates
+    with the real graft on load_v070_plan (2 ok, RMSD <= 0.15, 0 contacts, 0/1, byte-equal)
+    plus an in-test variant plan naming template atom 17 to expose the index_map remap;
+    T-O5 dump_reaction_graph_json file round trip; T-O6 enumerated_pathway_inputs
+    seeds for TS1a_n/TS1a_x (find_clash None, composed forming bonds, core); test_plan_loader_parity
+    runs tests/e2e v070.load_enumeration in a subprocess and compares bytes. No imports
+    from tests.unit or tests.e2e.
   inputs: []
   outputs: []
   edges:
@@ -933,6 +942,10 @@ nodes:
     - eta_rxncat_optimize
     - eta_rxncat_selectivity
     - eta_rxncat_species_runner
+    - eta_rxncat_conformers
+    - eta_rxncat_engines
+    - eta_rxncat_mapping
+    - eta_rxncat_enumerator
     implements: []
     member_of: []
   spec_refs:
@@ -940,6 +953,6 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.2
   review:
-    reviewed_at: '2026-11-27T19:58:05+00:00'
-    reviewed_by: audit:OPR.0.7.1.1
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-27T20:44:28+00:00'
+    reviewed_by: audit:OPR.0.7.1.2
+    summary: patched description, edges.depends_on, edges.implements, edges.member_of
