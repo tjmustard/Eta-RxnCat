@@ -2,7 +2,7 @@
 id: OPR.0.7.1.6
 slice: 06-known-issues-tooling
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Fix the tooling and test-text known issues (t3 gated_on text, test-poli
 depends_on: [OPR.0.7.1.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [tests/e2e/t3.py, "tests/e2e/test_t3_*.py", tests/conftest.py, tests/unit/test_test_policy.py, tools/licence_gate.py, pyproject.toml, tests/unit/tools/test_licence_gate.py, docs/licence-inventory.md, tests/unit/review/test_assets.py, tests/unit/review/test_bundle_scans.py, tests/integration/test_integration_policy.py, spec/compiled/architecture.yml]

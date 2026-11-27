@@ -17,6 +17,7 @@ All in `proof/06-execute.md` (builder evidence, not a QA verdict):
 ## Artifacts
 
 - proof/06-execute.md - guard CLEAR: 21 new tests fail at bf7b949 and 31 at 1d26110, then pass; full pytest 2848 passed; R28 verdict sets equal
+- proof/06-qa.md - qa PASS: audit reproduced 21 fails at bf7b949 and 31 at 1d26110 (new tests only), all pass after; full pytest 2848 passed; R28 rows equal modulo label in 4 profiles
 
 ## Residue / caveats
 
