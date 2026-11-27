@@ -17,6 +17,7 @@ All in `proof/04-execute.md` (builder evidence, not a QA verdict):
 ## Artifacts
 
 - proof/04-execute.md - guard CLEAR: Tier X 4 passed 0 skipped; full pytest 2763 passed; ruff/format/mypy exit 0; 7 seam breaks fail
+- proof/04-qa.md - qa PASS: Tier X 4 passed 0 skipped (32.75 s); 8/8 seam breaks fail incl. R43 gates; full pytest 2763 passed 200 deselected
 
 ## Residue / caveats
 

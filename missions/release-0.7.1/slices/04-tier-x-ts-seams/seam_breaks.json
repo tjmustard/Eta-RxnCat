@@ -1,0 +1,117 @@
+{
+  "slice": "OPR.0.7.1.4",
+  "worktree": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit",
+  "worktree_commit": "35b95c1",
+  "unbroken": [
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch",
+      "exit_code": 0,
+      "outcome": "1 passed in 17.01s"
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed",
+      "exit_code": 0,
+      "outcome": "1 passed in 16.26s"
+    }
+  ],
+  "unbroken_module": "main checkout, Tier X command on the module: exit 0, 4 passed, 0 skipped, wall 32.75 s, max RSS 155556 kB",
+  "breaks": [
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay",
+      "break_description": "T-X1 break 1 (slice): run_transition_state skips storing the frequency row",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/x1-no-frequency-row.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 5.38s",
+      "failed_on": "E       assert 1 == 2",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay",
+      "break_description": "T-X1 break 2 (slice): the identity gate reads the wrong forming-bond order (partners swapped)",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/x1-bond-order.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 5.37s",
+      "failed_on": "E       AssertionError: {'mode_count': True, 'active_core': True, 'forming_overlap': False, 'forming_in_phase': False}",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx2_ensemble_sampler_relax_and_store",
+      "break_description": "T-X2 (slice): relax_constrained_core passes the non-core atoms as frozen_atom_indices",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/x2-freeze-noncore.patch",
+      "eta_file": "src/eta_rxncat/mapping/relax.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx2_ensemble_sampler_relax_and_store -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 6.00s",
+      "failed_on": "E       AssertionError: [TSEnsembleExclusion(index=1, source='fragment_embed:0', reason='pre_relax_failed:CoreDisplacementError', pre_relax_wall_time_s=0.5148128599394113, detail=None)]",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch",
+      "break_description": "T-X3/R43 (slice): the fallback runner drops expected_face: pre-check skipped and the ensemble gets expected_face=None",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/mis-drop-face.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 6.00s",
+      "failed_on": "E       AssertionError: assert ('chosen', None) == ('fell_throug...atch_pathway')",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch",
+      "break_description": "R43 gate isolation: only the runner's pre-ensemble face check skipped (ensemble still checks the face after searching)",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/mis-precheck-only.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 22.02s",
+      "failed_on": "E           AssertionError: ts_opt",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch",
+      "break_description": "T-X3/R43 (slice, 'compares against no face'): pre-check compares the face against None",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/mis-compare-none.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 1.33s",
+      "failed_on": "E       AssertionError: assert None == 'TS1a_n__ethyl'",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed",
+      "break_description": "T-X3 (same edit as mis-compare-none) on the unmodified plan",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/tx3-compare-none.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.74s",
+      "failed_on": "E       AssertionError: assert 'all_templates_failed' is None",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed",
+      "break_description": "T-X3 docstring break: the face comparison is inverted",
+      "patch_file": "missions/release-0.7.1/slices/04-tier-x-ts-seams/proof/seam_breaks/tx3-face-inverted.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/ts_fallback.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-04-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0704audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.78s",
+      "failed_on": "E       AssertionError: assert 'all_templates_failed' is None",
+      "failed": true
+    }
+  ],
+  "all_failed": true
+}

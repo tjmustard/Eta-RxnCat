@@ -2,7 +2,7 @@
 id: OPR.0.7.1.4
 slice: 04-tier-x-ts-seams
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Check the P-RFO, TS ensemble and seed fallback seams against CPU GFN2 x
 depends_on: [OPR.0.7.1.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", spec/compiled/architecture.yml]

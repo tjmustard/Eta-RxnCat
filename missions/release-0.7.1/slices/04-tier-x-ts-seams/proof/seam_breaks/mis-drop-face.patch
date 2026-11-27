@@ -1,0 +1,22 @@
+diff --git a/src/eta_rxncat/orchestrator/ts_fallback.py b/src/eta_rxncat/orchestrator/ts_fallback.py
+index e3c1ba1..a8007ea 100644
+--- a/src/eta_rxncat/orchestrator/ts_fallback.py
++++ b/src/eta_rxncat/orchestrator/ts_fallback.py
+@@ -374,7 +374,7 @@ def run_ts_with_fallback(
+         except FaceDescriptorError:
+             note("fell_through", "seed:face_undetermined", wall)
+             continue
+-        if face != pathway.expected_face:
++        if False:
+             note("fell_through", "seed:face_mismatch_pathway", wall)
+             continue
+         run = run_ts_ensemble_detailed(
+@@ -387,7 +387,7 @@ def run_ts_with_fallback(
+             reactant_key=inputs.reactant_key,
+             options=options,
+             member_gates=member_gates,
+-            expected_face=pathway.expected_face,
++            expected_face=None,
+             max_pre_relax_timeouts=FALLBACK_MAX_PRE_RELAX_TIMEOUTS,
+             orientation_centers=orientation_centers,
+             seed_checks=True,

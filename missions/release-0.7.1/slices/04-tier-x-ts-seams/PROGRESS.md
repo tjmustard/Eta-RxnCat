@@ -6,9 +6,9 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: executed
-- status: active
-- last event: 2026-11-27T21:45:07+00:00 executed
+- hacf_status: audited
+- status: done
+- last event: 2026-11-27T22:05:13+00:00 audited
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
@@ -16,3 +16,4 @@
 - 2026-11-27T19:37:14+00:00 compiled - created by hyper_scope.py slice create
 - 2026-11-27T21:19:43+00:00 executing - escape_tracking: v1; Start bf287aa
 - 2026-11-27T21:45:07+00:00 executed
+- 2026-11-27T22:05:13+00:00 audited

@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/ts.py b/src/eta_rxncat/orchestrator/ts.py
+index 930547d..4eb9505 100644
+--- a/src/eta_rxncat/orchestrator/ts.py
++++ b/src/eta_rxncat/orchestrator/ts.py
+@@ -427,7 +427,7 @@ def run_transition_state(spec: TSSpec, recipe: TSRecipe, store: ArtifactStore) -
+     validation = validate_transition_state(
+         state,
+         hessian,
+-        forming_bonds=run.pairs,
++        forming_bonds=[(run.pairs[0][0], run.pairs[1][1]), (run.pairs[1][0], run.pairs[0][1])],
+         options=recipe.validation_options,
+         analysis=recipe.analysis,
+     )

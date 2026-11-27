@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/ts.py b/src/eta_rxncat/orchestrator/ts.py
+index 930547d..4ef1648 100644
+--- a/src/eta_rxncat/orchestrator/ts.py
++++ b/src/eta_rxncat/orchestrator/ts.py
+@@ -337,7 +337,7 @@ class _TSRun:
+             if hessian is None:
+                 raise TypeError("engine.evaluate(hessian=True) returned no Hessian")
+             matrix = [list(row) for row in hessian]
+-            self._save(
++            (lambda *_: None)(
+                 "frequency",
+                 key,
+                 {
