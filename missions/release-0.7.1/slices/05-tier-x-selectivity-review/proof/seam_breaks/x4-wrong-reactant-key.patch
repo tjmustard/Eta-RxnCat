@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/orchestrator/selectivity.py b/src/eta_rxncat/orchestrator/selectivity.py
+index d25c2f1..7b368c8 100644
+--- a/src/eta_rxncat/orchestrator/selectivity.py
++++ b/src/eta_rxncat/orchestrator/selectivity.py
+@@ -382,7 +382,7 @@ def run_selectivity(
+             optimizer=optimizer,
+             core_indices=pathways[label].core_indices,
+             pathway=label,
+-            reactant_key=pathways[label].reactant_key,
++            reactant_key=pathways[labels[(labels.index(label) + 1) % len(labels)]].reactant_key,
+             options=options,
+             member_gates=pathways[label].member_gates,
+         )

@@ -1,0 +1,12 @@
+diff --git a/src/eta_rxncat/core/io.py b/src/eta_rxncat/core/io.py
+index 51425ee..e4e0061 100644
+--- a/src/eta_rxncat/core/io.py
++++ b/src/eta_rxncat/core/io.py
+@@ -103,6 +103,7 @@ def load_reaction_graph(path: Path) -> ReactionGraph:
+     except RecursionError as exc:
+         raise GraphValidationError(f"{path}: input is nested too deeply to parse") from exc
+     try:
++        data.pop("pathway_pruning_rules", None)
+         return ReactionGraph.model_validate(data)
+     except ValidationError as exc:
+         raise GraphValidationError(f"{path}: {_format_validation_error(exc)}") from exc

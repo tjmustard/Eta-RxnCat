@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/review/export.py b/src/eta_rxncat/review/export.py
+index aa14168..0fc11e0 100644
+--- a/src/eta_rxncat/review/export.py
++++ b/src/eta_rxncat/review/export.py
+@@ -478,7 +478,7 @@ class _Export:
+                 own.append(
+                     self.trajectory("pre_relax", sample.species_id, label, sample.pre_relax_key)
+                 )
+-            if sample.ts_opt_key is not None:
++            if sample.ts_opt_key is not None and sample.sample_index != 0:
+                 own.append(
+                     self.trajectory("ts_search", sample.species_id, label, sample.ts_opt_key)
+                 )

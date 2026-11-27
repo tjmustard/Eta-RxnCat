@@ -1,0 +1,80 @@
+{
+  "slice": "OPR.0.7.1.5",
+  "worktree": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit",
+  "worktree_commit": "8d921ad",
+  "unbroken": [
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay",
+      "exit_code": 0,
+      "outcome": "1 passed in 86.23s (0:01:26)"
+    },
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip",
+      "exit_code": 0,
+      "outcome": "1 passed in 86.45s (0:01:26)"
+    }
+  ],
+  "unbroken_module": "main checkout, Tier X command on the module: exit 0, 2 passed, 0 skipped, wall 1:30.64, T-X4 call 89.97 s, max RSS 161200 kB",
+  "breaks": [
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay",
+      "break_description": "T-X4 (slice): run_selectivity passes the other pathway's reactant_key",
+      "patch_file": "missions/release-0.7.1/slices/05-tier-x-selectivity-review/proof/seam_breaks/x4-wrong-reactant-key.patch",
+      "eta_file": "src/eta_rxncat/orchestrator/selectivity.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-05-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 86.63s (0:01:26)",
+      "failed_on": "E           AssertionError: endo",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay",
+      "break_description": "T-X4 (slice): load_reaction_graph drops pathway_pruning_rules",
+      "patch_file": "missions/release-0.7.1/slices/05-tier-x-selectivity-review/proof/seam_breaks/x4-loader-drops-rules.patch",
+      "eta_file": "src/eta_rxncat/core/io.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-05-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 87.14s (0:01:27)",
+      "failed_on": "E       AssertionError: assert ReactionGraph...ning_rules=[]) == ReactionGraph...ority_ge_2')])",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay",
+      "break_description": "T-X4 (slice): load_reaction_graph drops one node's pathway (the last node that has one)",
+      "patch_file": "missions/release-0.7.1/slices/05-tier-x-selectivity-review/proof/seam_breaks/x4-loader-drops-one-pathway.patch",
+      "eta_file": "src/eta_rxncat/core/io.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-05-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 0.23s",
+      "failed_on": "E           eta_rxncat.orchestrator.selectivity.SelectivityInputError: pathways: inputs for ['endo', 'exo'] but the graph's priority-1 pathways are ['endo']",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip",
+      "break_description": "T-X5 (slice): the RunData serialiser writes keys unsorted (sort_keys=False in _canonical_bytes)",
+      "patch_file": "missions/release-0.7.1/slices/05-tier-x-selectivity-review/proof/seam_breaks/x5-unsorted-keys.patch",
+      "eta_file": "src/eta_rxncat/review/export.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-05-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 89.22s (0:01:29)",
+      "failed_on": "E       AssertionError: assert [['engine_id'...ge_key'], ...] == []",
+      "failed": true
+    },
+    {
+      "test_id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip",
+      "break_description": "T-X5 (slice): export_run_data skips one sample's ts_opt row (the seed, sample_index 0)",
+      "patch_file": "missions/release-0.7.1/slices/05-tier-x-selectivity-review/proof/seam_breaks/x5-skip-one-ts-opt.patch",
+      "eta_file": "src/eta_rxncat/review/export.py",
+      "command": "PYTHONPATH=/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src ETA_RXNCAT_XTB=<run record> ETA_RXNCAT_ACCEPTANCE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 timeout 600 /home/tjmustard/PROJECTS/eta-rxncat/.venv/bin/python -m pytest -c /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/pyproject.toml --rootdir /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit -p no:cacheprovider -m 'integration and xtb' /home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip -q -x  (cwd ~/.cache/eta-rxncat-tmp/v071-05-audit-cwd; blocking host check per case)",
+      "import_path": "/home/tjmustard/.cache/eta-rxncat-tmp/wt0705audit/src/eta_rxncat/__init__.py",
+      "exit_code": 1,
+      "outcome": "1 failed in 92.48s (0:01:32)",
+      "failed_on": "E       AssertionError: assert {('pre_relax'...07845a3d01d')} == {('pre_relax'...e8e6ae3b1e4')}",
+      "failed": true
+    }
+  ]
+}

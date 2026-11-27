@@ -912,34 +912,33 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_integration
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - tests/integration/**
   description: >-
     Integration tests across module seams (tests/integration, v0.7.1): real modules
     on both sides, default suite under the `integration` marker; Tier X adds `xtb`
-    and is deselected. conftest.py: uff_recipe() (rdkit_ff UFF, GeometricOptimizer),
-    gfn2_stage() (xtb GFN2, ALPB gsolv), `store`/`scratch_cwd` fixtures, row_count(store),
-    load_v070_plan() (copy of tests/e2e/v070.py load_enumeration rules; returns V070Plan).
-    test_integration_policy.py: AST scan failing on unittest.mock, monkeypatch beyond
-    setenv/delenv/chdir, assignment into eta_rxncat names or sys.modules, setattr/delattr,
-    imports of other tests packages, skip/xfail, gpu/mlip/slow markers, a module without
-    the integration pytestmark. test_seams_offline.py (Tier O, no engine binary):
-    T-O1 butane run_species on UFF, rerun 0 rows/0 engine_calls, equal keys, engine-identity
-    lookup, ThermoResult round trip; T-O2 reaction_free_energy replay from a reopened
-    store; T-O3 propanol conformer members stored, weights sum 1; T-O4 enumerate_candidates
-    with the real graft on load_v070_plan plus an in-test variant naming template
-    atom 17 for the index_map remap; T-O5 dump_reaction_graph_json round trip; T-O6
-    enumerated_pathway_inputs seeds for TS1a_n/TS1a_x; test_plan_loader_parity compares
-    bytes with tests/e2e v070.load_enumeration in a subprocess. test_seams_ts_gfn2.py
-    (Tier X, integration+xtb, CPU GFN2, P-RFO): T-X1 run_transition_state on TS1a_n
-    (converged, 1 imaginary, member gates, 2 rows, all-hit replay); T-X2 run_ts_ensemble_detailed,
-    1/1/1 sampler (weights sum 1, seed face kept, sample keys are rows of their kind,
-    core frozen, all-hit replay); T-X3 run_ts_with_fallback on enumerated ethyl (rank
-    1 chosen, equal replay); test_tx3_rank1_face_mismatch builds an in-test R42 variant
-    (TS1a_x geometry as TS1a_n rank 1): rank 1 falls through seed:face_mismatch_pathway,
-    only rank 2 searched. T-X3 tests share a module-scoped store. No imports from
-    tests.unit or tests.e2e.
+    and is deselected. conftest.py: uff_recipe() (rdkit_ff UFF), gfn2_stage() (xtb
+    GFN2, ALPB gsolv), `store`/`scratch_cwd` fixtures, row_count(store), load_v070_plan()
+    (copy of tests/e2e/v070.py load_enumeration rules; V070Plan). test_integration_policy.py:
+    AST scan failing on unittest.mock, monkeypatch beyond setenv/delenv/chdir, assignment
+    into eta_rxncat names or sys.modules, setattr/delattr, imports of other tests
+    packages, skip/xfail, gpu/mlip/slow markers, a module without the integration
+    pytestmark. test_seams_offline.py (Tier O): T-O1 butane run_species on UFF, 0-row
+    rerun, ThermoResult round trip; T-O2 reaction_free_energy replay from a reopened
+    store; T-O3 propanol conformer weights sum 1; T-O4 enumerate_candidates on load_v070_plan
+    plus an in-test variant (template atom 17) for the index_map remap; T-O5 dump_reaction_graph_json
+    round trip; T-O6 enumerated_pathway_inputs seeds; test_plan_loader_parity vs tests/e2e
+    load_enumeration in a subprocess. test_seams_ts_gfn2.py (Tier X, CPU GFN2, P-RFO):
+    T-X1 run_transition_state on TS1a_n (1 imaginary, member gates, all-hit replay);
+    T-X2 run_ts_ensemble_detailed 1/1/1 (weights sum 1, seed face, sample keys are
+    rows); T-X3 run_ts_with_fallback on ethyl (rank 1 chosen) and an R42 rank-1 face-mismatch
+    variant. test_seams_selectivity_gfn2.py (Tier X): T-X4 enumerated graph file ->
+    load_reaction_graph -> run_selectivity (TS nodes copied to priority 1), score
+    and all-hit replay, R42 pruning-rule variant, marker reactant_key inputs; T-X5
+    RunRecord -> export_run_data -> schema check, read_run_data, equal sorted-key
+    bundle bytes. Tier X modules share a module-scoped store. No imports from tests.unit
+    or tests.e2e.
   inputs: []
   outputs: []
   edges:
@@ -953,6 +952,7 @@ nodes:
     - eta_rxncat_engines
     - eta_rxncat_mapping
     - eta_rxncat_enumerator
+    - eta_rxncat_review
     implements: []
     member_of: []
   spec_refs:
@@ -960,6 +960,6 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.5
   review:
-    reviewed_at: '2026-11-27T22:04:26+00:00'
-    reviewed_by: audit:OPR.0.7.1.4
-    summary: patched description
+    reviewed_at: '2026-11-27T22:58:43+00:00'
+    reviewed_by: audit:OPR.0.7.1.5
+    summary: patched description, edges.depends_on

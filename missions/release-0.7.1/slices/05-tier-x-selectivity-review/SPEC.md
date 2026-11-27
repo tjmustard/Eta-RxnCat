@@ -2,7 +2,7 @@
 id: OPR.0.7.1.5
 slice: 05-tier-x-selectivity-review
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Check the enumerated graph file to selectivity score chain on CPU GFN2 
 depends_on: [OPR.0.7.1.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", spec/compiled/architecture.yml]

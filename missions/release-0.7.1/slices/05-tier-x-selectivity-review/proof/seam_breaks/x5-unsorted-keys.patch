@@ -1,0 +1,13 @@
+diff --git a/src/eta_rxncat/review/export.py b/src/eta_rxncat/review/export.py
+index aa14168..7bce24f 100644
+--- a/src/eta_rxncat/review/export.py
++++ b/src/eta_rxncat/review/export.py
+@@ -111,7 +111,7 @@ def _rounded(value: Any, digits: int) -> Any:
+ def _canonical_bytes(value: Any) -> bytes:
+     text = json.dumps(
+         _rounded(value, _DEFAULT_DIGITS),
+-        sort_keys=True,
++        sort_keys=False,
+         separators=(",", ":"),
+         ensure_ascii=True,  # writes U+2028 and U+2029 as   and
+         allow_nan=False,
