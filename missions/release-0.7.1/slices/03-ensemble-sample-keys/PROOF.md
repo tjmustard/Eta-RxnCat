@@ -16,6 +16,7 @@ All in `proof/03-execute.md` (builder evidence, not a QA verdict):
 ## Artifacts
 
 - proof/03-execute.md - guard CLEAR: full pytest 2763 passed; parity runrecord cmp exit 0, 0 engine calls; ruff/format/mypy exit 0
+- proof/03-qa.md - qa PASS: parity runrecord cmp exit 0 (0 engine calls); full pytest 2763 passed; ruff/format/mypy exit 0; clashed break exit 1
 
 ## Residue / caveats
 

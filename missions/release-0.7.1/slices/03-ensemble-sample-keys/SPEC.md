@@ -2,7 +2,7 @@
 id: OPR.0.7.1.3
 slice: 03-ensemble-sample-keys
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Expose each TS ensemble sample's stage keys on TSEnsembleRun, switch th
 depends_on: [OPR.0.7.1.2]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_selectivity
 parent: null
 hacf_touches: [src/eta_rxncat/orchestrator/ts_ensemble.py, src/eta_rxncat/orchestrator/__init__.py, src/eta_rxncat/orchestrator/ts_fallback.py, "tests/unit/orchestrator/test_ts_ensemble*.py", tests/e2e/v070.py, tests/e2e/test_v070_samples.py, spec/compiled/architecture.yml]

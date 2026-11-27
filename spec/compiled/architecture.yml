@@ -544,7 +544,7 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -578,13 +578,13 @@ nodes:
     activation/reaction dG (1 M, 1 atm). report.py: JSON v1. tests/e2e: t3 (HF1-HF3,
     R32), T4/t4_flexible; v070.py (load_enumeration/load_fallback -> V070Inputs; TS
     nodes priority 2; run_unit/_run_candidate: run_ts_with_fallback + run_species
-    twice in one store, Engine.evaluate counted, private ts_* sample keys (seed_clash:
-    none); unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord (endpoint
-    dispositions, validation), finite ratio; run_fallback_unit, attributed_engine_calls,
-    fallback_gates G8); review_v070.py: one bundle over 4 replan-7 stores (SOURCE_ROOT)
-    (G7/G8 groups; per-record sub-bundle via cli, 0 engine calls, root index+MANIFEST,
-    coverage, fresh roots refused, M10, scans; review_g15.py G15: dispositions, Used/Not
-    used, TSIdentity+banner, known answers; copy to candidates); acceptance_record_v070.py
+    twice in one store, Engine.evaluate counted, run.samples keys (seed_clash: none);
+    unit_gates G7, ensemble_gates, unit_record/score_pair -> RunRecord (endpoint dispositions,
+    validation), finite ratio; run_fallback_unit, attributed_engine_calls, fallback_gates
+    G8); review_v070.py: one bundle over 4 replan-7 stores (SOURCE_ROOT) (G7/G8 groups;
+    per-record sub-bundle via cli, 0 engine calls, root index+MANIFEST, coverage,
+    fresh roots refused, M10, scans; review_g15.py G15: dispositions, Used/Not used,
+    TSIdentity+banner, known answers; copy to candidates); acceptance_record_v070.py
     -> ACCEPTANCE_RESULT.json (SOURCE_ROOT, slice 17 proof, replan_7 vs slice 13;
     +rerun/fixtures: VOLATILE-only diffs -> record_verdict); REUSE_STORES=1 reruns
     on copies; never reads candidates.
@@ -640,9 +640,9 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-27T19:58:05+00:00'
-    reviewed_by: audit:OPR.0.7.1.1
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-27T21:16:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.3
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.1.3
 - id: eta_rxncat_mapping
@@ -715,7 +715,7 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: dirty
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -736,7 +736,9 @@ nodes:
     score, rules, unpruned run_species; import RDKit-free. ts_ensemble.py: run_ts_ensemble(_detailed):
     seed, samples, cached constrained_preopt (injected optimizer; every failure row
     carries the capture_frames frames, v0.7.0), re-search, exclusions (R19), dedup,
-    window, weights; v0.7.0 keywords expected_face (seed:face_mismatch_pathway), max_pre_relax_timeouts
+    window, weights; samples: tuple[SampleKeys] (v0.7.1 R37: seed then draw order,
+    pre_relax/ts_opt/frequency keys, seed_clash all None; the fallback sets the seed's
+    pre_relax_key); v0.7.0 keywords expected_face (seed:face_mismatch_pathway), max_pre_relax_timeouts
     (stall_cap_reached_bool), orientation_centers (orientation_mismatch). seed_checks
     (v0.7.0, on in the fallback): find_clash (seed_clash, no engine call) and bond_changes
     (bond_changed:pre_relax|ts; seed:*), each with SeedCheckDetail; graft close contacts
@@ -796,9 +798,9 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-27T19:58:05+00:00'
-    reviewed_by: audit:OPR.0.7.1.1
-    summary: reviewed; nothing patched
+    reviewed_at: '2026-11-27T21:16:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.3
+    summary: patched description
   provenance:
     last_slice: OPR.0.7.1.3
 - id: eta_rxncat_enumerator
@@ -910,7 +912,7 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_integration
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - tests/integration/**
   description: >-
@@ -953,6 +955,6 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.3
   review:
-    reviewed_at: '2026-11-27T20:44:28+00:00'
-    reviewed_by: audit:OPR.0.7.1.2
-    summary: patched description, edges.depends_on, edges.implements, edges.member_of
+    reviewed_at: '2026-11-27T21:16:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.3
+    summary: reviewed; nothing patched
