@@ -18,6 +18,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.1.4) On GFN2 the seed need not stay a TS ensemble member: on the v0.7.0 ethyl candidate (1/1/1 options) it merges into the lower-G sample, so members[0] is fragment_embed:0; check seed identity through run.samples[0] or merges, not members. anchors: none
 - 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.1.5) On a v0.7.0 candidate both pathways share one derived reactant_key and the plan has no pathway_pruning_rules, so a swapped-key or dropped-rules break is invisible without a variant: T-X4 uses distinct marker keys with all-rejecting member gates (no scoring, all cache hits) and a plan variant with a priority-1 rule. anchors: none
 - 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.1.6) uv build with a warm cache succeeds with the network blocked even without --offline, so R39 is guarded by a test on the build command, not by a network-blocked run; the .venv-accept-gpu/mace/uma envs hold dev deps, so their licence gate already fails on pathspec MPL-2.0 before any change. anchors: none
+- 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.1.7) A record's pydantic ser_json_inf_nan does not reach a nested core model (the model's own config wins), so RunRecord writes ratio=inf through a wrap field serializer on RecordSelectivity.result; tests/e2e/v070.py checked_record_text still refuses a non-finite ratio. anchors: none
 
 ## Lore capture
 

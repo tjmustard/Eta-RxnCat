@@ -10,7 +10,7 @@ intent: "Make open_timeout_s=inf mean no deadline under a typed contract, stop t
 depends_on: [OPR.0.7.1.6]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_store
 parent: null
 hacf_touches: [src/eta_rxncat/store/artifact_store.py, "tests/unit/store/**", src/eta_rxncat/engines/mace.py, "tests/unit/engines/**", src/eta_rxncat/review/run_data.py, "tests/unit/review/**", spec/compiled/architecture.yml]
@@ -115,11 +115,11 @@ the record side and state it.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] R29 and its tests.
-- [ ] R14 and its test.
-- [ ] R38: measure the mechanism, then the fix and its tests.
-- [ ] Required checks; Tier X rerun (host check first); commit; updater once.
+- [x] Index.
+- [x] R29 and its tests.
+- [x] R14 and its test.
+- [x] R38: measure the mechanism, then the fix and its tests.
+- [x] Required checks; Tier X rerun (host check first); commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
