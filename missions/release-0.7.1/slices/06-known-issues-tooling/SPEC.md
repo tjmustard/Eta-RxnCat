@@ -10,7 +10,7 @@ intent: "Fix the tooling and test-text known issues (t3 gated_on text, test-poli
 depends_on: [OPR.0.7.1.5]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [tests/e2e/t3.py, "tests/e2e/test_t3_*.py", tests/conftest.py, tests/unit/test_test_policy.py, tools/licence_gate.py, pyproject.toml, tests/unit/tools/test_licence_gate.py, docs/licence-inventory.md, tests/unit/review/test_assets.py, tests/unit/review/test_bundle_scans.py, tests/integration/test_integration_policy.py, spec/compiled/architecture.yml]
@@ -138,14 +138,14 @@ and its absence is a stop-and-report.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] R10 and its test.
-- [ ] R11 (a) and (b) and their tests.
-- [ ] R44 (a), (b) and (c) and their cases.
-- [ ] R28: config, label, tests, then the before and after profile runs.
-- [ ] R39 measurement, then the fix.
-- [ ] R40.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] R10 and its test.
+- [x] R11 (a) and (b) and their tests.
+- [x] R44 (a), (b) and (c) and their cases.
+- [x] R28: config, label, tests, then the before and after profile runs.
+- [x] R39 measurement, then the fix.
+- [x] R40.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
