@@ -912,7 +912,7 @@ nodes:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_integration
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - tests/integration/**
   description: >-
@@ -958,7 +958,7 @@ nodes:
   spec_refs:
   - OPR.0.7.1.1
   provenance:
-    last_slice: OPR.0.7.1.4
+    last_slice: OPR.0.7.1.5
   review:
     reviewed_at: '2026-11-27T22:04:26+00:00'
     reviewed_by: audit:OPR.0.7.1.4

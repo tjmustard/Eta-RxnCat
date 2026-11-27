@@ -10,7 +10,7 @@ intent: "Check the enumerated graph file to selectivity score chain on CPU GFN2 
 depends_on: [OPR.0.7.1.4]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", spec/compiled/architecture.yml]
@@ -100,10 +100,10 @@ and the `RunRecord` fields a non-E2E run can supply (stop-and-report if one is m
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] T-X4.
-- [ ] T-X5.
-- [ ] Host check; measured run; required checks; commit; updater once.
+- [x] Index.
+- [x] T-X4.
+- [x] T-X5.
+- [x] Host check; measured run; required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
