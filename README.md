@@ -7,8 +7,15 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. It covers the path from a reaction graph to a selectivity answer: energy engines from force fields to DFT and machine-learned potentials (v0.2.0); conformer search, optimisation, thermochemistry and Boltzmann ensembles (v0.3.0); a conserved-core mapper that grafts a fragment onto a known transition state (v0.4.0); transition-state search with frequency validation (v0.5.0); transition-state ensembles and selectivity between competing pathways (v0.6.0); and library enumeration with ranked template fallback and an offline HTML review page (v0.7.0).</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. It covers the path from a reaction graph to a selectivity answer:</strong>
 </p>
+
+- energy engines from force fields to DFT and machine-learned potentials (v0.2.0);
+- conformer search, optimisation, thermochemistry and Boltzmann ensembles (v0.3.0);
+- a conserved-core mapper that grafts a fragment onto a known transition state (v0.4.0);
+- transition-state search with frequency validation (v0.5.0);
+- transition-state ensembles and selectivity between competing pathways (v0.6.0);
+- library enumeration with ranked template fallback and an offline HTML review page (v0.7.0).
 
 <p align="center">
     <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.0-blue" alt="Latest Release"/></a>

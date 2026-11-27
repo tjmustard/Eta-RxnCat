@@ -346,10 +346,47 @@ def test_readme_header_and_banner() -> None:
     assert following == f'<p align="center">{banner}</p>'
 
 
+PITCH_INTRO = re.compile(r'<p align="center">\s*<strong>[^<]+</strong>\s*</p>')
+PITCH_BULLET = re.compile(r"^- .*\(v(\d+\.\d+\.\d+)\)[;.]$")
+
+
+def pitch_problems(readme_text: str, version: str) -> list[str]:
+    """The README pitch is a centred bold intro, then a Markdown list with one bullet per version.
+
+    The list follows the intro (blank lines allowed) and each bullet ends with ``(vX.Y.Z);`` or
+    ``(vX.Y.Z).``. Its versions, in order, equal the Roadmap's ``### Built`` versions minus v0.1.0
+    (the intro covers the foundation), and its last bullet is ``version``.
+    """
+    match = PITCH_INTRO.search(readme_text)
+    if match is None:
+        return ["pitch: no centred bold intro paragraph"]
+    block: list[str] = []
+    for line in readme_text[match.end() :].splitlines():
+        if line.startswith("- "):
+            block.append(line)
+        elif line.strip():
+            break
+    problems = []
+    if not block:
+        problems.append("pitch: no version list after the intro")
+    for line in block:
+        if not PITCH_BULLET.match(line):
+            problems.append(f"pitch: bullet does not end with (vX.Y.Z); or (vX.Y.Z).: {line!r}")
+    listed = [v for line in block for v in PITCH_BULLET.findall(line)]
+    roadmap = _section(readme_text, "## 🧭 Roadmap", "\n## ")
+    built_text = _section(roadmap, "### Built", "\n### ")
+    built = [v for v in re.findall(r"\*\*v(\d+\.\d+\.\d+)\*\*", built_text) if v != "0.1.0"]
+    if listed != built:
+        problems.append(f"pitch: list versions {listed} != roadmap built {built}")
+    if listed and listed[-1] != version:
+        problems.append(f"pitch: last bullet v{listed[-1]} != project version v{version}")
+    return problems
+
+
 def test_readme_pitch_and_badges() -> None:
-    """A bold centered pitch and the four badges for github.com/tjmustard/Eta-RxnCat."""
+    """A bold centred intro, a version bullet list and the four badges for the repository."""
     text = readme()
-    assert re.search(r'<p align="center">\s*<strong>[^<]+</strong>\s*</p>', text)
+    assert pitch_problems(text, project_version()) == []
     repo = "tjmustard/Eta-RxnCat"
     for needle in (
         f'href="https://github.com/{repo}/releases/latest"><img src="https://img.shields.io/badge/release-v',
@@ -358,6 +395,16 @@ def test_readme_pitch_and_badges() -> None:
         f'src="https://img.shields.io/github/license/{repo}"',
     ):
         assert needle in text, needle
+
+
+def test_pitch_missing_version_bullet_fails() -> None:
+    """A pitch list that skips a built version (v0.3.0) is reported; the complete one passes."""
+    roadmap = synthetic_readme("0.3.0", ("0.1.0", "0.2.0", "0.3.0"), PLAN_VERSIONS[3:])
+    intro = '<p align="center">\n    <strong>Intro.</strong>\n</p>\n\n'
+    complete = intro + "- engines (v0.2.0);\n- sweeps (v0.3.0).\n\n" + roadmap
+    skipped = intro + "- engines (v0.2.0).\n\n" + roadmap
+    assert pitch_problems(complete, "0.3.0") == []
+    assert any("list versions" in p for p in pitch_problems(skipped, "0.3.0"))
 
 
 def test_readme_sections_and_toc() -> None:
