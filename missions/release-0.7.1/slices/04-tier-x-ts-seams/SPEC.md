@@ -10,7 +10,7 @@ intent: "Check the P-RFO, TS ensemble and seed fallback seams against CPU GFN2 x
 depends_on: [OPR.0.7.1.3]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", spec/compiled/architecture.yml]
@@ -122,9 +122,9 @@ on GFN2, that is a stop-and-report to the lead, not a test change.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] T-X1, T-X2, T-X3, and `test_tx3_rank1_face_mismatch` (R43).
-- [ ] Host check; measured run; required checks; commit; updater once.
+- [x] Index.
+- [x] T-X1, T-X2, T-X3, and `test_tx3_rank1_face_mismatch` (R43).
+- [x] Host check; measured run; required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -134,10 +134,10 @@ on GFN2, that is a stop-and-report to the lead, not a test change.
 
 ## Proof contract
 
-- [ ] Host check output, the command, `/usr/bin/time -v`, and junit with T-X1…T-X3 and
+- [x] Host check output, the command, `/usr/bin/time -v`, and junit with T-X1…T-X3 and
   `test_tx3_rank1_face_mismatch` `passed`, 0 skipped (requirements 1-2).
-- [ ] `git status --porcelain` shows no `HT.v_*`.
-- [ ] Required checks exit 0 (requirements 3-4).
+- [x] `git status --porcelain` shows no `HT.v_*`.
+- [x] Required checks exit 0 (requirements 3-4).
 
 ## Source material
 
