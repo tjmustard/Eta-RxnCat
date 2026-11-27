@@ -6,10 +6,19 @@
 
 ## What this proves
 
-[Each Proof contract item, mapped to the artifact that demonstrates it]
+All in `proof/04-execute.md` (builder evidence, not a QA verdict):
+
+- host check, command, `/usr/bin/time -v` and junit, 4 `passed`, 0 skipped (requirements 1-2):
+  "Measured run";
+- no `HT.v_*` in `git status --porcelain`: "git status --porcelain";
+- the `expected_face` break fails `test_tx3_rank1_face_mismatch` (requirement 3): "Seam breaks";
+- required checks, the new module deselected by default (requirements 3-4): "Required checks".
 
 ## Artifacts
 
+- proof/04-execute.md - guard CLEAR: Tier X 4 passed 0 skipped; full pytest 2763 passed; ruff/format/mypy exit 0; 7 seam breaks fail
+
 ## Residue / caveats
 
-[What is not covered, and where it is tracked]
+The seam-break runs are the builder's pre-check; the audit owns `seam_breaks.json`. All GFN2 runs
+used the lead's 4 GiB memory floor. See "For the auditor to rule on" in `proof/04-execute.md`.
