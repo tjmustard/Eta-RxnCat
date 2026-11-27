@@ -11,7 +11,8 @@ pytest_plugins = ["pytester"]
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFTEST = (ROOT / "tests" / "conftest.py").read_text(encoding="utf-8")
-MARKERS = ("gpu", "xtb", "mlip_mace", "mlip_uma", "slow", "acceptance", "e2e")
+DESELECTED_MARKERS = ("gpu", "xtb", "mlip_mace", "mlip_uma", "slow", "acceptance", "e2e")
+DEFAULT_SELECTED_MARKERS = ("integration",)
 
 SKIPPING_TEST = """
 import pytest
@@ -89,14 +90,15 @@ def test_hub_offline_inside_test() -> None:
 
 
 def test_markers_and_default_deselection() -> None:
-    """All seven markers are declared, and the default addopts deselects every one of them."""
+    """The addopts deselect exactly the deselected set, never the default-selected one (R24)."""
     config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     ini = config["tool"]["pytest"]["ini_options"]
     declared = {entry.split(":", 1)[0] for entry in ini["markers"]}
-    assert declared == set(MARKERS)
+    assert declared == set(DESELECTED_MARKERS) | set(DEFAULT_SELECTED_MARKERS)
     assert all(entry.split(":", 1)[1].strip() for entry in ini["markers"])
-    expected = " and ".join(f"not {marker}" for marker in MARKERS)
+    expected = " and ".join(f"not {marker}" for marker in DESELECTED_MARKERS)
     assert ini["addopts"] == f"-m '{expected}'"
+    assert not any(marker in ini["addopts"] for marker in DEFAULT_SELECTED_MARKERS)
 
 
 def test_acceptance_envs_gitignored() -> None:
@@ -207,7 +209,7 @@ def test_xfail_unchanged_without_variable(
 
 
 SKIP_CALLS = frozenset({"importorskip", "skip"})
-GUARDED_DIRS = ("tests/unit/engines", "tests/acceptance")
+GUARDED_DIRS = ("tests/unit/engines", "tests/acceptance", "tests/integration")
 
 
 def module_level_skips(path: Path) -> list[str]:
@@ -245,7 +247,7 @@ def module_level_skips(path: Path) -> list[str]:
 
 
 def test_no_module_level_skips_in_engine_tests() -> None:
-    """No engine or acceptance test module skips at import; skips go through markers (R32)."""
+    """No engine, acceptance or integration module skips at import (R32, R25)."""
     files = [
         p for d in GUARDED_DIRS for p in sorted((ROOT / d).rglob("*.py")) if (ROOT / d).is_dir()
     ]

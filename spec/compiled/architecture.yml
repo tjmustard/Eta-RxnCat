@@ -27,6 +27,8 @@ nodes:
   - tests/unit/test_test_policy.py
   - docs/prd/PLAN_DISCREPANCIES.md
   - docs/prd/v0.7.0/ACCEPTANCE_RESULT.json
+  - tests/fixtures/.gitkeep
+  - tests/candidate_outputs/.gitkeep
   description: >-
     uv-managed MIT package eta-rxncat 0.7.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf. Extras:
@@ -557,6 +559,10 @@ nodes:
   - tests/candidate_outputs/v0.5.0/**
   - tests/candidate_outputs/v0.6.0/**
   - tests/candidate_outputs/v0.7.0/**
+  - tests/fixtures/v0.3.0/**
+  - tests/fixtures/v0.5.0/**
+  - tests/fixtures/v0.6.0/**
+  - tests/fixtures/v0.7.0/**
   description: >-
     eta_rxncat.orchestrator runners. Selectivity/ensembles/__init__: eta_rxncat_selectivity.
     species.py: SpeciesSpec, Recipe, SinglePoint, ENGINE_CLASSES; run_species caches
@@ -653,6 +659,7 @@ nodes:
   - tests/e2e/test_accept_v040.py
   - tests/e2e/acceptance_record_v040.py
   - tests/e2e/test_acceptance_record_v040.py
+  - tests/fixtures/v0.4.0/**
   description: >-
     Clean-room conserved-core mapper (v0.4.0; from approved nMAP behaviour specs only,
     TJ Q1). (1) align.py: Horn unit-quaternion superposition of ordered point pairs
@@ -901,3 +908,32 @@ nodes:
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.0.14
+- id: eta_rxncat_integration
+  dimension: Module
+  status: dirty
+  files:
+  - tests/integration/**
+  description: >-
+    Integration tests across the module seams (tests/integration, v0.7.1): real modules
+    on both sides, run in the default suite under the `integration` marker; Tier X
+    adds `xtb` and is deselected. conftest.py: uff_recipe() (rdkit_ff UFF, GeometricOptimizer),
+    gfn2_stage() (xtb GFN2, ALPB gsolv), `store` and `scratch_cwd` fixtures, row_count(store),
+    load_v070_plan() (copy of tests/e2e/v070.py load_enumeration rules over v070_enumeration.yaml;
+    returns V070Plan). test_integration_policy.py: AST scan failing on unittest.mock,
+    monkeypatch beyond setenv/delenv/chdir, assignment into eta_rxncat names or sys.modules,
+    setattr/delattr, imports of other tests packages, any skip/xfail form, gpu/mlip/slow
+    markers, and a test module without the integration pytestmark. No imports from
+    tests.unit or tests.e2e.
+  inputs: []
+  outputs: []
+  edges:
+    depends_on:
+    - eta_rxncat_core
+    - eta_rxncat_store
+    - eta_rxncat_optimize
+    - eta_rxncat_selectivity
+    - eta_rxncat_species_runner
+    implements: []
+    member_of: []
+  spec_refs:
+  - OPR.0.7.1.1

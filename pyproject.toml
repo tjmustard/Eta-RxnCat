@@ -94,6 +94,7 @@ markers = [
     "slow: DFT finite-difference checks, too slow for the default suite",
     "acceptance: acceptance run in a .venv-accept-* env (ETA_RXNCAT_ACCEPTANCE=1)",
     "e2e: end-to-end human-fixture runs that write candidate outputs (v0.3.0 slice 07)",
+    "integration: integration test across module seams; real modules, no mocks across the seam (v0.7.1)",
 ]
 addopts = "-m 'not gpu and not xtb and not mlip_mace and not mlip_uma and not slow and not acceptance and not e2e'"
 
