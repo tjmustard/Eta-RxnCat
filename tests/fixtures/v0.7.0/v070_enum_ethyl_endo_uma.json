@@ -395,7 +395,7 @@
       },
       "no_engine_error_or_face_mismatch": {
         "exclusions_by_reason": {
-          "orientation_mismatch": 5
+          "seed_clash": 5
         },
         "status": "pass"
       },
@@ -410,7 +410,7 @@
       }
     }
   },
-  "commit_sha": "3af1e954da3315db3dbcc3a81ed5a772f8be71a9",
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
   "environment": {
     "device": "cuda",
     "engine": {
@@ -436,9 +436,9 @@
   },
   "export": {
     "candidates": 1,
-    "frequencies": 15,
+    "frequencies": 10,
     "frequencies_missing": 0,
-    "trajectories": 40,
+    "trajectories": 30,
     "trajectories_missing": 0
   },
   "failed_checks": [],
@@ -449,7 +449,7 @@
         "rank": 1,
         "reason": null,
         "template_id": "TS1a_n__ethyl",
-        "wall_time_s": 84.91450615390204
+        "wall_time_s": 30.975337742944248
       }
     ],
     "chosen_template_id": "TS1a_n__ethyl",
@@ -484,44 +484,104 @@
     "derivation_new_rows": 0,
     "excluded": [
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3001530799685124,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.2150963364191705
+        },
         "index": 3,
-        "pre_relax_wall_time_s": 2.5047904609236866,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:2"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2791106224910305,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.1954304883093743
+        },
         "index": 4,
-        "pre_relax_wall_time_s": 4.796817540074699,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:3"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 0.47073801030310364,
+          "pair": [
+            4,
+            21
+          ],
+          "ratio_to_covalent_sum": 0.43994206570383515
+        },
         "index": 6,
-        "pre_relax_wall_time_s": 40.94515582197346,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:6"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.227594664582584,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.1472847332547513
+        },
         "index": 7,
-        "pre_relax_wall_time_s": 3.474152778973803,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:7"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3710946709480432,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.2813968887364888
+        },
         "index": 8,
-        "pre_relax_wall_time_s": 2.218251809012145,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:8"
       }
     ],
     "exclusions_by_reason": {
-      "orientation_mismatch": 5
+      "seed_clash": 5
     },
-    "first_pass_engine_calls": 745,
-    "first_pass_new_rows": 57,
-    "first_pass_wall_time_s": 204.35841002501547,
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 60.03358902002219,
     "graft_pre_relax_timeouts": 0,
-    "max_pre_relax_wall_time_s": 40.94515582197346,
+    "max_pre_relax_wall_time_s": 4.1237327409908175,
     "members": [
       {
         "G_hartree": -389.1059108367561,
@@ -573,7 +633,7 @@
     "n_members": 3,
     "n_merges": 3,
     "n_samples_run": 11,
-    "orientation_mismatch_count": 5,
+    "orientation_mismatch_count": 0,
     "reactant_key": [
       [
         "C1=CCC=C1",
@@ -595,32 +655,32 @@
       }
     },
     "resources": {
-      "cpu_user_plus_sys_s": 2525.2331980000004,
-      "peak_rss_child_kb": 8181224,
-      "peak_rss_self_kb": 8852524,
-      "wall_time_s": 315.95019480003975
+      "cpu_user_plus_sys_s": 742.991138,
+      "peak_rss_child_kb": 555488,
+      "peak_rss_self_kb": 8694180,
+      "wall_time_s": 141.05907643307
     },
     "second_pass_engine_calls": 0,
     "second_pass_new_rows": 0,
-    "second_pass_wall_time_s": 68.72360274603125,
+    "second_pass_wall_time_s": 52.110685571911745,
     "stage_metrics": {
       "constrained_preopt": {
-        "cache_hits": 0,
-        "engine_calls": 315,
-        "rows_created": 10,
-        "wall_time_s": 69.66616172785871
+        "cache_hits": 5,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
       },
       "frequency": {
-        "cache_hits": 0,
-        "engine_calls": 11,
-        "rows_created": 11,
-        "wall_time_s": 12.57008889701683
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008308693999424577
       },
       "ts_opt": {
-        "cache_hits": 0,
-        "engine_calls": 108,
-        "rows_created": 11,
-        "wall_time_s": 35.771750805084594
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008221222902648151
       }
     },
     "stall_cap_reached_bool": false,

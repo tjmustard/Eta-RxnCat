@@ -802,7 +802,7 @@
       "rank": 1,
       "outcome": "chosen",
       "reason": null,
-      "wall_time_s": 256.8348378770752
+      "wall_time_s": 27.552995936130174
      }
     ],
     "chosen_template_id": "TS1a_x__npropyl",
@@ -877,44 +877,128 @@
      {
       "index": 1,
       "source": "fragment_embed:0",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 22.590176825993694
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        19
+       ],
+       "distance_angstrom": 1.251999114306544,
+       "ratio_to_covalent_sum": 1.170092630193032,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 2,
       "source": "fragment_embed:1",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 10.669538378948346
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        19
+       ],
+       "distance_angstrom": 1.3427322456674178,
+       "ratio_to_covalent_sum": 1.2548899492218857,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 3,
       "source": "fragment_embed:2",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 26.37708762299735
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        19
+       ],
+       "distance_angstrom": 1.2175921259271267,
+       "ratio_to_covalent_sum": 1.1379365662870342,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 4,
       "source": "fragment_embed:3",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 21.26719238003716
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        19
+       ],
+       "distance_angstrom": 1.1723823086674738,
+       "ratio_to_covalent_sum": 1.0956844006238073,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 5,
       "source": "fragment_embed:4",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 104.80514873703942
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        19
+       ],
+       "distance_angstrom": 1.2614479825520712,
+       "ratio_to_covalent_sum": 1.1789233481795058,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 6,
       "source": "fragment_embed:5",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 16.428327640984207
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        19
+       ],
+       "distance_angstrom": 1.2975270759001754,
+       "ratio_to_covalent_sum": 1.2126421270095096,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 9,
       "source": "fragment_embed:8",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 27.14437035494484
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        26
+       ],
+       "distance_angstrom": 0.6743378587551726,
+       "ratio_to_covalent_sum": 1.0876417076696332,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      }
     ],
     "merges": [
@@ -958,54 +1042,54 @@
      "sample_index": 1,
      "source": "fragment_embed:0",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "40c444cc8317836422ad149b2bcfcb5b85b2472a85f793c06913d2e0c85c1d64",
-     "ts_opt_key": "2539211e7059f342adf53159b3ec5d869f89d6af11cb38adb780d561a76dbf04",
-     "frequency_key": "caca1973e8402c1414bece4d7a9e7a7886aed968750d450c160449cb776ad76f"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
      "sample_index": 2,
      "source": "fragment_embed:1",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "24196abc4989c37ac9d7c4a2fb469b040e8030b4f6b61957874a44af3b1f1c83",
-     "ts_opt_key": "672228ff5778eda9a043023773c78ae6488f2b3427b3eed1cbe3d6fe3b306184",
-     "frequency_key": "64a058926ab259ba2fe4b89da138f9132eea285b1baeff0aa024c8d9f97bd4eb"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
      "sample_index": 3,
      "source": "fragment_embed:2",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "ce180a850b911b0dc87c52e77bd33fa73bceba141146265fade8b98c05d4eecc",
-     "ts_opt_key": "2a8537e17d2deb6a509f7e683c4a1b30535e60b8cc7c50a31f81adb9d5276bf2",
-     "frequency_key": "751511dd7d8ebe07257c6cea05b9866248bf2644aa92f32b08965f2881452153"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
      "sample_index": 4,
      "source": "fragment_embed:3",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "4e7af266fbad799e215c709179c8c45fa0c36aaa95d693b5170087c50118746b",
-     "ts_opt_key": "b5b045975ca7c43f83a89b9c06a3bb83598a8773439a00f4808fb1d38c9c2a2c",
-     "frequency_key": "4f766ced3421891b2e93b38532e1739e1a84965d534d890b792bba302ad444c8"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
      "sample_index": 5,
      "source": "fragment_embed:4",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "a33c461dad4b40cc92300920fdf9d36522f1a7c4142088895c8916370beb145b",
-     "ts_opt_key": "cdf2f0f3bcab02a51f5d7ba71aebddd3f320e364cfb9679fd53b26f0227e5540",
-     "frequency_key": "f6414db5ff2ac332d2e057e3c91d0060e1ae0ec12c7d228e11a51b357c5b1b15"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
      "sample_index": 6,
      "source": "fragment_embed:5",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "c5e245b71384d66c76053911ba5ce7759dc0cd158449aaffb408e63edcec3d83",
-     "ts_opt_key": "35b9f55bee246ddaa2406da77db1f1b3a8b3718a16e90499a4dd353e85b015bd",
-     "frequency_key": "420c9e602039dd3d0162ea3541af251c69f47f75dd1b8d6005bfd56cb0c9e384"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
@@ -1030,9 +1114,9 @@
      "sample_index": 9,
      "source": "fragment_embed:8",
      "species_id": "TS1a_x__npropyl",
-     "pre_relax_key": "458a88d5ab6be5efa8e2f90edf66d9aa0a632c51ecacb690e12e1df420381a8e",
-     "ts_opt_key": "5a1115e212acb9748977638e95a03ef56c948e3e58939046c92a922ecbc79c3a",
-     "frequency_key": "2e1d49400400ff5b55f765ea97639268bed2e3a774200b20e8d18f2c2fc9c620"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__npropyl",
@@ -1054,6 +1138,14 @@
      ],
      "frequency_keys": [
       "21e9a03a3dfd37d22b05d74598bc29252478c8b9ea273730948711fe82ac3833"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "21e9a03a3dfd37d22b05d74598bc29252478c8b9ea273730948711fe82ac3833",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     },
     {
@@ -1087,9 +1179,55 @@
       "b9f634a6b6a8fff7d718794140b6f6571dd899e80d7dfde9eb353fbd5b1bc362",
       "1e9e5a302bbf51fbd7378bd95896589aba58269c0723512e412a7c8414057db3",
       "b96f333d2f9f52ba084c31f33ad16266a63e134814cc1665f09987b81a9899e3"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "82e71322020d1486f50d57cf4d4d95f38bac8cec6bb252f80f9c0f40ce0c2d4a",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "d4e87cb8532620ab050a4f719b14d7abb8d183461fa8541a7bafd8bb779abd4e",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b1d0392cf663d430f86b57d02a135431f9a9c470dc406aa35ca22935bdcc56cc",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b9f634a6b6a8fff7d718794140b6f6571dd899e80d7dfde9eb353fbd5b1bc362",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "1e9e5a302bbf51fbd7378bd95896589aba58269c0723512e412a7c8414057db3",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b96f333d2f9f52ba084c31f33ad16266a63e134814cc1665f09987b81a9899e3",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      }
      ]
     }
-   ]
+   ],
+   "validation": {
+    "imag_tol_cm1": 20.0,
+    "cutoff_cm1": -50.0,
+    "min_active_core_ke_fraction": 0.6,
+    "min_forming_stretch_overlap": 0.5,
+    "forming_distance_min_angstrom": 1.9,
+    "forming_distance_max_angstrom": 2.9
+   }
   }
  ],
  "selectivity": [],

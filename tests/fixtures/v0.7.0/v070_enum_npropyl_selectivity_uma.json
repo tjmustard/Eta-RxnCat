@@ -13,12 +13,12 @@
       }
     }
   },
-  "commit_sha": "3af1e954da3315db3dbcc3a81ed5a772f8be71a9",
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
   "export": {
     "candidates": 2,
-    "frequencies": 31,
+    "frequencies": 21,
     "frequencies_missing": 0,
-    "trajectories": 69,
+    "trajectories": 49,
     "trajectories_missing": 0
   },
   "failed_checks": [],

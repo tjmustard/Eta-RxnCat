@@ -730,7 +730,7 @@
       "rank": 1,
       "outcome": "chosen",
       "reason": null,
-      "wall_time_s": 670.5068271138007
+      "wall_time_s": 34.955437495955266
      }
     ],
     "chosen_template_id": "TS1a_x__ethyl",
@@ -805,26 +805,74 @@
      {
       "index": 1,
       "source": "fragment_embed:0",
-      "reason": "pre_relax_failed:PreRelaxTimeout",
-      "pre_relax_wall_time_s": 600.0052977799205
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        6,
+        17
+       ],
+       "distance_angstrom": 1.6320379549078434,
+       "ratio_to_covalent_sum": 1.0737091808604233,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 2,
       "source": "fragment_embed:1",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 18.974934852914885
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        14,
+        18
+       ],
+       "distance_angstrom": 1.254589248092586,
+       "ratio_to_covalent_sum": 1.1725133159743795,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 5,
       "source": "fragment_embed:4",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 2.222783650038764
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        18
+       ],
+       "distance_angstrom": 1.3357310917386562,
+       "ratio_to_covalent_sum": 1.2483468147090244,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 9,
       "source": "fragment_embed:9",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 14.348373334971257
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        15,
+        18
+       ],
+       "distance_angstrom": 1.238448792417803,
+       "ratio_to_covalent_sum": 1.1574287779605634,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      }
     ],
     "merges": [
@@ -886,7 +934,7 @@
      "sample_index": 1,
      "source": "fragment_embed:0",
      "species_id": "TS1a_x__ethyl",
-     "pre_relax_key": "0c3ae8d0cbf2b5ee01036a5bddae5baa378d2d16242f3e179344e453c96e7f3e",
+     "pre_relax_key": null,
      "ts_opt_key": null,
      "frequency_key": null
     },
@@ -895,9 +943,9 @@
      "sample_index": 2,
      "source": "fragment_embed:1",
      "species_id": "TS1a_x__ethyl",
-     "pre_relax_key": "7870f9af36f812becc2144dcc27c5502c6a712f7bac794e460ce2228bc352aa6",
-     "ts_opt_key": "28aea1178a684a345ff4a4c4c5a2aeef31eec8a4e338679864b6ced344f19bcd",
-     "frequency_key": "f1c9080c8c5f790b3ed76358aeb4db974ed684e5e444d02fbfc6c3ef188740f6"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__ethyl",
@@ -922,9 +970,9 @@
      "sample_index": 5,
      "source": "fragment_embed:4",
      "species_id": "TS1a_x__ethyl",
-     "pre_relax_key": "9b90ab8832c120cdbe781ccc763b133669c0422c4b54fac82b522254a9f4e88d",
-     "ts_opt_key": "d03ab1b1fb369594462bbc5e7850569be94d62072d297b206ea88cc709fa05af",
-     "frequency_key": "555c9db00b8a7b6f6b6508427e92db68248ab1249bd6d91cf62562f4f6be44ea"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__ethyl",
@@ -958,9 +1006,9 @@
      "sample_index": 9,
      "source": "fragment_embed:9",
      "species_id": "TS1a_x__ethyl",
-     "pre_relax_key": "7c4f799046e5f59e2e400e887aaec4236a89de1dd3df7f504849065347f4d7c5",
-     "ts_opt_key": "49cc6df51b514341baca6623082256a8e34e141cfdb9cfef7a98d3eaec600bf1",
-     "frequency_key": "a7551394f2867f7dfcccb24fb74a9b857fbd20350b5e113abe1093673eb59990"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_x__ethyl",
@@ -982,6 +1030,14 @@
      ],
      "frequency_keys": [
       "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     },
     {
@@ -1007,9 +1063,37 @@
       "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
       "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
       "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     }
-   ]
+   ],
+   "validation": {
+    "imag_tol_cm1": 20.0,
+    "cutoff_cm1": -50.0,
+    "min_active_core_ke_fraction": 0.6,
+    "min_forming_stretch_overlap": 0.5,
+    "forming_distance_min_angstrom": 1.9,
+    "forming_distance_max_angstrom": 2.9
+   }
   }
  ],
  "selectivity": [],

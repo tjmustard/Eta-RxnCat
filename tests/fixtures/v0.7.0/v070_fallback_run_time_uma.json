@@ -362,8 +362,8 @@
         "status": "pass"
       },
       "engine_calls_attributed": {
-        "attributed": 362,
-        "first_pass": 362,
+        "attributed": 0,
+        "first_pass": 0,
         "status": "pass"
       },
       "every_member_face_expected": {
@@ -407,12 +407,12 @@
       },
       "no_engine_error_or_face_mismatch": {
         "exclusions_by_reason": {
-          "orientation_mismatch": 5
+          "seed_clash": 5
         },
         "status": "pass"
       },
       "rank_1_no_ts_search_calls": {
-        "all_calls": 10,
+        "all_calls": 0,
         "status": "pass",
         "ts_search_calls": 0
       },
@@ -427,7 +427,7 @@
       }
     }
   },
-  "commit_sha": "24668b35e8c1074a185121d7bca9ce3995bd9866",
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
   "construct": "run_time",
   "environment": {
     "device": "cuda",
@@ -454,9 +454,9 @@
   },
   "export": {
     "candidates": 1,
-    "frequencies": 11,
+    "frequencies": 6,
     "frequencies_missing": 0,
-    "trajectories": 22,
+    "trajectories": 12,
     "trajectories_missing": 0
   },
   "failed_checks": [],
@@ -474,7 +474,7 @@
         "rank": 2,
         "reason": null,
         "template_id": "TS1a_n__ethyl",
-        "wall_time_s": 48.92612797592301
+        "wall_time_s": 20.818978947820142
       }
     ],
     "chosen_template_id": "TS1a_n__ethyl",
@@ -482,14 +482,8 @@
     "stop_reason": null
   },
   "first_pass_engine_calls_by_template_stage": {
-    "TS1a_n__ethyl": {
-      "constrained_preopt": 282,
-      "frequency": 11,
-      "ts_opt": 59
-    },
-    "TS1a_x__ethyl": {
-      "constrained_preopt": 10
-    }
+    "TS1a_n__ethyl": {},
+    "TS1a_x__ethyl": {}
   },
   "fixture": "e2e5_v070_fallback",
   "gated": false,
@@ -514,44 +508,104 @@
     "derivation_new_rows": 0,
     "excluded": [
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3012553266543825,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.2161264735087687
+        },
         "index": 3,
-        "pre_relax_wall_time_s": 3.0647931080311537,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:2"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2791055924956816,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.1954257873791416
+        },
         "index": 4,
-        "pre_relax_wall_time_s": 4.801840670988895,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:3"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 0.47032843332439034,
+          "pair": [
+            4,
+            21
+          ],
+          "ratio_to_covalent_sum": 0.4395592834807386
+        },
         "index": 6,
-        "pre_relax_wall_time_s": 14.342453032033518,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:6"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.2352943626679516,
+          "pair": [
+            4,
+            22
+          ],
+          "ratio_to_covalent_sum": 1.1544807127737864
+        },
         "index": 7,
-        "pre_relax_wall_time_s": 3.588777948054485,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:7"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3756212739432883,
+          "pair": [
+            4,
+            23
+          ],
+          "ratio_to_covalent_sum": 1.285627358825503
+        },
         "index": 8,
-        "pre_relax_wall_time_s": 2.3092842689948156,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:8"
       }
     ],
     "exclusions_by_reason": {
-      "orientation_mismatch": 5
+      "seed_clash": 5
     },
-    "first_pass_engine_calls": 362,
-    "first_pass_new_rows": 34,
-    "first_pass_wall_time_s": 158.7994900860358,
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 43.58533523103688,
     "graft_pre_relax_timeouts": 0,
-    "max_pre_relax_wall_time_s": 14.342453032033518,
+    "max_pre_relax_wall_time_s": 5.549354461953044,
     "members": [
       {
         "G_hartree": -389.1059108709095,
@@ -603,7 +657,7 @@
     "n_members": 3,
     "n_merges": 3,
     "n_samples_run": 11,
-    "orientation_mismatch_count": 5,
+    "orientation_mismatch_count": 0,
     "reactant_key": [
       [
         "C1=CCC=C1",
@@ -616,32 +670,32 @@
     ],
     "reactants": {},
     "resources": {
-      "cpu_user_plus_sys_s": 1886.181238,
-      "peak_rss_child_kb": 8177136,
-      "peak_rss_self_kb": 10591056,
-      "wall_time_s": 258.6050709260162
+      "cpu_user_plus_sys_s": 505.7140130000001,
+      "peak_rss_child_kb": 563916,
+      "peak_rss_self_kb": 8944504,
+      "wall_time_s": 104.3809861469781
     },
     "second_pass_engine_calls": 0,
     "second_pass_new_rows": 0,
-    "second_pass_wall_time_s": 57.62740975397173,
+    "second_pass_wall_time_s": 37.852579643949866,
     "stage_metrics": {
       "constrained_preopt": {
-        "cache_hits": 0,
-        "engine_calls": 273,
-        "rows_created": 10,
-        "wall_time_s": 47.5187041349709
+        "cache_hits": 5,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
       },
       "frequency": {
-        "cache_hits": 0,
-        "engine_calls": 11,
-        "rows_created": 11,
-        "wall_time_s": 12.923563944874331
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008198544150218368
       },
       "ts_opt": {
-        "cache_hits": 0,
-        "engine_calls": 59,
-        "rows_created": 11,
-        "wall_time_s": 25.350648041116074
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.006719302968122065
       }
     },
     "stall_cap_reached_bool": false,
@@ -664,7 +718,7 @@
         "rank": 2,
         "reason": null,
         "template_id": "TS1a_n__ethyl",
-        "wall_time_s": 48.92612797592301
+        "wall_time_s": 20.818978947820142
       }
     ],
     "chosen_template_id": "TS1a_n__ethyl",

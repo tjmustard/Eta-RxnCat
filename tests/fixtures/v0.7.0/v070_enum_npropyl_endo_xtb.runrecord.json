@@ -802,7 +802,7 @@
       "rank": 1,
       "outcome": "chosen",
       "reason": null,
-      "wall_time_s": 340.6915695092175
+      "wall_time_s": 70.73385082115419
      }
     ],
     "chosen_template_id": "TS1a_n__npropyl",
@@ -892,20 +892,56 @@
      {
       "index": 7,
       "source": "fragment_embed:6",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 244.76607714302372
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        25
+       ],
+       "distance_angstrom": 1.175126607095131,
+       "ratio_to_covalent_sum": 1.0982491655094682,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 8,
       "source": "fragment_embed:7",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 14.202933816006407
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        26
+       ],
+       "distance_angstrom": 1.1960660918019492,
+       "ratio_to_covalent_sum": 1.1178187773849992,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 9,
       "source": "fragment_embed:9",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 10.988707729033194
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        26
+       ],
+       "distance_angstrom": 1.2735939349129,
+       "ratio_to_covalent_sum": 1.1902747055260747,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      }
     ],
     "merges": [
@@ -1021,27 +1057,27 @@
      "sample_index": 7,
      "source": "fragment_embed:6",
      "species_id": "TS1a_n__npropyl",
-     "pre_relax_key": "b2ec6766d878b33409b82fa9ec58f8d73f92b32f103130607c3b1893f442724d",
-     "ts_opt_key": "80232dd636aaaec8fdb2eeb59854ae9f0a860a2c568d918b21ce65a8c46ce391",
-     "frequency_key": "0836bb7fa1eb8757da98ea012bb32f5d97dfef0fb86eeb9b7b1633d737f1206a"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__npropyl",
      "sample_index": 8,
      "source": "fragment_embed:7",
      "species_id": "TS1a_n__npropyl",
-     "pre_relax_key": "44ef4c7d8fdb054fbfcf3519806122c249bc2731b225bc5f70f96495803951ca",
-     "ts_opt_key": "30af75fd094ca75da71714a651e806d01524c8845b0b7a4ca400a6265db306f7",
-     "frequency_key": "b52fb8457ffb6b6b03b15bda269a2dd34278eb9ab4ef26fa9a65b5f84b67930a"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__npropyl",
      "sample_index": 9,
      "source": "fragment_embed:9",
      "species_id": "TS1a_n__npropyl",
-     "pre_relax_key": "1f1b9b79e68da748833639836f9dabfafb0b7e90a943f41df3691147ea65e466",
-     "ts_opt_key": "270174e20143f45e3154babe4e92f959385505ce811fecad1c4b9a7c59dd1fd0",
-     "frequency_key": "db713d79fbdf03fd765e376a5b6279e2f0878da34a2f514dee100ff61a3d9d6e"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__npropyl",
@@ -1063,6 +1099,14 @@
      ],
      "frequency_keys": [
       "21e9a03a3dfd37d22b05d74598bc29252478c8b9ea273730948711fe82ac3833"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "21e9a03a3dfd37d22b05d74598bc29252478c8b9ea273730948711fe82ac3833",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     },
     {
@@ -1096,9 +1140,55 @@
       "b9f634a6b6a8fff7d718794140b6f6571dd899e80d7dfde9eb353fbd5b1bc362",
       "1e9e5a302bbf51fbd7378bd95896589aba58269c0723512e412a7c8414057db3",
       "b96f333d2f9f52ba084c31f33ad16266a63e134814cc1665f09987b81a9899e3"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "82e71322020d1486f50d57cf4d4d95f38bac8cec6bb252f80f9c0f40ce0c2d4a",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "d4e87cb8532620ab050a4f719b14d7abb8d183461fa8541a7bafd8bb779abd4e",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b1d0392cf663d430f86b57d02a135431f9a9c470dc406aa35ca22935bdcc56cc",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b9f634a6b6a8fff7d718794140b6f6571dd899e80d7dfde9eb353fbd5b1bc362",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "1e9e5a302bbf51fbd7378bd95896589aba58269c0723512e412a7c8414057db3",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "b96f333d2f9f52ba084c31f33ad16266a63e134814cc1665f09987b81a9899e3",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      }
      ]
     }
-   ]
+   ],
+   "validation": {
+    "imag_tol_cm1": 20.0,
+    "cutoff_cm1": -50.0,
+    "min_active_core_ke_fraction": 0.6,
+    "min_forming_stretch_overlap": 0.5,
+    "forming_distance_min_angstrom": 1.9,
+    "forming_distance_max_angstrom": 2.9
+   }
   }
  ],
  "selectivity": [],

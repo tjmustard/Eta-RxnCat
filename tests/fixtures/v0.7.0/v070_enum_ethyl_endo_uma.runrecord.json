@@ -730,7 +730,7 @@
       "rank": 1,
       "outcome": "chosen",
       "reason": null,
-      "wall_time_s": 84.91450615390204
+      "wall_time_s": 30.975337742944248
      }
     ],
     "chosen_template_id": "TS1a_n__ethyl",
@@ -805,32 +805,92 @@
      {
       "index": 3,
       "source": "fragment_embed:2",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 2.5047904609236866
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        22
+       ],
+       "distance_angstrom": 1.3001530799685124,
+       "ratio_to_covalent_sum": 1.2150963364191705,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 4,
       "source": "fragment_embed:3",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 4.796817540074699
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        23
+       ],
+       "distance_angstrom": 1.2791106224910305,
+       "ratio_to_covalent_sum": 1.1954304883093743,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 6,
       "source": "fragment_embed:6",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 40.94515582197346
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        21
+       ],
+       "distance_angstrom": 0.47073801030310364,
+       "ratio_to_covalent_sum": 0.43994206570383515,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 7,
       "source": "fragment_embed:7",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 3.474152778973803
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        22
+       ],
+       "distance_angstrom": 1.227594664582584,
+       "ratio_to_covalent_sum": 1.1472847332547513,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      },
      {
       "index": 8,
       "source": "fragment_embed:8",
-      "reason": "orientation_mismatch",
-      "pre_relax_wall_time_s": 2.218251809012145
+      "reason": "seed_clash",
+      "pre_relax_wall_time_s": null,
+      "detail": {
+       "check": "clash",
+       "pair": [
+        4,
+        23
+       ],
+       "distance_angstrom": 1.3710946709480432,
+       "ratio_to_covalent_sum": 1.2813968887364888,
+       "bonds_formed": null,
+       "bonds_broken": null,
+       "close_contact_count": null
+      }
      }
     ],
     "merges": [
@@ -904,18 +964,18 @@
      "sample_index": 3,
      "source": "fragment_embed:2",
      "species_id": "TS1a_n__ethyl",
-     "pre_relax_key": "66a2fc1dcb344f4e1868172c5b8a28e3c4a723a8c97a92ba08f2933436293452",
-     "ts_opt_key": "026e0db97e379d13e8fe6adce8ddc1c418f08eb3e64efdeaa64ea0df97edbdab",
-     "frequency_key": "49e8c0b6aa323e977dda4712044984ff09fb7b25f21c9f6c2b629c6a26e501f4"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__ethyl",
      "sample_index": 4,
      "source": "fragment_embed:3",
      "species_id": "TS1a_n__ethyl",
-     "pre_relax_key": "40f7a140b5f8be21e22be1b61a84190eeab151eeb910d12a288b81942d591c5c",
-     "ts_opt_key": "8d46eea1da37c6e8a1fd8993707221f1c06bbcfcc4925e0a327bbf595ab41f4a",
-     "frequency_key": "e0165deb1718b0add43970a4f1775b7737a7164a71c06bc13b4c80fc7d5b32ea"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__ethyl",
@@ -931,27 +991,27 @@
      "sample_index": 6,
      "source": "fragment_embed:6",
      "species_id": "TS1a_n__ethyl",
-     "pre_relax_key": "2d3a91828e1cd1ce2d7ae928c55ee0e5c686f2d9e41dee3c78d72e4758d06426",
-     "ts_opt_key": "cc71bdc8b21ce80a95d601df60b7cbeb2f3f695c3f3b462f321356fc4a0235a2",
-     "frequency_key": "f48db03ebd30dc769ecdb7ea9d7011266e2178585e4d6b5feb9db8df7e24d298"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__ethyl",
      "sample_index": 7,
      "source": "fragment_embed:7",
      "species_id": "TS1a_n__ethyl",
-     "pre_relax_key": "04addf339bc9b1de2e99d521a7a636f3844f1528b3537dfc7fd51223c64e8de5",
-     "ts_opt_key": "8511e1031704187c1d8ab60e61c8d6f67204183260880494afbf73aa065d19ee",
-     "frequency_key": "4cbf937be2f3ef4d81a9fe8eef0ac3d261809d3cf84454710ec60a8f583871d0"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__ethyl",
      "sample_index": 8,
      "source": "fragment_embed:8",
      "species_id": "TS1a_n__ethyl",
-     "pre_relax_key": "efc6f87fb0707545b947ec15cd9c9d698d5147c9d87f3333ccffceb98c527966",
-     "ts_opt_key": "d26612b8d5a2d5a4fab9355bd18f8a9bc1a93a0d661dbaa2d15d406272429745",
-     "frequency_key": "c9222a7e57d585095581527f3effa3bacfdb678444b417fc3e375a4682bbb4f0"
+     "pre_relax_key": null,
+     "ts_opt_key": null,
+     "frequency_key": null
     },
     {
      "template_id": "TS1a_n__ethyl",
@@ -982,6 +1042,14 @@
      ],
      "frequency_keys": [
       "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "ea8df6ab937d5f62ab2862972dc284a425ab7a99fe164abaae71674a0e92868a",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     },
     {
@@ -1007,9 +1075,37 @@
       "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
       "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
       "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea"
+     ],
+     "frequency_dispositions": [
+      {
+       "frequency_key": "4f44d28f716a001a950f2ef9f92883956347d02457ec8ab01eaec6dcdfc9ddbb",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "37738fa0e1b3eaed222eca6383ef5fb27d878cf098c0fc2af9c68fb495155b01",
+       "kind": "dropped",
+       "reason": "mirror_partner",
+       "superseded_by_key": null
+      },
+      {
+       "frequency_key": "74e2fabf2d01998da064ee702d9ecf98fde0fa8838dca13ee030767d0c0254ea",
+       "kind": "kept",
+       "reason": null,
+       "superseded_by_key": null
+      }
      ]
     }
-   ]
+   ],
+   "validation": {
+    "imag_tol_cm1": 20.0,
+    "cutoff_cm1": -50.0,
+    "min_active_core_ke_fraction": 0.6,
+    "min_forming_stretch_overlap": 0.5,
+    "forming_distance_min_angstrom": 1.9,
+    "forming_distance_max_angstrom": 2.9
+   }
   }
  ],
  "selectivity": [],

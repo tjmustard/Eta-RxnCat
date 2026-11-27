@@ -395,8 +395,7 @@
       },
       "no_engine_error_or_face_mismatch": {
         "exclusions_by_reason": {
-          "orientation_mismatch": 3,
-          "pre_relax_failed:PreRelaxTimeout": 1
+          "seed_clash": 4
         },
         "status": "pass"
       },
@@ -411,7 +410,7 @@
       }
     }
   },
-  "commit_sha": "3af1e954da3315db3dbcc3a81ed5a772f8be71a9",
+  "commit_sha": "e798c92b8040224d76f2099059d88c517d1b3645",
   "environment": {
     "device": "cuda",
     "engine": {
@@ -437,9 +436,9 @@
   },
   "export": {
     "candidates": 1,
-    "frequencies": 14,
+    "frequencies": 11,
     "frequencies_missing": 0,
-    "trajectories": 39,
+    "trajectories": 32,
     "trajectories_missing": 0
   },
   "failed_checks": [],
@@ -450,7 +449,7 @@
         "rank": 1,
         "reason": null,
         "template_id": "TS1a_x__ethyl",
-        "wall_time_s": 670.5068271138007
+        "wall_time_s": 34.955437495955266
       }
     ],
     "chosen_template_id": "TS1a_x__ethyl",
@@ -485,39 +484,86 @@
     "derivation_new_rows": 0,
     "excluded": [
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.6320379549078434,
+          "pair": [
+            6,
+            17
+          ],
+          "ratio_to_covalent_sum": 1.0737091808604233
+        },
         "index": 1,
-        "pre_relax_wall_time_s": 600.0052977799205,
-        "reason": "pre_relax_failed:PreRelaxTimeout",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:0"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.254589248092586,
+          "pair": [
+            14,
+            18
+          ],
+          "ratio_to_covalent_sum": 1.1725133159743795
+        },
         "index": 2,
-        "pre_relax_wall_time_s": 18.974934852914885,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:1"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.3357310917386562,
+          "pair": [
+            15,
+            18
+          ],
+          "ratio_to_covalent_sum": 1.2483468147090244
+        },
         "index": 5,
-        "pre_relax_wall_time_s": 2.222783650038764,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:4"
       },
       {
+        "detail": {
+          "bonds_broken": null,
+          "bonds_formed": null,
+          "check": "clash",
+          "close_contact_count": null,
+          "distance_angstrom": 1.238448792417803,
+          "pair": [
+            15,
+            18
+          ],
+          "ratio_to_covalent_sum": 1.1574287779605634
+        },
         "index": 9,
-        "pre_relax_wall_time_s": 14.348373334971257,
-        "reason": "orientation_mismatch",
+        "pre_relax_wall_time_s": null,
+        "reason": "seed_clash",
         "source": "fragment_embed:9"
       }
     ],
     "exclusions_by_reason": {
-      "orientation_mismatch": 3,
-      "pre_relax_failed:PreRelaxTimeout": 1
+      "seed_clash": 4
     },
-    "first_pass_engine_calls": 357,
-    "first_pass_new_rows": 31,
-    "first_pass_wall_time_s": 758.322465770063,
+    "first_pass_engine_calls": 0,
+    "first_pass_new_rows": 0,
+    "first_pass_wall_time_s": 57.151105290977284,
     "graft_pre_relax_timeouts": 0,
-    "max_pre_relax_wall_time_s": 600.0052977799205,
+    "max_pre_relax_wall_time_s": 5.742645579972304,
     "members": [
       {
         "G_hartree": -389.099475087696,
@@ -569,7 +615,7 @@
     "n_members": 3,
     "n_merges": 4,
     "n_samples_run": 11,
-    "orientation_mismatch_count": 3,
+    "orientation_mismatch_count": 0,
     "reactant_key": [
       [
         "C1=CCC=C1",
@@ -591,46 +637,38 @@
       }
     },
     "resources": {
-      "cpu_user_plus_sys_s": 13674.303797999999,
-      "peak_rss_child_kb": 8207500,
-      "peak_rss_self_kb": 10624868,
-      "wall_time_s": 852.8019565460272
+      "cpu_user_plus_sys_s": 779.8133949999999,
+      "peak_rss_child_kb": 560312,
+      "peak_rss_self_kb": 8945148,
+      "wall_time_s": 148.7160600250354
     },
     "second_pass_engine_calls": 0,
     "second_pass_new_rows": 0,
-    "second_pass_wall_time_s": 56.69969318190124,
+    "second_pass_wall_time_s": 60.356277885031886,
     "stage_metrics": {
       "constrained_preopt": {
-        "cache_hits": 0,
-        "engine_calls": 288,
-        "rows_created": 10,
-        "wall_time_s": 656.1754732117988
+        "cache_hits": 6,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.0
       },
       "frequency": {
-        "cache_hits": 0,
-        "engine_calls": 10,
-        "rows_created": 10,
-        "wall_time_s": 12.020291620865464
+        "cache_hits": 7,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.008185242069885135
       },
       "ts_opt": {
-        "cache_hits": 0,
-        "engine_calls": 49,
-        "rows_created": 10,
-        "wall_time_s": 18.687661927891895
+        "cache_hits": 7,
+        "engine_calls": 0,
+        "rows_created": 0,
+        "wall_time_s": 0.00338715105317533
       }
     },
     "stall_cap_reached_bool": false,
-    "stall_count": 1,
-    "time_lost_to_stalls_s": 600.0052977799205,
-    "timeouts": [
-      {
-        "budget_kind": "load_scaled_wall",
-        "budget_s": 600.0,
-        "load1": 7.58056640625,
-        "sample_index": 1,
-        "wall_time_s": 600.0052977799205
-      }
-    ]
+    "stall_count": 0,
+    "time_lost_to_stalls_s": 0.0,
+    "timeouts": []
   },
   "schema": 1,
   "test_outcome": "passed"
