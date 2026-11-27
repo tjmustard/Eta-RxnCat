@@ -29,9 +29,9 @@ def write_config(tmp_path: Path, exempt: list[dict[str, Any]], nvidia: bool = Tr
     ]["licence-gate"]
     lines = ["[tool.eta-rxncat.licence-gate]"]
     lines += [f"{k} = {toml_value(gate[k])}" for k in ("allowed", "allowed-exceptions")]
-    for table in ("classifiers", "names"):
+    for table in ("classifiers", "names", "labels"):
         lines.append(f"[tool.eta-rxncat.licence-gate.{table}]")
-        lines += [f"{json.dumps(k)} = {json.dumps(v)}" for k, v in gate[table].items()]
+        lines += [f"{json.dumps(k)} = {json.dumps(v)}" for k, v in gate.get(table, {}).items()]
     rule = dict(gate["nvidia-rule"])
     if not nvidia:
         rule["profiles"] = []
@@ -263,6 +263,61 @@ def test_exact_names_case_insensitive(tmp_path: Path) -> None:
     dist(tmp_path / "site", "b", license_field="MIT Licence (see file)")
     result = gate(tmp_path)
     assert fails(result) == ["FAIL b:1.0 [license-field] MIT Licence (see file)"]
+
+
+BSD_CLASSIFIER = "License :: OSI Approved :: BSD License"
+BSD_LABEL = "[BSD (variant not stated)]"
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "source", "raw"),
+    [
+        ({"classifiers": (BSD_CLASSIFIER,)}, "classifier", "BSD License"),
+        ({"license_field": "BSD"}, "license-field", "BSD"),
+        ({"license_field": "BSD License"}, "license-field", "BSD License"),
+    ],
+    ids=["classifier", "name-bsd", "name-bsd-license"],
+)
+def test_bare_bsd_passes_with_the_label(
+    tmp_path: Path, kwargs: dict[str, Any], source: str, raw: str
+) -> None:
+    """A licence that names no BSD variant passes, and its row says so (R28)."""
+    dist(tmp_path / "site", "a", **kwargs)
+    result = gate(tmp_path)
+    assert result.returncode == 0, result.stdout
+    row = f"{'a':28} {'1.0':22} {source:13} {f'{raw} {BSD_LABEL}':62} pass"
+    assert row in result.stdout.splitlines(), result.stdout
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"expression": "BSD-3-Clause"},
+        {"expression": "BSD-3-Clause", "classifiers": (BSD_CLASSIFIER,)},
+        {"license_field": "BSD-3-Clause"},
+        {"license_field": "3-Clause BSD License"},
+    ],
+    ids=["expression", "expression-over-classifier", "field-id", "named-variant"],
+)
+def test_a_named_bsd_variant_is_not_labelled(tmp_path: Path, kwargs: dict[str, Any]) -> None:
+    """A licence that names its variant stays unlabelled (R28)."""
+    dist(tmp_path / "site", "a", **kwargs)
+    result = gate(tmp_path)
+    assert result.returncode == 0, result.stdout
+    assert "variant not stated" not in result.stdout
+
+
+def test_the_repo_maps_bare_bsd_to_the_labelled_id() -> None:
+    """The three bare forms resolve to the allowed LicenseRef id; the named variant does not."""
+    table = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))["tool"][
+        "eta-rxncat"
+    ]["licence-gate"]
+    bare = "LicenseRef-BSD-classifier"
+    assert table["classifiers"]["BSD License"] == bare
+    assert table["names"]["BSD"] == table["names"]["BSD License"] == bare
+    assert table["names"]["3-Clause BSD License"] == "BSD-3-Clause"
+    assert bare in table["allowed"]
+    assert table["labels"] == {bare: "BSD (variant not stated)"}
 
 
 def test_field_spdx_expression(tmp_path: Path) -> None:

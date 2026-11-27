@@ -105,13 +105,14 @@ addopts = "-m 'not gpu and not xtb and not mlip_mace and not mlip_uma and not sl
 allowed = [
     "MIT", "MIT-0", "MIT-CMU", "BSD-2-Clause", "BSD-3-Clause", "0BSD",
     "Apache-2.0", "ISC", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0", "BSL-1.0",
+    "LicenseRef-BSD-classifier",
 ]
 allowed-exceptions = ["LLVM-exception"]
 
 [tool.eta-rxncat.licence-gate.classifiers]
 # Last segment of a "License ::" classifier -> SPDX id or LicenseRef-*.
 "MIT License" = "MIT"
-"BSD License" = "BSD-3-Clause"
+"BSD License" = "LicenseRef-BSD-classifier"
 "Apache Software License" = "Apache-2.0"
 "ISC License (ISCL)" = "ISC"
 "Python Software Foundation License" = "PSF-2.0"
@@ -124,13 +125,17 @@ allowed-exceptions = ["LLVM-exception"]
 # Exact (case-insensitive) short License-field strings -> SPDX id or LicenseRef-*.
 "MIT" = "MIT"
 "MIT License" = "MIT"
-"BSD" = "BSD-3-Clause"
-"BSD License" = "BSD-3-Clause"
+"BSD" = "LicenseRef-BSD-classifier"
+"BSD License" = "LicenseRef-BSD-classifier"
 "3-Clause BSD License" = "BSD-3-Clause"
 "Apache 2.0" = "Apache-2.0"
 "Apache License 2.0" = "Apache-2.0"
 "Apache Software License" = "Apache-2.0"
 "NVIDIA Proprietary Software" = "LicenseRef-NVIDIA-Proprietary"
+
+[tool.eta-rxncat.licence-gate.labels]
+# Shown after the raw licence text in the report when a package resolves to the id (R28).
+"LicenseRef-BSD-classifier" = "BSD (variant not stated)"
 
 [tool.eta-rxncat.licence-gate.nvidia-rule]
 prefix = "nvidia-"

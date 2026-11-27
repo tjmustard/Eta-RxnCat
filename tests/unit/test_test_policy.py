@@ -83,6 +83,40 @@ def test_setup_skip_fails_under_acceptance(
     result.stdout.fnmatch_lines(["*tool-missing-in-setup*"])
 
 
+TEARDOWN_SKIP_TEST = """
+import pytest
+
+@pytest.fixture
+def needs_tool():
+    yield
+    pytest.skip("tool-missing-in-teardown")
+
+def test_uses_tool(needs_tool):
+    pass
+"""
+
+
+def test_teardown_skip_fails_under_acceptance(
+    pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Under ETA_RXNCAT_ACCEPTANCE=1 a skip raised in teardown fails the run (R11)."""
+    monkeypatch.setenv("ETA_RXNCAT_ACCEPTANCE", "1")
+    result = run_inner(pytester, TEARDOWN_SKIP_TEST)
+    assert result.ret == 1
+    result.assert_outcomes(passed=1, errors=1)
+    result.stdout.fnmatch_lines(["*ETA_RXNCAT_ACCEPTANCE=1*tool-missing-in-teardown*"])
+
+
+def test_teardown_skip_stays_skip_without_variable(
+    pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Without the variable a teardown skip is a skip and the run exits 0."""
+    monkeypatch.delenv("ETA_RXNCAT_ACCEPTANCE", raising=False)
+    result = run_inner(pytester, TEARDOWN_SKIP_TEST)
+    assert result.ret == 0
+    result.assert_outcomes(passed=1, skipped=1)
+
+
 def test_hub_offline_inside_test() -> None:
     """The autouse session fixture sets both Hugging Face offline variables."""
     assert os.environ["HF_HUB_OFFLINE"] == "1"
@@ -216,8 +250,9 @@ def module_level_skips(path: Path) -> list[str]:
     """Return ``path:line`` for each module-level ``pytest.skip``/``pytest.importorskip`` call.
 
     Module level means anything that runs at import: top-level statements and class bodies,
-    including inside top-level ``if``/``try``/``with``. Calls inside functions and lambdas run
-    at test time and are allowed. ``from pytest import skip`` style names are caught too.
+    including inside top-level ``if``/``try``/``with``, decorators, default arguments and class
+    bases and keywords. Function and lambda bodies run at test time and are allowed.
+    ``import pytest as X`` and ``from pytest import skip`` style names are caught too.
     """
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {
@@ -227,11 +262,22 @@ def module_level_skips(path: Path) -> list[str]:
         for alias in node.names
         if alias.name in SKIP_CALLS
     }
+    modules = {"pytest"} | {
+        alias.asname
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+        if alias.name == "pytest" and alias.asname
+    }
     hits: list[str] = []
     stack: list[ast.AST] = list(tree.body)
     while stack:
         node = stack.pop()
         if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):
+            # The body runs later; decorators and defaults run when the module is imported.
+            stack.extend(getattr(node, "decorator_list", []))
+            stack.extend(node.args.defaults)
+            stack.extend(d for d in node.args.kw_defaults if d is not None)
             continue
         if isinstance(node, ast.Call):
             func = node.func
@@ -239,7 +285,7 @@ def module_level_skips(path: Path) -> list[str]:
                 isinstance(func, ast.Attribute)
                 and func.attr in SKIP_CALLS
                 and isinstance(func.value, ast.Name)
-                and func.value.id == "pytest"
+                and func.value.id in modules
             ) or (isinstance(func, ast.Name) and func.id in aliases):
                 hits.append(f"{path}:{node.lineno}")
         stack.extend(ast.iter_child_nodes(node))
@@ -267,6 +313,22 @@ def test_no_module_level_skips_in_engine_tests() -> None:
         ("import pytest\n@pytest.fixture\ndef m():\n    return pytest.importorskip('x')\n", False),
         ("import pytest\nf = lambda: pytest.skip('x')\n", False),
         ("import pytest\npytestmark = pytest.mark.xtb\n", False),
+        ("import pytest as pt\nm = pt.importorskip('x')\n", True),
+        ("import pytest as pt\nif True:\n    pt.skip('x', allow_module_level=True)\n", True),
+        ("import pytest\n@pytest.importorskip('x').deco\ndef f():\n    pass\n", True),
+        ("import pytest\ndef f(m=pytest.importorskip('x')):\n    pass\n", True),
+        ("import pytest\ndef f(*, m=pytest.importorskip('x')):\n    pass\n", True),
+        ("import pytest\nasync def f(m=pytest.skip('x')):\n    pass\n", True),
+        ("import pytest\nf = lambda m=pytest.skip('x'): m\n", True),
+        (
+            "import pytest\nclass TestA:\n    @pytest.importorskip('x').deco\n"
+            "    def test_a(self):\n        pass\n",
+            True,
+        ),
+        ("import pytest as pt\nclass TestA(pt.importorskip('x').Base):\n    pass\n", True),
+        ("import pytest as pt\nclass TestA(meta=pt.importorskip('x')):\n    pass\n", True),
+        ("import pytest as pt\ndef test_a():\n    pt.skip('x')\n", False),
+        ("import pytest\n@pytest.mark.skip\ndef test_a():\n    pass\n", False),
     ],
     ids=[
         "top-level-importorskip",
@@ -278,6 +340,18 @@ def test_no_module_level_skips_in_engine_tests() -> None:
         "inside-fixture",
         "inside-lambda",
         "marker-only",
+        "module-alias",
+        "module-alias-in-if",
+        "decorator",
+        "argument-default",
+        "keyword-only-default",
+        "async-default",
+        "lambda-default",
+        "method-decorator",
+        "class-base",
+        "class-keyword",
+        "module-alias-in-test-function",
+        "skip-mark-decorator",
     ],
 )
 def test_module_level_skip_scanner(tmp_path: Path, source: str, flagged: bool) -> None:

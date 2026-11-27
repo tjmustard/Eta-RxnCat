@@ -171,6 +171,7 @@ class Config:
     exceptions: frozenset[str]
     classifiers: Mapping[str, str]
     names: Mapping[str, str]
+    labels: Mapping[str, str]
     exemptions: tuple[Exemption, ...]
     nvidia: NvidiaRule
 
@@ -230,6 +231,7 @@ def load_config(path: Path) -> Config:
         exceptions=frozenset(_strings(table, "allowed-exceptions")),
         classifiers=_string_map(table, "classifiers"),
         names={k.lower(): v for k, v in _string_map(table, "names").items()},
+        labels=_string_map(table, "labels") if "labels" in table else {},
         exemptions=tuple(
             Exemption(
                 package=_text(e, "package"),
@@ -372,7 +374,9 @@ def run(profile: str, config: Config, path: Sequence[str] | None) -> tuple[list[
                     and all(r in rule.licences for r in verdict.resolved)
                 ):
                     status = f"exempt ({rule.decision})"
-        rows.append(f"{name:28} {version:22} {verdict.source:13} {verdict.licence:62} {status}")
+        labels = dict.fromkeys(config.labels[r] for r in verdict.resolved if r in config.labels)
+        shown = verdict.licence + "".join(f" [{label}]" for label in labels)
+        rows.append(f"{name:28} {version:22} {verdict.source:13} {shown:62} {status}")
         if status == "FAIL":
             fails.append(f"FAIL {name}:{version} [{verdict.source}] {verdict.licence}")
     for index, exemption in enumerate(exemptions):

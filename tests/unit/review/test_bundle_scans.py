@@ -1,6 +1,7 @@
 """Scans of a written bundle: no network reference, no host data, no script sink; stable bytes."""
 
 import getpass
+import hashlib
 import re
 import socket
 from pathlib import Path
@@ -8,12 +9,21 @@ from pathlib import Path
 import pytest
 from bundle_helpers import exported, hostile
 from review_helpers import SECRET
+from test_assets import LICENSE_SHA256, MIN_JS_SHA256
 
 from eta_rxncat.review import RunData, write_review_bundle
 from eta_rxncat.review.bundle import ASSETS_PATH
 
 REPO = Path(__file__).parents[3]
 VENDORED = {"3Dmol-min.js"}
+PINNED_SHA256 = frozenset({MIN_JS_SHA256, LICENSE_SHA256})
+"""The pin source: the vendored assets' sha256 in ``test_assets.py`` (as in ``assets/SOURCES.md``).
+
+A file with these exact bytes is third-party text eta cannot have written host data into, and a
+short user or host name can match inside it by chance (R40).
+"""
+IN_PINNED_ONLY = "Float32Array"
+"""A word of the pinned 3Dmol build that no other bundle file holds."""
 SINKS = {
     "innerHTML": r"innerHTML",
     "outerHTML": r"outerHTML",
@@ -61,7 +71,7 @@ def test_every_reference_is_a_vendored_file_or_an_anchor(bundle: Path) -> None:
 
 
 def test_no_host_data_in_any_file(bundle: Path, tmp_path: Path) -> None:
-    """No file holds a local path, the user name or the host name."""
+    """No file eta wrote holds a local path, the user name or the host name."""
     forbidden = {
         str(tmp_path),
         str(REPO),
@@ -74,8 +84,43 @@ def test_no_host_data_in_any_file(bundle: Path, tmp_path: Path) -> None:
         socket.gethostname(),
     }
     for name, content in contents(bundle).items():
+        if hashlib.sha256(content).hexdigest() in PINNED_SHA256:
+            continue
         for item in forbidden:
             assert item.encode() not in content, (name, item)
+
+
+def stand_in(monkeypatch: pytest.MonkeyPatch, kind: str, name: str) -> None:
+    """Make ``name`` the user name or the host name the scan looks for."""
+    if kind == "user":
+        monkeypatch.setattr(getpass, "getuser", lambda: name)
+    else:
+        monkeypatch.setattr(socket, "gethostname", lambda: name)
+
+
+@pytest.mark.parametrize("kind", ["user", "host"])
+def test_the_host_data_scan_skips_the_pinned_3dmol_file(
+    bundle: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    """A name that only the pinned 3Dmol build happens to contain is not a finding (R40)."""
+    holders = [n for n, c in contents(bundle).items() if IN_PINNED_ONLY.encode() in c]
+    assert holders == ["assets/3Dmol-min.js"]
+    stand_in(monkeypatch, kind, IN_PINNED_ONLY)
+    test_no_host_data_in_any_file(bundle, tmp_path)
+
+
+@pytest.mark.parametrize("name", ["assets/eta-view.js", "index.html", "assets/3Dmol-min.js"])
+@pytest.mark.parametrize("kind", ["user", "host"])
+def test_the_host_data_scan_finds_a_planted_name(
+    bundle: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str, name: str
+) -> None:
+    """A name planted in any file is found, the 3Dmol build too once its bytes leave the pin."""
+    planted = "planted-name-r40"
+    stand_in(monkeypatch, kind, planted)
+    with (bundle / name).open("ab") as handle:
+        handle.write(planted.encode())
+    with pytest.raises(AssertionError, match=planted):
+        test_no_host_data_in_any_file(bundle, tmp_path)
 
 
 def test_eta_scripts_use_no_sink(bundle: Path) -> None:

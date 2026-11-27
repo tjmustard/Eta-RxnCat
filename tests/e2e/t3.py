@@ -37,6 +37,7 @@ from eta_rxncat.store import ArtifactStore
 
 CANDIDATES_V050 = REPO / "tests" / "candidate_outputs" / "v0.5.0"
 ENERGY_SOURCE_BOUND_KCAL_MOL = 0.01
+GFN2_REPORT_ONLY_FIXTURE = "e2e5_t3_ts4a_mapped"
 """Lead's slice 08 rule: the TS's frequency-run and gradient-run energies at one geometry may
 move ΔG‡ by at most this much, else stop and report (slice 06's energy-source note)."""
 REACTANT_STAGES = ("conformer_search", "geometry_opt", "frequency")
@@ -242,6 +243,15 @@ def reported_outcome(tier: dict[str, dict[str, Any]]) -> tuple[str, list[str]]:
     return ("failed" if failed else "passed"), failed
 
 
+def gated_on(recipe_name: str, fixture_name: str) -> str:
+    """What one case gates on one recipe, in the words of the v0.5.0 acceptance record (R32)."""
+    if recipe_name != "xtb":
+        return "all (UMA, Q-TJ3)"
+    if fixture_name == GFN2_REPORT_ONLY_FIXTURE:
+        return "none (report-only, R32)"
+    return "convergence, mode count, identity core (forming overlap, in phase, KE)"
+
+
 def reported_block(
     recipe_name: str,
     fixture: TSFixture,
@@ -288,7 +298,7 @@ def reported_block(
         )
     if first.barrier_error is not None:
         block["barrier_error"] = first.barrier_error
-    block["gated_on"] = "convergence, mode count" if recipe_name == "xtb" else "all (UMA, Q-TJ3)"
+    block["gated_on"] = gated_on(recipe_name, fixture.name)
     return block
 
 

@@ -63,7 +63,7 @@ def test_the_wheel_ships_the_assets_and_the_schema(tmp_path: Path) -> None:
     if uv is None:
         pytest.skip("uv is not installed")
     built = subprocess.run(
-        [uv, "build", "--wheel", "--out-dir", str(tmp_path)],
+        [uv, "build", "--wheel", "--offline", "--out-dir", str(tmp_path)],
         cwd=REPO,
         capture_output=True,
         text=True,
@@ -75,3 +75,22 @@ def test_the_wheel_ships_the_assets_and_the_schema(tmp_path: Path) -> None:
     expected.append("eta_rxncat/review/schema/run_data.v1.schema.json")
     for name in expected:
         assert names.count(name) == 1, name
+
+
+class _Captured(Exception):
+    """Carries the command the wheel test was about to run."""
+
+
+def test_the_wheel_build_is_offline(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The wheel test asks uv to build from its cache, never from the network (R39)."""
+
+    def capture(command: list[str], **_: object) -> None:
+        raise _Captured(command)
+
+    monkeypatch.setattr(shutil, "which", lambda _: "uv")
+    monkeypatch.setattr(subprocess, "run", capture)
+    with pytest.raises(_Captured) as caught:
+        test_the_wheel_ships_the_assets_and_the_schema(tmp_path)
+    (command,) = caught.value.args
+    assert command[:3] == ["uv", "build", "--wheel"]
+    assert "--offline" in command

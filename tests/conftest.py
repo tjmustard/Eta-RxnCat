@@ -1,7 +1,7 @@
 """Suite-wide test policy: offline unit tests and the acceptance skip-to-fail switch (ADR-0019).
 
-Under ``ETA_RXNCAT_ACCEPTANCE=1`` no test can pass by not running: setup and call skips, xfail
-(either outcome) and collection-phase skips all fail the run (R8, R32).
+Under ``ETA_RXNCAT_ACCEPTANCE=1`` no test can pass by not running: setup, call and teardown skips,
+xfail (either outcome) and collection-phase skips all fail the run (R8, R32).
 """
 
 import os
@@ -61,7 +61,7 @@ def pytest_make_collect_report(
 def pytest_runtest_makereport(
     item: pytest.Item, call: pytest.CallInfo[None]
 ) -> Generator[None, pytest.TestReport, pytest.TestReport]:
-    """Under ``ETA_RXNCAT_ACCEPTANCE=1``, report a skipped (setup or call) or xfail test as failed.
+    """Under ``ETA_RXNCAT_ACCEPTANCE=1``, report a skipped (any phase) or xfail test as failed.
 
     An ``xfail`` test fails whether it xfailed or xpassed (R32); ``wasxfail`` is removed so the
     terminal and exit code count it as a failure.
@@ -77,7 +77,7 @@ def pytest_runtest_makereport(
             f"{ACCEPTANCE_ENV}=1: an xfail test is a failure in an acceptance run "
             f"({report.when}): {reason}"
         )
-    elif report.skipped and report.when in ("setup", "call"):
+    elif report.skipped and report.when in ("setup", "call", "teardown"):
         reason = _skip_reason(report.longrepr)
         report.outcome = "failed"
         report.longrepr = f"{ACCEPTANCE_ENV}=1: a skip is a failure in an acceptance run: {reason}"
