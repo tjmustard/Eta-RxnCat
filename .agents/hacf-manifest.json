@@ -29,7 +29,7 @@
     },
     ".agents/config/openrig_contract.yml": {
       "owner": "hacf",
-      "sha256": "228ed51e45889befa3a3c9f8bd4951008a7112f6dadc70ca3cc083cc75b2e4e6"
+      "sha256": "7111aa2bb1277725998c57361ad9f2d2c7a31314a6db41757a79ce3509c1d59f"
     },
     ".agents/config/openrig_probe_expect.json": {
       "owner": "hacf",
@@ -241,7 +241,7 @@
     },
     ".agents/scripts/hyper_openrig.py": {
       "owner": "hacf",
-      "sha256": "bd4c012595a14f968b0f9e685f19eec4c66912559db62cfef1e8f93d97c9e4f2"
+      "sha256": "db429d9f1e7e4cfb615aa3dd8d0094cae47c5a24d8ef6336aa285608be78497a"
     },
     ".agents/scripts/hyper_orchestrator.py": {
       "owner": "hacf",
@@ -718,9 +718,9 @@
     "claude",
     "universal"
   ],
-  "installed_at": "2026-11-25T05:35:57+00:00",
-  "installed_commit": "561f6b12d505468f9c684ef69bc7822a94bf6b20",
-  "installer_sha256": "5ae495fcdea50cffff706fd564a1fbc16e30c48d34abad173734c53817cc1e9a",
+  "installed_at": "2026-11-27T04:19:16+00:00",
+  "installed_commit": "d0684946aa2658fb0a7ae506b5b10611b8dcb3e2",
+  "installer_sha256": "2fb950a5286314911fe42bee4567f0199b340ccb549ada1d8a5dca4ad9c52b24",
   "mcp_entries": {
     ".mcp.json": {
       "codebase-memory-mcp": {
@@ -765,8 +765,8 @@
     ]
   },
   "source": {
-    "commit": "561f6b12d505468f9c684ef69bc7822a94bf6b20",
+    "commit": "d0684946aa2658fb0a7ae506b5b10611b8dcb3e2",
     "kind": "local"
   },
-  "version": "0.6.6"
+  "version": "0.6.7"
 }
