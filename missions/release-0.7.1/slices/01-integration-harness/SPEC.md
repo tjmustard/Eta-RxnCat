@@ -10,7 +10,7 @@ intent: "Give tests/integration a default-selected integration marker, real-modu
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", pyproject.toml, tests/unit/test_test_policy.py, spec/compiled/architecture.yml]
@@ -114,12 +114,12 @@ before running it.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Marker, R24 split, R25 guarded dir.
-- [ ] Policy scanner and its cases.
-- [ ] Conftest helpers including `load_v070_plan()`.
-- [ ] Ledger: node, fixture globs (counts before/after), validate.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] Marker, R24 split, R25 guarded dir.
+- [x] Policy scanner and its cases.
+- [x] Conftest helpers including `load_v070_plan()`.
+- [x] Ledger: node, fixture globs (counts before/after), validate.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -130,10 +130,10 @@ before running it.
 
 ## Proof contract
 
-- [ ] `uv run pytest tests/integration tests/unit/test_test_policy.py -q` passes (requirements 1-4).
-- [ ] `hyper_ledger.py validate` ok; `impact --files tests/integration/conftest.py` names
+- [x] `uv run pytest tests/integration tests/unit/test_test_policy.py -q` passes (requirements 1-4).
+- [x] `hyper_ledger.py validate` ok; `impact --files tests/integration/conftest.py` names
   `eta_rxncat_integration`; the fixture counts before and after (requirement 5).
-- [ ] Required checks exit 0 (requirement 6).
+- [x] Required checks exit 0 (requirement 6).
 
 ## Source material
 

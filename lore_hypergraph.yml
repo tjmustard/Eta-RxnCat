@@ -3028,8 +3028,8 @@ nodes:
   - ADR-0052
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3069,8 +3069,8 @@ nodes:
   relates_to: []
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3112,8 +3112,8 @@ nodes:
   - ADR-0019
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3153,8 +3153,8 @@ nodes:
   relates_to: []
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3194,8 +3194,8 @@ nodes:
   - ADR-0013
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3234,8 +3234,8 @@ nodes:
   - ADR-0015
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3276,8 +3276,8 @@ nodes:
   - ADR-0027
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3317,8 +3317,8 @@ nodes:
   relates_to: []
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3360,8 +3360,8 @@ nodes:
   - ADR-0021
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3404,8 +3404,8 @@ nodes:
   - ADR-0052
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3446,8 +3446,8 @@ nodes:
   - ADR-0044
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
@@ -3486,8 +3486,8 @@ nodes:
   - ADR-0049
   supersedes: []
   superseded_by: null
-  stale: false
-  stale_reason: null
+  stale: true
+  stale_reason: impact
   legacy: null
   provenance:
     created_by: agent
