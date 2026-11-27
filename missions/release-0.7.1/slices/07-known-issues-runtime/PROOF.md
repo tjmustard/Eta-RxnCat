@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/07-execute.md - guard CLEAR: 12 new tests fail at bf7b949 then pass; full pytest 2878 passed; Tier X 6 passed 0 skipped; 15 v0.7.0 records byte-identical
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
