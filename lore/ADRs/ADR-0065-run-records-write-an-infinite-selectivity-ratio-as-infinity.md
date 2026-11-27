@@ -1,0 +1,3 @@
+Decision (resolve, v0.7.1 R38; TJ Q-71b = A, relay qitem-20261127193135-56e30a8bf6ae383a). RunRecord JSON writes SelectivityResult.ratio = inf as the JSON string "Infinity" and reads it back as inf (today it writes null and fails to read). Finite values and every committed record stay byte-identical; NaN is still refused. The change sits on the review record's serialisation, not on SelectivityResult or core.
+Trade-off: rejected refusing to write such a record (loses a valid result) and keeping the known issue.
+Relates to ADR-0049 (run-data contract); RunData v1 itself never carries the ratio. Contradicts no CANON node.

@@ -1,0 +1,3 @@
+Decision (resolve, v0.7.1 R13/R29; Red Team RT-10). open_timeout_s > 0; math.inf means no open deadline (today it crashes with OverflowError at int(remaining*1000)). bool and non-real values raise TypeError (True is newly refused); NaN and <= 0 raise ValueError. connect(timeout=...) and every PRAGMA busy_timeout are clamped to 2**31-1 ms. v0.8.0 relies on inf.
+Trade-off: rejected ValueError for every non-finite value (v0.8.0 wants an unbounded open, and the > 0 contract already admits inf). Chosen: inf is a deadline-free open.
+Refines ADR-0015 step 1 ('validate the timeout'); the open order, one deadline and StoreBusyError are unchanged. Contradicts no CANON node.

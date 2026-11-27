@@ -18,4 +18,8 @@
 | OPR.0.7.1.3 | 03-ensemble-sample-keys | compiled | OPR.0.7.1.2 | 2026-11-27T19:37:14+00:00 compiled |
 | OPR.0.7.1.4 | 04-tier-x-ts-seams | compiled | OPR.0.7.1.3 | 2026-11-27T19:37:14+00:00 compiled |
 | OPR.0.7.1.5 | 05-tier-x-selectivity-review | compiled | OPR.0.7.1.4 | 2026-11-27T19:37:14+00:00 compiled |
+| OPR.0.7.1.6 | 06-known-issues-tooling | compiled | OPR.0.7.1.5 | 2026-11-27T19:39:10+00:00 compiled |
+| OPR.0.7.1.7 | 07-known-issues-runtime | compiled | OPR.0.7.1.6 | 2026-11-27T19:39:10+00:00 compiled |
+| OPR.0.7.1.8 | 08-dead-code-and-doc-refs | compiled | OPR.0.7.1.7 | 2026-11-27T19:39:10+00:00 compiled |
+| OPR.0.7.1.9 | 09-verdict | compiled | OPR.0.7.1.8 | 2026-11-27T19:39:11+00:00 compiled |
 <!-- END HACF GENERATED: slice-table -->

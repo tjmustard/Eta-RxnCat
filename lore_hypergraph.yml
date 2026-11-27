@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 53
+  ADR: 65
   STORY: 0
   CANON: 0
 nodes:
@@ -3001,3 +3001,505 @@ nodes:
     warrant: Reviewed on the lore review page 2026-11-26; matches the decisions as
       built and as I intend them.
     ref: approve nonce bd02cdaa101f9f6fc91b45c0b7716506
+- id: ADR-0054
+  type: decision
+  title: Integration tests read the v0.7.0 enumeration plan through a copied loader
+    with a subprocess parity check
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0054-integration-tests-read-the-v0-7-0-enumeration-plan-through-a.md
+  content_sha256: 9ee70549db8aa6aafdc96f367f67f7cb0164d3f399399075929f5db4a48487f0
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/v070.py
+    - tests/e2e/data/e2e5/v070_enumeration.yaml
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/conftest.py
+    - tests/integration/test_seams_offline.py
+  relates_to:
+  - ADR-0052
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:16+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:16+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0055
+  type: decision
+  title: Seam breaks run in a worktree with PYTHONPATH=<worktree>/src and a recorded
+    import path; never uv in a worktree
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0055-seam-breaks-run-in-a-worktree-with-pythonpath-worktree-src-a.md
+  content_sha256: b14b6e22c0c26d8139042ac0266ed7b9863e7e9eabf7e13b6b2c8f44770c6afb
+  anchors:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - pyproject.toml
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/**
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:16+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:16+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0056
+  type: decision
+  title: The integration marker is default-selected; test policy splits deselected
+    from default-selected markers and forbids skips in tests/integration
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0056-the-integration-marker-is-default-selected-test-policy-split.md
+  content_sha256: 7adda560c3c91a1dc841b3ed284cad52e4e7a6e6101107c371f9c920090f0e6a
+  anchors:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - pyproject.toml
+    - tests/unit/test_test_policy.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/test_integration_policy.py
+  relates_to:
+  - ADR-0019
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:16+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:16+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0057
+  type: decision
+  title: Integration tests forbid every mock form across a seam, checked by an AST
+    scan
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0057-integration-tests-forbid-every-mock-form-across-a-seam-check.md
+  content_sha256: 5612c4afcf834a82af57b7edc40c0296705a0aafa57e4f64a93fbeaa2f776ff6
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/orchestrator/species.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/test_integration_policy.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:16+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:16+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0058
+  type: decision
+  title: Bare BSD licence strings resolve to LicenseRef-BSD-classifier with the label
+    'BSD (variant not stated)'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0058-bare-bsd-licence-strings-resolve-to-licenseref-bsd-classifie.md
+  content_sha256: 8f1553a85bf1e6f8953e70fd16501a9d295b8f683311815f959ff54496aca6c2
+  anchors:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - tools/licence_gate.py
+    - pyproject.toml
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0013
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:17+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:17+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0059
+  type: decision
+  title: 'ArtifactStore open_timeout_s: inf means no deadline, bool and non-real raise
+    TypeError, sleeps clamped to 2**31-1 ms'
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0059-artifactstore-open-timeout-s-inf-means-no-deadline-bool-and.md
+  content_sha256: 0ebcc65ffd9530b5b369b09325e5b4964785e3397db8ef5eb38d6022857a0f30
+  anchors:
+    components:
+    - eta_rxncat_store
+    files:
+    - src/eta_rxncat/store/artifact_store.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0015
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:17+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:17+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0060
+  type: decision
+  title: QUALITY_RESULT.json is generated from junit and committed seam-break files
+    and fails closed
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0060-quality-result-json-is-generated-from-junit-and-committed-se.md
+  content_sha256: b8cff7f3562ef07881fdf8f99b6451439cb242a9df9aae8cfe8eaf1309d2a725
+  anchors:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - README.md
+    symbols: []
+  planned:
+    components: []
+    files:
+    - tools/quality_record_v071.py
+    - docs/prd/v0.7.1/QUALITY_RESULT.json
+  relates_to:
+  - ADR-0027
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:18+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:18+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0061
+  type: decision
+  title: Dead code is removed only on scripted evidence with a computed engine-reachable
+    exclusion set
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0061-dead-code-is-removed-only-on-scripted-evidence-with-a-comput.md
+  content_sha256: df3231093ebf8c78503b0e9be30c124175f1603f4c89552b1341c2cb574b0297
+  anchors:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/orchestrator/species.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_scaffold
+    files:
+    - tools/engine_reachable.py
+  relates_to: []
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:18+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:18+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0062
+  type: decision
+  title: Tier X integration runs CPU GFN2 behind v0.7.0's host check with parent BLAS/OMP
+    threads pinned to 1
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0062-tier-x-integration-runs-cpu-gfn2-behind-v0-7-0-s-host-check.md
+  content_sha256: 03c28d9bcacea7f4f1afc11844a51ef7dbf9a6cb85bb8c522325c7ca32f5a093
+  anchors:
+    components:
+    - eta_rxncat_engines
+    files:
+    - src/eta_rxncat/engines/xtb_subprocess.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/test_seams_ts_gfn2.py
+    - tests/integration/test_seams_selectivity_gfn2.py
+  relates_to:
+  - ADR-0021
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:18+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:18+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0063
+  type: decision
+  title: The T-X4 integration test copies the enumerated graph with its TS nodes at
+    priority 1; the run_selectivity join waits for v0.8.0
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0063-the-t-x4-integration-test-copies-the-enumerated-graph-with-i.md
+  content_sha256: 5492c361fc48d14e0657bdfbea2f040fa3e97af121a52d749c4e76d909ea86a7
+  anchors:
+    components:
+    - eta_rxncat_selectivity
+    files:
+    - src/eta_rxncat/orchestrator/selectivity.py
+    - src/eta_rxncat/orchestrator/ts_fallback.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_integration
+    files:
+    - tests/integration/test_seams_selectivity_gfn2.py
+  relates_to:
+  - ADR-0046
+  - ADR-0052
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:19+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:19+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0064
+  type: decision
+  title: TSEnsembleRun exposes each sample's stage keys as SampleKeys
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0064-tsensemblerun-exposes-each-sample-s-stage-keys-as-samplekeys.md
+  content_sha256: 209d324b1a08ff12a0a81d2511d813cc6f1e94bcf77006c870c6547b736a7dc2
+  anchors:
+    components:
+    - eta_rxncat_selectivity
+    files:
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    - src/eta_rxncat/orchestrator/__init__.py
+    symbols: []
+  planned:
+    components:
+    - eta_rxncat_species_runner
+    files:
+    - tests/e2e/v070.py
+  relates_to:
+  - ADR-0044
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:19+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:19+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1
+- id: ADR-0065
+  type: decision
+  title: Run records write an infinite selectivity ratio as "Infinity" and read it
+    back as inf
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0065-run-records-write-an-infinite-selectivity-ratio-as-infinity.md
+  content_sha256: 6aab4e04e1b567a9931366001c5ace014cf360ea95a4a7473548f2544c535c9e
+  anchors:
+    components:
+    - eta_rxncat_review
+    files:
+    - src/eta_rxncat/review/run_data.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0049
+  supersedes: []
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-27T19:40:19+00:00'
+    source: OPR.0.7.1
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-27T19:40:19+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1

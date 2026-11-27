@@ -259,8 +259,10 @@ Phase 1, and R35–R41 from the compile re-verify and the carry-forwards. Each r
 
 ### PROPOSED lore (registered at compile; TJ approves with `/hyper-lore-approve`)
 
-One decision per contract-changing row: R21, R22, R24/R25, R26, R28, R29, R30, R31, R32, R35, R37 and
-R38. Each states which CANON node it refines. None supersedes one.
+One decision per contract-changing row, each stating the CANON node it refines; none supersedes one:
+ADR-0054 (R21), ADR-0055 (R22), ADR-0056 (R24/R25, refines ADR-0019), ADR-0057 (R26), ADR-0058 (R28,
+refines ADR-0013), ADR-0059 (R29, refines ADR-0015), ADR-0060 (R30), ADR-0061 (R31), ADR-0062 (R32),
+ADR-0063 (R35), ADR-0064 (R37) and ADR-0065 (R38).
 
 ### Heavy-run rule (normative for slices 03, 04, 05 and 09 and their audits)
 
@@ -420,6 +422,10 @@ R38. Each states which CANON node it refines. None supersedes one.
 | OPR.0.7.1.3 | slices/03-ensemble-sample-keys | Expose each TS ensemble sample's stage keys on TSEnsembleRun, switch the v0.7.0 E2E off private helpers with a byte-equal record, and unit-test the clashed-sample rule. |
 | OPR.0.7.1.4 | slices/04-tier-x-ts-seams | Check the P-RFO, TS ensemble and seed fallback seams against CPU GFN2 xtb with real modules on both sides. |
 | OPR.0.7.1.5 | slices/05-tier-x-selectivity-review | Check the enumerated graph file to selectivity score chain on CPU GFN2 and the review export from that store through the schema, lenient reader and bundle writer. |
+| OPR.0.7.1.6 | slices/06-known-issues-tooling | Fix the tooling and test-text known issues (t3 gated_on text, test-policy skip blind spots, bare-BSD licence label, offline wheel test, host-data scan false positive), each with a test that fails at the base. |
+| OPR.0.7.1.7 | slices/07-known-issues-runtime | Make open_timeout_s=inf mean no deadline under a typed contract, stop the MACE import leaking an environment variable, and round-trip run records with an infinite ratio as "Infinity". |
+| OPR.0.7.1.8 | slices/08-dead-code-and-doc-refs | Remove dead code only on scripted evidence, add a stale-reference scan for docs and docstrings, write the geomeTRIC docstring caveats, and tie README claims to records. |
+| OPR.0.7.1.9 | slices/09-verdict | Set version 0.7.1 under a point-release identity rule, write the CHANGELOG entry, and generate QUALITY_RESULT.json from the real suite runs and committed seam-break files, gating on real outcomes. |
 <!-- END HACF GENERATED: slices -->
 
 ## Status
