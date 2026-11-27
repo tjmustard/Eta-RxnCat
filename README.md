@@ -29,7 +29,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.7.0)](#-features-v070)
+- [✨ Features](#-features)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -58,7 +58,9 @@ those transition states, falls back through ranked templates and writes a run's 
 Everything beyond it is listed under
 [Roadmap](#-roadmap) and is not built yet.
 
-## ✨ Features (v0.7.0)
+## ✨ Features
+
+### Foundation (v0.1.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -77,16 +79,11 @@ Everything beyond it is listed under
 - **Hardware probe and GPU smoke test** (`eta_rxncat.utils.hw_probe`). A typed report of
   PyTorch/CUDA, the GPU, GPU4PySCF and a 6.5 GiB VRAM budget, which never raises for a missing or
   broken package. The smoke test compares GPU4PySCF with CPU PySCF and a CUDA matmul with the CPU
-  result, against fixed numeric tolerances. Without CUDA it reports `skipped`. GPU acceptance
-  passed on 2026-11-23 on an NVIDIA GeForce RTX 5060 Ti (compute capability 12.0, PyTorch
-  2.13.0+cu129), with GPU4PySCF and CPU PySCF agreeing to |ΔE| ≈ 1e-12 Eh in the smoke test and
-  every engine accepted on this host (see
-  [GPU_SMOKE_RESULT.json](docs/prd/v0.2.0/GPU_SMOKE_RESULT.json)).
+  result, against fixed numeric tolerances. Without CUDA it reports `skipped`.
 - **Command line**: `eta-rxncat validate` and `eta-rxncat hardware-check [--smoke]`, with a fixed
   exit-code table and one-line errors.
-- **Optional extras** `gpu` (GPU4PySCF, CuPy, PyTorch), `mlip-mace` (the `mace` engine) and
-  `mlip-uma` (the `uma_direct` and `esen_omol25` engines), and a per-environment **licence gate**
-  (`tools/licence_gate.py`).
+- **Optional extras** `gpu` (GPU4PySCF, CuPy, PyTorch), `mlip-mace` and `mlip-uma`, and a
+  per-environment **licence gate** (`tools/licence_gate.py`).
 
 ### Engines (v0.2.0)
 
@@ -119,6 +116,10 @@ Everything beyond it is listed under
 - **Known limits** are listed in the record's `known_limits`. One affects users: `import mace`
   sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` for the whole process, so keep the `mlip-mace` and
   `mlip-uma` environments separate (they are mutually exclusive extras anyway).
+- GPU acceptance passed on 2026-11-23 on an NVIDIA GeForce RTX 5060 Ti (compute capability
+  12.0, PyTorch 2.13.0+cu129), with GPU4PySCF and CPU PySCF agreeing to |ΔE| ≈ 1e-12 Eh in the smoke test and
+  every engine accepted on this host (see
+  [GPU_SMOKE_RESULT.json](docs/prd/v0.2.0/GPU_SMOKE_RESULT.json)).
 
 ### Conformers, optimisation and ensembles (v0.3.0)
 
