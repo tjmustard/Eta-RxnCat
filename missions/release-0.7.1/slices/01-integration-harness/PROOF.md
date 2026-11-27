@@ -13,6 +13,7 @@
 ## Artifacts
 
 - proof/01-execute.md - guard CLEAR: full pytest 2747 passed, 0 skipped; 57 integration ids default-selected; ledger valid, 65/65 fixtures owned
+- proof/01-qa.md - qa PASS: policy test goes red on a planted mock/skip/tests import; default suite 2747 passed 0 skipped; 65/65 fixtures owned
 
 ## Residue / caveats
 

@@ -2,7 +2,7 @@
 id: OPR.0.7.1.1
 slice: 01-integration-harness
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Give tests/integration a default-selected integration marker, real-modu
 depends_on: []
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_integration
 parent: null
 hacf_touches: ["tests/integration/**", pyproject.toml, tests/unit/test_test_policy.py, spec/compiled/architecture.yml]

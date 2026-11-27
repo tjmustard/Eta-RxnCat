@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - pyproject.toml
   - uv.lock
@@ -35,25 +35,25 @@ nodes:
     gpu (torch, gpu4pyscf-cuda12x, cupy-cuda12x), mlip-mace (mace-torch), mlip-uma
     (fairchem-core>=2.22), opt-geometric (geometric==1.1.1, also in dev; TJ v0.3.0
     Q3 A); [tool.uv] conflicts keep the MLIP extras exclusive; torch 2.13.0+cu129
-    only from the pytorch-cu129 index. Script eta-rxncat = eta_rxncat.cli:main. __init__
+    only from index pytorch-cu129. Script eta-rxncat = eta_rxncat.cli:main. __init__
     imports no backend. Gates: ruff, strict mypy, pytest. Test policy (ADR-0019):
-    markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance, e2e deselected by default;
-    tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1 and, under ETA_RXNCAT_ACCEPTANCE=1,
-    fails every skip and xfail; an AST rule bans module-level skips in engine and
-    acceptance tests; .venv-accept-* gitignored. tools/licence_gate.py (--profile
-    base|opt-geometric|gpu|mlip-mace|mlip-uma) judges each installed distribution
-    exactly against [tool.eta-rxncat.licence-gate] with version-pinned per-profile
-    exemptions (base none; geometric 1.1.1 in opt-geometric and, via gpu4pyscf-cuda12x,
-    gpu/mlip-*); stale exemptions, unnamed/duplicate dist-infos fail. test_package.py
-    bans copyleft imports, heavy imports in engines/optimize, geometric outside functions
-    of optimize/geometric_impl.py. Wheel ships review/assets/*, review/schema/*.json.
-    CI: checks plus licence-extras matrix. Public: README, CHANGELOG (scribe), WebP
-    media, LICENSE (MIT); test_identity.py enforces the author form Thomas J. L. Mustard
-    Ph.D. and derives the README badge, Features heading, roadmap and GPU claim from
-    GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
-    v0.5.0-v0.7.0 on verdict pass. docs/prd/v<version>/: verbatim starters (excluded
-    from gates; v0.7.0's via its own .ruff.toml), DISCREPANCIES.md, acceptance record
-    (v0.2.0 also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy
+    markers gpu, xtb, mlip_mace, mlip_uma, slow, acceptance, e2e deselected by default,
+    integration default-selected; tests/conftest.py sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE=1
+    and, under ETA_RXNCAT_ACCEPTANCE=1, fails every skip and xfail; an AST rule bans
+    module-level skips in engine, acceptance and integration tests; .venv-accept-*
+    gitignored. tools/licence_gate.py (--profile base|opt-geometric|gpu|mlip-mace|mlip-uma)
+    judges every installed dist exactly against [tool.eta-rxncat.licence-gate] with
+    version-pinned profile exemptions (base none; geometric 1.1.1 in opt-geometric
+    and, via gpu4pyscf-cuda12x, gpu/mlip-*); stale exemptions, unnamed/duplicate dist-infos
+    fail. test_package.py bans copyleft imports, heavy imports in engines/optimize,
+    geometric outside functions of optimize/geometric_impl.py. Wheel ships review/assets/*,
+    review/schema/*.json. CI: checks plus licence-extras matrix. Public: README, CHANGELOG
+    (scribe), WebP media, MIT LICENSE; test_identity.py enforces the author form Thomas
+    J. L. Mustard Ph.D. and derives the README badge, Features heading, roadmap and
+    GPU claim from GPU_SMOKE_RESULT.json; v0.3.0/v0.4.0 claims from their ACCEPTANCE_RESULT.json;
+    v0.5.0-v0.7.0 on verdict pass. docs/prd/v<version>/: verbatim starters (gate-excluded;
+    v0.7.0's via its own .ruff.toml), DISCREPANCIES.md, acceptance record (v0.2.0
+    also evidence/, calibration/); docs/prd/PLAN_DISCREPANCIES.md is the plan-copy
     register.
   inputs: []
   outputs:
@@ -68,8 +68,8 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: patched description
   spec_refs:
   - OPR.0.2.0.11
@@ -79,7 +79,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -125,15 +125,15 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.2.0.3
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -180,14 +180,14 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   spec_refs:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -231,12 +231,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -290,12 +290,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -357,12 +357,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -415,12 +415,12 @@ nodes:
   provenance:
     last_slice: OPR.0.7.1.1
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -471,14 +471,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.4
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_conformers
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -537,14 +537,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.5
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -640,14 +640,14 @@ nodes:
   - OPR.0.3.0.9
   - OPR.0.3.0.10
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
-    summary: patched description
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
+    summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_mapping
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -708,14 +708,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: needs_review
+  status: clean
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -796,14 +796,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
@@ -847,14 +847,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_review
   dimension: Module
-  status: needs_review
+  status: clean
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -903,14 +903,14 @@ nodes:
     implements: []
     member_of: []
   review:
-    reviewed_at: '2026-11-27T19:11:05+00:00'
-    reviewed_by: audit:OPR.0.7.0.14
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
     summary: reviewed; nothing patched
   provenance:
     last_slice: OPR.0.7.1.1
 - id: eta_rxncat_integration
   dimension: Module
-  status: dirty
+  status: clean
   files:
   - tests/integration/**
   description: >-
@@ -939,3 +939,7 @@ nodes:
   - OPR.0.7.1.1
   provenance:
     last_slice: OPR.0.7.1.1
+  review:
+    reviewed_at: '2026-11-27T19:58:05+00:00'
+    reviewed_by: audit:OPR.0.7.1.1
+    summary: reviewed; nothing patched
