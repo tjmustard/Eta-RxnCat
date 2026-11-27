@@ -42,6 +42,11 @@ Context the builder needs:
   options=TSEnsembleOptions(n_embed=1, n_perturb=1, max_research=1), kind="de")`. Gates: each
   pathway ≥ 1 member, Σw within `1e-12` per set, a score present, and a rerun all hits with an
   equal score.
+- **Plan variants (mission R42, replan 1):** the input is the R21 plan. A test may also build a
+  variant of it in the test (`model_copy`/`model_validate` on the `load_v070_plan()` result, no new
+  file or fixture) when a seam break can only fail on one. The docstring states each change, and
+  every gate above still runs on the unmodified plan. The TS-priority copy is a change to the graph,
+  not the plan, and stays as R35 states.
 - **T-X5:** a `RunRecord` built from T-X4's result (the `RecordCandidate` / `RecordSample` /
   `RecordSelectivity` models in `review/run_data.py`; samples from `TSEnsembleRun.samples`, R37)
   → `export_run_data` (`review/export.py:699`) → validate against
@@ -114,7 +119,7 @@ and the `RunRecord` fields a non-E2E run can supply (stop-and-report if one is m
 
 ## Source material
 
-- Mission R9, R33, R35, R37; resolve evidence `m1c*`.
+- Mission R9, R33, R35, R37, R42; resolve evidence `m1c*`.
 
 ## Intent visual
 

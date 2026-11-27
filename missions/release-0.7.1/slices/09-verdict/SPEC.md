@@ -13,7 +13,7 @@ hacf_type: MiniPRD
 hacf_status: compiled
 node_id: eta_rxncat_scaffold
 parent: null
-hacf_touches: [pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, README.md, CHANGELOG.md, tests/unit/test_identity.py, tools/quality_record_v071.py, "tests/unit/tools/test_quality_record*.py", docs/prd/v0.7.1/QUALITY_RESULT.json, spec/compiled/architecture.yml]
+hacf_touches: [pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, README.md, CHANGELOG.md, tests/unit/test_identity.py, tools/quality_record_v071.py, "tests/unit/tools/test_quality_record*.py", docs/prd/v0.7.1/QUALITY_RESULT.json, docs/prd/v0.7.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
 hacf_oracle: [[uv, run, ruff, check, .], [uv, run, ruff, format, "--check", ., "--extend-exclude", spec/archive, "--extend-exclude", spec/process], [uv, run, mypy], [uv, run, pytest], [uv, run, pytest, tests/unit/test_identity.py]]
 lore_refs: []
 hacf_legacy_source: null
@@ -26,7 +26,8 @@ hacf_legacy_order: null
 
 Set version 0.7.1 everywhere under a point-release identity rule, write the CHANGELOG entry, and
 generate `docs/prd/v0.7.1/QUALITY_RESULT.json` from the real suite runs and the committed seam-break
-files, gating on real outcomes (mission R19, R20, R23, R25, R30; US-009).
+files, gating on real outcomes. It also brings the README to TJ's 11-27 standard at 0.7.1 and
+closes v0.7.0's DV-10 row on TJ's choice (mission R19, R20, R23, R25, R30, R46, R47; US-009).
 
 Context the builder needs:
 - **R23 (scaffold test):** `tests/unit/test_identity.py`.
@@ -35,11 +36,34 @@ Context the builder needs:
     lists the rest.
   - The README badge must read `release-v0.7.1` (:300-302).
   - Add a positive case (0.7.1) and a negative case (0.7.1 with 0.8.0 under Built).
+  - With R47: at 0.7.1 the Roadmap's `### Built` also lists `**v0.7.1**` after `**v0.7.0**`. Since
+    0.7.1 is not in `PLAN_VERSIONS`, the rule must not count that line as a later plan version, and
+    `listing_problems` (Features subsections = Built, pitch = Built minus v0.1.0) must pass on the
+    real README. The positive synthetic case includes that Built line.
 - **Version 0.7.1** goes in:
   - `pyproject.toml`;
   - `src/eta_rxncat/__init__.py`;
-  - the README Features title (`readme_sections`) and the badge;
+  - the README badge `release-v0.7.1`, and the README shape of R47 (below);
   - `uv.lock`, via `uv lock` in the main checkout only.
+- **README standard (R47; TJ's docs-only pushes on main, `7b65537` and `8753164`, merged at
+  `030322a`).** The tests are `pitch_problems`, `check_version_identity` (R50) and
+  `listing_problems` in `tests/unit/test_identity.py`. Read them before writing.
+  - The pitch is the centred bold intro plus one bullet per released version. Add a v0.7.1 bullet,
+    last, ending `(v0.7.1).`, and change the previous last bullet's ending to `(v0.7.0);` if the
+    list's punctuation needs it.
+  - `## ✨ Features` has no version in its title. Add one `### … (v0.7.1)` subsection, last, after
+    `### Library enumeration, template fallback and review (v0.7.0)`. Its claims are cited per R19.
+  - Roadmap: add `- **v0.7.1**: …` under `### Built` after v0.7.0, and drop the `**v0.7.1** (in
+    progress)` line from `### Planned, not yet built`.
+  - Keep `readme_sections`, the TOC and the header tests green.
+  - If a point release cannot be a pitch bullet or a Features subsection under the R50/R23 checks,
+    stop. Ask TJ through `advisor-lead@kernel`, tagged `question-for-tj`, with options A/B/C and a
+    recommendation. Do not loosen the checks to fit.
+- **DV-10 (R46; TJ "Close it (Recommended)", advisor relay
+  `qitem-20261127204642-06c18509e72ce4bb`):** in `docs/prd/v0.7.0/DISCREPANCIES.md`, change only
+  row DV-10's last cell from `open` to `done (v0.7.0 slice 14 set version 0.7.0; closed on TJ's
+  choice, relay qitem-20261127204642-06c18509e72ce4bb)`. Touch no other row or file under
+  `docs/prd/v0.7.0/`.
 - **CHANGELOG `## [0.7.1] - <date>`** has four parts:
   - **Added:** the integration suite (Tier O and Tier X), `SampleKeys` / `TSEnsembleRun.samples`,
     `tools/engine_reachable.py` and `tools/quality_record_v071.py`.
@@ -52,6 +76,8 @@ Context the builder needs:
       temp-dir and partial-mark edge cases, R41; HF-13 still carried);
     - R14's import-order limit.
   - Remove the 0.7.0 `ratio = inf` known issue from the new entry only. Do not edit older entries.
+  - Under **Fixed** or a docs line: ADR-0053's reader claim is narrowed by the PROPOSED node slice
+    08 registered (R45; name its id), pending TJ's approval.
 - **Verdict runs:**
   1. The default suite: `uv run pytest --junitxml=~/.hacf/eta-rxncat-hacf/evidence/v071-verdict/default.xml`.
   2. Tier X: run the blocking host check as a separate call, then the mission R2 command with
@@ -73,7 +99,8 @@ Context the builder needs:
   - Commit the record from this run. Rerun the script after the commit to confirm it reproduces
     bytes-equal against the same evidence.
 - **R19:** fill each README/CHANGELOG claim's `QUALITY_RESULT.json` key.
-- **Ledger:** scaffold 1978 and cli 1550. Compress scaffold first if it needs a word.
+- **Ledger:** scaffold 1998 (1978 at compile; slice 01's audit added 20) and cli 1550. Compress
+  scaffold first if it needs a word.
 - **Seat rules (every slice):**
   - Set `TMPDIR=/home/tjmustard/.cache/eta-rxncat-tmp` (never /tmp). Run every framework script with
     `python3`.
@@ -111,11 +138,16 @@ the positive and negative cases.
 4. `QUALITY_RESULT.json` is generated from the named sources, every gate passes, and the script
    fails on a missing source (shown by a unit test or by a run against a missing file in scratch).
 5. The default suite and Tier X are green, with the host check in the proof.
+6. R47: `pitch_problems`, `check_version_identity` and `listing_problems` pass on the real README
+   at 0.7.1, with the v0.7.1 pitch bullet, Features subsection and Built line present.
+7. R46: DV-10 reads done with its citation, and `git diff --stat docs/prd/v0.7.0` shows only
+   `DISCREPANCIES.md`, one line.
 
 ## 3. Implementation Plan (Task List)
 
 - [ ] Index.
 - [ ] R23 rule and cases; version bump; `uv lock`.
+- [ ] README to the R47 standard; DV-10 (R46).
 - [ ] CHANGELOG.
 - [ ] Record script and its fail-closed test.
 - [ ] Verdict runs (host check before Tier X); generate the record.
@@ -131,13 +163,15 @@ the positive and negative cases.
 
 - [ ] `uv run pytest tests/unit/test_identity.py -q` passes (requirement 1).
 - [ ] `git grep -n "0\.7\.1"` over the version files (requirement 2).
+- [ ] The README pitch bullet, Features subsection and Built line, with `test_identity` green
+  (requirement 6); the DV-10 diff (requirement 7).
 - [ ] Both junit files, the host check, the script's exit 0, and its exit ≠ 0 on a missing source
   (requirements 4-5).
 - [ ] The required checks exit 0 (requirement 3).
 
 ## Source material
 
-- Mission R19, R20, R23, R25 and R30; Red Team RT-03 and RT-11.
+- Mission R19, R20, R23, R25, R30, R46 and R47; Red Team RT-03 and RT-11.
 
 ## Intent visual
 
