@@ -13,6 +13,7 @@ torch loads it (``torch.load`` unpickles, so the pin is also the trust check).
 
 import importlib
 import math
+import os
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -46,6 +47,22 @@ PROVISION_HINT: Final = (
     "~/.cache/eta-rxncat/mace/ and pass model_path=..."
 )
 """How to provision the weights (named in ``EngineUnavailableError``)."""
+
+_TORCH_LOAD_ENV: Final = "TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD"
+"""Process-wide torch switch that importing ``mace`` may set."""
+
+
+@contextmanager
+def _restored_env(name: str) -> Iterator[None]:
+    """Put the environment variable ``name`` back as it was: absent, or its prior value."""
+    prior = os.environ.get(name)
+    try:
+        yield
+    finally:
+        if prior is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = prior
 
 
 @contextmanager
@@ -117,10 +134,17 @@ class MACEEngine(Engine):
         self.model, self.device = self._load_model(path, device)
 
     def _load_model(self, path: Path, device: str) -> tuple[Any, str]:
-        """Load the (already sha-verified) model with torch, in float64, on the device."""
+        """Load the (already sha-verified) model with torch, in float64, on the device.
+
+        Importing ``mace`` may set ``TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD`` for the whole process;
+        the variable is put back as it was (this load passes ``weights_only=False`` itself).
+        Limit: if ``mace`` was already imported earlier in the process, the import here runs
+        nothing and whatever that earlier import set stays: the guard restores nothing.
+        """
         try:
             torch = importlib.import_module("torch")
-            importlib.import_module("mace")
+            with _restored_env(_TORCH_LOAD_ENV):
+                importlib.import_module("mace")
         except ImportError as exc:
             raise EngineUnavailableError(
                 "mace: the mlip-mace extra is not installed (uv sync --extra gpu --extra mlip-mace)"

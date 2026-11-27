@@ -10,6 +10,7 @@ refuses a later version.
 """
 
 import json
+import math
 import types
 from collections.abc import Iterable
 from typing import Annotated, Any, Literal, Self, Union, get_args, get_origin
@@ -22,6 +23,7 @@ from pydantic import (
     SerializerFunctionWrapHandler,
     StrictInt,
     create_model,
+    field_serializer,
     field_validator,
     model_serializer,
     model_validator,
@@ -228,6 +230,20 @@ class RecordSelectivity(_Record):
     candidate_id: Name
     engine: EngineIdentity
     result: SelectivityResult
+
+    @field_serializer("result", mode="wrap", when_used="json")
+    def _infinite_ratio(
+        self, result: SelectivityResult, handler: SerializerFunctionWrapHandler
+    ) -> Any:
+        """Write an infinite ``ratio`` as ``"Infinity"``, which reads back as ``inf``.
+
+        JSON has no infinity and the default writes ``null``, which does not read back. The
+        record's ``ser_json_inf_nan`` does not reach a nested core model, hence this serializer.
+        """
+        data = handler(result)
+        if math.isinf(result.ratio):
+            data["ratio"] = "Infinity"
+        return data
 
 
 class RecordUnitRef(_Record):

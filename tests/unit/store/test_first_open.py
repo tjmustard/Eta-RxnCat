@@ -1,16 +1,18 @@
 """Tests for safe concurrent first open and non-mutating schema rejection (slice 09)."""
 
 import hashlib
+import math
 import sqlite3
 import threading
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 import pytest
 
-from eta_rxncat.store import ArtifactStore, StoreBusyError, StoreSchemaError
+from eta_rxncat.store import ArtifactStore, StoreBusyError, StoreSchemaError, artifact_store
 
 
 def open_and_close(path: Path, barrier: threading.Barrier, errors: list[BaseException]) -> None:
@@ -194,3 +196,80 @@ def test_foreign_file_under_exclusive_holder(tmp_path: Path) -> None:
     assert raw.execute("PRAGMA journal_mode").fetchone()[0] == "delete"
     assert raw.execute("PRAGMA user_version").fetchone()[0] == 7
     raw.close()
+
+
+INT_MAX_MS = 2**31 - 1
+
+
+def test_infinite_open_timeout_opens_a_fresh_store(tmp_path: Path) -> None:
+    """``open_timeout_s=inf`` (no deadline) opens a new store in WAL (v0.7.1 R29)."""
+    with ArtifactStore(tmp_path / "a.sqlite", open_timeout_s=math.inf) as store:
+        assert store.query() == []
+        assert store._conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+
+
+def test_infinite_open_timeout_waits_for_a_held_lock(tmp_path: Path) -> None:
+    """With ``inf`` a locked file is retried until the holder lets go, then opens.
+
+    Both threads are daemons joined with a bound, so an open that never returns fails the test
+    instead of hanging the suite.
+    """
+    path = tmp_path / "a.sqlite"
+    conn = sqlite3.connect(path, isolation_level=None, check_same_thread=False)
+    conn.execute("BEGIN EXCLUSIVE")
+    outcome: dict[str, object] = {}
+
+    def opener() -> None:
+        try:
+            ArtifactStore(path, open_timeout_s=math.inf).close()
+        except BaseException as exc:  # asserted below
+            outcome["error"] = exc
+        outcome["seconds"] = time.monotonic() - start
+
+    def releaser() -> None:
+        time.sleep(0.5)
+        conn.execute("COMMIT")
+
+    worker = threading.Thread(target=opener, daemon=True)
+    release = threading.Thread(target=releaser, daemon=True)
+    start = time.monotonic()  # before either thread runs, so the 0.5 s bound is strict
+    release.start()
+    worker.start()
+    release.join(timeout=5)
+    worker.join(timeout=30)
+    assert not release.is_alive(), "the releaser did not drop the lock within 5 s"
+    conn.close()
+    assert not worker.is_alive(), "the open did not return within 30 s"
+    assert "error" not in outcome, outcome
+    assert isinstance(outcome["seconds"], float) and outcome["seconds"] >= 0.5
+
+
+def test_infinite_open_timeout_is_clamped_in_sqlite(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """``inf`` reaches SQLite as ``2**31 - 1`` ms at connect and before every open statement."""
+    after_connect: list[int] = []
+    statements: list[str] = []
+    real_connect = sqlite3.connect
+
+    def spy(*args: Any, **kwargs: Any) -> sqlite3.Connection:
+        conn: sqlite3.Connection = real_connect(*args, **kwargs)
+        after_connect.append(conn.execute("PRAGMA busy_timeout").fetchone()[0])
+        conn.set_trace_callback(statements.append)
+        return conn
+
+    monkeypatch.setattr(artifact_store.sqlite3, "connect", spy)
+    ArtifactStore(tmp_path / "a.sqlite", open_timeout_s=math.inf).close()
+    assert after_connect == [INT_MAX_MS]
+    waits = [s for s in statements if s.startswith("PRAGMA busy_timeout=")]
+    assert len(waits) > 1
+    assert waits[:-1] == [f"PRAGMA busy_timeout={INT_MAX_MS}"] * (len(waits) - 1)
+    assert waits[-1] == "PRAGMA busy_timeout=5000"
+
+
+@pytest.mark.parametrize("timeout", [True, "5", None])
+def test_open_timeout_must_be_a_real_number(tmp_path: Path, timeout: Any) -> None:
+    """A bool or a non-real open_timeout_s raises TypeError and creates nothing."""
+    with pytest.raises(TypeError, match="open_timeout_s"):
+        ArtifactStore(tmp_path / "a.sqlite", open_timeout_s=timeout)
+    assert list(tmp_path.iterdir()) == []

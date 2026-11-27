@@ -8,6 +8,7 @@ mlip_mace tests/unit/engines/test_mace.py``. The weights come from ``ETA_RXNCAT_
 """
 
 import os
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -70,6 +71,66 @@ def faked(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, Any]:
 def test_pin() -> None:
     """The pin is the mission's MACE-MP-0 medium sha256."""
     assert EXPECTED_SHA256 == {MODEL_NAME: PIN} and MODEL_NAME == "mace-mp-0-medium"
+
+
+TORCH_ENV = "TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD"
+
+
+class LoadedModel:
+    """What the stub ``torch.load`` returns: enough of a module for the loader."""
+
+    def double(self) -> "LoadedModel":
+        """Return itself."""
+        return self
+
+    def to(self, device: str) -> "LoadedModel":
+        """Return itself."""
+        return self
+
+    def eval(self) -> "LoadedModel":
+        """Return itself."""
+        return self
+
+
+@pytest.mark.parametrize("fails", [False, True], ids=["imports", "import-error"])
+@pytest.mark.parametrize("prior", [None, "0"], ids=["absent", "set"])
+def test_importing_mace_leaves_the_torch_env_as_it_was(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, prior: str | None, fails: bool
+) -> None:
+    """A ``mace`` import that sets the torch variable is undone, also when it fails (R14)."""
+    package = tmp_path / "mace"
+    package.mkdir()
+    lines = ["import os", f"os.environ[{TORCH_ENV!r}] = '1'", f"SEEN = os.environ[{TORCH_ENV!r}]"]
+    if fails:
+        lines.append("raise ImportError('stub')")
+    (package / "__init__.py").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    monkeypatch.syspath_prepend(str(tmp_path))
+    monkeypatch.setitem(
+        sys.modules,
+        "torch",
+        SimpleNamespace(
+            cuda=SimpleNamespace(is_available=lambda: False),
+            load=lambda *args, **kwargs: LoadedModel(),
+        ),
+    )
+    monkeypatch.setenv(TORCH_ENV, prior or "")  # set first, so teardown restores either state
+    if prior is None:
+        monkeypatch.delenv(TORCH_ENV)
+    evicted = sys.modules.pop("mace", None)
+    engine = object.__new__(MACEEngine)  # the loader alone: no weights, no real MACE
+    try:
+        if fails:
+            with pytest.raises(EngineUnavailableError, match="mlip-mace"):
+                engine._load_model(tmp_path / "model.model", "cpu")
+        else:
+            engine._load_model(tmp_path / "model.model", "cpu")
+            assert sys.modules["mace"].SEEN == "1"
+            assert sys.modules["mace"].__file__ == str(package / "__init__.py")
+        assert os.environ.get(TORCH_ENV) == prior
+    finally:
+        sys.modules.pop("mace", None)
+        if evicted is not None:
+            sys.modules["mace"] = evicted
 
 
 def test_sha_mismatch_refused_before_load(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

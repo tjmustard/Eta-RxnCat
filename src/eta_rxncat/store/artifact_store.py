@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import numbers
 import sqlite3
 import threading
 import time
@@ -19,6 +20,8 @@ SCHEMA_VERSION = 1
 
 _OPEN_RETRY_FIRST_S = 0.005
 _OPEN_RETRY_MAX_S = 0.1
+_BUSY_TIMEOUT_MAX_MS = 2**31 - 1
+"""Largest ``busy_timeout`` SQLite takes (a C int); longer or infinite waits are clamped to it."""
 _RETRYABLE = frozenset({sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED})
 
 _SCHEMA = (
@@ -69,6 +72,18 @@ def _now() -> str:
     return datetime.now(UTC).isoformat()
 
 
+def _refuse_non_real(open_timeout_s: object) -> None:
+    """Refuse an ``open_timeout_s`` that is a ``bool`` or not a real number.
+
+    The parameter is ``object`` because type stubs do not register ``float`` as ``numbers.Real``.
+
+    Raises:
+        TypeError: If it is a ``bool`` or not a ``numbers.Real``.
+    """
+    if isinstance(open_timeout_s, bool) or not isinstance(open_timeout_s, numbers.Real):
+        raise TypeError(f"open_timeout_s must be a real number, got {open_timeout_s!r}")
+
+
 class ArtifactStore:
     """SQLite artifact store for stage-decomposed caching.
 
@@ -88,16 +103,21 @@ class ArtifactStore:
 
         Args:
             path: The SQLite file. Its parent directory must exist; nothing else is created.
-            open_timeout_s: Deadline in seconds for the whole open; must be > 0.
+            open_timeout_s: Deadline in seconds for the whole open; a real number > 0.
+                ``math.inf`` means no deadline: a locked file is waited for without limit.
+                Each single wait inside SQLite is capped at ``2**31 - 1`` ms.
 
         Raises:
-            ValueError: If ``open_timeout_s`` is not > 0 (nothing is created).
+            TypeError: If ``open_timeout_s`` is a ``bool`` or not a real number (nothing is
+                created).
+            ValueError: If ``open_timeout_s`` is NaN or not > 0 (nothing is created).
             FileNotFoundError: If ``path.parent`` is not an existing directory.
             StoreSchemaError: If the file's ``user_version`` is neither 0 (new) nor 1, or the
                 file cannot be put in WAL mode.
             StoreBusyError: If another connection keeps the file locked past
                 ``open_timeout_s``; chains the last ``OperationalError``.
         """
+        _refuse_non_real(open_timeout_s)
         if not open_timeout_s > 0:
             raise ValueError(f"open_timeout_s must be > 0, got {open_timeout_s!r}")
         self._open_start = time.monotonic()
@@ -107,7 +127,10 @@ class ArtifactStore:
             raise FileNotFoundError(f"store directory does not exist: {self.path.parent}")
         self._lock = threading.Lock()
         self._conn = sqlite3.connect(
-            self.path, timeout=open_timeout_s, isolation_level=None, check_same_thread=False
+            self.path,
+            timeout=min(open_timeout_s, _BUSY_TIMEOUT_MAX_MS / 1000),
+            isolation_level=None,
+            check_same_thread=False,
         )
         try:
             version = self._busy_step("PRAGMA user_version").fetchone()[0]
@@ -140,7 +163,8 @@ class ArtifactStore:
         delay = _OPEN_RETRY_FIRST_S
         while True:
             remaining = self._deadline - time.monotonic()
-            self._conn.execute(f"PRAGMA busy_timeout={max(1, int(remaining * 1000))}")
+            wait_ms = max(1, int(min(remaining * 1000, _BUSY_TIMEOUT_MAX_MS)))
+            self._conn.execute(f"PRAGMA busy_timeout={wait_ms}")
             try:
                 return self._conn.execute(sql)
             except sqlite3.OperationalError as exc:

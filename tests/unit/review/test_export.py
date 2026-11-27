@@ -1,9 +1,12 @@
 """``export_run_data`` (v0.7.0, slice 07; R12, R15, R18): stub rows and rows of the real runners."""
 
 import getpass
+import json
+import math
 import socket
 from pathlib import Path
 
+import pydantic
 import pytest
 from review_helpers import (
     ENGINE,
@@ -242,6 +245,74 @@ def test_a_record_round_trips_through_json() -> None:
     """The record survives its JSON form."""
     record = stub_record(label=HOSTILE)
     assert RunRecord.model_validate_json(record.model_dump_json()) == record
+
+
+def infinite_ratio_record() -> RunRecord:
+    """The stub record with an infinite selectivity ratio."""
+    data = stub_record().model_dump()
+    data["selectivity"][0]["result"]["ratio"] = math.inf
+    return RunRecord.model_validate(data)
+
+
+@pytest.mark.parametrize("indent", [None, 1])
+def test_an_infinite_ratio_round_trips_as_the_string_infinity(indent: int | None) -> None:
+    """``ratio = inf`` is written as ``"Infinity"`` and read back as ``inf`` (v0.7.1 R38)."""
+    record = infinite_ratio_record()
+    text = record.model_dump_json(indent=indent)
+    assert json.loads(text)["selectivity"][0]["result"]["ratio"] == "Infinity"
+    read = RunRecord.model_validate_json(text)
+    assert read == record
+    assert read.selectivity[0].result.ratio == math.inf
+    assert record.model_dump()["selectivity"][0]["result"]["ratio"] == math.inf
+
+
+def float_paths(node: object, path: tuple[str | int, ...] = ()) -> list[tuple[str | int, ...]]:
+    """The path of every float in a parsed JSON document."""
+    if isinstance(node, float):
+        return [path]
+    items = (
+        node.items()
+        if isinstance(node, dict)
+        else enumerate(node)
+        if isinstance(node, list)
+        else ()
+    )
+    return [found for key, child in items for found in float_paths(child, (*path, key))]
+
+
+@pytest.mark.parametrize("bad", [math.nan, "NaN"], ids=["literal", "string"])
+def test_a_nan_anywhere_in_a_record_is_refused(bad: float | str) -> None:
+    """Every number of the record, the nested ratio included, refuses NaN."""
+    text = infinite_ratio_record().model_dump_json()
+    document = json.loads(text)
+    paths = [("selectivity", 0, "result", "ratio"), *float_paths(document)]
+    assert len(paths) > 10
+    for path in paths:
+        broken = json.loads(text)
+        parent = broken
+        for key in path[:-1]:
+            parent = parent[key]
+        parent[path[-1]] = bad
+        with pytest.raises(pydantic.ValidationError):
+            RunRecord.model_validate_json(json.dumps(broken))
+
+
+RECORDS_V070 = sorted(
+    (Path(__file__).resolve().parents[2] / "fixtures" / "v0.7.0").glob("*.runrecord.json")
+)
+
+
+def test_the_committed_records_are_found() -> None:
+    """The byte test below reads all 15 committed v0.7.0 records."""
+    assert len(RECORDS_V070) == 15
+
+
+@pytest.mark.parametrize("fixture", RECORDS_V070, ids=lambda p: p.name)
+def test_a_finite_v070_record_reserialises_to_its_bytes(fixture: Path) -> None:
+    """A committed record is written back byte for byte (the v0.7.0 writer's format)."""
+    committed = fixture.read_bytes()
+    record = RunRecord.model_validate_json(committed)
+    assert (record.model_dump_json(indent=1) + "\n").encode() == committed
 
 
 # --- Rows written by the real runners ---------------------------------------------------------
