@@ -7,7 +7,7 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies. Version 0.6.0 adds transition-state conformer ensembles, Boltzmann-summed selectivity between competing pathways and a threshold rule that prunes the losing branch. Version 0.7.0 enumerates a combinatorial library onto the transition states, falls back through ranked templates with seed geometry checks, and writes an offline HTML review bundle of a run.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. It covers the path from a reaction graph to a selectivity answer: energy engines from force fields to DFT and machine-learned potentials (v0.2.0); conformer search, optimisation, thermochemistry and Boltzmann ensembles (v0.3.0); a conserved-core mapper that grafts a fragment onto a known transition state (v0.4.0); transition-state search with frequency validation (v0.5.0); transition-state ensembles and selectivity between competing pathways (v0.6.0); and library enumeration with ranked template fallback and an offline HTML review page (v0.7.0).</strong>
 </p>
 
 <p align="center">
@@ -446,9 +446,20 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.
-- **v0.9.0**: covalent topology audit, summary reporting and an end-to-end fixture harness.
-- **v1.0.0**: the production command line, an engine registry and documentation.
+- **v0.7.1** (in progress): a quality point release with no new features: integration tests at the module seams, known-issue fixes, and a dead-code and docs pass.
+- **v0.8.0**: the catalytic-cycle orchestrator and the energetic span model: a priority-ordered scheduler with crash recovery and incremental stages, refinement from xTB or ML potentials to DFT (including DFT transition-state refinement), the energetic span model (TOF, TDI, TDTS), geomeTRIC moved into its own process, and a read-only reaction-network view on the review page.
+- **v0.9.0**: covalent topology audit, CSV/JSON summary reports and the five-tier human-fixture E2E harness.
+- **v0.10.x**: catalyst-family case studies, one point release per family, each with a tutorial, an E2E that runs the tutorial, and a review page:
+  - **v0.10.1**: organocatalysis, plus the case-study harness and the literature-value policy;
+  - **v0.10.2**: NHC;
+  - **v0.10.3**: Ru;
+  - **v0.10.4**: Pd, where charged-species support lands;
+  - **v0.10.5**: Rh/Ir;
+  - **v0.10.6**: Ni (stretch).
+- **v1.0.0**: the production command line (`run`, `validate`, `enumerate`, `hardware-check`, `cache-status`), a unified engine registry and API documentation.
+- **v1.1.0+**: an interactive GUI: a 3D builder for picking the keep, delete and alignment atoms, and an interactive viewer for reaction networks, Boltzmann distributions and imaginary modes.
+
+Point releases (`v0.x.y`) are cut when hardware quirks or edge cases need a patch before the next milestone.
 
 ## 🙏 Acknowledgements
 
