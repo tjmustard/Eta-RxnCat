@@ -57,13 +57,14 @@ ethyl UMA 4.57 / 99.91, ethyl GFN2 3.93 / 99.74, n-propyl UMA 4.97 / 99.95, n-pr
   to replan 7 (slices 15–18).
 - The re-review and re-promotion is `ef9225e`: 30 candidate files, promoted by TJ's answer "A".
   The new review bundle shows sample 6 as `excluded: seed_clash` and the minimum as
-  `superseded by push`.
+  `superseded by push`. TJ on the re-review site: "eta v0.7.0: the website review looks great".
 
 ### Known issues
 - **HF-13 (carried from v0.6.0).** geomeTRIC's pre-relax can still stall inside the black box. The
   guard bounds the stall, and the out-of-process cure is v0.8.0. Slice 11's UMA ethyl exo run hit
   one `PreRelaxTimeout` at 600.005 s (load1 7.58; the stall cap of 2 was not reached). Slice 17's
-  rerun has 0 stalls. Whether the stalled sample was the clashing one is not checked (slice 18 QA).
+  rerun has 0 stalls: the stalled sample (index 1, `fragment_embed:0`) is now rejected as
+  `seed_clash` before any engine call (lead check of the slice 17 rerun record against `9fdba68`).
 - **Multi-site forming bonds.** A later site can delete an earlier site's forming-bond or core atom,
   and each record validates only its own bonds (slice 04 QA, item b). The E2E is one site, so it
   does not exercise this.
