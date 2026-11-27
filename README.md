@@ -7,11 +7,11 @@
 <p align="center"><img src="./media/banner/banner-1024x573.webp" alt="Eta-RxnCat banner" width="100%"/></p>
 
 <p align="center">
-    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies. Version 0.6.0 adds transition-state conformer ensembles, Boltzmann-summed selectivity between competing pathways and a threshold rule that prunes the losing branch.</strong>
+    <strong>Eta-RxnCat is a computational-chemistry library for mapping organometallic and organocatalytic reaction mechanisms. A reaction is written once as a graph of states and transition states, every molecule carries an explicit charge and spin multiplicity, and each computational stage is cached on its own so a run can resume and extend. Version 0.2.0 adds the energy engines: RDKit force fields, PySCF / GPU4PySCF DFT on CPU or GPU, GFN2-xTB as a subprocess, and the MACE, UMA and eSEN machine-learned potentials, each honouring charge and spin exactly or refusing. Version 0.3.0 adds conformer search, ground-state optimisation, quasi-RRHO thermochemistry at a 1 M standard state, Boltzmann ensembles and a cached single-species stage runner. Version 0.4.0 adds a conserved-core structure mapper, which aligns a fragment onto a known transition state, grafts it in with explicit charge and spin, and pre-relaxes the result with the core frozen to give a guess for a new transition state. Version 0.5.0 turns that guess into a transition state: a P-RFO saddle-point search, an active-core frequency validator and activation free energies. Version 0.6.0 adds transition-state conformer ensembles, Boltzmann-summed selectivity between competing pathways and a threshold rule that prunes the losing branch. Version 0.7.0 enumerates a combinatorial library onto the transition states, falls back through ranked templates with seed geometry checks, and writes an offline HTML review bundle of a run.</strong>
 </p>
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.6.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.0-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -22,7 +22,7 @@
 ## Table of Contents
 
 - [🔬 What is Eta-RxnCat?](#-what-is-eta-rxncat)
-- [✨ Features (v0.6.0)](#-features-v060)
+- [✨ Features (v0.7.0)](#-features-v070)
 - [⚡ Installation](#-installation)
 - [🚀 Usage](#-usage)
 - [🧪 Development](#-development)
@@ -46,10 +46,12 @@ optimised conformers with free energies, and combines species into reaction free
 `v0.4.0` maps a fragment onto the conserved core of a known transition state to build a guess
 for a new one; `v0.5.0` optimises that guess to a validated transition state and computes its
 activation free energy; `v0.6.0` sums transition-state conformers into selectivities between
-competing pathways and prunes the losing branch. Everything beyond it is listed under
+competing pathways and prunes the losing branch; `v0.7.0` enumerates library combinations onto
+those transition states, falls back through ranked templates and writes a run's review bundle.
+Everything beyond it is listed under
 [Roadmap](#-roadmap) and is not built yet.
 
-## ✨ Features (v0.6.0)
+## ✨ Features (v0.7.0)
 
 - **Strict core data contracts** (`eta_rxncat.core`). Pydantic v2 models reject unknown keys and
   are immutable. Charge, spin multiplicity, counts, ranks and atom indices are strict integers
@@ -215,6 +217,40 @@ competing pathways and prunes the losing branch. Everything beyond it is listed 
 - The three new Tier 4 structures match their recorded sha256s and reproduce Liu's header ΔΔG‡
   (+4.273 and +1.849 kcal/mol); TJ confirmed the transcriptions.
 
+### Library enumeration, template fallback and review (v0.7.0)
+
+- **Combinatorial enumeration** (`eta_rxncat.mapping.enumerator.enumerate_candidates`). An `EnumerationPlan`
+  names substitution sites on a reference graph and a library of entries per site; the enumerator
+  makes one candidate graph per combination and records every graft it accepted or refused. It
+  runs no engine.
+- **Ranked template fallback** (`eta_rxncat.orchestrator.run_ts_with_fallback`). A node's
+  templates are tried in rank order. A failure that is the template's fault (a listed TS-search,
+  validation, face, member-gate or seed-check reason) falls through to the next template; every
+  other reason, such as a time fault, stops the node.
+- **Seed geometry checks** (on in the fallback; `seed_checks=True` for
+  `run_ts_ensemble`). TJ's clash rule: a pair of atoms at least 3 bonds apart (or unconnected)
+  clashes when its distance is below 1.3 × the sum of its covalent radii. A clashing sample is
+  excluded `seed_clash` with no engine call and with no replacement. A bond made or broken
+  outside the forming bonds excludes a sample as `bond_changed:pre_relax` or `bond_changed:ts`.
+  In the fallback, a graft with close contacts is `seed:seed_clash` with no engine call, and
+  the seed TS fails as `seed:bond_changed:ts` if its bonds changed.
+- The v0.7.0 acceptance record
+  ([ACCEPTANCE_RESULT.json](docs/prd/v0.7.0/ACCEPTANCE_RESULT.json)) passed: the ethyl and
+  n-propyl endo/exo candidates and the two fallback constructs ran with the xtb (GFN2) and UMA
+  recipes, every rerun command exited 0 with no skip, every GFN2 gate passed, and every rerun
+  output matched the fixtures TJ promoted except the listed volatile fields.
+- UMA gates are reported, not gated; all of them passed.
+- Endo is the major pathway for both candidates on both recipes: ΔΔG‡ +3.93 (ethyl) and +4.23
+  (n-propyl) kcal/mol with GFN2, +4.57 and +4.97 kcal/mol with UMA.
+- In the `run_time` construct the rank-1 template fell through (`seed:face_mismatch_pathway`)
+  and rank 2 was chosen on GFN2 and UMA; in the `graft_time` construct the enumerator refused the
+  declared rank-1 template (`alignment_rmsd`).
+- The seed checks excluded 53 sampled starts as `seed_clash` across the 11 runs (distance over
+  covalent-radius sum from 0.41 to 1.29), no run recorded a `bond_changed` exclusion, and no
+  pre-relaxation stalled.
+- The review bundle of these runs was built with no engine call: seven sub-bundles, 43 files and
+  12.0 MB in total, each sub-bundle under the 25 MB ceiling.
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
@@ -312,8 +348,55 @@ $ uv run eta-rxncat hardware-check --smoke
 | `hardware-check` | report printed | — | usage error | — |
 | `hardware-check --smoke` | smoke pass | smoke fail | usage error | skipped |
 | `validate <path>` | valid | invalid, unreadable or unsupported file | usage error | — |
+| `review-bundle` | bundle written | record, store or output directory refused | usage error | — |
 
 `python -m eta_rxncat` is the same command line.
+
+### Review a run (`eta-rxncat review-bundle`)
+
+Write the offline HTML review bundle of a run from its run record and artifact store:
+
+```bash
+uv run eta-rxncat review-bundle --record run.runrecord.json --store run.sqlite --out review/
+```
+
+`--record` is a `RunRecord` JSON (`eta_rxncat.review.RunRecord`), `--store` the run's artifact
+store (a missing file is refused, never created) and `--out` a new or empty directory. The export
+runs no engine; a row the store does not hold is exported as `missing` with its stage key. A
+refusal prints one `error: <ErrorType>: <message>` line and exits 1.
+
+- **Offline by design.** The bundle opens by double-click: no server and no network. Its
+  `index.html` carries a static summary that needs no JavaScript, and the viewer components
+  use the vendored 3Dmol.js 2.5.5. The page's Content-Security-Policy is
+  `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'`.
+  The files depend only on the run data and the vendored assets, so two writes of one document give
+  the same bytes.
+- **Size.** The ceiling is 25 MB. The command keeps trajectories within a 10 MB budget by
+  keeping every `decimation_stride`-th frame and the last one; the store keeps every frame.
+- **Dispositions.** Every transition-state sample and every minimum's frequency row says whether it
+  fed the result. Sample kinds are `member`, `merged`, `excluded` and `fell_through`; minimum
+  kinds are `kept`, `superseded_by_push`, `dropped` and `not_recorded` (an older record). Used rows
+  are listed first, under "Used in the result", then "Not used (rejected, merged or
+  superseded)".
+- **TS identity.** Every transition-state block shows the number of imaginary modes, the imaginary
+  frequency, the forming-bond overlap, the active-core kinetic-energy fraction and the forming
+  distances, recomputed from the stored Hessian with the run's own options. A red banner marks a
+  TS with other than one imaginary mode or a failed identity test.
+
+### The run-data contract
+
+The bundle's `run_data.json` (the same bytes as the data embedded in `index.html`) is the one
+document every view reads. Its schema is committed at
+`src/eta_rxncat/review/schema/run_data.v1.schema.json`. It holds ids and reason codes, never a
+message, path, user name, host name or timestamp.
+
+- **Version rule.** The writer (`RunData`) is strict: unknown keys are refused and
+  `schema_version` is exactly 1. The reader (`read_run_data`) ignores unknown keys and refuses a
+  later version. A new enum value is a version bump.
+- **Forward-only stores.** v0.7.0 adds optional trajectory data to stored payloads without
+  changing a stage key or the store schema version. v0.7.0 reads older rows (they show "no
+  trajectory stored"), but do not use a v0.7.0 store with v0.6.0: its strict models refuse the
+  new transition-state search rows.
 
 ## 🧪 Development
 
@@ -356,12 +439,13 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 - **v0.5.0**: transition-state optimisation, seeded from the mapper's guess, and an active-core
   frequency validator.
 - **v0.6.0**: selectivity branching and competing transition-state screening.
+- **v0.7.0**: combinatorial library enumeration, multi-template fallback and the offline review
+  bundle.
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.7.0**: combinatorial library enumeration and multi-template fallback.
 - **v0.8.0**: the full catalytic-cycle orchestrator and the energetic span model.
 - **v0.9.0**: covalent topology audit, summary reporting and an end-to-end fixture harness.
 - **v1.0.0**: the production command line, an engine registry and documentation.

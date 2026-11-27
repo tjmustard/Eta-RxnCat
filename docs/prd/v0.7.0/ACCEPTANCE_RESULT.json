@@ -823,7 +823,7 @@
       "command": "uv run pytest",
       "exit_code": 0,
       "counts": {
-        "passed": 2674,
+        "passed": 2690,
         "failed": 0,
         "skipped": 0,
         "deselected": 196,
@@ -1190,5 +1190,759 @@
       "before": "aa923c9441b96f31282888b285b95173c3d5403e59fc2209993413c7fb3e7473",
       "after": "5ad4aa3b9a8dc8cfbb42ea07c73b5311c27826ef276b52d3130de1a4378332ec"
     }
-  }
+  },
+  "verdict_run": {
+    "commands": [
+      {
+        "tag": "ethyl-endo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-endo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-exo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "ethyl-exo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-endo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-endo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-exo-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "npropyl-exo-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "graft-time-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "run-time-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "run-time-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-ethyl-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-ethyl-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-npropyl-uma",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      },
+      {
+        "tag": "score-npropyl-xtb",
+        "exit_code": 0,
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "deselected": 0,
+          "errors": 0
+        }
+      }
+    ],
+    "units": [
+      {
+        "case": "v070_enum_ethyl_endo_uma",
+        "engine": "UMA",
+        "gated": false,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_ethyl_endo_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_ethyl_exo_uma",
+        "engine": "UMA",
+        "gated": false,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_ethyl_exo_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_npropyl_endo_uma",
+        "engine": "UMA",
+        "gated": false,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_npropyl_endo_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_npropyl_exo_uma",
+        "engine": "UMA",
+        "gated": false,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_enum_npropyl_exo_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "charge_0_multiplicity_1": "pass",
+          "chosen_at_rank_1": "pass",
+          "every_member_face_expected": "pass",
+          "g3_invariant": "pass",
+          "graft_rmsd_and_contacts": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_fallback_graft_time_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "engine_calls_attributed": "pass",
+          "every_member_face_expected": "pass",
+          "fallback_record": "pass",
+          "graft_records": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "rank_1_no_ts_search_calls": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_fallback_run_time_xtb",
+        "engine": "GFN2",
+        "gated": true,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "engine_calls_attributed": "pass",
+          "every_member_face_expected": "pass",
+          "fallback_record": "pass",
+          "graft_records": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "rank_1_no_ts_search_calls": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      },
+      {
+        "case": "v070_fallback_run_time_uma",
+        "engine": "UMA",
+        "gated": false,
+        "commit_sha": "ef9225e1dfb4a45c0b39e3f22fcc6a2450d8eb3e",
+        "gates": {
+          "candidate_ok": "pass",
+          "engine_calls_attributed": "pass",
+          "every_member_face_expected": "pass",
+          "fallback_record": "pass",
+          "graft_records": "pass",
+          "no_engine_error_or_face_mismatch": "pass",
+          "rank_1_no_ts_search_calls": "pass",
+          "second_pass_all_hits": "pass",
+          "weights_sum_to_one": "pass"
+        },
+        "first_pass_engine_calls": 0,
+        "first_pass_new_rows": 0,
+        "second_pass_engine_calls": 0,
+        "second_pass_new_rows": 0
+      }
+    ],
+    "volatile_fields": [
+      {
+        "pattern": "commit_sha",
+        "reason": "HEAD of the rerun"
+      },
+      {
+        "pattern": "environment\\.run\\.eta_rxncat",
+        "reason": "installed package metadata version of the venv"
+      },
+      {
+        "pattern": "reported\\.resources\\.\\w+",
+        "reason": "CPU, wall time and peak memory of this run"
+      },
+      {
+        "pattern": "reported\\.(first|second)_pass_wall_time_s",
+        "reason": "a wall time measured by this run"
+      },
+      {
+        "pattern": "reported\\.stage_metrics\\.\\w+\\.wall_time_s",
+        "reason": "a wall time measured by this run"
+      },
+      {
+        "pattern": "(second_pass_)?fallback\\.attempts\\[\\d+\\]\\.wall_time_s",
+        "reason": "a wall time measured by this run"
+      },
+      {
+        "pattern": "runs\\[\\d+\\]\\.fallback\\.attempts\\[\\d+\\]\\.wall_time_s",
+        "reason": "a wall time measured by this run"
+      },
+      {
+        "pattern": "reported\\.first_pass_(engine_calls|new_rows)",
+        "reason": "the rerun reads the earlier run's rows, so its first pass computes less"
+      },
+      {
+        "pattern": "reported\\.stage_metrics\\.\\w+\\.(engine_calls|cache_hits|rows_created)",
+        "reason": "the rerun reads the earlier run's rows, so its first pass computes less"
+      },
+      {
+        "pattern": "first_pass_engine_calls_by_template_stage(\\.\\w+)+",
+        "reason": "the rerun reads the earlier run's rows, so its first pass computes less"
+      },
+      {
+        "pattern": "checks\\.\\w+\\.engine_calls_attributed\\.(attributed|first_pass)",
+        "reason": "the rerun reads the earlier run's rows, so its first pass computes less"
+      },
+      {
+        "pattern": "checks\\.\\w+\\.rank_1_no_ts_search_calls\\.all_calls",
+        "reason": "the rerun reads the earlier run's rows, so its first pass computes less"
+      }
+    ],
+    "regression": {
+      "v070_enum_ethyl_endo_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "a416bfc66c28011d8b328ed050b8d2e2310aee83b67c051c4e96a2c8306934a7",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_ethyl_endo_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "701a5131f908eff6381c00c2900ca10bedde07a53c45e160d4a90ef238598d3b",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_ethyl_endo_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "b2083838c0e3cfa8ee5b9448c6046510d9aa50edb2d3c40b057bdc393273dbb7",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_ethyl_endo_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "cfc1b9a617b0c1cd96db8f0beade6d964ee0e6bb20786a24771498ef3991fcf6",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_ethyl_exo_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "09384f2fdb93d29e9974d0e5558fd7dc0129ba034e2f06b78f1d2a75a09c7545",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_ethyl_exo_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "1c16333907053f5641413cd6f81633b116a5751b6e9fd0c14e74a60123a47fe0",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_ethyl_exo_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "47bba312e995a49b970ca51d2ba616ed1b67011979d6237e2e9fdee557a36fdc",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_ethyl_exo_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "f85b0cd95453961f6187b8e85f0851c293808a8c90cdaac3a62cc8ea55aec655",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_ethyl_selectivity_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "420c07ee2020f2687a7389251fce8e7b30c9cb2a8822ced38b96c70ec14ecf92",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha"
+        ]
+      },
+      "v070_enum_ethyl_selectivity_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "dc0715dafe2020230ba9f0490d559c9e1565eb607996fd331ad0a12272073f4a",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_ethyl_selectivity_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "bff1d26176fee3d3aa90b8144cabda1bd60004b8ed9aff11c5cc00aac3f0f44c",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha"
+        ]
+      },
+      "v070_enum_ethyl_selectivity_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "601c82a0bd0911bce87320eb647b769e0e6482f2ad954bc97030d188f9081be8",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_endo_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "1863d6c736dee1422042a14f975896d111f4d918dc9b03545ce8d034cb95f5b0",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_npropyl_endo_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "b8ddd45121a92203db9c692789f5c7712c4e3aa6ff5ad99758ed93e6f6ee87cd",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_endo_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "62c19805bcab39809463e8c6e7ff984bcda2ee90f632ae47961e377e26e42f83",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_npropyl_endo_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "cd9d28de07012fc09bcdaeb2c25cadf8ad2e027fe045ac134c7f08e80c933976",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_exo_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "a2e35dd3f087d7538af6f547f3fca37f8d56307cc2b3f3196e65e0e24a9d3b1b",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_npropyl_exo_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "e9a9da9ce6d41575c0f39b2d58450b8d04c6eb1ace39b3a6783155671d6d5596",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_exo_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "914a55aeff2a0ee7da03a10129e7c6b937d6147d80e60c7f7beae6b90c453bc5",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_enum_npropyl_exo_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "999007b6b6d37ac2d0f661295af5034cfe8521f57a5ee2c350352d19d6fa2511",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_selectivity_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "eb899fff340eda2c093199e75d1a984e6069d077003ddf7601e3a0e1307ce90c",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha"
+        ]
+      },
+      "v070_enum_npropyl_selectivity_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "1a30e1d7df87bf8715ddc314ba752dd928ba9a12c20f211ce39fd311a0631007",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_enum_npropyl_selectivity_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "83d983c88215a6f37943f9f0c08689d5a1ee6b370780b3fa979de6a2d70be99c",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha"
+        ]
+      },
+      "v070_enum_npropyl_selectivity_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "188bd72c6596559255a8b30109b5cead38c5e2846107a2624e98e6c7ace51164",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_fallback_graft_time_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "a5ea99458f8cb4cfde28eda78052ca490948370e669aa9c99b18c604d3a626c9",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_fallback_graft_time_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "287fe19517d7e72c696aabc1a67e5183a2bfa4618e59f5db0b26676e631cad03",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_fallback_run_time_uma.json": {
+        "status": "pass",
+        "fixture_sha256": "91b7cb0662c182ed73c27c6f56a63b1472c97dea93595fde61f98998add114c0",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_fallback_run_time_uma.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "8302a9020d7c8becbe16907408ce6fa4d8446f0774a3b1f1e6079f009794ebeb",
+        "unexpected": [],
+        "volatile": []
+      },
+      "v070_fallback_run_time_xtb.json": {
+        "status": "pass",
+        "fixture_sha256": "544ac57f2aaf8f808c4d88e23784759e74d5796a0e13e3a86d62a0aac0d36d6f",
+        "unexpected": [],
+        "volatile": [
+          "commit_sha",
+          "reported.first_pass_wall_time_s",
+          "reported.resources.cpu_user_plus_sys_s",
+          "reported.resources.peak_rss_child_kb",
+          "reported.resources.peak_rss_self_kb",
+          "reported.resources.wall_time_s",
+          "reported.second_pass_wall_time_s",
+          "reported.stage_metrics.frequency.wall_time_s",
+          "reported.stage_metrics.ts_opt.wall_time_s"
+        ]
+      },
+      "v070_fallback_run_time_xtb.runrecord.json": {
+        "status": "pass",
+        "fixture_sha256": "cefd994967e88fe985a445a629fb518cd2778d03adbeabd249ba6eb14b514ba4",
+        "unexpected": [],
+        "volatile": []
+      }
+    }
+  },
+  "verdict": "pass",
+  "verdict_reasons": []
 }

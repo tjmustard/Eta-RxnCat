@@ -1,7 +1,7 @@
 """Author-name guard: every author form this project writes is the canonical one (slice 08).
 
-Pure filesystem: no git, no network. The pattern and the canonical string are assembled from
-pieces, so this file never contains a literal author form and does not flag itself.
+Also the README claims checks. No git, no network. The pattern and the canonical string are
+assembled from pieces, so this file never contains a literal author form and does not flag itself.
 """
 
 import json
@@ -9,9 +9,26 @@ import re
 import tomllib
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any
+from typing import Any, get_args
 
 import pytest
+
+from eta_rxncat.core import TSStep
+from eta_rxncat.orchestrator.ts_ensemble import SEED_CLASH_FACTOR
+from eta_rxncat.review.bundle import (
+    ASSETS_PATH,
+    BUNDLE_ASSETS,
+    BUNDLE_BYTE_LIMIT,
+    CONTENT_SECURITY_POLICY,
+)
+from eta_rxncat.review.run_data import (
+    SCHEMA_VERSION,
+    EndpointKind,
+    RunData,
+    SampleKind,
+    TSIdentity,
+)
+from eta_rxncat.store import SCHEMA_VERSION as STORE_SCHEMA_VERSION
 
 REPO = Path(__file__).parents[2]
 SURNAME = "Mus" + "tard"
@@ -1327,7 +1344,7 @@ def test_readme_v060_claims_match_record() -> None:
     """Every README v0.6.0 claim is derived from (and true of) the v0.6.0 record."""
     record = _v060_record() if V060_RECORD.is_file() else None
     assert check_v060_claims(readme(), record) == []
-    assert project_version() == "0.6.0"
+    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.6.0")
 
 
 @pytest.mark.parametrize(
@@ -1388,3 +1405,300 @@ def test_v060_claims_refused_on_fail_or_without_record() -> None:
     assert len(problems) == len(V060_CLAIMS) and all("has no verdict" in p for p in problems)
     assert len(check_v060_claims(readme(), None)) == len(V060_CLAIMS)
     assert check_v060_claims("no claims here", None) == []
+
+
+V070_RECORD = REPO / "docs" / "prd" / "v0.7.0" / "ACCEPTANCE_RESULT.json"
+V070_CONSTRUCTS = (("graft_time", "GFN2"), ("run_time", "GFN2"), ("run_time", "UMA"))
+
+
+def _v070_units(record: dict[str, Any]) -> list[dict[str, Any]]:
+    """The eight G7 units and three G8 constructs, refused unless the matrix is complete."""
+    g7, g8 = record["g7_units"], record["g8_constructs"]
+    matrix = {(u["candidate_id"], u["pathway"], u["engine"]) for u in g7}
+    wanted = {
+        (c, p, e) for c in ("ethyl", "npropyl") for p in ("endo", "exo") for e in ("GFN2", "UMA")
+    }
+    constructs = sorted((u["construct"], u["engine"]) for u in g8)
+    if matrix != wanted or len(g7) != len(wanted) or constructs != sorted(V070_CONSTRUCTS):
+        raise KeyError("the record does not hold every unit")
+    return [*g7, *g8]
+
+
+def _v070_passed(record: dict[str, Any]) -> bool:
+    """Verdict pass: every rerun command clean, every GFN2 gate, every fixture comparison."""
+    run = record["verdict_run"]
+    return bool(
+        record["verdict"] == "pass"
+        and len(_v070_units(record)) == 11
+        and len(run["commands"]) == 15
+        and len(run["regression"]) == 30
+        and all(c["exit_code"] == 0 and c["counts"]["skipped"] == 0 for c in run["commands"])
+        and all(c["counts"]["passed"] and not c["counts"]["failed"] for c in run["commands"])
+        and all(
+            status == "pass"
+            for u in _v070_units(record)
+            if u["engine"] == "GFN2"
+            for status in u["gates"].values()
+        )
+        and all(r["status"] == "pass" and not r["unexpected"] for r in run["regression"].values())
+    )
+
+
+def _v070_uma(record: dict[str, Any]) -> bool:
+    uma = [u for u in _v070_units(record) if u["engine"] == "UMA"]
+    return all(not u["gated"] and set(u["gates"].values()) == {"pass"} for u in uma)
+
+
+def _v070_selectivity(record: dict[str, Any]) -> bool:
+    scores = {(s["candidate_id"], s["engine"]): s for s in record["g7_selectivity"]}
+    wanted = {
+        ("ethyl", "GFN2"): 3.93,
+        ("npropyl", "GFN2"): 4.23,
+        ("ethyl", "UMA"): 4.57,
+        ("npropyl", "UMA"): 4.97,
+    }
+    return set(scores) == set(wanted) and all(
+        scores[k]["major_pathway"] == "endo" and round(scores[k]["ddG_dagger_kcal_mol"], 2) == v
+        for k, v in wanted.items()
+    )
+
+
+def _v070_fallback(record: dict[str, Any]) -> bool:
+    _v070_units(record)
+    for unit in record["g8_constructs"]:
+        values, attempts = unit["values"], unit["values"]["fallback"]
+        if unit["construct"] == "run_time":
+            if [(a["rank"], a["outcome"], a["reason"]) for a in attempts] != [
+                (1, "fell_through", "seed:face_mismatch_pathway"),
+                (2, "chosen", None),
+            ]:
+                return False
+        else:
+            refused = [g for g in unit["graft_records"] if g["status"] == "refused"]
+            if [g["reason"] for g in refused] != ["alignment_rmsd"]:
+                return False
+            if refused[0]["template_id"] == values["chosen_template_id"]:
+                return False
+    return True
+
+
+def _v070_seed_checks(record: dict[str, Any]) -> bool:
+    values = [u["values"] for u in _v070_units(record)]
+    rule = record["replan_7"]["clash_rule"]
+    return bool(
+        sum(v["seed_clash_count"] for v in values) == 53
+        and f"{rule['rejected_ratio_min']:.2f}" == "0.41"
+        and f"{rule['rejected_ratio_max']:.2f}" == "1.29"
+        and sum(v["bond_changed_count"] for v in values) == 0
+        and record["stalls"]["count"] == 0
+        and record["stalls"]["graft_pre_relax_timeouts"] == 0
+    )
+
+
+def _v070_clash_rule(record: dict[str, Any]) -> bool:
+    """TJ's answered rule is the one the code applies."""
+    rule = record["replan_7"]["clash_rule"]
+    return bool(
+        (rule["q_r7a"], rule["q_r7b"]) == ("A", "A")
+        and rule["cut_covalent_sum_factor"] == SEED_CLASH_FACTOR == 1.3
+    )
+
+
+def _v070_bundle(record: dict[str, Any]) -> bool:
+    bundle = record["bundle"]
+    sizes = bundle["sub_bundle_bytes"]
+    return bool(
+        bundle["engine_calls"] == 0
+        and len(sizes) == 7
+        and bundle["files_listed"] == 43
+        and f"{bundle['total_bytes'] / 1e6:.1f}" == "12.0"
+        and max(sizes.values()) <= BUNDLE_BYTE_LIMIT == 25_000_000
+    )
+
+
+def _v070_offline(record: dict[str, Any]) -> bool:
+    sources = (ASSETS_PATH / "SOURCES.md").read_text(encoding="utf-8")
+    return (
+        "script-src 'self'" in CONTENT_SECURITY_POLICY
+        and "connect-src 'none'" in CONTENT_SECURITY_POLICY
+        and "3Dmol-min.js" in BUNDLE_ASSETS
+        and "2.5.5" in sources
+    )
+
+
+def _v070_dispositions(record: dict[str, Any]) -> bool:
+    return get_args(SampleKind) == ("member", "merged", "excluded", "fell_through") and get_args(
+        EndpointKind
+    ) == ("kept", "superseded_by_push", "dropped", "not_recorded")
+
+
+def _v070_identity(record: dict[str, Any]) -> bool:
+    return set(TSIdentity.model_fields) >= {
+        "n_imaginary",
+        "imaginary_frequency_cm1",
+        "forming_overlap",
+        "active_core_ke_fraction",
+        "forming_distances",
+        "passed_bool",
+    }
+
+
+def _v070_version_rule(record: dict[str, Any]) -> bool:
+    schema = REPO / "src/eta_rxncat/review/schema/run_data.v1.schema.json"
+    return SCHEMA_VERSION == 1 and RunData.model_config["extra"] == "forbid" and schema.is_file()
+
+
+def _v070_stores(record: dict[str, Any]) -> bool:
+    return STORE_SCHEMA_VERSION == 1 and "coordinates_angstrom" in TSStep.model_fields
+
+
+V070_CLAIMS = (
+    (
+        "passed: the ethyl and n-propyl endo/exo candidates and the two fallback constructs ran "
+        "with the xtb (GFN2) and UMA recipes, every rerun command exited 0 with no skip, every "
+        "GFN2 gate passed, and every rerun output matched the fixtures TJ promoted except the "
+        "listed volatile fields.",
+        _v070_passed,
+    ),
+    ("UMA gates are reported, not gated; all of them passed.", _v070_uma),
+    (
+        "Endo is the major pathway for both candidates on both recipes: ΔΔG‡ +3.93 (ethyl) and "
+        "+4.23 (n-propyl) kcal/mol with GFN2, +4.57 and +4.97 kcal/mol with UMA.",
+        _v070_selectivity,
+    ),
+    (
+        "In the `run_time` construct the rank-1 template fell through "
+        "(`seed:face_mismatch_pathway`) and rank 2 was chosen on GFN2 and UMA; in the "
+        "`graft_time` construct the enumerator refused the declared rank-1 template "
+        "(`alignment_rmsd`).",
+        _v070_fallback,
+    ),
+    (
+        "The seed checks excluded 53 sampled starts as `seed_clash` across the 11 runs (distance "
+        "over covalent-radius sum from 0.41 to 1.29), no run recorded a `bond_changed` "
+        "exclusion, and no pre-relaxation stalled.",
+        _v070_seed_checks,
+    ),
+    (
+        "TJ's clash rule: a pair of atoms at least 3 bonds apart (or unconnected) clashes when "
+        "its distance is below 1.3 × the sum of its covalent radii.",
+        _v070_clash_rule,
+    ),
+    (
+        "A clashing sample is excluded `seed_clash` with no engine call and with no replacement.",
+        _v070_clash_rule,
+    ),
+    (
+        "The review bundle of these runs was built with no engine call: seven sub-bundles, 43 "
+        "files and 12.0 MB in total, each sub-bundle under the 25 MB ceiling.",
+        _v070_bundle,
+    ),
+    ("The bundle opens by double-click: no server and no network.", _v070_offline),
+    (f"`{CONTENT_SECURITY_POLICY}`", _v070_offline),
+    ("vendored 3Dmol.js 2.5.5", _v070_offline),
+    (
+        "Sample kinds are `member`, `merged`, `excluded` and `fell_through`; minimum kinds are "
+        "`kept`, `superseded_by_push`, `dropped` and `not_recorded` (an older record).",
+        _v070_dispositions,
+    ),
+    (
+        "Every transition-state block shows the number of imaginary modes, the imaginary "
+        "frequency, the forming-bond overlap, the active-core kinetic-energy fraction and the "
+        "forming distances",
+        _v070_identity,
+    ),
+    (
+        "The writer (`RunData`) is strict: unknown keys are refused and `schema_version` is "
+        "exactly 1. The reader (`read_run_data`) ignores unknown keys and refuses a later "
+        "version. A new enum value is a version bump.",
+        _v070_version_rule,
+    ),
+    (
+        "do not use a v0.7.0 store with v0.6.0: its strict models refuse the new "
+        "transition-state search rows.",
+        _v070_stores,
+    ),
+    (
+        "**v0.7.0**: combinatorial library enumeration, multi-template fallback and the offline "
+        "review bundle.",
+        _v070_passed,
+    ),
+)
+
+
+def check_v070_claims(readme_text: str, record: dict[str, Any] | None) -> list[str]:
+    """Each v0.7.0 README claim is present and true of the record and code; none without a pass."""
+    text = " ".join(readme_text.split())
+    present = [phrase for phrase, _ in V070_CLAIMS if phrase in text]
+    if record is None:
+        return [f"README claims {p[:40]!r}… but there is no v0.7.0 record" for p in present]
+    if record.get("verdict") != "pass":
+        state = "has no verdict" if "verdict" not in record else f"verdict is {record['verdict']}"
+        return [f"README claims {p[:40]!r}… but the record {state}" for p in present] or [
+            f"the v0.7.0 record {state}"
+        ]
+    problems = []
+    for phrase, holds in V070_CLAIMS:
+        if phrase not in text:
+            problems.append(f"record present, README lacks the claim {phrase[:40]!r}…")
+        elif not _holds(holds, record):
+            problems.append(f"README claim {phrase[:40]!r}… is not what the record shows")
+    if "](docs/prd/v0.7.0/ACCEPTANCE_RESULT.json)" not in text:
+        problems.append(
+            "record present, but no Markdown link to docs/prd/v0.7.0/ACCEPTANCE_RESULT.json"
+        )
+    return problems
+
+
+def _v070_record() -> dict[str, Any]:
+    return dict(json.loads(V070_RECORD.read_text(encoding="utf-8")))
+
+
+def test_readme_v070_claims_match_record() -> None:
+    """Every README v0.7.0 claim is derived from (and true of) the record and the code."""
+    record = _v070_record() if V070_RECORD.is_file() else None
+    assert check_v070_claims(readme(), record) == []
+    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.7.0")
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda r: r["verdict_run"]["commands"][0]["counts"].update(skipped=1),
+        lambda r: r["verdict_run"]["commands"].pop(),
+        lambda r: next(iter(r["verdict_run"]["regression"].values())).update(status="fail"),
+        lambda r: r["g7_units"].pop(),
+        lambda r: next(u for u in r["g7_units"] if u["engine"] == "GFN2")["gates"].update(
+            {"G7.candidate_ok": "fail"}
+        ),
+        lambda r: next(u for u in r["g7_units"] if u["engine"] == "UMA")["gates"].update(
+            {"G7.candidate_ok": "fail"}
+        ),
+        lambda r: r["g7_selectivity"][0].update(major_pathway="exo"),
+        lambda r: r["g7_selectivity"][1].update(ddG_dagger_kcal_mol=1.0),
+        lambda r: r["g8_constructs"][1]["values"]["fallback"][0].update(reason="seed:other"),
+        lambda r: r["g7_units"][0]["values"].update(seed_clash_count=0),
+        lambda r: r["stalls"].update(count=1),
+        lambda r: r["replan_7"]["clash_rule"].update(q_r7b="B"),
+        lambda r: r["bundle"].update(engine_calls=3),
+        lambda r: r["bundle"].update(total_bytes=30_000_000),
+    ],
+)
+def test_v070_claim_check_catches_drift(change: Any) -> None:
+    """A failed, missing or changed value the README words otherwise is caught."""
+    record = _v070_record()
+    change(record)
+    assert any("not what the record shows" in p for p in check_v070_claims(readme(), record))
+
+
+def test_v070_claims_refused_on_fail_or_without_record() -> None:
+    """A fail verdict, or none, refuses every claim; no record refuses any claim present."""
+    record = _v070_record()
+    record["verdict"] = "fail"
+    problems = check_v070_claims(readme(), record)
+    assert len(problems) == len(V070_CLAIMS) and all("verdict is fail" in p for p in problems)
+    record.pop("verdict")
+    problems = check_v070_claims(readme(), record)
+    assert len(problems) == len(V070_CLAIMS) and all("has no verdict" in p for p in problems)
+    assert len(check_v070_claims(readme(), None)) == len(V070_CLAIMS)
+    assert check_v070_claims("no claims here", None) == []
