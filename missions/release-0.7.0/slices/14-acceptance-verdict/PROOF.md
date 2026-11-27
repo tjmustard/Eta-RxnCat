@@ -13,6 +13,7 @@
 ## Artifacts
 
 - proof/14-execute.md - guard CLEAR: verdict pass: 15 rerun commands, 0 engine calls, 0 skips, 30/30 outputs match ef9225e fixtures; 0.7.0; full pytest 2690 passed
+- proof/14-qa.md - qa PASS: audit rerun: 15/15 exit 0, 0 skips, 0 engine calls, 30/30 match ef9225e fixtures; record cmp-identical; full pytest 2690 passed; 0.7.0
 
 ## Residue / caveats
 

@@ -26,7 +26,7 @@
 | OPR.0.7.0.11 | 11-enumeration-e2e | audited | OPR.0.7.0.4, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T12:39:31+00:00 audited |
 | OPR.0.7.0.12 | 12-fallback-e2e | audited | OPR.0.7.0.5, OPR.0.7.0.6, OPR.0.7.0.10 | 2026-11-26T13:16:55+00:00 audited |
 | OPR.0.7.0.13 | 13-review-bundle-and-record | audited | OPR.0.7.0.9, OPR.0.7.0.11, OPR.0.7.0.12 | 2026-11-26T14:45:48+00:00 audited |
-| OPR.0.7.0.14 | 14-acceptance-verdict | executed | OPR.0.7.0.18 | 2026-11-27T18:52:21+00:00 executed |
+| OPR.0.7.0.14 | 14-acceptance-verdict | audited | OPR.0.7.0.18 | 2026-11-27T19:11:51+00:00 audited |
 | OPR.0.7.0.15 | 15-seed-geometry-checks | audited | OPR.0.7.0.13 | 2026-11-26T16:10:26+00:00 audited |
 | OPR.0.7.0.16 | 16-review-dispositions | audited | OPR.0.7.0.15 | 2026-11-26T18:46:29+00:00 audited |
 | OPR.0.7.0.17 | 17-rerun-units | audited | OPR.0.7.0.16 | 2026-11-26T20:46:21+00:00 audited |
