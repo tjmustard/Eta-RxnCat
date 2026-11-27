@@ -31,6 +31,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.16) read_run_data lenient twin made every field required; optional RunData keys need their defaults kept. UMA cached-row replay needs the mlip-uma extra (throwaway UV_PROJECT_ENVIRONMENT, _load stubbed). anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.17) Rerunning on a copied store: rows of samples that are now excluded before any engine call stay in the copy, so a record that re-derives per-sample stage keys from the store must skip them, or it reports keys and stalls the run never used (fixed in tests/e2e/v070.py, defd982). anchors: none
 - 2026-11-26 [field-note] (agent:hyper-execute, slice OPR.0.7.0.18) The rerun bundle has no transition state that fails its identity check (every searched TS passes; the clashing samples never reach a search), so no identity banner appears on the real page; the banner is covered by stub tests and M12 on stubs only. anchors: none
+- 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.0.14) A v0.6.0 reader refuses v0.7.0 successful ts_opt rows (TSStep coordinates_angstrom; probe on a replan-7 store copy refused 87/87); its geometry_opt rebuild picks payload keys, so the README states the refusal for TS-search rows only. anchors: none
 
 ## Lore capture
 

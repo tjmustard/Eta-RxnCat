@@ -10,7 +10,7 @@ intent: "After TJ's Phase 3 visual audit and promotion, run the verdict on both 
 depends_on: [OPR.0.7.0.18]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executing
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["tests/e2e/**", docs/prd/v0.7.0/ACCEPTANCE_RESULT.json, README.md, tests/unit/test_identity.py, tests/unit/test_package.py, pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, spec/compiled/architecture.yml]
@@ -102,10 +102,10 @@ against the re-promoted fixtures.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] Verdict runs (host check per command); record `verdict`.
-- [ ] README + claims helper; bump; `uv lock`.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] Verdict runs (host check per command); record `verdict`.
+- [x] README + claims helper; bump; `uv lock`.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
@@ -114,9 +114,9 @@ against the re-promoted fixtures.
 
 ## Proof contract
 
-- [ ] Verdict output with counts, skips, host checks and env.
-- [ ] `uv run pytest tests/unit/test_package.py tests/unit/test_identity.py -q` passes.
-- [ ] Required checks exit 0.
+- [x] Verdict output with counts, skips, host checks and env.
+- [x] `uv run pytest tests/unit/test_package.py tests/unit/test_identity.py -q` passes.
+- [x] Required checks exit 0.
 
 ## Source material
 
