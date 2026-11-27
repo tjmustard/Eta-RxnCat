@@ -7,36 +7,74 @@ The "Now" of this project: what was just done, what is in progress, and any bloc
 Agents read this file first to see where to pick up, and update it after each task.
 
 ## Current Sprint Goal
-- [x] v0.6.0 selectivity branching and competing TS screening (mission
-  `missions/release-0.6.0`, OPR.0.6.0, 14 slices: 01–12 plus replan slices 13 and 14). Built,
-  audited, promoted by TJ (Phase 3, `6fce509`), and accepted on this host on 2026-11-26
-  (`docs/prd/v0.6.0/ACCEPTANCE_RESULT.json`, verdict `pass`, run at `b67214b`).
-- Eta is not paused. TJ lifted the pause on 2026-11-25 with an overnight go.
+- [x] v0.7.0 library enumeration, ranked template fallback and the offline review bundle (mission
+  `missions/release-0.7.0`, OPR.0.7.0, 18 slices: 01–14 plus replan slices 15–18). Built, audited,
+  promoted by TJ (Phase 3, `9fdba68`; re-promoted `ef9225e` after replan 7), and accepted on this
+  host on 2026-11-27 (`docs/prd/v0.7.0/ACCEPTANCE_RESULT.json`, verdict `pass`).
+- Eta is not paused.
 
 ## Session State
-Updated 2026-11-26.
-- Branch `feature/eta-rxncat-v0.6.0`, Start `6dc735f` (the slice 12 verdict commit). Version
-  0.6.0. The v0.6.0 docs commit is this feature's last commit. Nothing is pushed or tagged; the
-  lead pushes on TJ's word.
-- v0.6.0 adds:
-  - selectivity in `orchestrator/selectivity.py`: Boltzmann-summed pathway free energies,
-    ΔΔG‡ and % de (ee refused over multi-member ensembles, R8; ratio overflow gives +inf, R27);
-  - `PathwayPruningRule` in `core`, beside the untouched `PruningRule` (DV-02, DV-05);
-  - TS conformer ensembles in `conformers/`: per-fragment ETKDGv3 embedding, a seeded non-core
-    perturbation, core-frozen sampling, P-RFO re-search and dedup (DV-07, DV-09);
-  - the xtb `EngineError` now ends as a cached `failed_reason` (slice 03; closes the v0.5.0
-    known issue);
-  - the HF-13 pre-relax wall-time guard, 600 s, recorded as `PreRelaxTimeout` (ADR-0048,
-    PROPOSED);
-  - Tier 4 unmapped and mapped endo/exo on GFN2 and UMA, and TJ's ethyl/n-propyl/n-butyl series
-    on TS1a_n (slice 14, mechanics only).
-- Acceptance: all 13 acceptance commands exit 0 (see the record's `commands`); default suite
-  2212 passed, 0 skipped, exit 0. Regression bounds are TJ's (R31): |ΔE_TS| ≤ 1e-5 Eh,
-  heavy-atom RMSD ≤ 0.01 Å, |ΔΔG‡| ≤ 0.01 kcal/mol on GFN2 and ≤ 0.75 kcal/mol on UMA.
-- The register `docs/prd/v0.6.0/DISCREPANCIES.md` closes DV-01, 02, 03, 05, 07, 08 and 09, each
-  naming the audit that satisfied it. DV-04 and DV-06 stay `open`: their audits named the
-  slice parts, not the row as satisfied. PD-010 is logged as DV-01.
-- HACF is v0.6.6 (pinned `561f6b1`). Seats never run the installer.
+Updated 2026-11-27.
+- Branch `feature/eta-rxncat-v0.7.0`, HEAD at the v0.7.0 docs commit. Version 0.7.0. Nothing is
+  pushed or tagged; the lead pushes on TJ's word.
+- v0.7.0 adds:
+  - library enumeration in `mapping/`: each entry grafted onto each declared (node, template),
+    single site and multi-site with a cap, refusals recorded with reasons;
+  - ranked template fallback: run-time fall-through on TS-validation failures only, on the R4
+    allow-list (TJ Q-A1 B);
+  - seed geometry checks: `seed_clash` before any engine call, `bond_changed:*` at pre-relax and
+    TS (TJ Q-R7a A, Q-R7b A);
+  - optimization frames as payload (ADR-0053); forward-only stores;
+  - the `RunData` contract and the offline HTML review bundle (`eta-rxncat review-bundle`);
+  - review-site dispositions and TS identity (slice 16);
+  - the HF-13 guard budget scales with host load up to a cap; the 600 s base is unchanged.
+- Acceptance: verdict `pass`, `verdict_reasons` empty; default suite `uv run pytest` 2690 passed,
+  0 failed, 196 deselected, exit 0 (the record's `suites.default_suite`).
+- The register `docs/prd/v0.7.0/DISCREPANCIES.md` is unchanged at this commit: DV-01 to DV-10 all
+  stay `open`. No audit PASS handoff for v0.7.0 named a DV row as satisfied, so none was closed.
+- HACF is v0.6.7 (`.agents/hacf-manifest.json`). Seats never run the installer.
+
+## Next Steps
+- The lead pushes on TJ's word. The v0.7.0 docs commit is the feature's last commit.
+- Version-end items for TJ (not recorded in the record or the lore): 27 CANON nodes marked
+  `stale: impact`; ADR-0053's "a v0.6.0 reader refuses v0.7.0 rows", which the README states more
+  narrowly; DV-09a/b and the ADR-0049/0051 notes carried from v0.6.0. Also open with TJ:
+  ADR approvals (`/hyper-lore-approve`) and geomeTRIC's "BSD 3-clause Non-AI" licence.
+- DV-01 to DV-10 closure is pending: the next audit PASS that names a row lets the scribe close it.
+- Carried forward:
+  - **v0.7.0**: HF-13 can still stall (the cure is v0.8.0); a later site can delete an earlier
+    site's forming-bond atom (not exercised by the one-site E2E); `RunRecord` `ratio = inf` does
+    not round-trip (v0.7.1 R13). Full text in CHANGELOG.md `[0.7.0]` "Known issues".
+  - **v0.6.0**: the mapped pair's UMA margin is −0.09 against ADR-0040's 1.0 kcal/mol; the 1.5
+    kcal/mol pruning rule falls on opposite sides of GFN2 and UMA; the Tier 4 Liu TSs converge to
+    one member per pathway (HF-10).
+  - **v0.5.0**: GFN2 TS4a has no reaction TS (report-only). UMA ΔG‡ spreads up to 0.074
+    kcal/mol run to run on CUDA (TS3a); UMA TS4a ΔG‡ 14.600 is 0.10 inside its 14.7 window edge.
+    `cartesian_basis` matches Gaussian only for d-only Pople bases at 6D. The record's GFN2
+    `gated_on` text still reads "convergence, mode count" although R32 also gates the identity
+    core (the tier gates are right).
+  - **v0.4.0**: `JunctionVolume.sign` accepts `True` and `1.0`, and `signed_volume_angstrom3`
+    accepts `True` (Pydantic laxness). Clean-room vector 07 is odd-electron, so the test uses
+    multiplicity 2. Pure-graft junction handedness is undetermined on planar pair sets. UMA
+    regressions vary by GPU noise (about 1e-8 Eh). `GraftSpec` duplicates
+    `TemplateGeometry.mapping` until the v0.8.0 loader builds it from there.
+  - **Security**: `import mace` sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` process-wide. Save and
+    restore the variable around the import when engines first share a process.
+  - R50: a non-deterministic engine failure stays cached until `invalidate`.
+  - UMA HF2 cyclohexene boat and twist-boat sit 0.126 Å apart (dedup threshold 0.125 Å). UMA
+    `dropped` reasons can swap between runs.
+  - `stability.py` pins private PySCF 2.15.1 / GPU4PySCF 1.9.2 internals. A lock bump needs a
+    re-pin, and the tripwire test enforces it.
+  - The GPU R43 CPU-copy stability follow is tested only with fakes. GPU Hessian memory is
+    outside the VRAM estimate, which relies on the OOM fallback.
+  - The test-policy AST rule misses `import pytest as pt` aliases and decorator or default-arg
+    skips. The runtime hook still catches them.
+  - `PotentialResult` float fields are lax, and frozen is shallow (DV-23). Tighten them when the
+    core is next touched.
+  - The store accepts `open_timeout_s=inf`, which raises `OverflowError`. Opening an existing
+    store waits behind an active writer (v0.8.0).
+  - CI runner disk for the CUDA wheels; cuTENSOR is absent (performance only).
+  - Doc claims about acceptance must be derived from the record.
 
 ## Recent Decisions
 - Licence policy (TJ, 2026-11-22 14:57Z, governs all versions): the core (`src/eta_rxncat/` and

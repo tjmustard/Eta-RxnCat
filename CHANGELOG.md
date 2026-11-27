@@ -4,8 +4,72 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-27
+
+**Acceptance** (`docs/prd/v0.7.0/ACCEPTANCE_RESULT.json`, verdict `pass`, `verdict_reasons` empty,
+derived by `tests/e2e/acceptance_record_v070.py`): default suite `uv run pytest` 2690 passed,
+0 failed, 196 deselected, exit 0. The selectivity scores are report-only (ΔΔG‡ kcal/mol, % de):
+ethyl UMA 4.57 / 99.91, ethyl GFN2 3.93 / 99.74, n-propyl UMA 4.97 / 99.95, n-propyl GFN2 4.23 /
+99.84.
+
+### Added
+- **Library enumeration** (`eta_rxncat.mapping`). Each library entry is grafted onto each declared
+  (node, template) pair with eta's `graft`, on one site or on several (a Cartesian product with a
+  cap). Entries carry declared `charge_delta` and multiplicity, with parity refused when wrong. A
+  refused graft is recorded with its reason rather than skipped.
+- **Ranked template fallback** (`eta_rxncat.mapping`, `eta_rxncat.conformers`). A node's templates
+  are tried in declared rank order. At run time the TS ensemble runner falls through to the next
+  template only when a seed fails TS validation, and only on the R4 allow-list. An `EngineError`
+  still propagates (TJ Q-A1 B).
+- **Seed geometry checks** (slice 15). A start geometry with a pair three or more bonds apart
+  closer than 1.3 × the sum of covalent radii is rejected as `seed_clash` before any engine call.
+  The sample is recorded and not replaced (TJ Q-R7a A and Q-R7b A). `bond_changed:pre_relax` and
+  `bond_changed:ts` record a topology change at those stages.
+- **Optimization frames** are stored as payload (ADR-0053). Geometry frames from geomeTRIC and
+  P-RFO appear in success and failure payloads. Stores are forward-only: a row written before this
+  release reads as "no trajectory stored".
+- **Run-data contract.** `RunData` is the one public JSON contract (`schema_version` 1). The review
+  page renders it.
+- **Offline review bundle** (`eta-rxncat review-bundle --record <run.runrecord.json> --store <run.sqlite> --out <dir>`).
+  It is a static HTML page with a content security policy, opens by double-click, and needs no
+  server or network. The 3Dmol.js 2.5.5 viewer (BSD-3) is a vendored output asset that no Python
+  module imports.
+- **Review site dispositions** (slice 16). Every row is labelled used or not used, with its reason.
+  Each TS shows its identity numbers, and a banner marks an identity failure.
+- **E2E acceptance on GFN2 and UMA.** Ethyl and n-propyl on TS1a_n, endo and exo, as a single-site
+  enumeration. Three fallback constructs: graft-time fallback on GFN2, and run-time fallback on GFN2
+  and UMA. The mechanics gates are the pass criteria; ΔΔG‡ per R is report-only.
+
+### Changed
+- **Version 0.7.0** in `pyproject.toml`, `src/eta_rxncat/__init__.py`, and `uv.lock` (slice 14).
+- The HF-13 guard keeps its 600 s base and ADR-0024. Its budget now scales with host load up to a
+  cap (R7, slice 05). The out-of-process cure is v0.8.0 (TJ Q-A2 A).
+
 ### Fixed
 - v0.5.0 `ACCEPTANCE_RESULT.json` text only: the xtb `gated_on` of n4, ts1a_n, ts1b_n and ts3a now names the R32 identity core, and TS4a reads report-only (TJ advisor row 1b51c1b3, 2026-11-26). No value, verdict or hash changed.
+- geomeTRIC runs each call in a per-run temp directory (R8, slice 06), so it no longer writes
+  `HT.v_*.txt` mode files into the working directory. This closes the v0.6.0 known issue of the
+  same name.
+
+### Phase 3 (TJ)
+- The first promotion was `9fdba68`. TJ's two findings on it were ethyl sample `1f64216a4471` (its
+  start geometry put ethyl H21 0.438 Å from diene C4) and pre-push minimum `071c077d750a`. They led
+  to replan 7 (slices 15–18).
+- The re-review and re-promotion is `ef9225e`: 30 candidate files, promoted by TJ's answer "A".
+  The new review bundle shows sample 6 as `excluded: seed_clash` and the minimum as
+  `superseded by push`.
+
+### Known issues
+- **HF-13 (carried from v0.6.0).** geomeTRIC's pre-relax can still stall inside the black box. The
+  guard bounds the stall, and the out-of-process cure is v0.8.0. Slice 11's UMA ethyl exo run hit
+  one `PreRelaxTimeout` at 600.005 s (load1 7.58; the stall cap of 2 was not reached). Slice 17's
+  rerun has 0 stalls. Whether the stalled sample was the clashing one is not checked (slice 18 QA).
+- **Multi-site forming bonds.** A later site can delete an earlier site's forming-bond or core atom,
+  and each record validates only its own bonds (slice 04 QA, item b). The E2E is one site, so it
+  does not exercise this.
+- **Run records with `ratio = inf`.** `RunRecord.model_dump_json` writes `ratio` as null, and
+  `model_validate_json` then fails. RunData exports ddG and never the ratio, so the bundle is not
+  affected (slice 07 QA). The related store item is v0.7.1 R13.
 
 ## [0.6.0] - 2026-11-26
 
