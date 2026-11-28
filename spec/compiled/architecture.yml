@@ -2,7 +2,7 @@ schema: hacf.ledger/v2
 nodes:
 - id: eta_rxncat_scaffold
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - pyproject.toml
   - uv.lock
@@ -35,6 +35,9 @@ nodes:
   - tools/engine_reachable.py
   - tests/unit/test_doc_refs.py
   - lore_hypergraph.yml
+  - tools/quality_record_v071.py
+  - docs/prd/v0.7.1/QUALITY_RESULT.json
+  - docs/prd/v0.7.0/DISCREPANCIES.md
   description: >-
     uv-managed MIT package eta-rxncat 0.7.0 (hatchling, src layout, Python >=3.11,<3.14,
     committed uv.lock). Deps numpy, scipy, pydantic>=2, pyyaml, rdkit, pyscf. Extras:
@@ -72,7 +75,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
@@ -85,7 +88,7 @@ nodes:
   - OPR.0.3.0.6
 - id: eta_rxncat_core
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/core/**
   - tests/unit/core/**
@@ -129,7 +132,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
@@ -139,7 +142,7 @@ nodes:
   - OPR.0.3.0.2
 - id: eta_rxncat_store
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/store/**
   - tests/unit/store/**
@@ -187,7 +190,7 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
@@ -196,7 +199,7 @@ nodes:
   - OPR.0.1.0.9
 - id: eta_rxncat_hw_probe
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/utils/**
   - tests/unit/utils/**
@@ -238,14 +241,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_cli
   dimension: Module
-  status: clean
+  status: dirty
   files:
   - src/eta_rxncat/cli.py
   - src/eta_rxncat/__main__.py
@@ -297,14 +300,14 @@ nodes:
     implements: []
     member_of: []
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_engines
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/engines/**
   - tests/unit/engines/**
@@ -364,14 +367,14 @@ nodes:
   - OPR.0.2.0.10
   - OPR.0.2.0.11
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_thermo
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/thermo/__init__.py
   files:
   - src/eta_rxncat/thermo/**
@@ -422,14 +425,14 @@ nodes:
   spec_refs:
   - OPR.0.3.0.3
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
 - id: eta_rxncat_optimize
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/optimize/base.py
   files:
   - src/eta_rxncat/optimize/**
@@ -484,10 +487,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_conformers
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/conformers/generate.py
   files:
   - src/eta_rxncat/conformers/**
@@ -550,10 +553,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_species_runner
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/orchestrator/species.py
   files:
   - src/eta_rxncat/orchestrator/species.py
@@ -653,10 +656,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_mapping
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/mapping/__init__.py
   files:
   - src/eta_rxncat/mapping/**
@@ -721,10 +724,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_selectivity
   dimension: Module
-  status: clean
+  status: needs_review
   associated_file: src/eta_rxncat/orchestrator/selectivity.py
   files:
   - src/eta_rxncat/orchestrator/__init__.py
@@ -811,10 +814,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_enumerator
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/mapping/enumerator.py
   - tests/unit/mapping/test_enumerator*.py
@@ -862,10 +865,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_review
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - src/eta_rxncat/review/**
   - tests/unit/review/**
@@ -918,10 +921,10 @@ nodes:
     reviewed_by: audit:OPR.0.7.1.8
     summary: reviewed; nothing patched
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
 - id: eta_rxncat_integration
   dimension: Module
-  status: clean
+  status: needs_review
   files:
   - tests/integration/**
   description: >-
@@ -969,7 +972,7 @@ nodes:
   spec_refs:
   - OPR.0.7.1.1
   provenance:
-    last_slice: OPR.0.7.1.8
+    last_slice: OPR.0.7.1.9
   review:
     reviewed_at: '2026-11-28T00:58:26+00:00'
     reviewed_by: audit:OPR.0.7.1.8

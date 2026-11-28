@@ -21,5 +21,5 @@
 | OPR.0.7.1.6 | 06-known-issues-tooling | audited | OPR.0.7.1.5 | 2026-11-27T23:19:57+00:00 audited |
 | OPR.0.7.1.7 | 07-known-issues-runtime | audited | OPR.0.7.1.6 | 2026-11-27T23:57:20+00:00 audited |
 | OPR.0.7.1.8 | 08-dead-code-and-doc-refs | audited | OPR.0.7.1.7 | 2026-11-28T00:59:02+00:00 audited |
-| OPR.0.7.1.9 | 09-verdict | compiled | OPR.0.7.1.8 | 2026-11-27T19:39:11+00:00 compiled |
+| OPR.0.7.1.9 | 09-verdict | executed | OPR.0.7.1.8 | 2026-11-28T01:13:40+00:00 executed |
 <!-- END HACF GENERATED: slice-table -->

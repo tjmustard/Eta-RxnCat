@@ -10,7 +10,7 @@ intent: "Set version 0.7.1 under a point-release identity rule, write the CHANGE
 depends_on: [OPR.0.7.1.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, README.md, CHANGELOG.md, tests/unit/test_identity.py, tools/quality_record_v071.py, "tests/unit/tools/test_quality_record*.py", docs/prd/v0.7.1/QUALITY_RESULT.json, docs/prd/v0.7.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
@@ -145,13 +145,13 @@ the positive and negative cases.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] R23 rule and cases; version bump; `uv lock`.
-- [ ] README to the R47 standard; DV-10 (R46).
-- [ ] CHANGELOG.
-- [ ] Record script and its fail-closed test.
-- [ ] Verdict runs (host check before Tier X); generate the record.
-- [ ] Required checks; commit; updater once.
+- [x] Index.
+- [x] R23 rule and cases; version bump; `uv lock`.
+- [x] README to the R47 standard; DV-10 (R46).
+- [x] CHANGELOG.
+- [x] Record script and its fail-closed test.
+- [x] Verdict runs (host check before Tier X); generate the record.
+- [x] Required checks; commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 

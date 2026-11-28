@@ -21,6 +21,8 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-27 [field-note] (agent:hyper-execute, slice OPR.0.7.1.7) A record's pydantic ser_json_inf_nan does not reach a nested core model (the model's own config wins), so RunRecord writes ratio=inf through a wrap field serializer on RecordSelectivity.result; tests/e2e/v070.py checked_record_text still refuses a non-finite ratio. anchors: none
 - 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.8) GPU KS analytic Hessian routing (gpu_ks_hessian_class) ignores cartesian_basis, while the v0.2.0 GPU support record was measured without it; cartesian_basis=True on CUDA can take the analytic path in a recorded class. README now says the class does not include cartesian_basis; no code change. anchors: none
 - 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.8) R31 reachability (tools/engine_reachable.py) covers 87 of 90 eta_rxncat modules (parent packages count, and the marked tests import most of the package), so only __main__, review.schema.__main__ and utils._smoke_child are outside; no zero-coverage symbol met all four removal conditions. anchors: none
+- 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) pytest junit has no deselected count, so tools/quality_record_v071.py also reads each verdict run's terminal log, and takes verdict_run_sha from a file written at the run so a rerun after the record commit gives the same bytes. anchors: none
+- 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) A point release breaks every PLAN_VERSIONS.index(project_version()) lookup in test_identity.py (the GPU claim and the v0.4.0-v0.7.0 claim tests); they now go through roadmap_position. anchors: none
 
 ## Lore capture
 
