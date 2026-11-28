@@ -10,7 +10,7 @@ intent: "Remove dead code only on scripted evidence, add a stale-reference scan 
 depends_on: [OPR.0.7.1.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: compiled
+hacf_status: executed
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["src/eta_rxncat/**", tools/engine_reachable.py, tests/unit/test_doc_refs.py, "tests/unit/**", README.md, "docs/*.md", "lore/**", lore_hypergraph.yml, spec/compiled/architecture.yml]
@@ -170,13 +170,13 @@ listed.
 
 ## 3. Implementation Plan (Task List)
 
-- [ ] Index.
-- [ ] `engine_reachable.py`; coverage, ruff and grep evidence.
-- [ ] Removals and the table.
-- [ ] `test_doc_refs.py` and the stale-reference fixes.
-- [ ] R41 docstrings; R19 list.
-- [ ] R45: propose the ADR-0053 successor, index, validate.
-- [ ] Required checks (and Tier X if triggered); commit; updater once.
+- [x] Index.
+- [x] `engine_reachable.py`; coverage, ruff and grep evidence.
+- [x] Removals and the table.
+- [x] `test_doc_refs.py` and the stale-reference fixes.
+- [x] R41 docstrings; R19 list.
+- [x] R45: propose the ADR-0053 successor, index, validate.
+- [x] Required checks (and Tier X if triggered); commit; updater once.
 
 ## 4. The Negative Space (Constraints)
 
