@@ -313,6 +313,33 @@
       "id": "review page red frequency-failure box",
       "verdict": "deferred",
       "test": null
+    },
+    {
+      "id": "R14 limit: the guard wraps only the import of mace; an already-imported mace is not covered",
+      "verdict": "open",
+      "test": [
+        "tests/unit/engines/test_mace.py::test_importing_mace_leaves_the_torch_env_as_it_was"
+      ]
+    },
+    {
+      "id": "GPU analytic Hessian routing: gpu_ks_hessian_class has no cartesian_basis, and the support record does not cover it",
+      "verdict": "open",
+      "test": null
+    },
+    {
+      "id": "tests/e2e/v070.py checked_record_text still raises on a non-finite ratio, and its docstring is stale",
+      "verdict": "open",
+      "test": null
+    },
+    {
+      "id": "tests/e2e/t3.py: the ENERGY_SOURCE_BOUND_KCAL_MOL docstring follows the wrong constant",
+      "verdict": "open",
+      "test": null
+    },
+    {
+      "id": "R44 scanner misses: builtins.getattr, objects returned by eta calls, non-constant module names, patchers passed by other routes",
+      "verdict": "open",
+      "test": null
     }
   ],
   "dead_code": {

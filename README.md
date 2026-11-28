@@ -279,7 +279,8 @@ its record key.
   infinite selectivity ratio reads back
   (`test_an_infinite_ratio_round_trips_as_the_string_infinity`).
 - **Per-sample stage keys.** `eta_rxncat.orchestrator.TSEnsembleRun` lists each sample's stage
-  keys in `samples` (`eta_rxncat.orchestrator.SampleKeys`; `test_sample_keys_name_every_samples_rows`).
+  keys in `samples` (`eta_rxncat.orchestrator.SampleKeys`; `test_sample_keys_name_every_samples_rows`,
+  `test_tx2_ensemble_sampler_relax_and_store`, `integration_tests`).
 
 ## ⚡ Installation
 

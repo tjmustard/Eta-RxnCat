@@ -122,8 +122,38 @@ KNOWN_ISSUES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ("geomeTRIC temp-dir and partial-mark edge cases (R41)", "deferred", ()),
     ("HF-13 geomeTRIC pre-relax stall", "deferred", ()),
     ("review page red frequency-failure box", "deferred", ()),
+    (
+        "R14 limit: the guard wraps only the import of mace; an already-imported mace "
+        "is not covered",
+        "open",
+        ("tests/unit/engines/test_mace.py::test_importing_mace_leaves_the_torch_env_as_it_was",),
+    ),
+    (
+        "GPU analytic Hessian routing: gpu_ks_hessian_class has no cartesian_basis, and the "
+        "support record does not cover it",
+        "open",
+        (),
+    ),
+    (
+        "tests/e2e/v070.py checked_record_text still raises on a non-finite ratio, and its "
+        "docstring is stale",
+        "open",
+        (),
+    ),
+    (
+        "tests/e2e/t3.py: the ENERGY_SOURCE_BOUND_KCAL_MOL docstring follows the wrong constant",
+        "open",
+        (),
+    ),
+    (
+        "R44 scanner misses: builtins.getattr, objects returned by eta calls, non-constant "
+        "module names, patchers passed by other routes",
+        "open",
+        (),
+    ),
 )
-"""Every known issue of the release: id, verdict and the default-suite tests that prove a fix."""
+"""Every known issue of the release: id, verdict and the default-suite tests that prove a fix or
+bound an open limit."""
 
 
 class RecordError(Exception):
