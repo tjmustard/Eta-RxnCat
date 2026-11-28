@@ -156,3 +156,29 @@ Deviations for the audit:
 
 For the version end (ruling note 5): `PLAN_VERSIONS` in `tests/unit/test_identity.py` lacks
 v0.10.x, so 0.10.1 would be "not a plan version". Fix before v0.10.x; unchanged now.
+
+## Fix round 2 (audit FAIL iteration 2: U3; R19 citation)
+
+Start stays `2fcc8be`; round base `771b5a0`; fix commit `fcc49ad` (`CHANGELOG.md` only).
+
+- U3: the Known issues "HF-13 (carried)" line now cites
+  `tests/unit/orchestrator/test_deadline.py::test_a_stalled_loop_is_interrupted_near_the_budget`
+  and
+  `tests/unit/orchestrator/test_ts_ensemble.py::test_a_stalled_pre_relax_is_excluded_and_the_ensemble_continues`
+  (by function name, as the entry's other lines do), beside `known_issues`. Both are `passed` in
+  `E/default.xml`. The record and its script are unchanged.
+
+| command | exit | seen |
+|---|---|---|
+| `hyper_spec.py progress --event executing` (detail `escape_tracking: v1`), before the edit | 0 | executing |
+| junit parse of `E/default.xml` for the two ids | 0 | both passed |
+| `timeout 3600 uv run --no-sync ruff format --check . --extend-exclude spec/archive --extend-exclude spec/process` | 0 | 886 files already formatted |
+| `git diff --check` | 0 | clean |
+| `timeout 3600 uv run --no-sync pytest tests/unit/test_identity.py tests/unit/test_doc_refs.py -q -p no:cacheprovider` | 0 | 143 passed |
+| `hyper_codegraph.py index` (start, and before the updater) | 0 | `index: ok` |
+| `hypergraph_updater.py --from-diff 771b5a0 --json` (dry), then `--apply --slice OPR.0.7.1.9`, once | 0 / 0 | scaffold only; "no change"; `lore_stale_candidates` empty; 104 unmapped (the 2 `.claude` backups, 3 mission progress/SPEC files, untracked `spec/` workbench names, not opened) |
+| `hyper_spec.py progress --event executed` | 0 | executed |
+| `hyper_ledger.py validate` | 0 | ok |
+
+Not repeated: full `pytest`, ruff check, mypy and the verdict runs (no code or test change).
+`ensure-node` not rerun (no new file).

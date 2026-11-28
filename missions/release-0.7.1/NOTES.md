@@ -24,6 +24,7 @@ Context and observations that help the mission but do not change its `SPEC.md` c
 - 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) pytest junit has no deselected count, so tools/quality_record_v071.py also reads each verdict run's terminal log, and takes verdict_run_sha from a file written at the run so a rerun after the record commit gives the same bytes. anchors: none
 - 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) A point release breaks every PLAN_VERSIONS.index(project_version()) lookup in test_identity.py (the GPU claim and the v0.4.0-v0.7.0 claim tests); they now go through roadmap_position. anchors: none
 - 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) R19 wants a test id plus a record key per README/CHANGELOG claim, so a version record script needs known_issues constants for every CHANGELOG known issue before the verdict run; test-less known issues can cite only the key. anchors: none
+- 2026-11-28 [field-note] (agent:hyper-execute, slice OPR.0.7.1.9) Fix round 2: R19 key-only citation holds only where no test exists; search tests for a known issue's claim before citing known_issues alone. anchors: none
 
 ## Lore capture
 
