@@ -6,9 +6,9 @@
 ## Current state
 
 <!-- BEGIN HACF GENERATED: current-state -->
-- hacf_status: executed
+- hacf_status: audit_failed
 - status: active
-- last event: 2026-11-28T01:33:42+00:00 executed
+- last event: 2026-11-28T01:41:12+00:00 audit_failed
 <!-- END HACF GENERATED: current-state -->
 
 ## Outcomes
@@ -19,3 +19,4 @@
 - 2026-11-28T01:29:00+00:00 audit_failed
 - 2026-11-28T01:33:42+00:00 executing - escape_tracking: v1; fix round 1 (R19 citations), Start 2fcc8be
 - 2026-11-28T01:33:42+00:00 executed
+- 2026-11-28T01:41:12+00:00 audit_failed
