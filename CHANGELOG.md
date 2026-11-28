@@ -64,7 +64,9 @@ and an added tool or test file its path.
 - `PotentialResult` is not strict about floats and is frozen only shallowly. This is kept for the
   v1.0 API-freeze review (R15, `known_issues`).
 - **HF-13 (carried).** geomeTRIC's pre-relax can still stall inside the black box. The guard bounds
-  the stall; the out-of-process cure is v0.8.0 (`known_issues`).
+  the stall; the out-of-process cure is v0.8.0
+  (`test_a_stalled_loop_is_interrupted_near_the_budget`,
+  `test_a_stalled_pre_relax_is_excluded_and_the_ensemble_continues`, `known_issues`).
 - **Multi-site forming bonds** (deferred: an enumerator behaviour change no shipped plan exercises).
   A later site can delete an earlier site's forming-bond or core atom (`known_issues`).
 - **`+` in library entry ids** can collide joined candidate ids (deferred: the fix changes the
