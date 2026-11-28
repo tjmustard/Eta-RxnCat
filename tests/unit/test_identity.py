@@ -258,6 +258,17 @@ PLAN_VERSIONS = tuple(f"0.{m}.0" for m in range(1, 10)) + ("1.0.0",)
 """Every version in the master plan's roadmap, in order (R50)."""
 
 
+def roadmap_position(version: str) -> int:
+    """The index in ``PLAN_VERSIONS`` that ``version`` takes, or -1 when it has none.
+
+    A plan version takes its own position. A point release ``X.Y.Z`` with ``Z > 0`` takes
+    ``X.Y.0``'s (R23).
+    """
+    match = re.fullmatch(r"(\d+)\.(\d+)\.([1-9]\d*)", version)
+    base = f"{match[1]}.{match[2]}.0" if match else version
+    return PLAN_VERSIONS.index(base) if base in PLAN_VERSIONS else -1
+
+
 def project_version() -> str:
     """``[project].version`` from ``pyproject.toml``."""
     data = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
@@ -294,8 +305,9 @@ def check_version_identity(readme_text: str, version: str) -> list[str]:
     The release badge is ``release-v<version>``; the Features section is titled plainly
     ``Features`` and its newest (last) ``###`` subsection ends ``(v<version>)``; the Roadmap's
     ``### Built`` lists every plan version up to and including ``<version>``, and
-    ``### Planned, not yet built`` lists every later one and no built one. Each problem names the
-    part it is about (``badge``, ``heading``, ``roadmap``).
+    ``### Planned, not yet built`` lists every later one and no built one. A point release counts
+    as its ``X.Y.0`` for the Roadmap (R23); its own Built line is not a plan version. Each problem
+    names the part it is about (``badge``, ``heading``, ``roadmap``).
     """
     problems = []
     badge = f"https://img.shields.io/badge/release-v{version}-blue"
@@ -312,7 +324,7 @@ def check_version_identity(readme_text: str, version: str) -> list[str]:
     roadmap = _section(readme_text, "## 🧭 Roadmap", "\n## ")
     built_text = _section(roadmap, "### Built", "\n### ")
     planned_text = _section(roadmap, "### Planned, not yet built", "\n### ")
-    index = PLAN_VERSIONS.index(version) if version in PLAN_VERSIONS else -1
+    index = roadmap_position(version)
     built, later = set(PLAN_VERSIONS[: index + 1]), set(PLAN_VERSIONS[index + 1 :])
     if index < 0:
         problems.append(f"roadmap: {version} is not a plan version")
@@ -322,6 +334,8 @@ def check_version_identity(readme_text: str, version: str) -> list[str]:
         problems.append(f"roadmap: '### Planned, not yet built' does not list {missing}")
     if wrong := sorted(built & _bold_versions(planned_text)):
         problems.append(f"roadmap: '### Planned, not yet built' lists built {wrong}")
+    if early := sorted(later & _bold_versions(built_text)):
+        problems.append(f"roadmap: '### Built' lists planned {early}")
     return problems
 
 
@@ -516,6 +530,32 @@ def test_version_identity_missing_planned_version_fails() -> None:
     assert any("does not list ['0.3.0']" in p for p in check_version_identity(text, "0.2.0"))
 
 
+BUILT_THROUGH_071 = (*PLAN_VERSIONS[:7], "0.7.1")
+
+
+def test_version_identity_point_release_readme_passes() -> None:
+    """At 0.7.1, Built through 0.7.0 plus its own line, and 0.8.0 onward Planned, passes (R23)."""
+    good = synthetic_readme("0.7.1", BUILT_THROUGH_071, PLAN_VERSIONS[7:])
+    assert check_version_identity(good, "0.7.1") == []
+
+
+def test_version_identity_point_release_with_next_minor_built_fails() -> None:
+    """At 0.7.1, v0.8.0 under Built (and so not under Planned) fails (R23)."""
+    built = (*PLAN_VERSIONS[:8], "0.7.1")
+    problems = check_version_identity(synthetic_readme("0.7.1", built, PLAN_VERSIONS[8:]), "0.7.1")
+    assert any("lists planned ['0.8.0']" in p for p in problems), problems
+    assert any("does not list ['0.8.0']" in p for p in problems), problems
+
+
+@pytest.mark.parametrize(
+    ("version", "position"),
+    [("0.7.0", 6), ("0.7.1", 6), ("1.0.0", 9), ("1.0.2", 9), ("0.10.0", -1), ("0.10.1", -1)],
+)
+def test_roadmap_position(version: str, position: int) -> None:
+    """A point release takes its ``X.Y.0`` position; a version outside the plan has none."""
+    assert roadmap_position(version) == position
+
+
 def test_readme_features_pitch_and_roadmap_agree() -> None:
     """The real README's Features subsections, pitch bullets and Built list agree."""
     assert listing_problems(readme()) == []
@@ -576,7 +616,7 @@ def test_readme_gpu_claim_matches_record_and_no_pip_licenses() -> None:
         "version"
     ]
     # the GPU claim follows the newest GPU record at or below this version (v0.3.0 adds none)
-    released = PLAN_VERSIONS[: PLAN_VERSIONS.index(version) + 1]
+    released = PLAN_VERSIONS[: roadmap_position(version) + 1]
     recorded = [
         v for v in released if (REPO / "docs" / "prd" / f"v{v}" / "GPU_SMOKE_RESULT.json").is_file()
     ]
@@ -956,7 +996,7 @@ def test_readme_v040_claims_match_record() -> None:
     """Every README v0.4.0 claim is derived from (and true of) the v0.4.0 record."""
     record = json.loads(V040_RECORD.read_text(encoding="utf-8")) if V040_RECORD.is_file() else None
     assert check_v040_claims(readme(), record) == []
-    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.4.0")
+    assert roadmap_position(project_version()) >= PLAN_VERSIONS.index("0.4.0")
 
 
 def test_v040_claim_check_catches_drift() -> None:
@@ -1202,7 +1242,7 @@ def test_readme_v050_claims_match_record() -> None:
     """Every README v0.5.0 claim is derived from (and true of) the v0.5.0 record."""
     record = _v050_record() if V050_RECORD.is_file() else None
     assert check_v050_claims(readme(), record) == []
-    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.5.0")
+    assert roadmap_position(project_version()) >= PLAN_VERSIONS.index("0.5.0")
 
 
 @pytest.mark.parametrize(
@@ -1444,7 +1484,7 @@ def test_readme_v060_claims_match_record() -> None:
     """Every README v0.6.0 claim is derived from (and true of) the v0.6.0 record."""
     record = _v060_record() if V060_RECORD.is_file() else None
     assert check_v060_claims(readme(), record) == []
-    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.6.0")
+    assert roadmap_position(project_version()) >= PLAN_VERSIONS.index("0.6.0")
 
 
 @pytest.mark.parametrize(
@@ -1758,7 +1798,7 @@ def test_readme_v070_claims_match_record() -> None:
     """Every README v0.7.0 claim is derived from (and true of) the record and the code."""
     record = _v070_record() if V070_RECORD.is_file() else None
     assert check_v070_claims(readme(), record) == []
-    assert PLAN_VERSIONS.index(project_version()) >= PLAN_VERSIONS.index("0.7.0")
+    assert roadmap_position(project_version()) >= PLAN_VERSIONS.index("0.7.0")
 
 
 @pytest.mark.parametrize(

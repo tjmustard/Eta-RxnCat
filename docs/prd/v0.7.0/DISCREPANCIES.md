@@ -86,4 +86,4 @@ fff8b525139897cb6d84b8539093cb3d13de9fd8d6e9dad6630892d088455d3d  Eta-RxnCat-v0.
 | DV-07 | template loop | silent `continue` on a count mismatch | recorded refusal | 03 | open |
 | DV-08 | `target_node_ids=None` | grafts every node | only declared (node, template) pairs | 03 | open |
 | DV-09 | — | no multi-site | Cartesian product with a cap | 04 | open |
-| DV-10 | `pyproject.toml` | `version = "0.7.0"`, `ruff>=0.7.0` | bump in slice 14; ruff pin not adopted | 14 | open |
+| DV-10 | `pyproject.toml` | `version = "0.7.0"`, `ruff>=0.7.0` | bump in slice 14; ruff pin not adopted | 14 | done (v0.7.0 slice 14 set version 0.7.0; closed on TJ's choice, relay qitem-20261127204642-06c18509e72ce4bb) |

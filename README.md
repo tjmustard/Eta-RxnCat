@@ -15,10 +15,11 @@
 - a conserved-core mapper that grafts a fragment onto a known transition state (v0.4.0);
 - transition-state search with frequency validation (v0.5.0);
 - transition-state ensembles and selectivity between competing pathways (v0.6.0);
-- library enumeration with ranked template fallback and an offline HTML review page (v0.7.0).
+- library enumeration with ranked template fallback and an offline HTML review page (v0.7.0);
+- a quality point release: integration tests at the module seams and known-issue fixes (v0.7.1).
 
 <p align="center">
-    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.0-blue" alt="Latest Release"/></a>
+    <a href="https://github.com/tjmustard/Eta-RxnCat/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.1-blue" alt="Latest Release"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml"><img src="https://github.com/tjmustard/Eta-RxnCat/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/stargazers"><img src="https://img.shields.io/github/stars/tjmustard/Eta-RxnCat?style=social" alt="GitHub stars"/></a>
     <a href="https://github.com/tjmustard/Eta-RxnCat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tjmustard/Eta-RxnCat" alt="License"/></a>
@@ -260,6 +261,26 @@ Everything beyond it is listed under
 - The review bundle of these runs was built with no engine call: seven sub-bundles, 43 files and
   12.0 MB in total, each sub-bundle under the 25 MB ceiling.
 
+### Integration tests and quality fixes (v0.7.1)
+
+A quality point release: no new features. The release record is
+[QUALITY_RESULT.json](docs/prd/v0.7.1/QUALITY_RESULT.json); each claim below names its test and
+its record key.
+
+- **Integration tests at the module seams** (`tests/integration/`), with real modules on both
+  sides. The offline tests (`tests/integration/test_seams_offline.py`, RDKit UFF) run in the
+  default `uv run pytest`; the CPU GFN2 xtb tests (`test_seams_ts_gfn2.py` and
+  `test_seams_selectivity_gfn2.py`) run with `-m "integration and xtb"`. A named source break
+  made each seam test fail (`integration_tests`, `suites.default`, `suites.integration_x`).
+- **Known issues fixed**, each with a test (`known_issues`): `ArtifactStore` accepts
+  `open_timeout_s=math.inf` as no deadline (`test_infinite_open_timeout_waits_for_a_held_lock`);
+  importing `mace` no longer leaves `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD` changed, unless `mace` was
+  already imported (`test_importing_mace_leaves_the_torch_env_as_it_was`); a run record with an
+  infinite selectivity ratio reads back
+  (`test_an_infinite_ratio_round_trips_as_the_string_infinity`).
+- **Per-sample stage keys.** `eta_rxncat.orchestrator.TSEnsembleRun` lists each sample's stage
+  keys in `samples` (`eta_rxncat.orchestrator.SampleKeys`; `test_sample_keys_name_every_samples_rows`).
+
 ## ⚡ Installation
 
 Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/). It declares Python 3.11–3.13
@@ -450,12 +471,13 @@ behind the `gpu` marker and are skipped by default, as are the end-to-end fixtur
 - **v0.6.0**: selectivity branching and competing transition-state screening.
 - **v0.7.0**: combinatorial library enumeration, multi-template fallback and the offline review
   bundle.
+- **v0.7.1**: a quality point release with no new features: integration tests at the module seams,
+  known-issue fixes, and a dead-code and docs pass.
 
 ### Planned, not yet built
 
 The full plan is `PRDs/Eta-RxnCat_Living_Master_Plan.md`.
 
-- **v0.7.1** (in progress): a quality point release with no new features: integration tests at the module seams, known-issue fixes, and a dead-code and docs pass.
 - **v0.8.0**: the catalytic-cycle orchestrator and the energetic span model: a priority-ordered scheduler with crash recovery and incremental stages, refinement from xTB or ML potentials to DFT (including DFT transition-state refinement), the energetic span model (TOF, TDI, TDTS), geomeTRIC moved into its own process, and a read-only reaction-network view on the review page.
 - **v0.9.0**: covalent topology audit, CSV/JSON summary reports and the five-tier human-fixture E2E harness.
 - **v0.10.x**: catalyst-family case studies, one point release per family, each with a tutorial, an E2E that runs the tutorial, and a review page:

@@ -4,6 +4,84 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-11-27
+
+A quality point release: no new features, CPU only (RDKit UFF and GFN2 xtb in the new tests; no
+GPU, UMA, MACE or PySCF run). The release record is `docs/prd/v0.7.1/QUALITY_RESULT.json`, written
+by `tools/quality_record_v071.py` from the verdict runs and the committed `seam_breaks.json` files.
+Each claim below names its test or record key.
+
+### Added
+- **Integration suite** (`tests/integration/`), with real modules on both sides of each seam and a
+  policy test that forbids mocks and silent skips. Tier O (`test_seams_offline.py`, RDKit UFF) runs
+  in the default suite; Tier X (`test_seams_ts_gfn2.py`, `test_seams_selectivity_gfn2.py`, CPU GFN2
+  xtb) runs with `-m "integration and xtb"`. A named source break made each seam test fail
+  (`integration_tests`, `suites.default`, `suites.integration_x`).
+- **Per-sample stage keys** (TJ Q-71a A): `eta_rxncat.orchestrator.SampleKeys` and
+  `TSEnsembleRun.samples` (`test_sample_keys_name_every_samples_rows`,
+  `test_a_cached_run_records_the_same_sample_keys`). `tests/e2e/v070.py` keeps three private eta
+  imports (`_PreRelax` and `_digest` for call attribution, `_canonical_smiles` for reactant specs),
+  each listed with its reason in slice 03's proof, as that slice's requirement 2 allows. Mission goal
+  G4 words this as no private import; it is judged by the slice's wording.
+- `tools/engine_reachable.py` (the dead-code exclusion set), a stale-reference scan
+  (`tests/unit/test_doc_refs.py`) and `tools/quality_record_v071.py`.
+
+### Changed
+- **Version 0.7.1** in `pyproject.toml`, `src/eta_rxncat/__init__.py` and `uv.lock` (slice 09). A
+  point release takes its `X.Y.0` roadmap position
+  (`test_version_identity_point_release_readme_passes`).
+- ADR-0053's reader claim is narrowed by the PROPOSED node ADR-0066, which supersedes it, pending
+  TJ's approval (slice 08).
+
+### Fixed
+- t3 writes the xtb `gated_on` text of the v0.5.0 acceptance record
+  (`test_gated_on_text_equals_the_record`, `known_issues` R10).
+- The test-policy skip scanner now sees import aliases, decorators, defaults and class bases, and a
+  teardown skip fails an acceptance run (`test_module_level_skip_scanner`,
+  `test_teardown_skip_fails_under_acceptance`, R11).
+- `ArtifactStore(open_timeout_s=math.inf)` means no deadline, and a `bool` or non-real value raises
+  `TypeError` (`test_infinite_open_timeout_waits_for_a_held_lock`,
+  `test_open_timeout_must_be_a_real_number`, R13/R29).
+- Importing `mace` restores `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD`
+  (`test_importing_mace_leaves_the_torch_env_as_it_was`, R14).
+- The licence gate labels a bare "BSD" licence "BSD (variant not stated)"
+  (`test_bare_bsd_passes_with_the_label`, R28).
+- A run record with an infinite selectivity ratio writes `"Infinity"` and reads back (TJ Q-71b A;
+  `test_an_infinite_ratio_round_trips_as_the_string_infinity`, R38).
+- The wheel test builds offline (`test_the_wheel_build_is_offline`, R39).
+- The review bundle's host-data scan skips only the byte-pinned vendored files
+  (`test_the_host_data_scan_skips_the_pinned_3dmol_file`, R40).
+
+### Removed
+- Nothing. The scripted dead-code pass (R17, R31) found no symbol meeting all four removal
+  conditions (`dead_code.removed` is empty; `dead_code.kept` lists the candidates).
+
+### Known issues
+- `PotentialResult` is not strict about floats and is frozen only shallowly. This is kept for the
+  v1.0 API-freeze review (R15, `known_issues`).
+- **HF-13 (carried).** geomeTRIC's pre-relax can still stall inside the black box. The guard bounds
+  the stall; the out-of-process cure is v0.8.0.
+- **Multi-site forming bonds** (deferred: an enumerator behaviour change no shipped plan exercises).
+  A later site can delete an earlier site's forming-bond or core atom.
+- **`+` in library entry ids** can collide joined candidate ids (deferred: the fix changes the
+  `EnumerationPlan` contract; no shipped id contains `+`).
+- `run_selectivity` runs only priority-1 pathways, while the v0.7.0 plan's TS nodes are priority 2
+  (deferred to v0.8.0's scheduler, which owns the join; R35).
+- **geomeTRIC edge cases** (deferred to v0.8.0's out-of-process geomeTRIC; R41): a deadline inside
+  temporary-directory cleanup can leak one directory, and one inside step marking can leave a step
+  partly marked.
+- The review page's red frequency-failure box is unchanged (deferred: TJ's call).
+- The `mace` environment guard (R14) restores nothing if `mace` was already imported in the process,
+  and covers the `import mace` line only.
+- With `cartesian_basis=True` on CUDA, the PySCF engine can take the GPU analytic Hessian path for a
+  class whose support record was measured without that option (slice 08; no GPU run in this release).
+- `tests/e2e/v070.py` `checked_record_text` still refuses an infinite ratio, and its docstring still
+  says it would be written as `null` (slice 07 QA).
+- In `tests/e2e/t3.py` the `GFN2_REPORT_ONLY_FIXTURE` line separates
+  `ENERGY_SOURCE_BOUND_KCAL_MOL` from its docstring (slice 06 QA).
+- The integration policy scanner does not catch `builtins.getattr`, objects returned by eta calls,
+  non-constant module names or patchers passed by other routes (slice 06 QA, R44).
+
 ## [0.7.0] - 2026-11-27
 
 **Acceptance** (`docs/prd/v0.7.0/ACCEPTANCE_RESULT.json`, verdict `pass`, `verdict_reasons` empty,
