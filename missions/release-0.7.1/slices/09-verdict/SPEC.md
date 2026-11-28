@@ -2,7 +2,7 @@
 id: OPR.0.7.1.9
 slice: 09-verdict
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Set version 0.7.1 under a point-release identity rule, write the CHANGE
 depends_on: [OPR.0.7.1.8]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: [pyproject.toml, uv.lock, src/eta_rxncat/__init__.py, README.md, CHANGELOG.md, tests/unit/test_identity.py, tools/quality_record_v071.py, "tests/unit/tools/test_quality_record*.py", docs/prd/v0.7.1/QUALITY_RESULT.json, docs/prd/v0.7.0/DISCREPANCIES.md, spec/compiled/architecture.yml]
