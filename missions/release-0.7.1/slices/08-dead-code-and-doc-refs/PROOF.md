@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/08-execute.md - guard CLEAR: full pytest 2900 passed; doc-refs 22 passed with planted stale names failing; R17: 0 removals (all candidates referenced); ADR-0066 PROPOSED, validate ok
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
