@@ -104,9 +104,10 @@ Everything beyond it is listed under
     mandatory internal stability analysis. The stability threshold is keyed and robust to
     threaded-CPU noise. On CUDA, a stage over the VRAM budget, or one that hits a listed
     out-of-memory error, runs on the CPU instead, with the reason recorded. A GPU KS analytic
-    Hessian is used only where the committed support record shows it correct; elsewhere the
-    Hessian is a finite difference of analytic gradients. Across the four test cases, GPU energies
-    match CPU to ≤ 2e-7 Eh;
+    Hessian is used only for the classes the committed
+    [support record](docs/prd/v0.2.0/evidence/pyscf-gpu-support.json) shows correct (the class
+    does not include `cartesian_basis`); elsewhere the Hessian is a finite difference of analytic
+    gradients. Across the four test cases, GPU energies match CPU to ≤ 2e-7 Eh;
   - `xtb_subprocess`: GFN2-xTB 6.8.0 as a separate process (LGPL-3.0, never in-process), with a
     Hessian from finite differences of its gradients;
   - `mace`: MACE-MP-0 medium, neutral singlets only, with the model file pinned by SHA-256;
@@ -261,8 +262,8 @@ Everything beyond it is listed under
 
 ## ⚡ Installation
 
-Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/) and supports Python 3.11–3.13 (the lock
-targets 3.12).
+Eta-RxnCat uses [`uv`](https://docs.astral.sh/uv/). It declares Python 3.11–3.13
+(`requires-python` in `pyproject.toml`); development and CI use 3.12 (`.python-version`).
 
 ```bash
 git clone https://github.com/tjmustard/Eta-RxnCat.git

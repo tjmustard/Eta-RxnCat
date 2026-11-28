@@ -75,6 +75,11 @@ class TransitionStateOptimizer(abc.ABC):
     ) -> TSSearchResult:
         """Search for a first-order saddle point from ``state`` on ``engine``.
 
+        Step contract: an implementation evaluates ``engine`` with ``hessian=False`` exactly once
+        per history step, at that step's trial point and in history order. eta's TS runner relies
+        on this to attach each step's geometry, and refuses a search whose count, energy or
+        largest gradient component does not match.
+
         Args:
             state: The start structure.
             engine: The engine giving energies, gradients and Hessians.

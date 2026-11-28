@@ -288,6 +288,11 @@ class GeometricOptimizer(Optimizer):
     (``coordsys="hdlc"``, ``trust=0.05``) for a constrained one (R45). A step is tried only after
     the previous one raised ``GeomOptNotConvergedError`` (also what reaching ``maxiter`` raises)
     or ``GeomOptStructureError``.
+
+    While a step runs, the working directory of the whole process is a temporary one. Relative
+    paths used by a host program's own threads resolve there in the meantime, so a threaded host
+    should use absolute paths. The lock that serialises the directory change is not reentrant: an
+    engine that calls ``minimize`` again from inside ``evaluate`` deadlocks.
     """
 
     OPTIONS: ClassVar[Mapping[str, OptionSpec]] = {

@@ -1,6 +1,6 @@
 schema: hacf.lore/v1
 id_counters:
-  ADR: 65
+  ADR: 66
   STORY: 0
   CANON: 0
 nodes:
@@ -14,15 +14,15 @@ nodes:
     path: lore/ADRs/ADR-0001-cache-key-canonical-versioned-per-stage-payload-key-schema-1.md
   content_sha256: 195cde0d27e912c88b72a777084ef72ad71488804e18581f2bd8f5521d1c460c
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_store
     - eta_rxncat_core
     files:
     - src/eta_rxncat/store/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -69,14 +69,14 @@ nodes:
     path: lore/ADRs/ADR-0002-artifact-store-completed-rows-immutable-wal-schema-version-1.md
   content_sha256: f313e46a32d8eecee52869aeef3e225c07b794b5a14c553230634835584bba73
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_store
     files:
     - src/eta_rxncat/store/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -123,14 +123,14 @@ nodes:
     path: lore/ADRs/ADR-0003-core-models-are-strict-strictint-chemistry-ints-extra-forbid.md
   content_sha256: 9d397e383798f2461b5b24554902d1a87f9bb211e5f9f395d96f724495d99df6
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_core
     files:
     - src/eta_rxncat/core/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -177,14 +177,14 @@ nodes:
     path: lore/ADRs/ADR-0004-reactiongraph-templates-are-ranked-alternatives-components-a.md
   content_sha256: d0b29786b0f860f887a2e925066ee96d3fb70b977399aa0a7b17445e6e48a353
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_core
     files:
     - src/eta_rxncat/core/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -231,14 +231,14 @@ nodes:
     path: lore/ADRs/ADR-0005-atommappingspec-full-invariant-list-including-keep-delete-pa.md
   content_sha256: d1d31014bd2694d342a2bf6725d14f39fc778ee08cbecca4d9bb75d6f5c2b0a4
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_core
     files:
     - src/eta_rxncat/core/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -284,15 +284,15 @@ nodes:
     path: lore/ADRs/ADR-0006-licence-gate-runtime-only-allow-list-with-partial-match.md
   content_sha256: 55cee2532de2497697a4dc7f6296d98169d12ad2cd89364fe9f6fc73c5c05798
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_scaffold
     files:
     - pyproject.toml
     - .github/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -339,15 +339,15 @@ nodes:
     path: lore/ADRs/ADR-0007-reference-starter-under-docs-prd-is-excluded-from-all-gates.md
   content_sha256: 2c50a00ed5153a00cda293e1bd0221fd967e3080e225c25b6920b4e69c2ef72a
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_scaffold
     files:
     - docs/**
     - pyproject.toml
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -394,15 +394,15 @@ nodes:
     path: lore/ADRs/ADR-0008-hardware-6-5-gib-budget-of-total-vram-smoke-pass-is-gpu-vs-c.md
   content_sha256: fa55635ad9a6bd48a5021500416378bbbd6353f0ee645eac71f2518acd607bf9
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_hw_probe
     files:
     - src/eta_rxncat/utils/**
     - docs/prd/v0.1.0/GPU_SMOKE_RESULT.json
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -449,16 +449,16 @@ nodes:
     path: lore/ADRs/ADR-0009-project-rules-live-in-agents-md-after-the-hacf-block-core-sc.md
   content_sha256: 70d2544dac2a778f33198ea1fc97341c56328a3d4c771c0ac3af27690ce1ff34
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_scaffold
     - eta_rxncat_core
     files:
     - AGENTS.md
     - src/eta_rxncat/core/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -506,15 +506,15 @@ nodes:
   content_sha256: 6313d2a0b96776d1dffd10f81baecebbfeaa0a44e60bb3331e5da93059cd930e
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - pyproject.toml
     - uv.lock
     - .github/workflows/ci.yml
     - AGENTS.md
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0006
   supersedes: []
@@ -563,14 +563,14 @@ nodes:
   content_sha256: 4f94862c33932c6a24b90b3a5d2c565d95637a1f6294aac834a0fed1a96c7782
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - pyproject.toml
     - .github/workflows/ci.yml
     - AGENTS.md
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0006
   - ADR-0010
@@ -620,13 +620,13 @@ nodes:
   content_sha256: ee8f880783dac64b0df0ac83d2bd1e33931431f641daec0239ea5e11dd136f59
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/store/artifact_store.py
     - src/eta_rxncat/store/__init__.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0002
   supersedes: []
@@ -683,15 +683,15 @@ nodes:
   content_sha256: 7410c0e5bae22e10b56e6c6120ee4f61ffdb82b95db599e79d9b5b2685f1a9f2
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - tools/licence_gate.py
     - pyproject.toml
     - .github/workflows/ci.yml
     - AGENTS.md
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0006
   - ADR-0010
@@ -742,13 +742,13 @@ nodes:
   content_sha256: 91c01c9598a9caca0aa7b6ed4f2a0d08b335cd55bb86b531c60075506c9186f6
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - pyproject.toml
     - tests/unit/test_package.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0010
   - ADR-0013
@@ -798,12 +798,12 @@ nodes:
   content_sha256: fb1239f22cc032e943ac6521bb2200aa56093ec3200a8795a7f653b78ca58fb7
   anchors:
     components: []
-    files: []
+    files:
+    - src/eta_rxncat/store/artifact_store.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/store/artifact_store.py
+    files: []
   relates_to:
   - ADR-0002
   - ADR-0012
@@ -853,13 +853,13 @@ nodes:
   content_sha256: 5a83640ab5ab7bfe82fa900a9ffb7c0dbc174da912a53591fe372937e1445fbf
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/engines/options.py
     - src/eta_rxncat/engines/base.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0001
   supersedes: []
@@ -908,14 +908,14 @@ nodes:
   content_sha256: 12157eee510bfb20ea59d51401537761dc2fc5a789b8b4bcf90962cb9bfc3a0f
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/engines/identity.py
     - src/eta_rxncat/engines/mace.py
     - src/eta_rxncat/engines/uma_direct.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0001
   supersedes: []
@@ -964,12 +964,12 @@ nodes:
   content_sha256: 34da17ecad5bbba5513d96ddf438c0529733814c7958c359b67850f32428c665
   anchors:
     components: []
-    files: []
+    files:
+    - src/eta_rxncat/engines/pyscf_gpu_cpu
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/engines/pyscf_gpu_cpu
+    files: []
   relates_to:
   - ADR-0008
   - ADR-0016
@@ -1019,13 +1019,13 @@ nodes:
   content_sha256: 90d745dfce99b6f3a099cfaa5b9aed9cef3a7d7a2ae4debd45237040b22b54bb
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - tests/conftest.py
     - pyproject.toml
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0010
   supersedes: []
@@ -1074,13 +1074,13 @@ nodes:
   content_sha256: c99cb230b2c82606ee98295a3529a245a5a46446554fe6908b10d9db20c4acaa
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - pyproject.toml
     - uv.lock
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0008
   - ADR-0010
@@ -1132,13 +1132,13 @@ nodes:
   content_sha256: 310ac80f256e0f998b4c808d8a7d56e43f462252ef187fc367e9c0bf9d52021f
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/engines/xtb_subprocess.py
     - docs/licence-inventory.md
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0014
   supersedes: []
@@ -1187,14 +1187,14 @@ nodes:
   content_sha256: bcfd29897e7d3e888c2e4c4eea91fb4362d7e7f7cf40d7d50e81bc2b30212cc1
   anchors:
     components: []
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/core/models.py
     - src/eta_rxncat/engines/_fairchem_bridge.py
     - src/eta_rxncat/engines/esen_omol25.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0001
   - ADR-0017
@@ -1245,16 +1245,16 @@ nodes:
   anchors:
     components:
     - eta_rxncat_scaffold
+    - eta_rxncat_optimize
     files:
     - pyproject.toml
     - tools/licence_gate.py
     - uv.lock
+    - src/eta_rxncat/optimize/**
     symbols: []
   planned:
-    components:
-    - eta_rxncat_optimize
-    files:
-    - src/eta_rxncat/optimize/**
+    components: []
+    files: []
   relates_to:
   - ADR-0011
   supersedes: []
@@ -1302,14 +1302,14 @@ nodes:
     path: lore/ADRs/ADR-0024-geometricoptimizer-uses-geometric-s-lower-level-api-never-ru.md
   content_sha256: c311f519d3eb9f1b72a848bdb57900db9138ceeeb7d65243ec7a8d301b493a9a
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_optimize
     files:
     - src/eta_rxncat/optimize/geometric_impl.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1355,14 +1355,14 @@ nodes:
     path: lore/ADRs/ADR-0025-two-pass-etkdgv3-own-proper-rotation-dedup-and-per-conformer.md
   content_sha256: c4cfb794cf05a4157d593ae43a65b6de5054337292111a13b1cc8a1bde81e494
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_conformers
     files:
     - src/eta_rxncat/conformers/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1412,15 +1412,15 @@ nodes:
     components:
     - eta_rxncat_core
     - eta_rxncat_engines
-    files:
-    - src/eta_rxncat/engines/units.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_thermo
     - eta_rxncat_species_runner
     files:
+    - src/eta_rxncat/engines/units.py
     - src/eta_rxncat/thermo/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1467,15 +1467,15 @@ nodes:
     path: lore/ADRs/ADR-0027-candidate-outputs-committed-in-candidates-only-commits-read.md
   content_sha256: ed91fafd8bf0b4cd5bdd31d891df5a531a4cde5a5a3179ab486ad514c4b92794
   anchors:
-    components: []
-    files: []
-    symbols: []
-  planned:
     components:
     - eta_rxncat_species_runner
     files:
     - tests/e2e/**
     - tests/candidate_outputs/v0.3.0/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1524,15 +1524,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_core
-    files:
-    - src/eta_rxncat/core/models.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_mapping
     files:
+    - src/eta_rxncat/core/models.py
     - src/eta_rxncat/core/mapping_models.py
     - src/eta_rxncat/mapping/graft.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1581,14 +1581,14 @@ nodes:
   anchors:
     components:
     - eta_rxncat_thermo
-    files:
-    - src/eta_rxncat/thermo/_geometry.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_mapping
     files:
+    - src/eta_rxncat/thermo/_geometry.py
     - src/eta_rxncat/mapping/align.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1638,15 +1638,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_core
-    files:
-    - src/eta_rxncat/core/models.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_mapping
     files:
+    - src/eta_rxncat/core/models.py
     - src/eta_rxncat/mapping/graft.py
     - src/eta_rxncat/mapping/report.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1695,15 +1695,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
-    files:
-    - tests/e2e/**
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_mapping
     files:
+    - tests/e2e/**
     - tests/e2e/m1.py
     - tests/e2e/data/e2e5/m1_ts1a_n_to_ts1b_n.yaml
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1753,14 +1753,14 @@ nodes:
   anchors:
     components:
     - eta_rxncat_optimize
-    files:
-    - src/eta_rxncat/optimize/base.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_mapping
     files:
+    - src/eta_rxncat/optimize/base.py
     - src/eta_rxncat/mapping/relax.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1811,12 +1811,12 @@ nodes:
     - eta_rxncat_optimize
     files:
     - src/eta_rxncat/optimize/base.py
+    - src/eta_rxncat/optimize/ts_base.py
+    - src/eta_rxncat/optimize/prfo.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/optimize/ts_base.py
-    - src/eta_rxncat/optimize/prfo.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1867,11 +1867,11 @@ nodes:
     - eta_rxncat_optimize
     files:
     - src/eta_rxncat/optimize/base.py
+    - src/eta_rxncat/optimize/prfo.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/optimize/prfo.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1922,11 +1922,11 @@ nodes:
     - eta_rxncat_thermo
     files:
     - src/eta_rxncat/thermo/modes.py
+    - src/eta_rxncat/thermo/ts.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/thermo/ts.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -1977,12 +1977,12 @@ nodes:
     files:
     - src/eta_rxncat/thermo/symmetry.py
     - src/eta_rxncat/thermo/rrho.py
+    - src/eta_rxncat/thermo/ts.py
+    - src/eta_rxncat/orchestrator/barrier.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/thermo/ts.py
-    - src/eta_rxncat/orchestrator/barrier.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2032,13 +2032,13 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - tests/e2e/e2e_env.py
-    symbols: []
-  planned:
-    components: []
-    files:
     - tests/e2e/test_t3_diels_alder.py
     - tests/e2e/test_t3_tetrazine.py
     - tests/e2e/test_t3_cyclobutenone.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: ADR-0047
@@ -2094,11 +2094,11 @@ nodes:
     - eta_rxncat_core
     files:
     - src/eta_rxncat/core/models.py
+    - src/eta_rxncat/core/ts_models.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/core/ts_models.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2149,12 +2149,12 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - tests/e2e/e2e_env.py
+    - tests/e2e/eta_geometric_shim.py
+    - tests/e2e/test_t3_cross_check.py
     symbols: []
   planned:
     components: []
-    files:
-    - tests/e2e/eta_geometric_shim.py
-    - tests/e2e/test_t3_cross_check.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2205,15 +2205,15 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - tests/e2e/data/e2e5/SOURCES.md
-    symbols: []
-  planned:
-    components: []
-    files:
     - tests/e2e/data/e2e5/t3_ts1a_n_unmapped.yaml
     - tests/e2e/data/e2e5/t3_ts1b_n_mapped.yaml
     - tests/e2e/data/e2e5/t3_ts3a_unmapped.yaml
     - tests/e2e/data/e2e5/t3_ts4a_mapped.yaml
     - tests/e2e/data/e2e5/t3_n4_unmapped.yaml
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2261,12 +2261,12 @@ nodes:
   anchors:
     components:
     - eta_rxncat_engines
-    files: []
+    files:
+    - src/eta_rxncat/engines/pyscf_gpu_cpu/engine.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/engines/pyscf_gpu_cpu/engine.py
+    files: []
   relates_to:
   - ADR-0016
   - ADR-0018
@@ -2320,12 +2320,12 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - src/eta_rxncat/mapping/report.py
+    - src/eta_rxncat/conformers/ts_sampler.py
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/conformers/ts_sampler.py
-    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2378,12 +2378,12 @@ nodes:
     files:
     - src/eta_rxncat/conformers/generate.py
     - src/eta_rxncat/mapping/relax.py
+    - src/eta_rxncat/conformers/ts_sampler.py
+    - src/eta_rxncat/orchestrator/ts_ensemble.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/conformers/ts_sampler.py
-    - src/eta_rxncat/orchestrator/ts_ensemble.py
+    files: []
   relates_to:
   - ADR-0025
   - ADR-0032
@@ -2434,13 +2434,13 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
-    files: []
-    symbols: []
-  planned:
-    components: []
     files:
     - src/eta_rxncat/orchestrator/ts_ensemble.py
     - src/eta_rxncat/orchestrator/selectivity.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0025
   - ADR-0036
@@ -2551,12 +2551,12 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - src/eta_rxncat/core/graph.py
+    - src/eta_rxncat/core/selectivity_models.py
+    - src/eta_rxncat/orchestrator/selectivity.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/core/selectivity_models.py
-    - src/eta_rxncat/orchestrator/selectivity.py
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2662,11 +2662,11 @@ nodes:
     - eta_rxncat_species_runner
     files:
     - src/eta_rxncat/orchestrator/ts_ensemble.py
+    - src/eta_rxncat/orchestrator/_deadline.py
     symbols: []
   planned:
     components: []
-    files:
-    - src/eta_rxncat/orchestrator/_deadline.py
+    files: []
   relates_to:
   - ADR-0024
   - ADR-0045
@@ -2718,16 +2718,16 @@ nodes:
     components:
     - eta_rxncat_cli
     - eta_rxncat_scaffold
+    - eta_rxncat_review
     files:
     - src/eta_rxncat/cli.py
     - pyproject.toml
-    symbols: []
-  planned:
-    components:
-    - eta_rxncat_review
-    files:
     - src/eta_rxncat/review/**
     - tests/unit/review/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -2777,16 +2777,16 @@ nodes:
     components:
     - eta_rxncat_species_runner
     - eta_rxncat_optimize
+    - eta_rxncat_selectivity
     files:
     - src/eta_rxncat/orchestrator/ts_ensemble.py
     - src/eta_rxncat/orchestrator/ts.py
     - src/eta_rxncat/optimize/errors.py
+    - src/eta_rxncat/orchestrator/ts_fallback.py
     symbols: []
   planned:
-    components:
-    - eta_rxncat_selectivity
-    files:
-    - src/eta_rxncat/orchestrator/ts_fallback.py
+    components: []
+    files: []
   relates_to:
   - ADR-0045
   supersedes: []
@@ -2836,13 +2836,13 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
+    - eta_rxncat_selectivity
     files:
     - src/eta_rxncat/orchestrator/ts_ensemble.py
     - src/eta_rxncat/orchestrator/_deadline.py
     symbols: []
   planned:
-    components:
-    - eta_rxncat_selectivity
+    components: []
     files: []
   relates_to:
   - ADR-0048
@@ -2895,16 +2895,16 @@ nodes:
     components:
     - eta_rxncat_mapping
     - eta_rxncat_core
+    - eta_rxncat_enumerator
     files:
     - src/eta_rxncat/mapping/graft.py
     - src/eta_rxncat/core/graph.py
-    symbols: []
-  planned:
-    components:
-    - eta_rxncat_enumerator
-    files:
     - src/eta_rxncat/mapping/enumerator.py
     - src/eta_rxncat/core/enumeration_models.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0028
   supersedes: []
@@ -3014,16 +3014,16 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
+    - eta_rxncat_integration
     files:
     - tests/e2e/v070.py
     - tests/e2e/data/e2e5/v070_enumeration.yaml
-    symbols: []
-  planned:
-    components:
-    - eta_rxncat_integration
-    files:
     - tests/integration/conftest.py
     - tests/integration/test_seams_offline.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0052
   supersedes: []
@@ -3058,14 +3058,14 @@ nodes:
   anchors:
     components:
     - eta_rxncat_scaffold
-    files:
-    - pyproject.toml
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_integration
     files:
+    - pyproject.toml
     - tests/integration/**
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -3099,15 +3099,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_scaffold
+    - eta_rxncat_integration
     files:
     - pyproject.toml
     - tests/unit/test_test_policy.py
+    - tests/integration/test_integration_policy.py
     symbols: []
   planned:
-    components:
-    - eta_rxncat_integration
-    files:
-    - tests/integration/test_integration_policy.py
+    components: []
+    files: []
   relates_to:
   - ADR-0019
   supersedes: []
@@ -3142,14 +3142,14 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
-    files:
-    - src/eta_rxncat/orchestrator/species.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_integration
     files:
+    - src/eta_rxncat/orchestrator/species.py
     - tests/integration/test_integration_policy.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -3306,14 +3306,14 @@ nodes:
   anchors:
     components:
     - eta_rxncat_species_runner
-    files:
-    - src/eta_rxncat/orchestrator/species.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_scaffold
     files:
+    - src/eta_rxncat/orchestrator/species.py
     - tools/engine_reachable.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to: []
   supersedes: []
   superseded_by: null
@@ -3347,15 +3347,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_engines
-    files:
-    - src/eta_rxncat/engines/xtb_subprocess.py
-    symbols: []
-  planned:
-    components:
     - eta_rxncat_integration
     files:
+    - src/eta_rxncat/engines/xtb_subprocess.py
     - tests/integration/test_seams_ts_gfn2.py
     - tests/integration/test_seams_selectivity_gfn2.py
+    symbols: []
+  planned:
+    components: []
+    files: []
   relates_to:
   - ADR-0021
   supersedes: []
@@ -3390,15 +3390,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_selectivity
+    - eta_rxncat_integration
     files:
     - src/eta_rxncat/orchestrator/selectivity.py
     - src/eta_rxncat/orchestrator/ts_fallback.py
+    - tests/integration/test_seams_selectivity_gfn2.py
     symbols: []
   planned:
-    components:
-    - eta_rxncat_integration
-    files:
-    - tests/integration/test_seams_selectivity_gfn2.py
+    components: []
+    files: []
   relates_to:
   - ADR-0046
   - ADR-0052
@@ -3433,15 +3433,15 @@ nodes:
   anchors:
     components:
     - eta_rxncat_selectivity
+    - eta_rxncat_species_runner
     files:
     - src/eta_rxncat/orchestrator/ts_ensemble.py
     - src/eta_rxncat/orchestrator/__init__.py
+    - tests/e2e/v070.py
     symbols: []
   planned:
-    components:
-    - eta_rxncat_species_runner
-    files:
-    - tests/e2e/v070.py
+    components: []
+    files: []
   relates_to:
   - ADR-0044
   supersedes: []
@@ -3503,3 +3503,49 @@ nodes:
     by: agent
     warrant: null
     ref: OPR.0.7.1
+- id: ADR-0066
+  type: decision
+  title: Optimization frames are payload-only, a v0.6.0 reader refuses v0.7.0 TS-search
+    rows, and geomeTRIC runs in a per-run temp cwd
+  status: PROPOSED
+  origin: agent
+  context: null
+  pointer:
+    path: lore/ADRs/ADR-0066-optimization-frames-are-payload-only-a-v0-6-0-reader-refuses.md
+  content_sha256: 15a35266a927411605d3919d7f6aac12ccac68a494f82a42693acf6a82bfd0a3
+  anchors:
+    components:
+    - eta_rxncat_optimize
+    - eta_rxncat_core
+    - eta_rxncat_species_runner
+    files:
+    - src/eta_rxncat/optimize/geometric_impl.py
+    - src/eta_rxncat/core/optimization_models.py
+    - src/eta_rxncat/core/ts_models.py
+    symbols: []
+  planned:
+    components: []
+    files: []
+  relates_to:
+  - ADR-0016
+  - ADR-0024
+  supersedes:
+  - ADR-0053
+  superseded_by: null
+  stale: false
+  stale_reason: null
+  legacy: null
+  provenance:
+    created_by: agent
+    created_at: '2026-11-28T00:18:57+00:00'
+    source: OPR.0.7.1.8
+    session_id: null
+    run_id: null
+  approval: null
+  history:
+  - at: '2026-11-28T00:18:57+00:00'
+    from: null
+    to: PROPOSED
+    by: agent
+    warrant: null
+    ref: OPR.0.7.1.8
