@@ -10,6 +10,8 @@
 
 ## Artifacts
 
+- proof/09-execute.md - guard CLEAR: full pytest 2940 passed; Tier X 6 passed 0 skipped; record generated at acb7e7c, rerun bytes-equal, exit 1 on a missing source
+
 ## Residue / caveats
 
 [What is not covered, and where it is tracked]
