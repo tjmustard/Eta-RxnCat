@@ -11,6 +11,7 @@
 ## Artifacts
 
 - proof/08-execute.md - guard CLEAR: full pytest 2900 passed; doc-refs 22 passed with planted stale names failing; R17: 0 removals (all candidates referenced); ADR-0066 PROPOSED, validate ok
+- proof/08-qa.md - qa PASS: audit pytest 2900 passed; doc-refs 22 incl. planted negatives; R17 0 removals all referenced; ADR-0066 PROPOSED exact body, supersedes ADR-0053; validate ok
 
 ## Residue / caveats
 

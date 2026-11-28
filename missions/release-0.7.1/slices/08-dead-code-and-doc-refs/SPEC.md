@@ -2,7 +2,7 @@
 id: OPR.0.7.1.8
 slice: 08-dead-code-and-doc-refs
 mission: release-0.7.1
-status: active
+status: done
 stage: wip
 verified: "2026-11-27 against scaffold (hyper_scope slice create)"
 created: "2026-11-27"
@@ -10,7 +10,7 @@ intent: "Remove dead code only on scripted evidence, add a stale-reference scan 
 depends_on: [OPR.0.7.1.7]
 hacf_schema: 1
 hacf_type: MiniPRD
-hacf_status: executed
+hacf_status: audited
 node_id: eta_rxncat_scaffold
 parent: null
 hacf_touches: ["src/eta_rxncat/**", tools/engine_reachable.py, tests/unit/test_doc_refs.py, "tests/unit/**", README.md, "docs/*.md", "lore/**", lore_hypergraph.yml, spec/compiled/architecture.yml]
