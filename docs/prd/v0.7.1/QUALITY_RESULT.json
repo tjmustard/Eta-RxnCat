@@ -1,0 +1,499 @@
+{
+  "version": "0.7.1",
+  "base_sha": "bf7b9497b6d76caaabd2d6544d2e3f704d117919",
+  "verdict_run_sha": "acb7e7cf0db9ff7ce66e0aee0b739693e4e55200",
+  "suites": {
+    "default": {
+      "passed": 2940,
+      "failed": 0,
+      "skipped": 0,
+      "deselected": 202,
+      "errors": 0,
+      "wall_s": 428.095
+    },
+    "integration_x": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "deselected": 100,
+      "errors": 0,
+      "wall_s": 114.513
+    }
+  },
+  "integration_tests": [
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip",
+      "tier": "O",
+      "seam": "species runner, store, thermo",
+      "seam_breaks": [
+        {
+          "break": "stage_payload drops engine_identity (store/keys.py)",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip"
+        },
+        {
+          "break": "ArtifactStore.get returns None",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to1_species_runner_store_roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to2_reaction_energies_replay_from_reopened_store",
+      "tier": "O",
+      "seam": "reaction free energy from real runner output",
+      "seam_breaks": [
+        {
+          "break": "reaction_free_energy drops the first product's term",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to2_reaction_energies_replay_from_reopened_store"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to3_conformer_stage_stores_members",
+      "tier": "O",
+      "seam": "conformers, engine, store",
+      "seam_breaks": [
+        {
+          "break": "the conformer stage stores no members (_pool_payload members empty)",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to3_conformer_stage_stores_members"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft",
+      "tier": "O",
+      "seam": "enumerator, graft",
+      "seam_breaks": [
+        {
+          "break": "the enumerator skips the index_map remap of the forming bonds",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft"
+        },
+        {
+          "break": "the enumerator skips the index_map remap of the stages' frozen atoms",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to4_enumerator_runs_the_real_graft"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to5_candidate_graph_file_roundtrip",
+      "tier": "O",
+      "seam": "candidate graph file, loader",
+      "seam_breaks": [
+        {
+          "break": "dump_reaction_graph_json omits the node field priority",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to5_candidate_graph_file_roundtrip"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs[TS1a_n]",
+      "tier": "O",
+      "seam": "enumerated seed inputs",
+      "seam_breaks": [
+        {
+          "break": "enumerated_pathway_inputs returns the reference (template-index, ungrafted) forming bonds",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs[TS1a_x]",
+      "tier": "O",
+      "seam": "enumerated seed inputs",
+      "seam_breaks": [
+        {
+          "break": "enumerated_pathway_inputs returns the reference (template-index, ungrafted) forming bonds",
+          "failed_test": "tests/integration/test_seams_offline.py::test_to6_enumerated_seed_inputs"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_offline.py::test_plan_loader_parity",
+      "tier": "O",
+      "seam": "plan loader parity with the E2E loader",
+      "seam_breaks": [
+        {
+          "break": "the conftest loader resolves xyz against the repo root instead of the YAML dir",
+          "failed_test": "tests/integration/test_seams_offline.py::test_plan_loader_parity"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay",
+      "tier": "X",
+      "seam": "TS runner, P-RFO, GFN2",
+      "seam_breaks": [
+        {
+          "break": "T-X1 break 1 (slice): run_transition_state skips storing the frequency row",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay"
+        },
+        {
+          "break": "T-X1 break 2 (slice): the identity gate reads the wrong forming-bond order (partners swapped)",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx1_prfo_validation_thermo_and_replay"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_ts_gfn2.py::test_tx2_ensemble_sampler_relax_and_store",
+      "tier": "X",
+      "seam": "TS ensemble, optimizer, store",
+      "seam_breaks": [
+        {
+          "break": "T-X2 (slice): relax_constrained_core passes the non-core atoms as frozen_atom_indices",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx2_ensemble_sampler_relax_and_store"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed",
+      "tier": "X",
+      "seam": "TS template fallback",
+      "seam_breaks": [
+        {
+          "break": "T-X3 (same edit as mis-compare-none) on the unmodified plan",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed"
+        },
+        {
+          "break": "T-X3 docstring break: the face comparison is inverted",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx3_fallback_rank1_chosen_and_replayed"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch",
+      "tier": "X",
+      "seam": "TS fallback face check",
+      "seam_breaks": [
+        {
+          "break": "T-X3/R43 (slice): the fallback runner drops expected_face: pre-check skipped and the ensemble gets expected_face=None",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch"
+        },
+        {
+          "break": "R43 gate isolation: only the runner's pre-ensemble face check skipped (ensemble still checks the face after searching)",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch"
+        },
+        {
+          "break": "T-X3/R43 (slice, 'compares against no face'): pre-check compares the face against None",
+          "failed_test": "tests/integration/test_seams_ts_gfn2.py::test_tx3_rank1_face_mismatch"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay",
+      "tier": "X",
+      "seam": "graph file, loader, selectivity",
+      "seam_breaks": [
+        {
+          "break": "T-X4 (slice): run_selectivity passes the other pathway's reactant_key",
+          "failed_test": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay"
+        },
+        {
+          "break": "T-X4 (slice): load_reaction_graph drops pathway_pruning_rules",
+          "failed_test": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay"
+        },
+        {
+          "break": "T-X4 (slice): load_reaction_graph drops one node's pathway (the last node that has one)",
+          "failed_test": "tests/integration/test_seams_selectivity_gfn2.py::test_tx4_graph_file_to_selectivity_and_replay"
+        }
+      ]
+    },
+    {
+      "id": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip",
+      "tier": "X",
+      "seam": "review export, reader, bundle",
+      "seam_breaks": [
+        {
+          "break": "T-X5 (slice): the RunData serialiser writes keys unsorted (sort_keys=False in _canonical_bytes)",
+          "failed_test": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip"
+        },
+        {
+          "break": "T-X5 (slice): export_run_data skips one sample's ts_opt row (the seed, sample_index 0)",
+          "failed_test": "tests/integration/test_seams_selectivity_gfn2.py::test_tx5_review_export_round_trip"
+        }
+      ]
+    }
+  ],
+  "known_issues": [
+    {
+      "id": "R10",
+      "verdict": "fixed",
+      "test": [
+        "tests/e2e/test_t3_gated_on.py::test_gated_on_text_equals_the_record"
+      ]
+    },
+    {
+      "id": "R11",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/test_test_policy.py::test_module_level_skip_scanner",
+        "tests/unit/test_test_policy.py::test_teardown_skip_fails_under_acceptance"
+      ]
+    },
+    {
+      "id": "R13/R29",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/store/test_first_open.py::test_infinite_open_timeout_opens_a_fresh_store",
+        "tests/unit/store/test_first_open.py::test_infinite_open_timeout_waits_for_a_held_lock",
+        "tests/unit/store/test_first_open.py::test_infinite_open_timeout_is_clamped_in_sqlite",
+        "tests/unit/store/test_first_open.py::test_open_timeout_must_be_a_real_number"
+      ]
+    },
+    {
+      "id": "R14",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/engines/test_mace.py::test_importing_mace_leaves_the_torch_env_as_it_was"
+      ]
+    },
+    {
+      "id": "R28",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/tools/test_licence_gate.py::test_bare_bsd_passes_with_the_label",
+        "tests/unit/tools/test_licence_gate.py::test_the_repo_maps_bare_bsd_to_the_labelled_id"
+      ]
+    },
+    {
+      "id": "R38",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/review/test_export.py::test_an_infinite_ratio_round_trips_as_the_string_infinity"
+      ]
+    },
+    {
+      "id": "R39",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/review/test_assets.py::test_the_wheel_build_is_offline"
+      ]
+    },
+    {
+      "id": "R40",
+      "verdict": "fixed",
+      "test": [
+        "tests/unit/review/test_bundle_scans.py::test_the_host_data_scan_skips_the_pinned_3dmol_file"
+      ]
+    },
+    {
+      "id": "R15: PotentialResult floats and shallow freeze",
+      "verdict": "kept",
+      "test": null
+    },
+    {
+      "id": "R12: licence gate unnamed and ambiguous distribution cases",
+      "verdict": "dropped",
+      "test": null
+    },
+    {
+      "id": "multi-site forming bonds",
+      "verdict": "deferred",
+      "test": null
+    },
+    {
+      "id": "'+' in library entry ids",
+      "verdict": "deferred",
+      "test": null
+    },
+    {
+      "id": "run_selectivity priority 1 against priority-2 TS nodes (R35)",
+      "verdict": "deferred",
+      "test": null
+    },
+    {
+      "id": "geomeTRIC temp-dir and partial-mark edge cases (R41)",
+      "verdict": "deferred",
+      "test": null
+    },
+    {
+      "id": "HF-13 geomeTRIC pre-relax stall",
+      "verdict": "deferred",
+      "test": null
+    },
+    {
+      "id": "review page red frequency-failure box",
+      "verdict": "deferred",
+      "test": null
+    }
+  ],
+  "dead_code": {
+    "removed": [],
+    "kept": [
+      {
+        "symbol": "_registry",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "_cached",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "FairchemEngine._load_unit",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "FairchemEngine._atomic_data",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "FairchemEngine._evaluate.forces_at",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "_default_dtype",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "MACEEngine._energy_forces",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "MACEEngine._evaluate.forces_at",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "PySCFEngine._fd_hessian",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "PySCFEngine._passthrough",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "_gpu_lowest",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "XTBSubprocessEngine.hessian_file",
+        "reason": "referenced; R31 module; public, listed and kept"
+      },
+      {
+        "symbol": "CountingEngine._evaluate",
+        "reason": "referenced; R31 module; required override of the abstract `Engine._evaluate`"
+      },
+      {
+        "symbol": "RunMetrics.as_payload",
+        "reason": "referenced; R31 module; public, listed and kept"
+      },
+      {
+        "symbol": "_RecordingEngine.stage",
+        "reason": "referenced; R31 module; implements the abstract `Engine.stage` property"
+      },
+      {
+        "symbol": "_RecordingEngine.identity",
+        "reason": "referenced; R31 module; implements the abstract `Engine.identity` property"
+      },
+      {
+        "symbol": "_RecordingEngine._evaluate",
+        "reason": "referenced; R31 module; required override of the abstract `Engine._evaluate`"
+      },
+      {
+        "symbol": "_RecordingEngine.__getattr__",
+        "reason": "referenced; R31 module; dunder: delegation, called by Python"
+      },
+      {
+        "symbol": "main",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_child_argv",
+        "reason": "referenced; R31 module"
+      },
+      {
+        "symbol": "normalise",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "tokenize",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "_Parser.__init__",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.peek",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.take",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.parse",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.or_expr",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.and_expr",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_Parser.with_expr",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "spdx_allowed",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "_strings",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_text",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_profiles",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "_string_map",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "load_config",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "_shown",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "judge",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "_location",
+        "reason": "referenced"
+      },
+      {
+        "symbol": "installed",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "run",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "main",
+        "reason": "referenced; public, listed and kept"
+      },
+      {
+        "symbol": "eta_rxncat.__main__",
+        "reason": "referenced entry point, public"
+      },
+      {
+        "symbol": "eta_rxncat.review.schema.__main__",
+        "reason": "referenced entry point, public"
+      },
+      {
+        "symbol": "eta_rxncat.utils._smoke_child",
+        "reason": "referenced, run with `-m`"
+      }
+    ]
+  }
+}
