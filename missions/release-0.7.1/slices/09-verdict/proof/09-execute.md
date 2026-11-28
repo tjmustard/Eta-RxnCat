@@ -105,3 +105,54 @@ ruff format` on those two fixed it.
   ADR-0013, ADR-0014, ADR-0019, ADR-0020.
 - `hyper_ledger.py validate`: ok.
 - `hyper_codegraph.py index`: `index: ok` at the start and before the updater.
+
+## Fix round 1 (audit FAIL iteration 1: U1, U2; R19 citations)
+
+Governed by the lead ruling `~/.cache/eta-rxncat-tmp/lead-ruling-071-09-r19.md` (exceptions
+(a) lore node id, (b) added file path; fixes 1-4; note 5). Start stays `2fcc8be`. Fix commit
+`4f24c1c`, on top of `dddfb56`.
+
+- U1: the README "Per-sample stage keys" bullet now cites
+  `test_tx2_ensemble_sampler_relax_and_store` (every non-None `run.samples` key is a store row)
+  and `integration_tests`, beside the unit test. All 3 README bullets carry a record key.
+- U2: CHANGELOG `[0.7.1]` header says test and record key; `version`, `known_issues`,
+  `integration_tests`, `suites.default` and `dead_code` added as ruled; ADR-0066 stays cited by
+  node id. A script over the entry: 26 bullets, 0 without a record key or lore id.
+- Fix 3: five `open` entries added to the script's `known_issues` (R14 import limit, with the R14
+  test as its bound; `cartesian_basis` GPU Hessian routing; `v070.py` `checked_record_text` and
+  its docstring; the `t3.py` constant docstring; the R44 scanner misses; `test` null for the last
+  four), worded from the slice 06, 07 and 08 QA proofs.
+- Record: regenerated from the same `E` (`~/.hacf/eta-rxncat-hacf/evidence/v071-verdict`). The
+  diff is the five added entries only; `verdict_run_sha` stays `acb7e7c`. No fresh verdict run.
+
+| command | exit | seen |
+|---|---|---|
+| `timeout 3600 python3 tools/quality_record_v071.py --evidence E` | 0 | wrote the record |
+| same after `4f24c1c`, `--output` in scratch; `cmp` | 0 / 0 | bytes equal (scratch removed) |
+| `git diff --stat acb7e7c..4f24c1c -- src tests` | 0 | empty |
+| `git diff --stat acb7e7c..4f24c1c` | 0 | the 4 fix files except tests, plus mission, proof, lore and ledger bookkeeping from `11426e0`..`dddfb56` |
+| `uv run --no-sync pytest tests/unit/tools/test_quality_record_v071.py tests/unit/test_identity.py tests/unit/test_package.py tests/unit/test_doc_refs.py -q -p no:cacheprovider` | 0 | 222 passed (before and after the commit) |
+| `uv run --no-sync ruff check .` | 0 | passed |
+| `uv run --no-sync ruff format --check . --extend-exclude spec/archive --extend-exclude spec/process` | 0 | 886 files already formatted |
+| `uv run --no-sync mypy` | 0 | 93 source files |
+| `hyper_codegraph.py index` | 0 | `index: ok` |
+| `hypergraph_updater.py --from-diff dddfb56 --json` (dry), then `--apply --slice OPR.0.7.1.9`, once | 0 / 0 | scaffold only; "no change" (already flagged); `lore_stale_candidates` empty; 101 unmapped = the 2 `.claude` backups and the untracked `spec/` workbench names |
+| `hyper_spec.py progress --event executed` | 4 | refused: `audit_failed -> executed` not allowed |
+| `progress --event executing` (detail `escape_tracking: v1`), then `--event executed` | 0 / 0 | status executed |
+| `hyper_ledger.py validate` | 0 | ok |
+
+Deviations for the audit:
+1. The CHANGELOG header adds what is named where only a test or only a key exists: test-less known
+   issues and the "Removed" result cite the key alone (no test exists for them), beside
+   exceptions (a) and (b).
+2. Citations are per bullet: the `v070.py` private-import sentences sit under the Per-sample
+   bullet's citations.
+3. The integration-suite line also names `test_integration_policy.py` for its policy claim.
+4. The script's `KNOWN_ISSUES` docstring now says a test may bound an open limit. Its unit test
+   file is unchanged.
+5. The full `pytest` and the verdict runs were not repeated (no `src/` or `tests/` change, per the
+   ruling). `ensure-node` was not rerun (no new file).
+6. `executing` was recorded at the end of the round, not before the edits.
+
+For the version end (ruling note 5): `PLAN_VERSIONS` in `tests/unit/test_identity.py` lacks
+v0.10.x, so 0.10.1 would be "not a plan version". Fix before v0.10.x; unchanged now.
